@@ -1,0 +1,339 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+body {
+  margin: 0;
+  font-family: Inter;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+:root {
+  --btnBackground: #ffad00;
+  --navColor: #1e1e1e;
+  --bgColor: #1e293b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+* {
+  font-family: Inter, "Times New Roman", Times, serif;
+}
+
+/* NavBar Component */
+
+.nav-li {
+  color: #fff;
+}
+
+.nav-logo {
+  margin-left: 1.2rem;
+  margin-top: 0.6rem;
+  width: 7.5rem;
+  height: 5rem;
+  padding-bottom: 0.3rem;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+
+  flex-wrap: wrap;
+}
+
+li:active {
+  color: var(--btnBackground);
+}
+
+.nav-menu {
+  width: 3.5rem;
+  height: 3.5rem;
+
+  opacity: 0.5;
+
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  transition: max-height 0.3s;
+}
+
+.nav-items {
+  list-style: none;
+  background-color: var(--bgColor);
+  color: #fff;
+  padding: 0;
+  margin-bottom: 0;
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.nav-items > li,
+a > li {
+  margin-right: 2.5rem;
+  margin: 0;
+  padding: 0.6rem 2rem;
+  border: 1px solid #171515;
+
+  letter-spacing: 0.5px;
+  font-weight: 580;
+  font-size: 1rem;
+}
+
+.nav-items > li:hover {
+  transition: color 0.3s;
+  color: black;
+  cursor: pointer;
+}
+.nav-items:last-child {
+  border-bottom: 0;
+}
+.TogglerOpened .nav-menu {
+  opacity: 1;
+  outline: 0;
+  border: 0;
+  box-shadow: 0 0 0 1px lightgray;
+}
+
+.TogglerOpened .nav-items {
+  max-height: 100vh;
+  transition: max-height 0.3s;
+}
+a.login-li {
+  color: black !important;
+  text-decoration: none !important;
+}
+a {
+  text-decoration: none !important;
+
+  color: var(--btnBackground);
+}
+
+.nav-li:hover {
+  color: #dc4d40 !important;
+}
+@media screen and (min-width: 873px) {
+  .nav-li {
+    color: black;
+  }
+  .nav-items {
+    background-color: transparent;
+  }
+  .signup-li {
+    color: var(--btnBackground);
+  }
+  .nav-btn.signup:hover {
+    color: black !important;
+  }
+  li {
+    color: black;
+    background-color: transparent;
+  }
+  button.nav-btn.signup:hover {
+    /* background-color: var(--btnBackground) !important;
+    color: black !important; */
+  }
+  a > li {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font-weight: 800;
+  }
+  /* .nav-items > li:hover {
+    color: rgb(255, 173, 0);
+  } */
+  .nav {
+    flex-wrap: nowrap;
+  }
+  .nav-items {
+    max-height: 100vh;
+  }
+  .nav-menu {
+    display: none;
+  }
+  .nav-items {
+    width: auto;
+    display: flex;
+    align-items: center;
+  }
+  .nav-items > li {
+    margin: 0;
+    padding-top: 0;
+    font-family: Inter;
+    padding-bottom: 0;
+    padding-right: 0.6rem;
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    border: 0;
+  }
+
+  .nav-btn {
+    letter-spacing: 0.5px;
+
+    font-weight: bold;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+  }
+  .login {
+    background-color: var(--btnBackground);
+    margin-right: 1.5rem;
+    margin-left: 0.5rem;
+    width: 15rem;
+    height: 3rem;
+    color: black;
+  }
+
+  .signup {
+    width: 7.5rem;
+    height: 3rem;
+    margin-right: 1.5rem;
+    border: 0;
+    border: 1px solid #ffad00;
+    background-color: #1e1e1e;
+  }
+
+  .signup:hover {
+    text-decoration: none;
+  }
+  .signup-li.nav-btn:hover {
+    /* background-color: rgba(255, 173, 0.4);
+    color: var(--bgColor) !important; */
+  }
+}
+
+/* Hero Componenet */
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@600&display=swap");
+
+.hero-container {
+  height: 39rem;
+  overflow: hidden;
+}
+
+.tagline {
+  margin: 0;
+  padding-left: 45rem;
+}
+
+.discription {
+  text-align: center;
+}
+.discription-2 {
+  text-align: center;
+}
+.tag-msg {
+  margin: 0;
+  text-align: center;
+  padding-top: 11rem;
+  color: #fff;
+  font-size: 1.5rem;
+  font-family: "Rubik", sans-serif;
+}
+.discription {
+  margin-left: 3rem;
+  margin-top: 2rem;
+  color: #c0c0c1;
+  font-weight: 550;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-right: 2rem;
+}
+.discription-2 {
+  text-align: center;
+  color: #c0c0c1;
+  font-weight: 550;
+  font-size: 1.2rem;
+}
+
+.hero-img {
+  height: 34rem;
+  width: 100%;
+  margin-left: 1rem;
+  margin-top: -20rem;
+}
+.discription-2 {
+  margin-top: -1rem;
+}
+@media screen and (min-width: 768px) {
+  .tag-msg {
+    font-size: 3rem;
+  }
+  .nav-logo {
+    height: 4.8rem;
+  }
+}
+
+.signup-form {
+  margin-top: 0;
+  height: 100vh;
+  background-color: #eaeef3;
+}
+
+.txt1 {
+  margin-left: 2rem;
+}
+
+.login-card {
+  width: 45rem;
+  height: 30rem;
+  margin: 0 auto;
+  padding-top: 3rem;
+  padding-left: 3rem;
+}
+
+.signup-form {
+  padding-top: 5rem;
+}
+
+.signup-title {
+  text-align: center;
+
+  margin-top: -2rem;
+  margin-bottom: 3rem;
+}
+
+.signUp-container {
+  padding-top: 5rem;
+  background: url("../../Images/bg1.png");
+
+  object-fit: cover;
+  overflow: hidden;
+  background-color: var(--bgColor);
+
+  height: 100vh;
+}
+
+.signup-page {
+  background: url("../../Images/bg1.png");
+  object-fit: cover;
+  height: 100vh;
+  background-color: var(--bgColor);
+  background-position: center;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.txt {
+  display: flex;
+  justify-content: center;
+}
+
+li {
+  font-weight: 800;
+}
+
+h1.sign-up-header-text {
+  font-weight: 700;
+}

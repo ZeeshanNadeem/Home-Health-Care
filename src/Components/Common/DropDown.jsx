@@ -5,10 +5,11 @@ const DropDown = ({ label, opt1, opt2, opt3, opt4, opt5 }) => {
     <article>
       <select
         id=""
-        className="form-select dropdown"
+        className={`form-select dropdown`}
         aria-label="Default select example"
+        defaultValue={label}
       >
-        <option value="" selected disabled>
+        <option value="" disabled>
           {label}
         </option>
         <option value="1">{opt1}</option>

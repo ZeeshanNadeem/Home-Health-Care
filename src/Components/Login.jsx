@@ -1,14 +1,18 @@
 import React from "react";
 import Form from "./Common/Form";
-
+import "animate.css";
+import NavBar from "./NavBar";
 class Login extends Form {
   render() {
     return (
       <React.Fragment>
+        <NavBar />
         <article className="signup-page">
-          <main className="card-signup card-style">
+          <main className="card-signup card-style animate__animated animate__fadeInLeft">
             <header>
-              <h1 className="sign-up-header-text">Login</h1>
+              <h1 className="sign-up-header-text animate__animated animate__zoomIn">
+                Login
+              </h1>
             </header>
             <article>{this.renderLabel("Email", "loginEmail")}</article>
 
@@ -22,8 +26,8 @@ class Login extends Form {
             {this.renderCheckBox(
               "chkbox",
               "chkbox",
-              "rememberMeChkBox",
-              "Remember me"
+              "addCheckBox",
+              "Only Once"
             )}
             {this.renderBtn("Login")}
           </main>

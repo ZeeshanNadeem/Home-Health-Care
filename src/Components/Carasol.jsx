@@ -1,38 +1,133 @@
 import React from "react";
-import hero from "../Images/hero.jpg";
-import a from "../Images/a.jpg";
-import b from "../Images/b.jpg";
-import mos from "../Images/mos.jpg";
-import { Carousel } from "bootstrap";
+
+import { Carousel } from "react-bootstrap";
+
+import img1 from "../Images/img1.jpg";
+
+import img3 from "../Images/img3.jpg";
+import img4 from "../Images/img4.jpg";
+import img5 from "../Images/img5.jpg";
+import img9 from "../Images/img5.jpg";
+
+import img10 from "../Images/img10.jpg";
 
 const Carasol = () => {
   return (
     <Carousel>
       <Carousel.Item>
-        <img className="d-block w-100" src={a} alt="First slide" />
-        <Carousel.Caption>
-          <h3>First slide label</h3>
-          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-        </Carousel.Caption>
+        <img
+          style={{ height: "37rem" }}
+          className="d-block w-100 carasol-img"
+          src={img1}
+          alt="First slide"
+        />
       </Carousel.Item>
-      <Carousel.Item>
-        <img className="d-block w-100" src={b} alt="Second slide" />
 
-        <Carousel.Caption>
-          <h3>Second slide label</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-        </Carousel.Caption>
-      </Carousel.Item>
       <Carousel.Item>
-        <img className="d-block w-100" src={mos} alt="Third slide" />
-
-        <Carousel.Caption>
-          <h3>Third slide label</h3>
-          <p>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-          </p>
-        </Carousel.Caption>
+        <img
+          style={{ height: "37rem" }}
+          className="d-block w-100 carasol-img"
+          src={img3}
+          alt="First slide"
+        />
       </Carousel.Item>
+
+      <Carousel.Item>
+        <img
+          style={{ height: "37rem" }}
+          className="d-block w-100 carasol-img"
+          src={img9}
+          alt="First slide"
+        />
+      </Carousel.Item>
+
+      <Carousel.Item>
+        <img
+          style={{ height: "37rem" }}
+          className="d-block w-100 carasol-img"
+          src={img4}
+          alt="First slide"
+        />
+      </Carousel.Item>
+
+      <Carousel.Item>
+        <img
+          style={{ height: "37rem" }}
+          className="d-block w-100 carasol-img"
+          src={img5}
+          alt="First slide"
+        />
+      </Carousel.Item>
+
+      {/* <Carousel.Item>
+        <img
+          style={{ height: "37rem" }}
+          className="d-block w-100 carasol-img"
+          src={img6}
+          alt="First slide"
+        />
+      </Carousel.Item> */}
+
+      <Carousel.Item>
+        <img
+          style={{ height: "37rem" }}
+          className="d-block w-100 carasol-img"
+          src={img10}
+          alt="First slide"
+        />
+      </Carousel.Item>
+      {/* <Carousel.Item>
+        <img
+          style={{ height: "37rem" }}
+          className="d-block w-100"
+          src={nurse4}
+          alt="First slide"
+        /> */}
+      {/* <Carousel.Caption>
+          <h3 style={{ color: "#333" }}>Home Heath Care Nurses & Doctors</h3>
+          <p style={{ color: "#333" }}>Will take care of you</p>
+        </Carousel.Caption> */}
+      {/* </Carousel.Item> */}
+
+      {/* <Carousel.Item>
+        <img
+          style={{ height: "37rem" }}
+          className="d-block w-100"
+          src={nurse5}
+          alt="First slide"
+        /> */}
+      {/* <Carousel.Caption>
+          <h3 style={{ color: "#333" }}>Home Heath Care Nurses & Doctors</h3>
+          <p style={{ color: "#333" }}>Will take care of you</p>
+        </Carousel.Caption> */}
+      {/* </Carousel.Item> */}
+
+      {/* <Carousel.Item>
+        <img
+          style={{ height: "37rem" }}
+          className="d-block w-100"
+          src={nurse1}
+          alt="Second slide"
+        /> */}
+
+      {/* <Carousel.Caption>
+          <h3 style={{ color: "#333" }}>Home Heath Care Nurses & Doctors</h3>
+          <p style={{ color: "#333" }}>Will take care of you</p>
+        </Carousel.Caption> */}
+      {/* </Carousel.Item> */}
+      {/* <Carousel.Item>
+        <img
+          style={{ height: "37rem" }}
+          className="d-block w-100"
+          src={nurse7}
+          alt="Third slide"
+        /> */}
+
+      {/* <Carousel.Caption>
+          <h3 style={{ color: "#333" }}>Home Heath Care Nurses & Doctors</h3>
+          <p style={{ color: "#333" }}>Will take care of you</p>
+        </Carousel.Caption> */}
+      {/* </Carousel.Item> */}
     </Carousel>
   );
 };

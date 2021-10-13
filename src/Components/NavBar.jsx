@@ -2,6 +2,7 @@ import menu from "../Icons/menu.svg";
 import logo from "../Icons/logo.svg";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import IndexDropdown from "./IndexDropdown";
 
 class NavBar extends Component {
   state = {
@@ -16,7 +17,11 @@ class NavBar extends Component {
     const { openToggler } = this.state;
     return (
       <nav className={`nav ${openToggler}`}>
-        <img className="nav-logo" src={logo} alt="home health care logo" />
+        <img
+          className="nav-logo animate__heartBeat"
+          src={logo}
+          alt="home health care logo"
+        />
 
         <img
           className="nav-menu"
@@ -27,14 +32,17 @@ class NavBar extends Component {
 
         <ul className="nav-items">
           <Link to="/">
-            <li>Home</li>
+            <li className="nav-li">Home</li>
           </Link>
-          <li>Registered Organizations</li>
-          <li>About Us</li>
-          <li>Contact Us</li>
+
+          {/* <li className="nav-li">Registered Organizations</li> */}
+          <IndexDropdown />
+
+          <li className="nav-li">About Us</li>
+          <li className="nav-li">Contact Us</li>
           {openToggler ? (
             <Link to="/Login">
-              <li>Login</li>
+              <li className="nav-li">Login</li>
             </Link>
           ) : (
             <button className="nav-btn login">
@@ -45,7 +53,7 @@ class NavBar extends Component {
           )}
           {openToggler ? (
             <Link to="/Signup">
-              <li>Sign Up</li>
+              <li className="nav-li">Sign Up</li>
             </Link>
           ) : (
             <button className="nav-btn signup">
