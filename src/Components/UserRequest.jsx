@@ -1,20 +1,35 @@
 import React from "react";
 import Form from "./Common/Form";
 class UserRequest extends Form {
+  state = {
+    serviceFor: [
+      "Nursing Care",
+      "Doctor Care",
+      "Physical Therapy",
+      "Vaccination",
+      "Urine Sample",
+    ],
+  };
   render() {
+    const { serviceFor } = this.state;
     return (
       <div className="doc-container">
-        <div className="card-signup doc-form">
+        <div className="card-signup doc-form style-User-Request">
           <header>
             <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
-              Get A Service
+              Schedule A Service
             </h1>
           </header>
+
+          <article>{this.renderLabel("Service For", "serviceFor")}</article>
+          <article>
+            {this.renderDropDown("service For", serviceFor, "serviceFor")}
+          </article>
 
           <article>{this.renderLabel("Schedule", "schedule")}</article>
           <article>
             {this.renderInput(
-              "date",
+              "datetime-local",
               "schedule",
               "schedule",
               "Schedule a Meeting"

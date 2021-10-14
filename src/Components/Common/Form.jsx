@@ -31,19 +31,9 @@ class Form extends React.Component {
     return <button className="btns">{label}</button>;
   };
 
-  renderDropDown = (
-    label,
-    opt1,
-    opt2,
-    opt3,
-    opt4,
-    opt5,
-    id,
-    placeholder = ""
-  ) => {
+  renderDropDown = (label, optionsArray, id) => {
     return (
       <select
-        placeholder={placeholder}
         id={id}
         className="form-select dropdown"
         aria-label="Default select example"
@@ -51,11 +41,9 @@ class Form extends React.Component {
         <option selected disabled>
           {label}
         </option>
-        <option value="1">{opt1}</option>
-        <option value="2">{opt2}</option>
-        <option value="3">{opt3}</option>
-        <option value="4">{opt4}</option>
-        <option value="5">{opt5}</option>
+        {optionsArray.map((option) => (
+          <option value={option}>{option}</option>
+        ))}
       </select>
     );
   };

@@ -38,3 +38,49 @@
   justify-content: end;
   margin-right: 4.5rem;
 }
+
+.style-User-Request {
+  height: 41rem;
+}
+
+/* EditService */
+.icon-name {
+  display: flex;
+}
+
+.name {
+  /* margin-top: 0.5rem; */
+  color: #bd1616;
+  font-weight: 600;
+}
+.icon-doc {
+  margin-right: 1rem;
+}
+
+.doc-table {
+  margin-top: 10rem;
+}
+
+.doc-table-container {
+  background-color: #fff;
+  border-radius: 10px;
+  margin-left: 15rem;
+  margin-right: 1rem;
+
+  box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.1);
+}
+
+.table-th {
+  background-color: #172774;
+  color: #fff;
+  border-radius: 15px;
+  height: 4rem;
+}
+
+.MuiAvatar-root.MuiAvatar-circular.MuiAvatar-colorDefault {
+  background-color: steelblue;
+}
+
+button.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButtonBase-root.css-sghohy-MuiButtonBase-root-MuiButton-root {
+  background-color: #bd1616;
+}

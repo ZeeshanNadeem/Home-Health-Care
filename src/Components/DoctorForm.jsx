@@ -1,7 +1,11 @@
 import Form from "./Common/Form";
 import React from "react";
 class DoctorForm extends Form {
+  state = {
+    qualifictionOptions: ["MBBS", "BDS", "BMBS", "BM", "MBChB"],
+  };
   render() {
+    const { qualifictionOptions } = this.state;
     return (
       <div className="doc-container">
         <div className="card-signup doc-form">
@@ -24,11 +28,8 @@ class DoctorForm extends Form {
           <article>
             {this.renderDropDown(
               "Qualification",
-              "MBBS",
-              "BDS",
-              "BMBS",
-              "BM",
-              "MBChB"
+              qualifictionOptions,
+              "docQualification"
             )}
           </article>
           <article>{this.renderLabel("Email Address", "email")}</article>

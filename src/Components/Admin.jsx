@@ -8,6 +8,7 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { faUserTie } from "@fortawesome/free-solid-svg-icons";
+import EditService from "./EditService";
 import AddService from "./AddService";
 import NurseForm from "./NurseForm";
 import "animate.css";
@@ -53,7 +54,7 @@ const Admin = () => {
             <FontAwesomeIcon icon={faTrash} style={{ marginRight: "0.6rem" }} />
             Delete Service
           </li>
-          <li>
+          <li onClick={() => DoctorDetailsHandler("AssignDuty")}>
             <FontAwesomeIcon
               icon={faUserTie}
               style={{ marginRight: "0.6rem" }}
@@ -68,7 +69,8 @@ const Admin = () => {
       </article>
       {(showDocDetials === "docDetails" && <DoctorForm />) ||
         (showDocDetials === "nurseDetails" && <NurseForm />) ||
-        (showDocDetials === "addService" && <AddService />)}
+        (showDocDetials === "addService" && <AddService />) ||
+        (showDocDetials === "AssignDuty" && <EditService />)}
     </article>
   );
 };
