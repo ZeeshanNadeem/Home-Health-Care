@@ -46,7 +46,7 @@ class PopOverTable extends Form {
                     <article className="icon-doc">
                       <Avatar alt="Zeeshan" src="." className="avatar" />
                     </article>
-                    <article className="name">Neymar</article>
+                    <article className="name">Eric Haland</article>
                   </td>
                   <td className="td">MBBS</td>
                   <td>+9928261111</td>
@@ -106,7 +106,7 @@ class PopOverTable extends Form {
                     <article className="icon-doc">
                       <Avatar alt="Umer" src="." />
                     </article>
-                    <article className="name">Ronaldo</article>
+                    <article className="name">Sergio Ramous</article>
                   </td>
                   <td>MBBS</td>
                   <td>+9928261111</td>
