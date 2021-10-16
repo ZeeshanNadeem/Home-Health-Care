@@ -58,15 +58,22 @@
 }
 
 .doc-table {
-  margin-top: 10rem;
+  margin-bottom: 0;
 }
-
+.table-container {
+  width: 180%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .doc-table-container {
   background-color: #fff;
   border-radius: 10px;
-  margin-left: 15rem;
-  margin-right: 1rem;
-
+  /* margin-left: 18rem;
+  margin-right: 10rem; */
+  padding: 1.5rem;
+  /* padding-right: 0.9rem; */
   box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -83,4 +90,48 @@
 
 button.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButtonBase-root.css-sghohy-MuiButtonBase-root-MuiButton-root {
   background-color: #bd1616;
+}
+
+/* EditService */
+
+.editService-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Admin panel side bar */
+.li-add-doc {
+  margin-top: 3rem;
+}
+
+/* PopOver-dropDown */
+.popOver-dropDown {
+  margin-bottom: 0.4rem;
+}
+
+.search-by {
+  margin-left: 1rem;
+  font-weight: 600;
+  margin-top: 0.4rem;
+}
+
+/* table */
+table.table.doc-table {
+  margin-bottom: 0;
+}
+
+/* Admin Nav */
+
+.admin-nav {
+  height: 4.5rem;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  background-color: #082032;
+}
+
+.style-avatar {
 }

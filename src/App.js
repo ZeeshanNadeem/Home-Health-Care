@@ -8,8 +8,9 @@ import SignUpNew from "./Components/SignUpNew";
 import Home from "./Components/Home";
 
 import Admin from "./Components/Admin";
-import EditService from "./Components/EditService";
+
 import UserRequest from "./Components/UserRequest";
+import AdminNav from "./Components/AdminNav";
 function App() {
   return (
     <article>
