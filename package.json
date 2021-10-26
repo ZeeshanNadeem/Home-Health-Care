@@ -25,6 +25,7 @@
     "@testing-library/user-event": "^12.8.3",
     "and": "^0.0.3",
     "animate.css": "^4.1.1",
+    "axios": "^0.24.0",
     "bootstrap": "^5.1.1",
     "bootstrap-slider": "^11.0.2",
     "chartjs-adapter-date-fns": "^1.1.0-beta.1",

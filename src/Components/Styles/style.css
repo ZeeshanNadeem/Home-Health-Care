@@ -185,12 +185,15 @@ a.text-sm.py-2.px-4.font-normal.block.w-full.whitespace-nowrap.bg-transparent.te
   /* display: inline; */
   display: inline-block;
   background-color: #082032;
-  height: 100vh;
+  /* height: 100vh; */
   overflow: hidden;
   border-top: 1px solid rgb(145, 140, 164, 0.4);
   z-index: 999999999999;
 }
-
+.doc-form-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+}
 .menu-items {
   padding: 0;
   margin: 0;
@@ -219,6 +222,8 @@ a.text-sm.py-2.px-4.font-normal.block.w-full.whitespace-nowrap.bg-transparent.te
 /* Add a Doctor Form */
 .admin-container {
   display: flex;
+
+  /* align-items: center; */
   flex-wrap: wrap;
 }
 
@@ -233,9 +238,11 @@ a.text-sm.py-2.px-4.font-normal.block.w-full.whitespace-nowrap.bg-transparent.te
 }
 
 .doc-container {
-  margin-left: auto;
+  /* margin-left: auto;
   margin-right: auto;
-  /* height: 100vh; */
+  height: 100vh; */
+  overflow: hidden;
+  flex-wrap: wrap;
 }
 
 .doc-header {
@@ -250,8 +257,7 @@ a.text-sm.py-2.px-4.font-normal.block.w-full.whitespace-nowrap.bg-transparent.te
 article.admin-container {
   /* background: url("./Images/na3.jpg"); */
 
-  object-fit: cover;
-  height: 100vh;
+  /* height: 100vh; */
 
   background-position: center;
   background-size: cover;
@@ -264,16 +270,35 @@ h2.menu-title {
 h1.sign-up-header-text.doc-header {
   font-size: 2.7rem;
 }
+.doc-container {
+  margin-left: auto;
+  margin-right: auto;
+}
 
-@media screen and (min-width: 200px) and (max-width: 399px) {
+@media screen and (min-width: 200px) and (max-width: 610px) {
+  h2.menu-title {
+    padding: 0;
+
+    font-size: 2rem;
+  }
   .card-signup {
-    height: 42rem;
+  }
+  .menuBar-container {
+    width: 100vh;
+    text-align: center;
+  }
+  button.btns {
+    margin-top: 1rem;
   }
 }
 
 @media screen and (min-width: 900px) {
   .card-signup {
-    width: 50rem;
+    width: 33rem;
+  }
+  .menuBar-container {
+    height: 100vh;
+    overflow: hidden;
   }
 }
 

@@ -13,8 +13,8 @@ class Form extends React.Component {
     );
   };
 
-  renderLabel = (labelName, HtmlFor) => {
-    return <label forHtml={HtmlFor}>{labelName}</label>;
+  renderLabel = (labelName, ForHtml) => {
+    return <label htmlFor={ForHtml}>{labelName}</label>;
   };
   renderCheckBox = (id, name, value, msg) => {
     return (
