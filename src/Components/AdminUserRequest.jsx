@@ -1,11 +1,8 @@
 import React from "react";
 import { Avatar } from "@material-ui/core";
-import Paper from "@mui/material/Paper";
-import TableContainer from "@mui/material/TableContainer";
-import { Typography } from "@mui/material";
 
 import Popover from "@mui/material/Popover";
-import AssignDuty from "./AssignDuty";
+
 import PopOverTable from "./PopOverTable";
 import { faUserTie } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

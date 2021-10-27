@@ -226,7 +226,9 @@ a.text-sm.py-2.px-4.font-normal.block.w-full.whitespace-nowrap.bg-transparent.te
   /* align-items: center; */
   flex-wrap: wrap;
 }
-
+input#dob {
+  text-indent: 0.34 rem;
+}
 .doc > p {
   border: 2px solid black;
   /* height: 100vh; */

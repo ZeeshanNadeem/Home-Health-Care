@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import DoctorForm from "./DoctorForm";
-import SignUp from "./SignUpNew";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
-import { faUserTie } from "@fortawesome/free-solid-svg-icons";
+
 import EditService from "./EditService";
 import AdminUserRequest from "./AdminUserRequest";
 import AssignDuty from "./AssignDuty";

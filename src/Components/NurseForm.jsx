@@ -3,6 +3,13 @@ import Form from "./Common/Form";
 
 class NurseForm extends Form {
   state = {
+    doctorForm: {
+      fullname: "",
+      dateOfBirth: "",
+      qualification: "",
+      email: "",
+      phoneNo: "",
+    },
     qualifictionOptions: ["MBBS", "BDS", "BMBS", "BM", "MBChB"],
   };
   render() {

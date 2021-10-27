@@ -1,13 +1,47 @@
 import Form from "./Common/Form";
+
 import React from "react";
+import axios from "axios";
 class DoctorForm extends Form {
   state = {
-    qualifictionOptions: ["MBBS", "BDS", "BMBS", "BM", "MBChB"],
+    doctorForm: {
+      fullname: "",
+      dateOfBirth: "",
+      qualification: "",
+      email: "",
+      phoneNo: "",
+    },
+    qualification: [],
+    // qualifictionOptions: ["MBBS", "BDS", "BMBS", "BM", "MBChB"],
   };
+
+  async componentDidMount() {
+    const { data: qualification } = await axios.get(
+      "http://localhost:3000/api/services"
+    );
+    this.setState({ qualification });
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    //call the server
+    // const { doctorForm } = this.state;
+    // const obj = { title: "zeeshan", body: "ahha" };
+    // const { data: post } = await http.post(
+    //   "http://localhost:3000/api/services",
+    //   doctorForm
+    // );
+
+    // const posts = [post, ...this.state.posts];
+    // this.setState({ posts });
+
+    console.log("Submitted");
+  };
+
   render() {
-    const { qualifictionOptions } = this.state;
+    const { qualification } = this.state;
     return (
-      <form action="" className="doc-form-wrapper">
+      <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
         <div className="doc-container">
           <div className="card-signup doc-form">
             <header>
@@ -21,7 +55,7 @@ class DoctorForm extends Form {
             </article>
             <article>{this.renderLabel("Date of Birth", "dob")}</article>
             <article>
-              {this.renderInput("date", "dob", "dob", "Date Of Birth")}
+              {this.renderInput("date", "dob", "dateOfBirth", "Date Of Birth")}
             </article>
             <article>
               {this.renderLabel("Qualification", "qualification")}
@@ -29,8 +63,9 @@ class DoctorForm extends Form {
             <article>
               {this.renderDropDown(
                 "Qualification",
-                qualifictionOptions,
-                "docQualification"
+                qualification,
+                "docQualification",
+                "qualification"
               )}
             </article>
             <article>{this.renderLabel("Email Address", "email")}</article>
@@ -39,7 +74,7 @@ class DoctorForm extends Form {
             </article>
             <article>{this.renderLabel("Phone No", "phoneno")}</article>
             <article>
-              {this.renderInput("number", "phoneno", "phoneno", "Phone No")}
+              {this.renderInput("number", "phoneno", "phoneNo", "Phone No")}
             </article>
             {this.renderBtn("Save Doctor")}
           </div>

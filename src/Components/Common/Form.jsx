@@ -1,14 +1,33 @@
 import React from "react";
 
 class Form extends React.Component {
+  state = {
+    doctorForm: {
+      fullname: "",
+      dateOfBirth: "",
+      qualification: "",
+      email: "",
+      phoneNo: "",
+    },
+  };
+  handleChange = ({ currentTarget: input }) => {
+    console.log("ON CHANGE");
+    const doctorForm = { ...this.state.doctorForm };
+    doctorForm[input.name] = input.value;
+    console.log(doctorForm);
+    this.setState({ doctorForm });
+  };
   renderInput = (type, id, name, placeholder = "") => {
+    const { doctorForm } = this.state;
     return (
       <input
+        name={name}
+        value={doctorForm[name]}
         placeholder={placeholder}
         className="input"
         type={type}
         id={id}
-        name={name}
+        onChange={this.handleChange}
       />
     );
   };
@@ -31,18 +50,17 @@ class Form extends React.Component {
     return <button className="btns">{label}</button>;
   };
 
-  renderDropDown = (label, optionsArray, id) => {
+  renderDropDown = (label, optionsArray, id, name) => {
+    const { doctorForm } = this.state;
     return (
       <select
+        value={doctorForm[name]}
         id={id}
         className="form-select dropdown"
         aria-label="Default select example"
       >
-        <option selected disabled>
-          {label}
-        </option>
         {optionsArray.map((option) => (
-          <option value={option}>{option}</option>
+          <option value={option._id}>{option.name}</option>
         ))}
       </select>
     );
