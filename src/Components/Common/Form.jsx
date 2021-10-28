@@ -1,5 +1,6 @@
 import React from "react";
-
+import { Alert } from "@mui/material";
+import Joi from "joi-browser";
 class Form extends React.Component {
   state = {
     doctorForm: {
@@ -9,26 +10,72 @@ class Form extends React.Component {
       email: "",
       phoneNo: "",
     },
+    errors: {},
   };
+
+  validateProperty = ({ value, name }) => {
+    let dataProperty = { [name]: value };
+    let subSchema = { [name]: this.schema[name] };
+    let errors = {};
+    const { error } = Joi.validate(dataProperty, subSchema);
+
+    if (error) {
+      errors[error.details[0].path[0]] = error.details[0].message;
+    }
+    return Object.keys(errors).length === 0 ? null : errors;
+  };
+  validate = () => {
+    const { error } = Joi.validate(this.state.doctorForm, this.schema, {
+      abortEarly: false,
+    });
+    if (!error) return null;
+    let errors = {};
+    if (error) {
+      for (let item of error.details) {
+        errors[item.path] = item.message;
+      }
+    }
+
+    return Object.keys(errors).length === 0 ? null : errors;
+  };
+
   handleChange = ({ currentTarget: input }) => {
-    console.log("ON CHANGE");
+    const errorMessage = this.validateProperty(input);
+    const errors = { ...this.state.errors };
+    if (errorMessage) errors[input.name] = errorMessage;
+    else delete errors[input.name];
+
     const doctorForm = { ...this.state.doctorForm };
     doctorForm[input.name] = input.value;
-    console.log(doctorForm);
-    this.setState({ doctorForm });
+
+    this.setState({ doctorForm, errors });
   };
   renderInput = (type, id, name, placeholder = "") => {
-    const { doctorForm } = this.state;
+    const { doctorForm, errors } = this.state;
     return (
-      <input
-        name={name}
-        value={doctorForm[name]}
-        placeholder={placeholder}
-        className="input"
-        type={type}
-        id={id}
-        onChange={this.handleChange}
-      />
+      <article>
+        <input
+          name={name}
+          value={doctorForm[name]}
+          placeholder={placeholder}
+          className="input"
+          type={type}
+          id={id}
+          onChange={this.handleChange}
+        />
+        {/* {errors && (
+          <Alert variant="filled" severity="error">
+            {errors[name]}
+          </Alert>
+        )} */}
+        {/* {errors && (
+          <div>
+            <Alert variant="filled" severity="error">
+              {errors[name]}
+            </Alert>
+          </div>
+        )} */}
+      </article>
     );
   };
 

@@ -2,6 +2,7 @@ import Form from "./Common/Form";
 
 import React from "react";
 import axios from "axios";
+import Joi from "joi-browser";
 class DoctorForm extends Form {
   state = {
     doctorForm: {
@@ -12,9 +13,15 @@ class DoctorForm extends Form {
       phoneNo: "",
     },
     qualification: [],
-    // qualifictionOptions: ["MBBS", "BDS", "BMBS", "BM", "MBChB"],
   };
 
+  schema = {
+    fullname: Joi.string().required(),
+    dateOfBirth: Joi.string().required(),
+    qualification: Joi.string().required(),
+    email: Joi.string().required(),
+    phoneNo: Joi.number().required(),
+  };
   async componentDidMount() {
     const { data: qualification } = await axios.get(
       "http://localhost:3000/api/services"
@@ -24,6 +31,7 @@ class DoctorForm extends Form {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    const errors = this.validate();
     //call the server
     // const { doctorForm } = this.state;
     // const obj = { title: "zeeshan", body: "ahha" };
@@ -39,7 +47,7 @@ class DoctorForm extends Form {
   };
 
   render() {
-    const { qualification } = this.state;
+    const { qualification, errors } = this.state;
     return (
       <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
         <div className="doc-container">
