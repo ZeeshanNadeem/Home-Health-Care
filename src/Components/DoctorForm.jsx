@@ -16,15 +16,15 @@ class DoctorForm extends Form {
   };
 
   schema = {
-    fullname: Joi.string().required(),
-    dateOfBirth: Joi.string().required(),
+    fullname: Joi.string().required().label("Full Name"),
+    dateOfBirth: Joi.string().required().label("Date of Birth"),
     qualification: Joi.string().required(),
-    email: Joi.string().required(),
-    phoneNo: Joi.number().required(),
+    email: Joi.string().required().label("Email"),
+    phoneNo: Joi.number().required().label("Phone No"),
   };
   async componentDidMount() {
     const { data: qualification } = await axios.get(
-      "http://localhost:3000/api/services"
+      "http://localhost:3000/api/qualification"
     );
     this.setState({ qualification });
   }
@@ -32,6 +32,7 @@ class DoctorForm extends Form {
   handleSubmit = (e) => {
     e.preventDefault();
     const errors = this.validate();
+    this.setState({ errors: errors || {} });
     //call the server
     // const { doctorForm } = this.state;
     // const obj = { title: "zeeshan", body: "ahha" };
@@ -47,7 +48,7 @@ class DoctorForm extends Form {
   };
 
   render() {
-    const { qualification, errors } = this.state;
+    const { qualification } = this.state;
     return (
       <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
         <div className="doc-container">

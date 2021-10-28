@@ -19,10 +19,11 @@ class Form extends React.Component {
     let errors = {};
     const { error } = Joi.validate(dataProperty, subSchema);
 
-    if (error) {
-      errors[error.details[0].path[0]] = error.details[0].message;
-    }
-    return Object.keys(errors).length === 0 ? null : errors;
+    return error ? error.details[0].message : null;
+    // if (error) {
+    //   errors[error.details[0].path[0]] = error.details[0].message;
+    // }
+    // return Object.keys(errors).length === 0 ? null : errors;
   };
   validate = () => {
     const { error } = Joi.validate(this.state.doctorForm, this.schema, {
@@ -52,6 +53,7 @@ class Form extends React.Component {
   };
   renderInput = (type, id, name, placeholder = "") => {
     const { doctorForm, errors } = this.state;
+
     return (
       <article>
         <input
@@ -63,18 +65,7 @@ class Form extends React.Component {
           id={id}
           onChange={this.handleChange}
         />
-        {/* {errors && (
-          <Alert variant="filled" severity="error">
-            {errors[name]}
-          </Alert>
-        )} */}
-        {/* {errors && (
-          <div>
-            <Alert variant="filled" severity="error">
-              {errors[name]}
-            </Alert>
-          </div>
-        )} */}
+        {errors && errors[name] && <p className="error">{errors[name]}</p>}
       </article>
     );
   };

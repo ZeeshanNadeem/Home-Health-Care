@@ -11,14 +11,16 @@
   background-color: hsl(214, 31%, 91%);
 
   max-width: 35rem;
+  padding-bottom: 1rem;
+  /* height: 39rem; */
 
-  height: 39rem;
   padding-left: 3rem;
   padding-right: 3rem;
-  padding-top: 2rem;
+  padding-top: 1.3rem;
   z-index: 9999999999999999999999;
   border-radius: 8px;
   margin-top: -2.5rem;
+  padding-bottom: 1.3rem;
 }
 
 .input {
@@ -42,7 +44,7 @@ label {
 .btns {
   background-color: #232a34;
   width: 100%;
-  margin-top: 2rem;
+
   color: #fff;
   text-transform: uppercase;
   height: 2.5rem;
@@ -50,7 +52,7 @@ label {
   letter-spacing: 1.5px;
   border: 0;
   border-radius: 3px;
-  margin-top: 2.4rem;
+  margin-top: 1.5rem;
 }
 
 .signup-page {

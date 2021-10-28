@@ -133,5 +133,12 @@ table.table.doc-table {
   background-color: #082032;
 }
 
-.style-avatar {
+/* froms error */
+
+.error {
+  font-size: 0.85rem;
+  color: #ff0000;
+  font-weight: 600;
+  margin: 0;
+  margin-top: -0.4rem;
 }
