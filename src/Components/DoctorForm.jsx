@@ -3,6 +3,8 @@ import Form from "./Common/Form";
 import React from "react";
 import axios from "axios";
 import Joi from "joi-browser";
+import Alert from "@material-ui/lab/Alert";
+
 class DoctorForm extends Form {
   state = {
     doctorForm: {
@@ -13,12 +15,13 @@ class DoctorForm extends Form {
       phoneNo: "",
     },
     qualification: [],
+    successMessage: "",
   };
 
   schema = {
     fullname: Joi.string().required().label("Full Name"),
     dateOfBirth: Joi.string().required().label("Date of Birth"),
-    qualification: Joi.string().required(),
+    qualification: Joi.string().required().label("Qualification"),
     email: Joi.string().required().label("Email"),
     phoneNo: Joi.number().required().label("Phone No"),
   };
@@ -26,32 +29,38 @@ class DoctorForm extends Form {
     const { data: qualification } = await axios.get(
       "http://localhost:3000/api/qualification"
     );
+
     this.setState({ qualification });
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
     const errors = this.validate();
     this.setState({ errors: errors || {} });
     //call the server
-    // const { doctorForm } = this.state;
-    // const obj = { title: "zeeshan", body: "ahha" };
-    // const { data: post } = await http.post(
-    //   "http://localhost:3000/api/services",
-    //   doctorForm
-    // );
-
-    // const posts = [post, ...this.state.posts];
-    // this.setState({ posts });
-
-    console.log("Submitted");
+    if (!errors) {
+      const { doctorForm } = this.state;
+      const doctorToPost = {
+        fullName: doctorForm.fullname,
+        dateOfBirth: doctorForm.dateOfBirth,
+        qualificationID: doctorForm.qualification,
+        email: doctorForm.email,
+        phone: doctorForm.phoneNo,
+      };
+      const { data: doctorPosted } = await axios.post(
+        "http://localhost:3000/api/doctors",
+        doctorToPost
+      );
+      this.setState({ successMessage: "Doctor has been saved" });
+    }
   };
 
   render() {
-    const { qualification } = this.state;
+    const { qualification, successMessage } = this.state;
     return (
       <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
         <div className="doc-container">
+          {successMessage && <Alert severity="success">{successMessage}</Alert>}
           <div className="card-signup doc-form">
             <header>
               <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">

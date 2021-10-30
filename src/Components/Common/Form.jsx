@@ -9,6 +9,9 @@ class Form extends React.Component {
       qualification: "",
       email: "",
       phoneNo: "",
+      serviceName: "",
+      serviceOrgranization: "",
+      servicePrice: "",
     },
     errors: {},
   };
@@ -20,11 +23,8 @@ class Form extends React.Component {
     const { error } = Joi.validate(dataProperty, subSchema);
 
     return error ? error.details[0].message : null;
-    // if (error) {
-    //   errors[error.details[0].path[0]] = error.details[0].message;
-    // }
-    // return Object.keys(errors).length === 0 ? null : errors;
   };
+
   validate = () => {
     const { error } = Joi.validate(this.state.doctorForm, this.schema, {
       abortEarly: false,
@@ -89,18 +89,26 @@ class Form extends React.Component {
   };
 
   renderDropDown = (label, optionsArray, id, name) => {
-    const { doctorForm } = this.state;
+    const { doctorForm, errors } = this.state;
     return (
-      <select
-        value={doctorForm[name]}
-        id={id}
-        className="form-select dropdown"
-        aria-label="Default select example"
-      >
-        {optionsArray.map((option) => (
-          <option value={option._id}>{option.name}</option>
-        ))}
-      </select>
+      <article>
+        <select
+          value={doctorForm[name]}
+          name={name}
+          id={id}
+          className="form-select dropdown"
+          aria-label="Default select example"
+          onChange={this.handleChange}
+        >
+          <option value=""></option>
+          {optionsArray.map((option) => (
+            <option value={option._id} key={option._id}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+        {errors && errors[name] && <p className="error">{errors[name]}</p>}
+      </article>
     );
   };
 
@@ -113,7 +121,9 @@ class Form extends React.Component {
           aria-label="Default select example"
         >
           {optionsArray.map((opt) => (
-            <option value={opt}>{opt}</option>
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
           ))}
         </select>
       </article>

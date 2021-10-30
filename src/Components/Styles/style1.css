@@ -142,3 +142,13 @@ table.table.doc-table {
   margin: 0;
   margin-top: -0.4rem;
 }
+
+/* dropdown doctorForm & nurseForm */
+select#docQualification {
+  margin-bottom: 0.5rem;
+}
+
+/* Success Message Doctor Form */
+.MuiPaper-root.MuiAlert-root.MuiAlert-standardSuccess.MuiPaper-elevation0 {
+  margin-top: 0.4rem;
+}

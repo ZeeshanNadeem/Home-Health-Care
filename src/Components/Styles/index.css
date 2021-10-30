@@ -20,7 +20,7 @@ code {
 
 * {
   box-sizing: border-box;
-  /* overflow: hidden; */
+  /* overflow-y: hidden; */
 }
 
 * {

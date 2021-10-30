@@ -23,7 +23,8 @@ code {
 }
 
 * {
-  font-family: Inter;
+  font-family: Inter, "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 /* NavBar Component */
