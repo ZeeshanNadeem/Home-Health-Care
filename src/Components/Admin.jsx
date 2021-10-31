@@ -7,6 +7,7 @@ import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faUserMd } from "@fortawesome/free-solid-svg-icons";
 
 import EditService from "./EditService";
 import AdminUserRequest from "./AdminUserRequest";
@@ -14,19 +15,23 @@ import AssignDuty from "./AssignDuty";
 import AddService from "./AddService";
 import NurseForm from "./NurseForm";
 import AdminNav from "./AdminNav";
+import TableDemo from "./TableDemo";
 import "animate.css";
 const Admin = () => {
   const [showDocDetials, setDocDetails] = useState("");
+  const [menuBarZindex, setMenuBarZindex] = useState("");
   const DoctorDetailsHandler = (name) => {
     setDocDetails(name);
-    console.log("name saved :", name);
+    if (name === "EditService") {
+      setMenuBarZindex("MenuBarZIndex");
+    }
   };
   return (
     <React.Fragment>
       <article className="admin-top">
         <AdminNav />
-        <article className="admin-container">
-          <article className="menuBar-container">
+        <article className={`admin-container`}>
+          <article className={`menuBar-container ${menuBarZindex}`}>
             <ul className="menu-items">
               <h2 className="menu-title animate__heartBeat">Admin</h2>
               <li
@@ -47,19 +52,19 @@ const Admin = () => {
                 />
                 Add A Nurse
               </li>
-              <li onClick={() => DoctorDetailsHandler("addService")}>
+              {/* <li onClick={() => DoctorDetailsHandler("addService")}>
                 <FontAwesomeIcon
                   icon={faUserPlus}
                   style={{ marginRight: "0.6rem" }}
                 />
                 Add A Service
-              </li>
+              </li> */}
               <li onClick={() => DoctorDetailsHandler("EditService")}>
                 <FontAwesomeIcon
-                  icon={faEdit}
+                  icon={faUserMd}
                   style={{ marginRight: "0.6rem" }}
                 />
-                Edit Service
+                Services Panel
               </li>
               {/* <li>
                 <FontAwesomeIcon icon={faTrash} style={{ marginRight: "0.6rem" }} />

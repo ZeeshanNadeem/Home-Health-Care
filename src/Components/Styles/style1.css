@@ -81,7 +81,7 @@
   background-color: #172774;
   color: #fff;
   border-radius: 15px;
-  height: 4rem;
+  height: 5rem;
 }
 
 .MuiAvatar-root.MuiAvatar-circular.MuiAvatar-colorDefault {
@@ -93,13 +93,21 @@ button.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-s
 }
 
 /* EditService */
+.table-responsive {
+  overflow-x: auto;
+  border-radius: 13px;
+  box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.1);
+}
 
 .editService-container {
   display: flex;
-  justify-content: center;
+
   align-items: center;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 4.5rem;
+  overflow-x: auto;
+  background-color: #fff;
 }
 
 /* Admin panel side bar */
@@ -151,4 +159,14 @@ select#docQualification {
 /* Success Message Doctor Form */
 .MuiPaper-root.MuiAlert-root.MuiAlert-standardSuccess.MuiPaper-elevation0 {
   margin-top: 0.4rem;
+}
+
+.float-button {
+  position: fixed;
+  bottom: 0.6rem;
+  right: 0.6rem;
+}
+
+.menuBarZindex {
+  z-index: -1 !important;
 }

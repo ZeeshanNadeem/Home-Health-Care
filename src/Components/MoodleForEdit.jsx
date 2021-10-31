@@ -29,6 +29,16 @@ export default function BasicModal({ service }) {
 
   return (
     <div>
+      <Button
+        variant="contained"
+        onClick={() => {
+          this.editService(data);
+        }}
+      >
+        <FontAwesomeIcon icon={faEdit} style={{ marginRight: "0.6rem" }} />
+        Edit
+      </Button>
+
       <article className="float-button">
         <Fab color="primary" aria-label="add">
           <AddIcon onClick={handleOpen} />

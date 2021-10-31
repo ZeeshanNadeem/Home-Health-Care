@@ -14,7 +14,19 @@ class AddService extends Form {
       servicePrice: "",
     },
     successMessage: "",
+    services: [],
   };
+
+  componentDidMount() {
+    const { service } = this.props;
+    const doctorForm = { ...this.state.doctorForm };
+    if (service) {
+      doctorForm.serviceName = service.serviceName;
+      doctorForm.serviceOrgranization = service.serviceOrgranization;
+      doctorForm.servicePrice = service.servicePrice;
+      this.setState({ doctorForm });
+    }
+  }
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,9 +40,16 @@ class AddService extends Form {
         serviceOrgranization: doctorForm.serviceOrgranization,
         servicePrice: doctorForm.servicePrice,
       };
-      await axios.post("http://localhost:3000/api/services", service);
-      this.setState({ successMessage: "Service has been added" });
-      toast.success("Service has been added");
+      try {
+        await axios.post("http://localhost:3000/api/services", service);
+        this.setState({ successMessage: "Service has been added" });
+        toast.success("Service has been added");
+        const { data: services } = await axios.get(
+          "http://localhost:3000/api/services"
+        );
+
+        this.setState({ services });
+      } catch (ex) {}
     }
   };
   schema = {
