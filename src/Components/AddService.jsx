@@ -2,8 +2,8 @@ import React from "react";
 import Form from "./Common/Form";
 import Joi from "joi-browser";
 
-import Alert from "@material-ui/lab/Alert";
 import { toast, ToastContainer } from "react-toastify";
+import EditService from "./EditService";
 import axios from "axios";
 
 class AddService extends Form {
@@ -18,21 +18,30 @@ class AddService extends Form {
   };
 
   componentDidMount() {
-    const { service } = this.props;
+    const { serviceData } = this.props;
     const doctorForm = { ...this.state.doctorForm };
-    if (service) {
-      doctorForm.serviceName = service.serviceName;
-      doctorForm.serviceOrgranization = service.serviceOrgranization;
-      doctorForm.servicePrice = service.servicePrice;
+    if (serviceData) {
+      doctorForm.serviceName = serviceData.serviceName;
+      doctorForm.serviceOrgranization = serviceData.serviceOrgranization;
+      doctorForm.servicePrice = serviceData.servicePrice;
       this.setState({ doctorForm });
     }
   }
 
   handleSubmit = async (e) => {
     e.preventDefault();
+
     const errors = this.validate();
     this.setState({ errors: errors || {} });
-
+    const { serviceData, updateService } = this.props;
+    if (serviceData) {
+      await axios.put(
+        "http://localhost:3000/api/services" + "/" + serviceData._id,
+        serviceData
+      );
+      updateService();
+      return;
+    }
     if (!errors) {
       const { doctorForm } = this.state;
       const service = {
@@ -44,11 +53,8 @@ class AddService extends Form {
         await axios.post("http://localhost:3000/api/services", service);
         this.setState({ successMessage: "Service has been added" });
         toast.success("Service has been added");
-        const { data: services } = await axios.get(
-          "http://localhost:3000/api/services"
-        );
 
-        this.setState({ services });
+        updateService();
       } catch (ex) {}
     }
   };

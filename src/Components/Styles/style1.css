@@ -22,7 +22,7 @@
 
 .search-Container {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 .small-btn {
   width: 6rem !important;
@@ -35,7 +35,7 @@
 
 .search-btn-container {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   margin-right: 4.5rem;
 }
 
@@ -136,7 +136,7 @@ table.table.doc-table {
 .admin-nav {
   height: 4.5rem;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   background-color: #082032;
 }

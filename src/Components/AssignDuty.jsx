@@ -1,9 +1,6 @@
 import React from "react";
 import { Avatar } from "@material-ui/core";
-import Paper from "@mui/material/Paper";
-import TableContainer from "@mui/material/TableContainer";
-import { Typography } from "@mui/material";
-import { typography } from "@mui/system";
+
 import { Button } from "@mui/material";
 const AssignDuty = () => {
   return (

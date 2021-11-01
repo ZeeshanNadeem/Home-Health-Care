@@ -1,25 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-import Box from "@mui/material/Box";
-import Fab from "@mui/material/Fab";
-import AddIcon from "@mui/icons-material/Add";
+import EditModal from "./MoodleForEdit";
 
 import BasicModal from "../AddServiceModle";
+import AddService from "./AddService";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-
-class EditService extends React.Component {
+class EditService extends AddService {
   state = {
-    service: "",
+    services: [],
   };
 
-  editService = (service) => {
-    this.setState({ service });
+  updateService = async () => {
+    const { data: services } = await axios.get(
+      "http://localhost:3000/api/services"
+    );
+    this.setState({ services });
   };
+
+  async componentDidMount() {
+    const { data: services } = await axios.get(
+      "http://localhost:3000/api/services"
+    );
+    this.setState({ services });
+  }
+
   deleteService = async (id) => {
     const { services } = this.state;
     const orignalServices = services;
@@ -41,12 +49,12 @@ class EditService extends React.Component {
   };
 
   render() {
-    const { service } = this.state;
+    const { services } = this.state;
 
     return (
       <article className="editService-container">
         <ToastContainer />
-        <BasicModal service={service} />
+        <BasicModal updateService={this.updateService} />
 
         {services.length > 0 && (
           // <article className="editService-container">
@@ -65,7 +73,7 @@ class EditService extends React.Component {
               </thead>
               <tbody>
                 {services.map((data) => (
-                  <tr>
+                  <tr key={data._id}>
                     <td>{data.serviceName}</td>
                     <td>{data.serviceOrgranization}</td>
                     <td>{data.servicePrice}</td>
@@ -84,18 +92,10 @@ class EditService extends React.Component {
                       </Button>
                     </td>
                     <td>
-                      <Button
-                        variant="contained"
-                        onClick={() => {
-                          this.editService(data);
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={faEdit}
-                          style={{ marginRight: "0.6rem" }}
-                        />
-                        Edit
-                      </Button>
+                      <EditModal
+                        serviceData={data}
+                        updateService={this.updateService}
+                      />
                     </td>
                   </tr>
                 ))}

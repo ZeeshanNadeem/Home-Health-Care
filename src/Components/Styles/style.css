@@ -193,7 +193,6 @@ a.text-sm.py-2.px-4.font-normal.block.w-full.whitespace-nowrap.bg-transparent.te
   /* height: 100vh; */
   overflow: hidden;
   border-top: 1px solid rgb(145, 140, 164, 0.4);
-  z-index: 999999999999;
 }
 .doc-form-wrapper {
   margin-left: auto;

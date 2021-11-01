@@ -4,7 +4,6 @@ import DoctorForm from "./DoctorForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { faUserMd } from "@fortawesome/free-solid-svg-icons";
@@ -15,7 +14,7 @@ import AssignDuty from "./AssignDuty";
 import AddService from "./AddService";
 import NurseForm from "./NurseForm";
 import AdminNav from "./AdminNav";
-import TableDemo from "./TableDemo";
+
 import "animate.css";
 const Admin = () => {
   const [showDocDetials, setDocDetails] = useState("");

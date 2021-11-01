@@ -1,4 +1,4 @@
-import NavBar from "./Components/NavBar";
+// import NavBar from "./Components/NavBar";
 import { Route } from "react-router-dom";
 
 import Login from "./Components/Login";
@@ -10,18 +10,21 @@ import Home from "./Components/Home";
 import Admin from "./Components/Admin";
 
 import UserRequest from "./Components/UserRequest";
-import AdminNav from "./Components/AdminNav";
+import AddService from "./Components/AddService";
+import EditService from "./Components/EditService";
+// import AdminNav from "./Components/AdminNav";
 
 function App() {
   return (
     <article>
       {/* <EditService /> */}
-      <Route path="/admin/Panel" component={Admin} />
+      <Route exact path="/admin/Panel" component={Admin} />
+      <Route exact path="/admin/Panel/:id" component={EditService} />
 
-      <Route path="/" exact component={Home} />
-      <Route path="/Signup" component={SignUpNew} />
-      <Route path="/Login" component={Login} />
-      <Route path="/user/request" component={UserRequest} />
+      <Route exact path="/" exact component={Home} />
+      <Route exact path="/Signup" component={SignUpNew} />
+      <Route exact path="/Login" component={Login} />
+      <Route exact path="/user/request" component={UserRequest} />
     </article>
   );
 }

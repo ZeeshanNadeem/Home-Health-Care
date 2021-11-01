@@ -1,14 +1,12 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-import AddService from "./Components/AddService";
+import AddService from "./AddService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container } from "@mui/material";
 import Modal from "@mui/material/Modal";
-import AddIcon from "@mui/icons-material/Add";
-import Fab from "@mui/material/Fab";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 const style = {
   position: "absolute",
@@ -22,28 +20,33 @@ const style = {
   p: 4,
 };
 
-export default function BasicModal({ service }) {
+export default function EditModal({ serviceData, updateService }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [services, setServices] = React.useState([]);
+
+  React.useEffect = async () => {
+    const { data: services } = await axios.get(
+      "http://localhost:3000/api/services"
+    );
+    setServices(services);
+  };
 
   return (
     <div>
-      <Button
-        variant="contained"
-        onClick={() => {
-          this.editService(data);
-        }}
-      >
-        <FontAwesomeIcon icon={faEdit} style={{ marginRight: "0.6rem" }} />
-        Edit
-      </Button>
-
-      <article className="float-button">
-        <Fab color="primary" aria-label="add">
-          <AddIcon onClick={handleOpen} />
-        </Fab>
-      </article>
+      <Link to={`/admin/Panel/${serviceData._id}`}>
+        <Button variant="contained" onClick={handleOpen}>
+          <FontAwesomeIcon icon={faEdit} style={{ marginRight: "0.6rem" }} />
+          Edit
+        </Button>
+      </Link>
+      {/* <Link to={`/admin/Panel/${serviceData._id}`}>
+        <Button variant="contained" onClick={handleOpen}>
+          <FontAwesomeIcon icon={faEdit} style={{ marginRight: "0.6rem" }} />
+          Edit
+        </Button>
+      </Link> */}
 
       <Modal
         open={open}
@@ -52,7 +55,7 @@ export default function BasicModal({ service }) {
         aria-describedby="modal-modal-description"
       >
         <Container>
-          <AddService service={service} />
+          <AddService serviceData={serviceData} updateService={updateService} />
         </Container>
       </Modal>
     </div>
