@@ -14,7 +14,7 @@ import AssignDuty from "./AssignDuty";
 import AddService from "./AddService";
 import NurseForm from "./NurseForm";
 import AdminNav from "./AdminNav";
-
+import { Link } from "react-router-dom";
 import "animate.css";
 const Admin = () => {
   const [showDocDetials, setDocDetails] = useState("");
@@ -26,74 +26,56 @@ const Admin = () => {
     }
   };
   return (
-    <React.Fragment>
-      <article className="admin-top">
-        <AdminNav />
-        <article className={`admin-container`}>
+    <article className="admin-wrapper">
+      <span className="admin-top">
+        <span className={`admin-container`}>
           <article className={`menuBar-container ${menuBarZindex}`}>
             <ul className="menu-items">
               <h2 className="menu-title animate__heartBeat">Admin</h2>
-              <li
-                onClick={() => DoctorDetailsHandler("docDetails")}
-                className="li-add-doc"
-              >
-                <FontAwesomeIcon
-                  icon={faUserPlus}
-                  style={{ marginRight: "0.6rem" }}
-                />
-                Add A Doctor
-              </li>
-              <li onClick={() => DoctorDetailsHandler("nurseDetails")}>
-                {" "}
-                <FontAwesomeIcon
-                  icon={faUserPlus}
-                  style={{ marginRight: "0.6rem" }}
-                />
-                Add A Nurse
-              </li>
-              {/* <li onClick={() => DoctorDetailsHandler("addService")}>
-                <FontAwesomeIcon
-                  icon={faUserPlus}
-                  style={{ marginRight: "0.6rem" }}
-                />
-                Add A Service
-              </li> */}
-              <li onClick={() => DoctorDetailsHandler("EditService")}>
-                <FontAwesomeIcon
-                  icon={faUserMd}
-                  style={{ marginRight: "0.6rem" }}
-                />
-                Services Panel
-              </li>
-              {/* <li>
-                <FontAwesomeIcon icon={faTrash} style={{ marginRight: "0.6rem" }} />
-                Delete Service
-              </li> */}
-              {/* <li onClick={() => DoctorDetailsHandler("AssignDuty")}>
-                <FontAwesomeIcon
-                  icon={faUserTie}
-                  style={{ marginRight: "0.6rem" }}
-                />
-                Assign Duty
-              </li> */}
-              <li onClick={() => DoctorDetailsHandler("AdminUserRequests")}>
-                <FontAwesomeIcon
-                  icon={faUsers}
-                  style={{ marginRight: "0.6rem" }}
-                />
-                User Requests
-              </li>
+              <Link to="/admin/doctor">
+                <li className="li-add-doc admin-li">
+                  <FontAwesomeIcon
+                    icon={faUserPlus}
+                    style={{ marginRight: "0.6rem" }}
+                  />
+                  Add A Doctor
+                </li>
+              </Link>
+              <Link to="/admin/Nurse">
+                <li className="admin-li">
+                  {" "}
+                  <FontAwesomeIcon
+                    icon={faUserPlus}
+                    style={{ marginRight: "0.6rem" }}
+                  />
+                  Add A Nurse
+                </li>
+              </Link>
+
+              <Link to="/admin/Services">
+                <li className="admin-li">
+                  <FontAwesomeIcon
+                    icon={faUserMd}
+                    style={{ marginRight: "0.6rem" }}
+                  />
+                  Services Panel
+                </li>
+              </Link>
+
+              <Link to="/admin/Requests">
+                <li className="admin-li">
+                  <FontAwesomeIcon
+                    icon={faUsers}
+                    style={{ marginRight: "0.6rem" }}
+                  />
+                  User Requests
+                </li>
+              </Link>
             </ul>
           </article>
-          {(showDocDetials === "docDetails" && <DoctorForm />) ||
-            (showDocDetials === "nurseDetails" && <NurseForm />) ||
-            (showDocDetials === "addService" && <AddService />) ||
-            (showDocDetials === "AssignDuty" && <AssignDuty />) ||
-            (showDocDetials === "AdminUserRequests" && <AdminUserRequest />) ||
-            (showDocDetials === "EditService" && <EditService />)}
-        </article>
-      </article>
-    </React.Fragment>
+        </span>
+      </span>
+    </article>
   );
 };
 

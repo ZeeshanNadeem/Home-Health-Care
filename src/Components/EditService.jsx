@@ -9,7 +9,7 @@ import BasicModal from "../AddServiceModle";
 import AddService from "./AddService";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-class EditService extends AddService {
+class EditService extends React.Component {
   state = {
     services: [],
   };
@@ -52,6 +52,7 @@ class EditService extends AddService {
     const { services } = this.state;
 
     return (
+      //editService-container classname of
       <article className="editService-container">
         <ToastContainer />
         <BasicModal updateService={this.updateService} />

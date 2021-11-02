@@ -107,6 +107,7 @@ button.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-s
   margin-right: auto;
   margin-bottom: 4.5rem;
   overflow-x: auto;
+  padding: 2rem;
   background-color: #fff;
 }
 
@@ -169,4 +170,17 @@ select#docQualification {
 
 .menuBarZindex {
   z-index: -1 !important;
+}
+
+/* App.js admin routes */
+.admin-routes {
+  display: flex;
+}
+
+.admin-li {
+  font-size: 1rem;
+  padding-top: 2rem;
+  padding-left: 2rem;
+  color: #fff;
+  font-weight: 590;
 }

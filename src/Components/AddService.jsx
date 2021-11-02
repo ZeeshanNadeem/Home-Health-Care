@@ -34,12 +34,22 @@ class AddService extends Form {
     const errors = this.validate();
     this.setState({ errors: errors || {} });
     const { serviceData, updateService } = this.props;
+
     if (serviceData) {
-      await axios.put(
-        "http://localhost:3000/api/services" + "/" + serviceData._id,
-        serviceData
-      );
-      updateService();
+      console.log("Inside put request");
+      const { doctorForm } = this.state;
+
+      try {
+        await axios.put(
+          "http://localhost:3000/api/services" + "/" + serviceData._id,
+          doctorForm
+        );
+        updateService();
+        toast.success("Service Updated");
+      } catch (ex) {
+        toast.error("Something went wrong");
+      }
+
       return;
     }
     if (!errors) {

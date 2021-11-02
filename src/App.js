@@ -12,16 +12,25 @@ import Admin from "./Components/Admin";
 import UserRequest from "./Components/UserRequest";
 import AddService from "./Components/AddService";
 import EditService from "./Components/EditService";
+import EditModal from "./Components/MoodleForEdit";
+import DoctorForm from "./Components/DoctorForm";
+import NurseForm from "./Components/NurseForm";
 // import AdminNav from "./Components/AdminNav";
+import AdminUserRequest from "./Components/AdminUserRequest";
 
 function App() {
   return (
     <article>
       {/* <EditService /> */}
-      <Route exact path="/admin/Panel" component={Admin} />
-      <Route exact path="/admin/Panel/:id" component={EditService} />
+      <article class="admin-routes">
+        <Route path="/admin" component={Admin} />
+        <Route path="/admin/doctor" component={DoctorForm} />
+        <Route path="/admin/Nurse" component={NurseForm} />
+        <Route path="/admin/Services/:id?" component={EditService} />
+        <Route path="/admin/Requests" component={AdminUserRequest} />
+      </article>
 
-      <Route exact path="/" exact component={Home} />
+      <Route exact path="/" component={Home} />
       <Route exact path="/Signup" component={SignUpNew} />
       <Route exact path="/Login" component={Login} />
       <Route exact path="/user/request" component={UserRequest} />

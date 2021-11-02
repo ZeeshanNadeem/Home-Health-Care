@@ -20,7 +20,7 @@
   z-index: 9999999999999999999999;
   border-radius: 8px;
   margin-top: -2.5rem;
-  padding-bottom: 1.3rem;
+  padding-bottom: 2.3rem;
 }
 
 .input {
@@ -52,7 +52,7 @@ label {
   letter-spacing: 1.5px;
   border: 0;
   border-radius: 3px;
-  margin-top: 1.5rem;
+  margin-top: 2rem;
 }
 
 .signup-page {
@@ -197,6 +197,8 @@ a.text-sm.py-2.px-4.font-normal.block.w-full.whitespace-nowrap.bg-transparent.te
 .doc-form-wrapper {
   margin-left: auto;
   margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 .menu-items {
   padding: 0;
@@ -239,7 +241,7 @@ input#dob {
 }
 
 .doc-form {
-  margin-top: 1.7rem;
+  margin-top: 0;
   width: 100%;
 }
 
