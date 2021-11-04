@@ -64,7 +64,7 @@ class AddService extends Form {
         this.setState({ successMessage: "Service has been added" });
         toast.success("Service has been added");
 
-        updateService();
+        // updateService();
       } catch (ex) {}
     }
   };

@@ -1,5 +1,5 @@
 :root {
-  --btnBackground: #ffad00;
+  --btnBackground: #afaca5;
   --navColor: #1e1e1e;
   --bgColor: #1e293b;
 }
@@ -274,6 +274,8 @@ article.admin-container {
 h2.menu-title {
   background-color: rgba(8, 23, 32, 1);
   margin-top: 2rem;
+  padding-left: 3.5rem;
+  font-size: 2.5rem;
 }
 h1.sign-up-header-text.doc-header {
   font-size: 2.7rem;
@@ -290,6 +292,11 @@ h1.sign-up-header-text.doc-header {
     font-size: 2rem;
   }
   .card-signup {
+    margin-top: 2rem;
+  }
+
+  .admin-routes {
+    display: block;
   }
   .menuBar-container {
     width: 100vw;
@@ -307,6 +314,9 @@ h1.sign-up-header-text.doc-header {
   .menuBar-container {
     height: 100vh;
     overflow: hidden;
+  }
+  .admin-routes {
+    display: flex;
   }
 }
 

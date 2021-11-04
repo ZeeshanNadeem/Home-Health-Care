@@ -173,14 +173,28 @@ select#docQualification {
 }
 
 /* App.js admin routes */
-.admin-routes {
+/* .admin-routes {
   display: flex;
-}
+} */
 
 .admin-li {
   font-size: 1rem;
-  padding-top: 2rem;
-  padding-left: 2rem;
+  padding-top: 3rem;
+  padding-left: 2.5rem;
+  padding-right: 3rem;
   color: #fff;
   font-weight: 590;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.ServicePanel-wrapper {
+  margin: auto;
+}
+
+.editService-style {
+  margin-bottom: 0;
 }

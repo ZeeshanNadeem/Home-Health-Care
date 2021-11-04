@@ -24,6 +24,7 @@ function App() {
       {/* <EditService /> */}
       <article class="admin-routes">
         <Route path="/admin" component={Admin} />
+
         <Route path="/admin/doctor" component={DoctorForm} />
         <Route path="/admin/Nurse" component={NurseForm} />
         <Route path="/admin/Services/:id?" component={EditService} />
