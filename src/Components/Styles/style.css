@@ -339,10 +339,11 @@ h1.sign-up-header-text.doc-header {
 }
 
 .search-btn {
-  background-color: var(--btnBackground);
+  background-color: var(--bgColor);
   width: 10rem;
   border-radius: inherit;
   height: 3rem;
+  color: #fff;
 }
 
 input.search-input {

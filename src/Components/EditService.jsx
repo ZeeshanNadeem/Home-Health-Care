@@ -4,33 +4,37 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import EditModal from "./MoodleForEdit";
+import { Paper } from "@material-ui/core";
 
 import BasicModal from "../AddServiceModle";
 import AddService from "./AddService";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { TextField } from "@mui/material";
 // import Paginating from "./Common/Paginating";
 import Pagination from "@mui/material/Pagination";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 const EditService = () => {
   const [services, setServices] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSelected, setPageSelected] = useState(1);
-
+  const [searchedService, setSearchedService] = useState("");
   useEffect(async () => {
-    console.log(`http://localhost:3000/api/services?
-    page=${pageSelected}&limit=${3}`);
     const { data } = await axios.get(
-      `http://localhost:3000/api/services?page=${pageSelected}&limit=${3}`
+      `http://localhost:3000/api/services?page=${pageSelected}&limit=${4}&searchedString=${searchedService}`
     );
     const { data: totalDocuments } = await axios.get(
       `http://localhost:3000/api/services`
     );
-    const page = Math.ceil(totalDocuments.results.length / 3);
-
-    if (page > 1) {
-      setTotalPages(page);
+    let page = "";
+    if (searchedService) {
+      page = Math.ceil(data.results.length / 4);
+    } else {
+      page = Math.ceil(totalDocuments.results.length / 4);
     }
+
+    setTotalPages(page);
 
     setServices(data.results);
   }, [pageSelected]);
@@ -60,12 +64,79 @@ const EditService = () => {
 
     setServices(services.results);
   };
+
+  const checkPages = () => {
+    if (totalPages > 1) return true;
+    else return false;
+  };
+  const filterResult = async () => {
+    console.log(
+      `http://localhost:3000/api/services?page=${pageSelected}&limit=${4}&searchedString=${searchedService}`
+    );
+
+    let page = "";
+    if (searchedService) {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/services?searchedString=${searchedService}`
+      );
+
+      page = Math.ceil(data.results.length / 4);
+      if (data.results.length === 0 && searchedService) {
+        toast.error("No Results Found");
+      }
+
+      setServices(data.results);
+    } else {
+      const { data: totalDocuments } = await axios.get(
+        `http://localhost:3000/api/services`
+      );
+      page = Math.ceil(totalDocuments.results.length / 4);
+    }
+
+    setTotalPages(page);
+  };
+  const searchService = () => {
+    filterResult();
+  };
+  const handleChange = (e) => {
+    const searched = e.currentTarget.value;
+    console.log("Searchedd ::", searched);
+    if (!searched) setSearchedService("");
+    else setSearchedService(searched);
+    console.log("searched service ::", searchedService);
+    if (!e.currentTarget.value) {
+      console.log("!e.currentTarget.value");
+      console.log("e.currentTarget.value = ", e.currentTarget.value);
+
+      filterResult();
+    }
+  };
+
   return (
     //editService-container classname of
+
     <article className="ServicePanel-wrapper ">
       <React.Fragment>
+        <article className="searchBar-wrapper">
+          <input
+            className="search-Bar"
+            type="text"
+            placeholder="Search Service"
+            value={searchedService}
+            onChange={handleChange}
+          />
+          <button className="search-btn" onClick={searchService}>
+            <FontAwesomeIcon
+              icon={faSearch}
+              style={{ marginRight: "0.6rem" }}
+            />
+            Search
+          </button>
+        </article>
+
         <article className="editService-container editService-style">
           <ToastContainer />
+
           <BasicModal updateService={updateService} />
           {services.length > 0 && (
             // <article className="editService-container">
@@ -125,18 +196,20 @@ const EditService = () => {
             size="large"
           /> */}
       </React.Fragment>
-      <div className="pagination">
-        <Pagination
-          count={totalPages}
-          // variant="outlined"
-          color="secondary"
-          defaultPage={1}
-          size="large"
-          showFirstButton
-          showLastButton
-          onChange={(event, value) => setPageSelected(value)}
-        />
-      </div>
+      {checkPages() && (
+        <div className="pagination">
+          <Pagination
+            count={totalPages}
+            // variant="outlined"
+            color="secondary"
+            defaultPage={1}
+            size="large"
+            showFirstButton
+            showLastButton
+            onChange={(event, value) => setPageSelected(value)}
+          />
+        </div>
+      )}
       {/* <Paginating count={10}
         updateService={this.updateService}
         /> */}

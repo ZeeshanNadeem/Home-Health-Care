@@ -186,6 +186,9 @@ select#docQualification {
   font-weight: 590;
 }
 
+.admin-li:active {
+  color: #ffad00;
+}
 .pagination {
   display: flex;
   justify-content: center;
@@ -197,4 +200,40 @@ select#docQualification {
 
 .editService-style {
   margin-bottom: 0;
+}
+
+/* logo hhc */
+img.nav-logo.animate__heartBeat {
+  height: 6rem;
+}
+
+.search-Bar {
+  height: 3.2rem;
+  border-radius: 22px;
+  width: 35rem;
+  border: 0 !important;
+
+  /* border: 3px solid; */
+
+  width: 100%;
+  flex-grow: 1;
+}
+input {
+  --tw-ring-color: #ffffff !important;
+}
+
+/* *:focus {
+  outline: none !important;
+} */
+.searchBar-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 25px;
+  display: flex;
+  border: 0;
+  box-shadow: 0 0 10px 10px rbga(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px 10px rgb(0 0 0 / 10%);
+  margin-bottom: 2rem;
 }
