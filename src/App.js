@@ -17,12 +17,18 @@ import DoctorForm from "./Components/DoctorForm";
 import NurseForm from "./Components/NurseForm";
 // import AdminNav from "./Components/AdminNav";
 import AdminUserRequest from "./Components/AdminUserRequest";
+import UserScheduled from "./Components/UserScheduled";
+import Schedule from "./Components/Schedule";
+import Leave from "./Components/Leave";
 
 function App() {
   return (
     <article>
+      {/* <Schedule /> */}
+      <Leave />
+      {/* <UserScheduled /> */}
       {/* <EditService /> */}
-      <article class="admin-routes">
+      {/* <article class="admin-routes">
         <Route path="/admin" component={Admin} />
 
         <Route path="/admin/doctor" component={DoctorForm} />
@@ -34,7 +40,7 @@ function App() {
       <Route exact path="/" component={Home} />
       <Route exact path="/Signup" component={SignUpNew} />
       <Route exact path="/Login" component={Login} />
-      <Route exact path="/user/request" component={UserRequest} />
+      <Route exact path="/user/request" component={UserRequest} /> */}
     </article>
   );
 }

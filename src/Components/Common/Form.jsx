@@ -100,10 +100,9 @@ class Form extends React.Component {
           aria-label="Default select example"
           onChange={this.handleChange}
         >
-          <option value=""></option>
           {optionsArray.map((option) => (
             <option value={option._id} key={option._id}>
-              {option.name}
+              {option.serviceName}
             </option>
           ))}
         </select>

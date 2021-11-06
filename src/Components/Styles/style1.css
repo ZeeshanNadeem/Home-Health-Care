@@ -1,5 +1,10 @@
 /* Search Service  */
 
+:root {
+  --btnBackground: #ffad00;
+  --navColor: #1e1e1e;
+  --bgColor: #1e293b;
+}
 .styleDropDown {
   width: 5rem !important;
 }
@@ -40,7 +45,7 @@
 }
 
 .style-User-Request {
-  height: 41rem;
+  height: 45.5rem;
 }
 
 /* EditService */
@@ -236,4 +241,32 @@ input {
   box-shadow: 0 0 10px 10px rbga(0, 0, 0, 0.1);
   box-shadow: 0 0 10px 10px rgb(0 0 0 / 10%);
   margin-bottom: 2rem;
+}
+
+.doc-container {
+  /* background: url("/src/Images/bg1.png");
+  background-color: #1e293b; */
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.td-schedule {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.table-schedule {
+  border-collapse: collapse;
+}
+
+.leave {
+  background: url("../../Images/bg1.png");
+
+  background-color: var(--bgColor);
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

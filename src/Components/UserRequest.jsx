@@ -1,17 +1,39 @@
 import React from "react";
 import Form from "./Common/Form";
+import axios from "axios";
 class UserRequest extends Form {
   state = {
-    serviceFor: [
-      "Nursing Care",
-      "Doctor Care",
-      "Physical Therapy",
-      "Vaccination",
-      "Urine Sample",
+    doctorForm: {
+      fullname: "",
+      dateOfBirth: "",
+      qualification: "",
+      email: "",
+      phoneNo: "",
+      serviceName: "",
+      serviceOrgranization: "",
+      servicePrice: "",
+    },
+    services: [],
+    organization: [
+      { _id: "123191JHH1", serviceName: "Shifa" },
+      { _id: "123191JHXXVV1", serviceName: "Quaid-e-Azam International" },
+      { _id: "123191JHXXVV1", serviceName: "PIMS" },
+    ],
+    profession: [
+      { _id: "102222XXX001", serviceName: "Nurse" },
+      { _id: "1022229991", serviceName: "Doctor" },
     ],
   };
+  async componentDidMount() {
+    const { data: services } = await axios.get(
+      `http://localhost:3000/api/services`
+    );
+    console.log("Service ::", services.results);
+    this.setState({ services: services.results });
+  }
+
   render() {
-    const { serviceFor } = this.state;
+    const { services, organization, profession } = this.state;
     return (
       <div className="doc-container">
         <div className="card-signup doc-form style-User-Request">
@@ -21,11 +43,20 @@ class UserRequest extends Form {
             </h1>
           </header>
 
-          <article>{this.renderLabel("Service For", "serviceFor")}</article>
+          <article>{this.renderLabel("Speciality", "serviceFor")}</article>
           <article>
-            {this.renderDropDown("service For", serviceFor, "serviceFor")}
+            {this.renderDropDown("Speciality", services, "serviceFor")}
           </article>
+          <article>{this.renderLabel("Organization", "serviceFor")}</article>
 
+          <article>
+            {this.renderDropDown("Profession", profession, "serviceFor")}
+          </article>
+          <article>{this.renderLabel("Organization", "serviceFor")}</article>
+
+          <article>
+            {this.renderDropDown("service For", organization, "serviceFor")}
+          </article>
           <article>{this.renderLabel("Schedule", "schedule")}</article>
           <article>
             {this.renderInput(
@@ -44,7 +75,7 @@ class UserRequest extends Form {
           )}
           <article>{this.renderLabel("Address", "Address")}</article>
           <article>
-            {this.renderMultiLineTextField("5", "49", "address")}
+            {this.renderMultiLineTextField("3", "44", "address")}
           </article>
           <article>{this.renderLabel("Phone No", "phoneno")}</article>
           <article>
