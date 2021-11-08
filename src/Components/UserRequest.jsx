@@ -28,7 +28,7 @@ class UserRequest extends Form {
     const { data: services } = await axios.get(
       `http://localhost:3000/api/services`
     );
-    console.log("Service ::", services.results);
+
     this.setState({ services: services.results });
   }
 

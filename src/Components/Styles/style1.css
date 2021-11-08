@@ -113,6 +113,7 @@ button.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-s
   margin-bottom: 4.5rem;
   overflow-x: auto;
   padding: 2rem;
+  padding-top: 0.5rem;
   background-color: #fff;
 }
 
@@ -201,6 +202,7 @@ select#docQualification {
 
 .ServicePanel-wrapper {
   margin: auto;
+  margin-top: 0.5rem;
 }
 
 .editService-style {
@@ -249,7 +251,7 @@ input {
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
-
+/* Nusrse-Doctor Schedule */
 .td-schedule {
   border: 1px solid black;
   padding: 10px;
@@ -269,4 +271,11 @@ input {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+article.searchBar-wrapper {
+  margin: 1rem;
+  margin-top: 1.2rem;
+
+  margin-bottom: 0.5rem;
 }

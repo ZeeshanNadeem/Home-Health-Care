@@ -20,7 +20,14 @@ code {
 
 * {
   box-sizing: border-box;
+
   /* overflow-y: hidden; */
+}
+
+@media screen and (min-width: 900px) {
+  * {
+    /* overflow: hidden; */
+  }
 }
 
 * {

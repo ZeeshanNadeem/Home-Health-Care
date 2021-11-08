@@ -3,7 +3,12 @@ import DoctorForm from "./DoctorForm";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faUsers } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFemale,
+  faMale,
+  faUserFriends,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { faUserMd } from "@fortawesome/free-solid-svg-icons";
@@ -69,6 +74,16 @@ const Admin = () => {
                     style={{ marginRight: "0.6rem" }}
                   />
                   User Requests
+                </li>
+              </Link>
+              <Link to="/admin/Staff">
+                <li className="admin-li">
+                  {" "}
+                  <FontAwesomeIcon
+                    icon={faUserFriends}
+                    style={{ marginRight: "0.6rem" }}
+                  />
+                  Staff
                 </li>
               </Link>
             </ul>
