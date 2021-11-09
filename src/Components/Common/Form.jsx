@@ -6,9 +6,11 @@ class Form extends React.Component {
     doctorForm: {
       fullname: "",
       dateOfBirth: "",
+      staffType: "",
+      organization: "",
       qualification: "",
-      email: "",
       phoneNo: "",
+
       serviceName: "",
       serviceOrgranization: "",
       servicePrice: "",
@@ -102,7 +104,7 @@ class Form extends React.Component {
         >
           {optionsArray.map((option) => (
             <option value={option._id} key={option._id}>
-              {option.serviceName}
+              {option.serviceName || option.name}
             </option>
           ))}
         </select>

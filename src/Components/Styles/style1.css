@@ -185,13 +185,16 @@ select#docQualification {
 
 .admin-li {
   font-size: 1rem;
+  /* margin-top: 5rem; */
   padding-top: 3rem;
   padding-left: 2.5rem;
   padding-right: 3rem;
   color: #fff;
   font-weight: 590;
 }
-
+.frist-li {
+  margin-top: 6rem;
+}
 .admin-li:active {
   color: #ffad00;
 }

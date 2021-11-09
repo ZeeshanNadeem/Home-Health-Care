@@ -21,7 +21,7 @@ import AdminStaff from "./Components/AdminStaff";
 import UserScheduled from "./Components/UserScheduled";
 import Schedule from "./Components/Schedule";
 import Leave from "./Components/Leave";
-
+import StaffPanel from "./Components/StaffPanel";
 function App() {
   return (
     <article>
@@ -31,9 +31,7 @@ function App() {
       {/* <EditService /> */}
       <article class="admin-routes">
         <Route path="/admin" component={Admin} />
-
-        <Route path="/admin/doctor" component={DoctorForm} />
-        <Route path="/admin/Nurse" component={NurseForm} />
+        <Route path="/admin/Nurse" component={StaffPanel} />
         <Route path="/admin/Services/:id?" component={EditService} />
         <Route path="/admin/Requests" component={AdminUserRequest} />
         {/* <Route path="/admin/Staff" component={AdminStaff} /> */}

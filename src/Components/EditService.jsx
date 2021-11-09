@@ -11,7 +11,7 @@ import AddService from "./AddService";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { TextField } from "@mui/material";
-// import Paginating from "./Common/Paginating";
+
 import Pagination from "@mui/material/Pagination";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
@@ -30,31 +30,29 @@ const EditService = () => {
   };
 
   const PopulateTable = async () => {
-    console.log("POPULATE TABLE !!!");
     let page = "";
 
     if (searchedService) {
-      console.log("Search!!!");
-      console.log("Searched Service ::", searchedService);
       const { data } = await axios.get(`http://localhost:3000/api/services`);
       const searchedResults = data.results.filter((d) =>
-        d.serviceName.toUpperCase().startsWith(searchedService)
+        d.serviceName.toUpperCase().startsWith(searchedService.toUpperCase())
       );
       console.log("Searched Results ::", searchedResults);
 
       const totalDocuments = await getTotalDocuments();
 
-      if (searchedResults.length > 0) {
-        if (searchedService) {
-          page = Math.ceil(searchedResults.length / pageSize);
-        } else {
-          page = Math.ceil(searchedResults.length / pageSize);
-        }
-        setTotalPages(page);
-
-        setServices(searchedResults);
-        return;
+      if (searchedService) {
+        page = Math.ceil(searchedResults.length / pageSize);
+      } else {
+        page = Math.ceil(searchedResults.length / pageSize);
       }
+      setTotalPages(page);
+
+      setServices(searchedResults);
+      if (searchedResults.length === 0 && searchedService) {
+        toast.error("No Results Found!");
+      }
+      return;
     }
     const { data } = await axios.get(
       `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}&searchedString=${searchedService}`
@@ -72,13 +70,10 @@ const EditService = () => {
       setServices(data.results);
     }
   };
+
   useEffect(async () => {
     PopulateTable();
-
-    // const { data: totalDocuments } = await axios.get(
-    //   `http://localhost:3000/api/services`
-    // );
-  }, [pageSelected]);
+  }, [pageSelected, searchedService]);
 
   const deleteService = async (id) => {
     const orignalServices = services;
@@ -114,7 +109,6 @@ const EditService = () => {
   };
 
   const handleChange = async (e) => {
-    // const searched = e.currentTarget.value;
     let page = "";
     if (!e.currentTarget.value) {
       const { data } = await axios.get(
@@ -133,21 +127,9 @@ const EditService = () => {
       setSearchedService("");
       return;
     }
+
     setSearchedService(e.currentTarget.value);
     PopulateTable();
-    console.log("Searched service ::", e.currentTarget.value);
-    // if (!searched) {
-    //   console.log("!seearch");
-    //   setSearchedService("");
-    //   // filterResult();
-    // } else setSearchedService(searched);
-    // console.log("searched service ::", searchedService);
-    // if (!e.currentTarget.value) {
-    //   console.log("!e.currentTarget.value");
-    //   console.log("e.currentTarget.value = ", e.currentTarget.value);
-
-    //   filterResult();
-    // }
   };
 
   return (

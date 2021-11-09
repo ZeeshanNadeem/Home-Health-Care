@@ -37,7 +37,7 @@ const Admin = () => {
           <article className={`menuBar-container ${menuBarZindex}`}>
             <ul className="menu-items">
               <h2 className="menu-title animate__heartBeat">Admin</h2>
-              <Link to="/admin/doctor">
+              {/* <Link to="/admin/doctor">
                 <li className="li-add-doc admin-li">
                   <FontAwesomeIcon
                     icon={faUserPlus}
@@ -45,7 +45,28 @@ const Admin = () => {
                   />
                   Add A Doctor
                 </li>
+              </Link> */}
+              {/* <Link to="/admin/Nurse">
+                <li className="admin-li">
+                  {" "}
+                  <FontAwesomeIcon
+                    icon={faUserPlus}
+                    style={{ marginRight: "0.6rem" }}
+                  />
+                  Staff
+                </li>
+              </Link> */}
+
+              <Link to="/admin/Services">
+                <li className="admin-li frist-li">
+                  <FontAwesomeIcon
+                    icon={faUserMd}
+                    style={{ marginRight: "0.6rem" }}
+                  />
+                  Manage Services
+                </li>
               </Link>
+
               <Link to="/admin/Nurse">
                 <li className="admin-li">
                   {" "}
@@ -53,17 +74,7 @@ const Admin = () => {
                     icon={faUserPlus}
                     style={{ marginRight: "0.6rem" }}
                   />
-                  Add A Nurse
-                </li>
-              </Link>
-
-              <Link to="/admin/Services">
-                <li className="admin-li">
-                  <FontAwesomeIcon
-                    icon={faUserMd}
-                    style={{ marginRight: "0.6rem" }}
-                  />
-                  Services Panel
+                  Manage Staff
                 </li>
               </Link>
 
@@ -74,16 +85,6 @@ const Admin = () => {
                     style={{ marginRight: "0.6rem" }}
                   />
                   User Requests
-                </li>
-              </Link>
-              <Link to="/admin/Staff">
-                <li className="admin-li">
-                  {" "}
-                  <FontAwesomeIcon
-                    icon={faUserFriends}
-                    style={{ marginRight: "0.6rem" }}
-                  />
-                  Staff
                 </li>
               </Link>
             </ul>
