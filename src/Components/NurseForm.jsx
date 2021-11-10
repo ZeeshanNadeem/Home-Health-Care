@@ -8,26 +8,24 @@ import { toast, ToastContainer } from "react-toastify";
 class NurseForm extends Form {
   state = {
     doctorForm: {
-      fullname: "",
+      fullName: "",
       dateOfBirth: "",
       staffType: "",
-      organization: "",
       qualification: "",
-
-      phoneNo: "",
+      email: "",
+      phone: "",
     },
     qualification: [],
-    organization: [],
+
     serviceType: [],
   };
   schema = {
-    fullname: Joi.string().required().label("Full Name"),
+    fullName: Joi.string().required().label("Full Name"),
     dateOfBirth: Joi.string().required().label("Date of Birth"),
     staffType: Joi.string().required().label("Staff Type"),
-    organization: Joi.string().required().label("Organizaton"),
     qualification: Joi.string().required().label("Qualification"),
-
-    phoneNo: Joi.number().required().label("Phone No"),
+    email: Joi.string().required().label("Email"),
+    phone: Joi.number().required().label("Phone No"),
   };
 
   handleSubmit = async (e) => {
@@ -37,19 +35,30 @@ class NurseForm extends Form {
 
     if (!errors) {
       const { doctorForm } = this.state;
+      console.log("Doctor Form:::!!", doctorForm);
       const doctorToPost = {
-        fullName: doctorForm.fullname,
+        fullName: doctorForm.fullName,
         dateOfBirth: doctorForm.dateOfBirth,
         staffTypeID: doctorForm.staffType,
-        organizationID: doctorForm.organization,
         qualificationID: doctorForm.qualification,
-        phone: doctorForm.phoneNo,
+        email: doctorForm.email,
+        phone: doctorForm.phone,
       };
 
-      const { data: doctorPosted } = await axios.post(
-        "http://localhost:3000/api/staff",
-        doctorToPost
-      );
+      try {
+        const { updateService } = this.props;
+        console.log("Nurse Form update :", updateService);
+        const { data: doctorPosted } = await axios.post(
+          "http://localhost:3000/api/staff",
+          doctorToPost
+        );
+        updateService();
+      } catch (ex) {
+        console.log("Catch :::", ex);
+        toast.error("Something went wrong..");
+        return;
+      }
+      console.log("Error :::");
       toast.success("Staff member has been saved!");
       return;
     }
@@ -59,17 +68,26 @@ class NurseForm extends Form {
     const { data: qualification } = await axios.get(
       "http://localhost:3000/api/qualification"
     );
-    const { data: organization } = await axios.get(
-      "http://localhost:3000/api/organization"
-    );
+
     const { data: serviceType } = await axios.get(
       "http://localhost:3000/api/staffType"
     );
-    this.setState({ qualification, organization, serviceType });
+    const { serviceData } = this.props;
+
+    const doctorForm = { ...this.state.doctorForm };
+    if (serviceData) {
+      doctorForm.fullName = serviceData.fullName;
+      doctorForm.dateOfBirth = serviceData.dateOfBirth;
+      doctorForm.staffType = serviceData.staffType._id;
+      doctorForm.qualification = serviceData.qualification._id;
+      doctorForm.email = serviceData.email;
+      doctorForm.phone = serviceData.phone;
+      this.setState({ doctorForm });
+    }
+    this.setState({ qualification, serviceType });
   }
   render() {
-    const { qualification, successMessage, organization, serviceType } =
-      this.state;
+    const { qualification, successMessage, serviceType } = this.state;
     return (
       <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
         <ToastContainer />
@@ -84,7 +102,7 @@ class NurseForm extends Form {
             </header>
             <article>{this.renderLabel("FULL NAME", "fname")}</article>
             <article>
-              {this.renderInput("text", "fname", "fullname", "Full Name")}
+              {this.renderInput("text", "fname", "fullName", "Full Name")}
             </article>
             <article>{this.renderLabel("Date of Birth", "dob")}</article>
             <article>
@@ -94,18 +112,6 @@ class NurseForm extends Form {
             <article>{this.renderLabel("Staff Type", "staff")}</article>
             <article>
               {this.renderDropDown("Staff", serviceType, "staff", "staffType")}
-            </article>
-
-            <article>
-              {this.renderLabel("Organization", "organization")}
-            </article>
-            <article>
-              {this.renderDropDown(
-                "Organization",
-                organization,
-                "organization",
-                "organization"
-              )}
             </article>
 
             <article>
@@ -120,9 +126,14 @@ class NurseForm extends Form {
               )}
             </article>
 
+            <article>{this.renderLabel("Email", "email")}</article>
+            <article>
+              {this.renderInput("text", "email", "email", "Email")}
+            </article>
+
             <article>{this.renderLabel("Phone No", "phoneno")}</article>
             <article>
-              {this.renderInput("number", "phoneno", "phoneNo", "Phone No")}
+              {this.renderInput("number", "phoneno", "phone", "Phone No")}
             </article>
 
             {this.renderBtn("Save Staff Member")}

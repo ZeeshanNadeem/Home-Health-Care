@@ -4,12 +4,12 @@ import Joi from "joi-browser";
 class Form extends React.Component {
   state = {
     doctorForm: {
-      fullname: "",
+      fullName: "",
       dateOfBirth: "",
       staffType: "",
-      organization: "",
       qualification: "",
-      phoneNo: "",
+      email: "",
+      phone: "",
 
       serviceName: "",
       serviceOrgranization: "",

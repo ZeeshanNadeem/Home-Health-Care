@@ -37,7 +37,6 @@ const EditService = () => {
       const searchedResults = data.results.filter((d) =>
         d.serviceName.toUpperCase().startsWith(searchedService.toUpperCase())
       );
-      console.log("Searched Results ::", searchedResults);
 
       const totalDocuments = await getTotalDocuments();
 

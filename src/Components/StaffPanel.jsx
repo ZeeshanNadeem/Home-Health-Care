@@ -17,6 +17,8 @@ import { TextField } from "@mui/material";
 
 import Pagination from "@mui/material/Pagination";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import StaffEditModle from "./StaffEditModle";
+import AddStaffModle from "./AddStaffModle";
 
 const StaffPanel = () => {
   const [staff, setStaff] = useState([]);
@@ -24,7 +26,13 @@ const StaffPanel = () => {
   useEffect(async () => {
     const { data: staff } = await axios.get(`http://localhost:3000/api/staff`);
     setStaff(staff);
-  }, [staff]);
+  }, []);
+
+  const updateService = async () => {
+    const { data: staff } = await axios.get(`http://localhost:3000/api/staff`);
+
+    setStaff(staff);
+  };
 
   return (
     <article className="ServicePanel-wrapper ">
@@ -39,12 +47,8 @@ const StaffPanel = () => {
           Search
         </button>
       </article>
-      <article class="float-button">
-        <Fab color="primary" aria-label="edit">
-          <AddIcon />
-        </Fab>
-      </article>
 
+      <AddStaffModle />
       <article className="table-responsive">
         <table className="table">
           <thead className="table-th assign-duty-th">
@@ -52,8 +56,8 @@ const StaffPanel = () => {
               <th scope="col">Full Name</th>
               <th scope="col">Date Of Birth</th>
               <th scope="col">Occupation</th>
-              <th scope="col">Organization</th>
               <th scope="col">Qualification</th>
+              <th scope="col">Email</th>
               <th scope="col">Phone No</th>
               <th scope="col"></th>
               <th scope="col"></th>
@@ -65,8 +69,9 @@ const StaffPanel = () => {
                 <td>{data.fullName}</td>
                 <td>{data.dateOfBirth}</td>
                 <td>{data.staffType.name}</td>
-                <td>{data.organization.name}</td>
+
                 <td>{data.qualification.name}</td>
+                <td>{data.email}</td>
                 <td>{data.phone}</td>
                 <td>
                   <Button variant="contained">
@@ -76,6 +81,12 @@ const StaffPanel = () => {
                     />
                     Delete
                   </Button>
+                </td>
+                <td>
+                  <StaffEditModle
+                    serviceData={data}
+                    updateService={updateService}
+                  />
                 </td>
               </tr>
             ))}

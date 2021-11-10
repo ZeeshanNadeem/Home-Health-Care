@@ -36,7 +36,6 @@ class AddService extends Form {
     const { serviceData, updateService } = this.props;
 
     if (serviceData) {
-      console.log("Inside put request");
       const { doctorForm } = this.state;
 
       try {
