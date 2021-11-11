@@ -28,38 +28,69 @@ class NurseForm extends Form {
     phone: Joi.number().required().label("Phone No"),
   };
 
+  //Editing Data
+  updateStaffMember = async () => {
+    const { staffMemberData, RefreshStaffMembers } = this.props;
+    const { doctorForm } = this.state;
+    const updateStaff = {
+      fullName: doctorForm.fullName,
+      dateOfBirth: doctorForm.dateOfBirth,
+      staffTypeID: doctorForm.staffType,
+      qualificationID: doctorForm.qualification,
+      email: doctorForm.email,
+      phone: doctorForm.phone,
+    };
+
+    try {
+      await axios.put(
+        "http://localhost:3000/api/staff" + "/" + staffMemberData._id,
+        updateStaff
+      );
+      RefreshStaffMembers();
+      toast.success("Staff Member Updated");
+    } catch (ex) {
+      toast.error("Something went wrong");
+    }
+  };
+
+  addAStaffMember = async () => {
+    const { doctorForm } = this.state;
+    const { RefreshStaffMembers } = this.props;
+
+    const addStaffMember = {
+      fullName: doctorForm.fullName,
+      dateOfBirth: doctorForm.dateOfBirth,
+      staffTypeID: doctorForm.staffType,
+      qualificationID: doctorForm.qualification,
+      email: doctorForm.email,
+      phone: doctorForm.phone,
+    };
+
+    try {
+      const { data: doctorPosted } = await axios.post(
+        "http://localhost:3000/api/staff",
+        addStaffMember
+      );
+      RefreshStaffMembers();
+    } catch (ex) {
+      toast.error("Something went wrong..");
+      return;
+    }
+    toast.success("Staff member has been added!");
+  };
+
   handleSubmit = async (e) => {
     e.preventDefault();
     const errors = this.validate();
     this.setState({ errors: errors || {} });
+    const { staffMemberData } = this.props;
+    if (staffMemberData) {
+      this.updateStaffMember();
+      return;
+    }
 
     if (!errors) {
-      const { doctorForm } = this.state;
-      console.log("Doctor Form:::!!", doctorForm);
-      const doctorToPost = {
-        fullName: doctorForm.fullName,
-        dateOfBirth: doctorForm.dateOfBirth,
-        staffTypeID: doctorForm.staffType,
-        qualificationID: doctorForm.qualification,
-        email: doctorForm.email,
-        phone: doctorForm.phone,
-      };
-
-      try {
-        const { updateService } = this.props;
-        console.log("Nurse Form update :", updateService);
-        const { data: doctorPosted } = await axios.post(
-          "http://localhost:3000/api/staff",
-          doctorToPost
-        );
-        updateService();
-      } catch (ex) {
-        console.log("Catch :::", ex);
-        toast.error("Something went wrong..");
-        return;
-      }
-      console.log("Error :::");
-      toast.success("Staff member has been saved!");
+      this.addAStaffMember();
       return;
     }
     toast.error("Something went wrong..");
@@ -72,16 +103,19 @@ class NurseForm extends Form {
     const { data: serviceType } = await axios.get(
       "http://localhost:3000/api/staffType"
     );
-    const { serviceData } = this.props;
+    const { staffMemberData } = this.props;
 
     const doctorForm = { ...this.state.doctorForm };
-    if (serviceData) {
-      doctorForm.fullName = serviceData.fullName;
-      doctorForm.dateOfBirth = serviceData.dateOfBirth;
-      doctorForm.staffType = serviceData.staffType._id;
-      doctorForm.qualification = serviceData.qualification._id;
-      doctorForm.email = serviceData.email;
-      doctorForm.phone = serviceData.phone;
+
+    //Pre-Populating Staff Form
+    if (staffMemberData) {
+      doctorForm.fullName = staffMemberData.fullName;
+      doctorForm.dateOfBirth = staffMemberData.dateOfBirth;
+      doctorForm.staffType = staffMemberData.staffType._id;
+      doctorForm.qualification = staffMemberData.qualification._id;
+      doctorForm.email = staffMemberData.email;
+      doctorForm.phone = staffMemberData.phone;
+
       this.setState({ doctorForm });
     }
     this.setState({ qualification, serviceType });

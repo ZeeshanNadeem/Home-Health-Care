@@ -10,8 +10,7 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import NurseForm from "./NurseForm";
 import { useEffect } from "react";
 
-export default function EditModal({ serviceData, updateService }) {
-  console.log("Staff Edit Modle :", updateService);
+export default function EditModal({ staffMemberData, RefreshStaffMembers }) {
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -19,7 +18,7 @@ export default function EditModal({ serviceData, updateService }) {
 
   return (
     <div>
-      <Link to={`/admin/Nurse/${serviceData._id}`}>
+      <Link to={`/admin/Nurse/${staffMemberData._id}`}>
         <Button variant="contained" onClick={handleOpen}>
           <FontAwesomeIcon icon={faEdit} style={{ marginRight: "0.6rem" }} />
           Edit
@@ -33,7 +32,10 @@ export default function EditModal({ serviceData, updateService }) {
         aria-describedby="modal-modal-description"
       >
         <Container>
-          <NurseForm updateService={updateService} />
+          <NurseForm
+            staffMemberData={staffMemberData}
+            RefreshStaffMembers={RefreshStaffMembers}
+          />
         </Container>
       </Modal>
     </div>

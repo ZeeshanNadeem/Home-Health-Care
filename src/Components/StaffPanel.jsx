@@ -22,16 +22,38 @@ import AddStaffModle from "./AddStaffModle";
 
 const StaffPanel = () => {
   const [staff, setStaff] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSelected, setPageSelected] = useState(1);
+  const [pageSize] = useState(9);
 
   useEffect(async () => {
     const { data: staff } = await axios.get(`http://localhost:3000/api/staff`);
     setStaff(staff);
   }, []);
 
-  const updateService = async () => {
+  const RefreshStaffMembers = async () => {
     const { data: staff } = await axios.get(`http://localhost:3000/api/staff`);
 
     setStaff(staff);
+  };
+
+  const deleteAStaffMember = async (id) => {
+    const orignalStaff = staff;
+    const newStaff = staff.filter((s) => s._id !== id);
+    setStaff(newStaff);
+
+    try {
+      await axios.delete("http://localhost:3000/api/staff" + "/" + id);
+      toast.success("Deleted");
+      const { data: services } = await axios.get(
+        "http://localhost:3000/api/staff"
+      );
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404) {
+        toast.error("This post has already been deleted");
+      }
+      setStaff(orignalStaff);
+    }
   };
 
   return (
@@ -48,7 +70,7 @@ const StaffPanel = () => {
         </button>
       </article>
 
-      <AddStaffModle />
+      <AddStaffModle RefreshStaffMembers={RefreshStaffMembers} />
       <article className="table-responsive">
         <table className="table">
           <thead className="table-th assign-duty-th">
@@ -74,7 +96,12 @@ const StaffPanel = () => {
                 <td>{data.email}</td>
                 <td>{data.phone}</td>
                 <td>
-                  <Button variant="contained">
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      deleteAStaffMember(data._id);
+                    }}
+                  >
                     <FontAwesomeIcon
                       icon={faTrash}
                       style={{ marginRight: "0.6rem" }}
@@ -84,8 +111,8 @@ const StaffPanel = () => {
                 </td>
                 <td>
                   <StaffEditModle
-                    serviceData={data}
-                    updateService={updateService}
+                    staffMemberData={data}
+                    RefreshStaffMembers={RefreshStaffMembers}
                   />
                 </td>
               </tr>
@@ -93,6 +120,19 @@ const StaffPanel = () => {
           </tbody>
         </table>
       </article>
+      {
+        <div className="pagination" style={{ marginTop: "1rem" }}>
+          <Pagination
+            count={4}
+            // variant="outlined"
+            color="secondary"
+            defaultPage={1}
+            size="large"
+            showFirstButton
+            showLastButton
+          />
+        </div>
+      }
     </article>
   );
 };

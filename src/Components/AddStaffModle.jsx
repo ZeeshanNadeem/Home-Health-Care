@@ -17,7 +17,7 @@ import Fab from "@mui/material/Fab";
 //   p: 4,
 // };
 
-export default function AddStaffModle({ updateService }) {
+export default function AddStaffModle({ RefreshStaffMembers }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -37,7 +37,7 @@ export default function AddStaffModle({ updateService }) {
         aria-describedby="modal-modal-description"
       >
         <Container>
-          <NurseFrom />
+          <NurseFrom RefreshStaffMembers={RefreshStaffMembers} />
         </Container>
       </Modal>
     </div>
