@@ -101,9 +101,13 @@ button.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary.MuiButton-s
 .table-responsive {
   overflow-x: auto;
   border-radius: 13px;
+  margin-top: 1rem;
   box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.1);
 }
 
+.table-Services {
+  margin-top: 0;
+}
 .editService-container {
   display: flex;
 
@@ -218,7 +222,7 @@ img.nav-logo.animate__heartBeat {
 }
 
 .search-Bar {
-  height: 3.2rem;
+  /* height: 2rem; */
   border-radius: 22px;
   width: 35rem;
   border: 0 !important;
@@ -239,13 +243,13 @@ input {
   display: flex;
   justify-content: center;
   align-items: center;
-
+  height: 3.2rem;
   border-radius: 25px;
   display: flex;
   border: 0;
   box-shadow: 0 0 10px 10px rbga(0, 0, 0, 0.1);
   box-shadow: 0 0 10px 10px rgb(0 0 0 / 10%);
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
 }
 
 .doc-container {

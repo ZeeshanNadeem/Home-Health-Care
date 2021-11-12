@@ -29,9 +29,13 @@ const EditService = () => {
     return totalDocuments;
   };
 
+  //Get Searched Service Results.
+  //To Be Displayed in a Table
+  //Or Without any searched Value.
   const PopulateTable = async () => {
     let page = "";
 
+    //When Searched Value Exists.
     if (searchedService) {
       const { data } = await axios.get(`http://localhost:3000/api/services`);
       const searchedResults = data.results.filter((d) =>
@@ -53,6 +57,7 @@ const EditService = () => {
       }
       return;
     }
+    //When Searched Value Doesn't Exist.
     const { data } = await axios.get(
       `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}&searchedString=${searchedService}`
     );
@@ -101,8 +106,6 @@ const EditService = () => {
   };
 
   const checkPages = () => {
-    console.log("Check Pages");
-    console.log("totalPages", totalPages);
     if (totalPages > 1) return true;
     else return false;
   };
@@ -132,8 +135,6 @@ const EditService = () => {
   };
 
   return (
-    //editService-container classname of
-
     <article className="ServicePanel-wrapper ">
       <React.Fragment>
         <article className="searchBar-wrapper">
@@ -162,7 +163,7 @@ const EditService = () => {
             // <article className="table-container">
             // <div className="doc-table-container">
             <React.Fragment>
-              <article className="table-responsive">
+              <article className="table-responsive table-Services">
                 <table className="table">
                   <thead className="table-th assign-duty-th">
                     <tr>
@@ -207,13 +208,6 @@ const EditService = () => {
             </React.Fragment>
           )}
         </article>
-
-        {/* <Pagination
-            count="10"
-            // variant="outlined"
-            color="secondary"
-            size="large"
-          /> */}
       </React.Fragment>
 
       {checkPages() && (
@@ -230,9 +224,6 @@ const EditService = () => {
           />
         </div>
       )}
-      {/* <Paginating count={10}
-        updateService={this.updateService}
-        /> */}
     </article>
   );
 };
