@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import DoctorForm from "./DoctorForm";
+// import DoctorForm from "../DoctorForm";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -15,10 +15,10 @@ import { faUserMd } from "@fortawesome/free-solid-svg-icons";
 
 import EditService from "./EditService";
 import AdminUserRequest from "./AdminUserRequest";
-import AssignDuty from "./AssignDuty";
-import AddService from "./AddService";
-import NurseForm from "./NurseForm";
-import AdminNav from "./AdminNav";
+import AssignDuty from "../AssignDuty";
+import AddService from "./Forms/AddService";
+import NurseForm from "./Forms/AddStaff";
+import AdminNav from "../AdminNav";
 import { Link } from "react-router-dom";
 import "animate.css";
 const Admin = () => {

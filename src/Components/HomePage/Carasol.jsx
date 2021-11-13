@@ -2,14 +2,14 @@ import React from "react";
 
 import { Carousel } from "react-bootstrap";
 
-import img1 from "../Images/img1.jpg";
+import img1 from "../../Images/img1.jpg";
 
-import img3 from "../Images/img3.jpg";
-import img4 from "../Images/img4.jpg";
-import img5 from "../Images/img5.jpg";
-import img9 from "../Images/img5.jpg";
+import img3 from "../../Images/img3.jpg";
+import img4 from "../../Images/img4.jpg";
+import img5 from "../../Images/img5.jpg";
+import img9 from "../../Images/img5.jpg";
 
-import img10 from "../Images/img10.jpg";
+import img10 from "../../Images/img10.jpg";
 
 const Carasol = () => {
   return (

@@ -5,23 +5,23 @@ import Login from "./Components/Login";
 
 import SignUpNew from "./Components/SignUpNew";
 
-import Home from "./Components/Home";
+import Home from "./Components/HomePage/Home";
 
-import Admin from "./Components/Admin";
+import Admin from "./Components/AdminOrganization/Admin";
 
 import UserRequest from "./Components/UserRequest";
-import AddService from "./Components/AddService";
-import EditService from "./Components/EditService";
-import EditModal from "./Components/MoodleForEdit";
-import DoctorForm from "./Components/DoctorForm";
-import NurseForm from "./Components/NurseForm";
+import AddService from "./Components/AdminOrganization/Forms/AddService";
+import EditService from "./Components/AdminOrganization/EditService";
+import EditModal from "./Components/AdminOrganization/Modles/MoodleForEdit";
+// import DoctorForm from "./Components/DoctorForm";
+import NurseForm from "./Components/AdminOrganization/Forms/AddStaff";
 // import AdminNav from "./Components/AdminNav";
-import AdminUserRequest from "./Components/AdminUserRequest";
-import AdminStaff from "./Components/AdminStaff";
+import AdminUserRequest from "./Components/AdminOrganization/AdminUserRequest";
+import AdminStaff from "./Components/AdminOrganization/AdminStaff";
 import UserScheduled from "./Components/UserScheduled";
 import Schedule from "./Components/Schedule";
 import Leave from "./Components/Leave";
-import StaffPanel from "./Components/StaffPanel";
+import StaffPanel from "./Components/AdminOrganization/StaffPanel";
 function App() {
   return (
     <article>

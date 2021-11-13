@@ -1,16 +1,15 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
-import AddService from "./AddService";
+import AddService from "../Forms/AddService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import NurseForm from "./NurseForm";
 import { useEffect } from "react";
 
-export default function EditModal({ staffMemberData, RefreshStaffMembers }) {
+export default function EditModal({ serviceData, updateService }) {
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -18,7 +17,7 @@ export default function EditModal({ staffMemberData, RefreshStaffMembers }) {
 
   return (
     <div>
-      <Link to={`/admin/Nurse/${staffMemberData._id}`}>
+      <Link to={`/admin/Services/${serviceData._id}`}>
         <Button variant="contained" onClick={handleOpen}>
           <FontAwesomeIcon icon={faEdit} style={{ marginRight: "0.6rem" }} />
           Edit
@@ -32,10 +31,7 @@ export default function EditModal({ staffMemberData, RefreshStaffMembers }) {
         aria-describedby="modal-modal-description"
       >
         <Container>
-          <NurseForm
-            staffMemberData={staffMemberData}
-            RefreshStaffMembers={RefreshStaffMembers}
-          />
+          <AddService serviceData={serviceData} updateService={updateService} />
         </Container>
       </Modal>
     </div>

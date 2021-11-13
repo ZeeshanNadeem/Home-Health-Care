@@ -1,5 +1,5 @@
-import menu from "../Icons/menu.svg";
-import logo from "../Icons/logo.svg";
+import menu from "../../Icons/menu.svg";
+import logo from "../../Icons/logo.svg";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import IndexDropdown from "./IndexDropdown";

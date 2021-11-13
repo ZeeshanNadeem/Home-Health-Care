@@ -1,7 +1,7 @@
 import React from "react";
 import Form from "./Common/Form";
 import "animate.css";
-import NavBar from "./NavBar";
+import NavBar from "./HomePage/NavBar";
 class Login extends Form {
   render() {
     return (

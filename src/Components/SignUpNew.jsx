@@ -1,6 +1,6 @@
 import React from "react";
 import Form from "./Common/Form";
-import NavBar from "./NavBar";
+import NavBar from "./HomePage/NavBar";
 import "animate.css";
 class SignUp extends Form {
   render() {

@@ -1,8 +1,10 @@
 import * as React from "react";
+
+import AddService from "../Forms/AddService";
+
 import { Container } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
-import NurseFrom from "./NurseForm";
 import Fab from "@mui/material/Fab";
 
 // const style = {
@@ -17,7 +19,7 @@ import Fab from "@mui/material/Fab";
 //   p: 4,
 // };
 
-export default function AddStaffModle({ RefreshStaffMembers }) {
+export default function BasicModal({ updateService }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -37,7 +39,7 @@ export default function AddStaffModle({ RefreshStaffMembers }) {
         aria-describedby="modal-modal-description"
       >
         <Container>
-          <NurseFrom RefreshStaffMembers={RefreshStaffMembers} />
+          <AddService updateService={updateService} />
         </Container>
       </Modal>
     </div>

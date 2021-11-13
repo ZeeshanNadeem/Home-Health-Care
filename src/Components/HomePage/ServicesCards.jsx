@@ -1,8 +1,8 @@
 import React from "react";
 import Card_ from "./Card";
-import vacine from "../Images/vacine4.jpg";
-import doc1 from "../Images/aides2.jpg";
-import urine from "../Images/urine9.jpg";
+import vaccination4 from "../../Images/vaccination4.jpg";
+import doc1 from "../../Images/aides2.jpg";
+import urine from "../../Images/urine9.jpg";
 const ServicesCards = () => {
   return (
     <React.Fragment>
@@ -34,15 +34,15 @@ const ServicesCards = () => {
           cardTitle=""
           cardText=""
           btnName=""
-          cardTitle="Physical Therapy"
+          cardTitle="Physiotherapy Care"
           imgSrc="https://homehealthcare.com.ph/assets/default/img/online.svg"
         />
         <Card_
           cardTitle=""
           cardText=""
           btnName=""
-          cardTitle="Vaccination"
-          imgSrc={vacine}
+          cardTitle="Vaccination Care"
+          imgSrc={vaccination4}
         />
         <Card_
           cardTitle=""
@@ -55,7 +55,7 @@ const ServicesCards = () => {
           cardTitle=""
           cardText=""
           btnName=""
-          cardTitle="Urine Sample"
+          cardTitle="Sampling Care"
           imgSrc={urine}
         />
       </article>

@@ -3,11 +3,11 @@ import { Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import EditModal from "./MoodleForEdit";
+import EditModal from "./Modles/MoodleForEdit";
 import { Paper } from "@material-ui/core";
 
-import BasicModal from "../AddServiceModle";
-import AddService from "./AddService";
+import BasicModal from "./Modles/AddServiceModle";
+import AddService from "./Forms/AddService";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { TextField } from "@mui/material";
@@ -102,6 +102,10 @@ const EditService = () => {
       `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}`
     );
 
+    console.log(
+      `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}`
+    );
+    console.log("Results:::!", services);
     setServices(services.results);
   };
 
@@ -178,7 +182,7 @@ const EditService = () => {
                     {services.map((data) => (
                       <tr key={data._id}>
                         <td>{data.serviceName}</td>
-                        <td>{data.serviceOrgranization}</td>
+                        <td>{data.serviceOrgranization.name}</td>
                         <td>{data.servicePrice}</td>
                         <td>
                           <Button

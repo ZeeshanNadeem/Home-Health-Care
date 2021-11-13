@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import Form from "./Common/Form";
+import Form from "../../Common/Form";
 import Joi from "joi-browser";
 import Alert from "@material-ui/lab/Alert";
 import { toast, ToastContainer } from "react-toastify";

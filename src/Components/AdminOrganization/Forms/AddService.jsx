@@ -1,9 +1,9 @@
 import React from "react";
-import Form from "./Common/Form";
+import Form from "../../Common/Form";
 import Joi from "joi-browser";
 
 import { toast, ToastContainer } from "react-toastify";
-import EditService from "./EditService";
+import EditService from "../EditService";
 import axios from "axios";
 
 class AddService extends Form {
@@ -15,9 +15,14 @@ class AddService extends Form {
     },
     successMessage: "",
     services: [],
+    organizations: [],
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const { data } = await axios.get("http://localhost:3000/api/organization");
+
+    this.setState({ organizations: data });
+
     const { serviceData } = this.props;
     const doctorForm = { ...this.state.doctorForm };
     if (serviceData) {
@@ -63,7 +68,7 @@ class AddService extends Form {
         this.setState({ successMessage: "Service has been added" });
         toast.success("Service has been added");
 
-        // updateService();
+        updateService();
       } catch (ex) {}
     }
   };
@@ -74,7 +79,7 @@ class AddService extends Form {
   };
 
   render() {
-    const { successMessage } = this.state;
+    const { successMessage, organizations } = this.state;
     return (
       <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
         <article className="doc-container">
@@ -95,14 +100,21 @@ class AddService extends Form {
               )}
             </article>
             <article>
-              {this.renderLabel("Organization", "service_organization")}
+              {this.renderLabel("Organization", "serviceOrganization")}
             </article>
             <article>
-              {this.renderInput(
+              {/* {this.renderInput(
                 "text",
                 "serviceOrgranization",
                 "serviceOrgranization",
                 "Service Organization"
+              )} */}
+              {/* label, optionsArray, id, name */}
+              {this.renderDropDown(
+                "serviceOrgranization",
+                this.state.organizations,
+                "serviceOrgranization",
+                "serviceOrgranization"
               )}
             </article>
             <article>{this.renderLabel("Price", "service_price")}</article>

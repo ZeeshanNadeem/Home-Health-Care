@@ -2,7 +2,7 @@ import React from "react";
 import { Avatar } from "@material-ui/core";
 
 import { Button } from "@mui/material";
-import Form from "./Common/Form";
+import Form from "../Common/Form";
 class PopOverTable extends Form {
   state = {
     services: [

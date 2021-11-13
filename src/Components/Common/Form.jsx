@@ -14,6 +14,14 @@ class Form extends React.Component {
       serviceName: "",
       serviceOrgranization: "",
       servicePrice: "",
+
+      //User Request
+      service: "",
+      serviceOrganization: "",
+      schedule: "",
+      address: "",
+      phoneno: "",
+      addressCheckBox: "",
     },
     errors: {},
   };
@@ -92,6 +100,7 @@ class Form extends React.Component {
 
   renderDropDown = (label, optionsArray, id, name) => {
     const { doctorForm, errors } = this.state;
+
     return (
       <article>
         <select
