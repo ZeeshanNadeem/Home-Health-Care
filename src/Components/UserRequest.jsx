@@ -7,31 +7,28 @@ class UserRequest extends Form {
   state = {
     doctorForm: {
       service: "",
-      serviceOrganization: "",
+      organization: "",
       schedule: "",
       address: "",
       phoneno: "",
       addressCheckBox: "",
     },
-    services: [],
+    // services: [],
     organization: [],
+    Conditionalservices: [],
   };
   async componentDidMount() {
-    const { data: services } = await axios.get(
-      `http://localhost:3000/api/services`
-    );
-
     const { data: organization } = await axios.get(
       `http://localhost:3000/api/organization`
     );
     this.setState({
-      services: services.results,
       organization: organization,
     });
   }
+  componentDidUpdate() {}
   schema = {
     service: Joi.string().required().label("Service"),
-    serviceOrganization: Joi.string().required().label("Service Organization"),
+    organization: Joi.string().required().label("Service Organization"),
     schedule: Joi.string().required().label("Service Organization"),
     address: Joi.string().required().label("Service Organization"),
     phoneno: Joi.number().required().label("Service Organization"),
@@ -59,18 +56,19 @@ class UserRequest extends Form {
               "service For",
               organization,
               "serviceOrgranization",
-              "serviceOrganization"
+              "organization",
+              "Please Select an Organization"
             )}
           </article>
           <article>{this.renderLabel("Service", "service")}</article>
           <article>
-            {this.renderDropDown("service", services, "service", "service")}
+            {this.renderConditionalDropDown("service", "service")}
           </article>
 
           <article>{this.renderLabel("Schedule", "schedule")}</article>
           <article>
             {this.renderInput(
-              "datetime-local",
+              "date",
               "schedule",
               "schedule",
               "Schedule a Meeting"
