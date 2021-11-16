@@ -3,6 +3,9 @@ import { Alert } from "@mui/material";
 import getDay from "date-fns/getDay";
 import Joi from "joi-browser";
 import axios from "axios";
+import moment from "moment";
+import confiq from "../Api/config.json";
+
 class Form extends React.Component {
   state = {
     doctorForm: {
@@ -21,6 +24,7 @@ class Form extends React.Component {
       service: "",
       organization: "618a7b3192c7e9d6236734a0",
       schedule: "",
+
       address: "",
       phoneno: "",
       addressCheckBox: "",
@@ -51,11 +55,14 @@ class Form extends React.Component {
 
     return Object.keys(errors).length === 0 ? null : errors;
   };
-  scheduleTime = () => {
-    const { schedule } = this.state;
-    const date = new Date();
-    console.log("Schedule value :", schedule);
-    console.log("Date converted into day:", schedule.getDay());
+  scheduleTime = async (date) => {
+    console.log("Schedule Time!!!");
+
+    const m = moment(date);
+    const day = m.format("dddd");
+    console.log("Schedule ::", m.format("dddd"));
+    const { data } = await axios.get(confiq.staffDuties);
+    console.log(data);
   };
   populateServices = async (inputValue) => {
     const { data } = await axios.get(
@@ -73,13 +80,13 @@ class Form extends React.Component {
     const doctorForm = { ...this.state.doctorForm };
     doctorForm[input.name] = input.value;
 
+    this.setState({ doctorForm, errors });
+
     if (input.name === "organization") {
       this.populateServices(input.value);
     } else if (input.name === "schedule") {
-      this.scheduleTime();
+      this.scheduleTime(input.value);
     }
-
-    this.setState({ doctorForm, errors });
   };
   renderInput = (type, id, name, placeholder = "") => {
     const { doctorForm, errors } = this.state;
@@ -105,12 +112,12 @@ class Form extends React.Component {
   };
   renderCheckBox = (id, name, value, msg) => {
     return (
-      <React.Fragment>
+      <article>
         <input type="checkbox" id={id} name={name} value={value} />
         <label className="chkBox-Msg" forHtml={id}>
           {msg}
         </label>
-      </React.Fragment>
+      </article>
     );
   };
 
@@ -120,7 +127,7 @@ class Form extends React.Component {
 
   renderConditionalDropDown = (id, name) => {
     const { doctorForm, errors, Conditionalservices } = this.state;
-    console.log("Conditional services :", Conditionalservices);
+
     return (
       <article>
         <select

@@ -300,3 +300,12 @@ article.searchBar-wrapper {
   background-size: cover;
   overflow: hidden;
 }
+
+.check-availability {
+  margin: 0;
+  padding: 0;
+  color: #1e293b;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}

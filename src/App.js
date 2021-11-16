@@ -9,7 +9,7 @@ import Home from "./Components/HomePage/Home";
 
 import Admin from "./Components/AdminOrganization/Admin";
 
-import UserRequest from "./Components/UserRequest";
+import UserRequestService from "./Components/UserRequestService/UserRequest";
 import AddService from "./Components/AdminOrganization/Forms/AddService";
 import EditService from "./Components/AdminOrganization/EditService";
 import EditModal from "./Components/AdminOrganization/Modles/MoodleForEdit";
@@ -39,7 +39,7 @@ function App() {
       <Route exact path="/" component={Home} />
       <Route exact path="/Signup" component={SignUpNew} />
       <Route exact path="/Login" component={Login} />
-      <Route exact path="/user/request" component={UserRequest} />
+      <Route exact path="/user/request" component={UserRequestService} />
     </article>
   );
 }

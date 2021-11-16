@@ -1,9 +1,11 @@
 import React from "react";
-import Form from "./Common/Form";
+import Form from "../Common/Form";
 import axios from "axios";
 import Joi from "joi-browser";
+import Button from "@mui/material/Button";
+import CheckAvailability from "./Modal/CheckAvailability";
 
-class UserRequest extends Form {
+class UserRequestService extends Form {
   state = {
     doctorForm: {
       service: "",
@@ -74,7 +76,9 @@ class UserRequest extends Form {
               "Schedule a Meeting"
             )}
           </article>
-
+          <span>
+            <CheckAvailability />
+          </span>
           {this.renderCheckBox(
             "addressCheckBox",
             "addressCheckBox",
@@ -96,4 +100,4 @@ class UserRequest extends Form {
   }
 }
 
-export default UserRequest;
+export default UserRequestService;
