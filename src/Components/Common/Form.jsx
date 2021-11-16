@@ -22,7 +22,7 @@ class Form extends React.Component {
 
       //User Request
       service: "",
-      organization: "618a7b3192c7e9d6236734a0",
+      organization: "",
       schedule: "",
 
       address: "",
@@ -30,6 +30,7 @@ class Form extends React.Component {
       addressCheckBox: "",
     },
     errors: {},
+    availabilityData: [],
   };
 
   validateProperty = ({ value, name }) => {
@@ -56,13 +57,16 @@ class Form extends React.Component {
     return Object.keys(errors).length === 0 ? null : errors;
   };
   scheduleTime = async (date) => {
-    console.log("Schedule Time!!!");
-
     const m = moment(date);
     const day = m.format("dddd");
-    console.log("Schedule ::", m.format("dddd"));
-    const { data } = await axios.get(confiq.staffDuties);
-    console.log(data);
+    const { data } = await axios.get(confiq.staffDuties + "?day=" + `${day}`);
+    const { service, organization } = this.state.doctorForm;
+    console.log("Data got :", data);
+    const availabilityData = data.filter(
+      (d) =>
+        d.service._id === service && d.serviceOrganization._id === organization
+    );
+    this.setState({ availabilityData });
   };
   populateServices = async (inputValue) => {
     const { data } = await axios.get(
@@ -125,7 +129,7 @@ class Form extends React.Component {
     return <button className="btns">{label}</button>;
   };
 
-  renderConditionalDropDown = (id, name) => {
+  renderConditionalDropDown = (id, name, label) => {
     const { doctorForm, errors, Conditionalservices } = this.state;
 
     return (
@@ -138,6 +142,7 @@ class Form extends React.Component {
           aria-label="Default select example"
           onChange={this.handleChange}
         >
+          {Conditionalservices.length > 0 && <option value="">{label}</option>}
           {Conditionalservices ? (
             Conditionalservices.map((option) => (
               <option value={option._id} key={option._id}>

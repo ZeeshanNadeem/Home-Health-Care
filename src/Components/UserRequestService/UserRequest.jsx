@@ -18,6 +18,7 @@ class UserRequestService extends Form {
     // services: [],
     organization: [],
     Conditionalservices: [],
+    availabilityData: [],
   };
   async componentDidMount() {
     const { data: organization } = await axios.get(
@@ -36,8 +37,9 @@ class UserRequestService extends Form {
     phoneno: Joi.number().required().label("Service Organization"),
     addressCheckBox: Joi.string().required().label("Service Organization"),
   };
+  handleSubmit = () => {};
   render() {
-    const { services, organization, profession } = this.state;
+    const { services, organization, availabilityData } = this.state;
     return (
       <div className="doc-container user-request-wrapper">
         <div className="card-signup doc-form style-User-Request">
@@ -51,49 +53,60 @@ class UserRequestService extends Form {
           <article>
             {this.renderDropDown("Profession", profession, "serviceFor")}
           </article> */}
+          <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
+            <article>{this.renderLabel("Organization", "serviceFor")}</article>
+            <article>
+              {this.renderDropDown(
+                "service For",
+                organization,
+                "serviceOrgranization",
+                "organization",
+                "Please Select an Organization"
+              )}
+            </article>
+            <article>{this.renderLabel("Service", "service")}</article>
+            <article>
+              {this.renderConditionalDropDown(
+                "service",
+                "service",
+                "Please Select a Service"
+              )}
+            </article>
 
-          <article>{this.renderLabel("Organization", "serviceFor")}</article>
-          <article>
-            {this.renderDropDown(
-              "service For",
-              organization,
-              "serviceOrgranization",
-              "organization",
-              "Please Select an Organization"
-            )}
-          </article>
-          <article>{this.renderLabel("Service", "service")}</article>
-          <article>
-            {this.renderConditionalDropDown("service", "service")}
-          </article>
+            <article>{this.renderLabel("Schedule", "schedule")}</article>
+            <article>
+              {this.renderInput(
+                "date",
+                "schedule",
+                "schedule",
+                "Schedule a Meeting"
+              )}
+            </article>
+            <span>
+              <CheckAvailability availabilityData={availabilityData} />
+            </span>
 
-          <article>{this.renderLabel("Schedule", "schedule")}</article>
-          <article>
-            {this.renderInput(
-              "date",
-              "schedule",
-              "schedule",
-              "Schedule a Meeting"
+            <article>{this.renderLabel("Time", "time")}</article>
+            <article>
+              {this.renderInput("time", "timeSchedule", "timeSchedule", "Time")}
+            </article>
+
+            {this.renderCheckBox(
+              "addressCheckBox",
+              "addressCheckBox",
+              "rememberMeChkBox",
+              "Only Once"
             )}
-          </article>
-          <span>
-            <CheckAvailability />
-          </span>
-          {this.renderCheckBox(
-            "addressCheckBox",
-            "addressCheckBox",
-            "rememberMeChkBox",
-            "Only Once"
-          )}
-          <article>{this.renderLabel("Address", "Address")}</article>
-          <article>
-            {this.renderMultiLineTextField("3", "44", "address")}
-          </article>
-          <article>{this.renderLabel("Phone No", "phoneno")}</article>
-          <article>
-            {this.renderInput("number", "phoneno", "phoneno", "Phone No")}
-          </article>
-          {this.renderBtn("Schedule")}
+            <article>{this.renderLabel("Address", "Address")}</article>
+            <article>
+              {this.renderMultiLineTextField("3", "44", "address")}
+            </article>
+            <article>{this.renderLabel("Phone No", "phoneno")}</article>
+            <article>
+              {this.renderInput("number", "phoneno", "phoneno", "Phone No")}
+            </article>
+            {this.renderBtn("Schedule")}
+          </form>
         </div>
       </div>
     );

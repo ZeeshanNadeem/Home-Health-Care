@@ -2,8 +2,9 @@ import * as React from "react";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import CheckAvailability from "../ModalData/CheckAvailability";
 
-export default function CheckAvailabilityPopover() {
+export default function CheckAvailabilityPopover({ availabilityData }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -16,7 +17,6 @@ export default function CheckAvailabilityPopover() {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-
   return (
     <span>
       <span onMouseEnter={handleClick} className="check-availability">
@@ -32,7 +32,7 @@ export default function CheckAvailabilityPopover() {
           horizontal: "left",
         }}
       >
-        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+        <CheckAvailability availabilityData={availabilityData} />
       </Popover>
     </span>
   );
