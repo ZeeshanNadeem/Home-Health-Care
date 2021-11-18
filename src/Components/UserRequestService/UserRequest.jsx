@@ -14,6 +14,7 @@ class UserRequestService extends Form {
       address: "",
       phoneno: "",
       addressCheckBox: "",
+      timeschedule: "",
     },
     // services: [],
     organization: [],
@@ -32,10 +33,11 @@ class UserRequestService extends Form {
   schema = {
     service: Joi.string().required().label("Service"),
     organization: Joi.string().required().label("Service Organization"),
-    schedule: Joi.string().required().label("Service Organization"),
-    address: Joi.string().required().label("Service Organization"),
-    phoneno: Joi.number().required().label("Service Organization"),
+    schedule: Joi.string().required().label("Date"),
+    address: Joi.string().required().label("address"),
+    phoneno: Joi.number().required().label("Phone No"),
     addressCheckBox: Joi.string().required().label("Service Organization"),
+    timeSchedule: Joi.string().required().label("Time"),
   };
   handleSubmit = () => {};
   render() {

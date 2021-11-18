@@ -317,6 +317,8 @@ article.searchBar-wrapper {
   line-height: 1.4;
   text-transform: uppercase;
   background-color: #36304a;
+  border: 1px solid black;
+  border-collapse: collapse;
   /* background-color: #10182b; */
 }
 

@@ -9,25 +9,22 @@ import confiq from "../Api/config.json";
 class Form extends React.Component {
   state = {
     doctorForm: {
-      fullName: "",
-      dateOfBirth: "",
-      staffType: "",
-      qualification: "",
-      email: "",
-      phone: "",
-
-      serviceName: "",
-      serviceOrgranization: "",
-      servicePrice: "",
-
-      //User Request
-      service: "",
-      organization: "",
-      schedule: "",
-
-      address: "",
-      phoneno: "",
-      addressCheckBox: "",
+      // fullName: "",
+      // dateOfBirth: "",
+      // staffType: "",
+      // qualification: "",
+      // email: "",
+      // phone: "",
+      // serviceName: "",
+      // serviceOrgranization: "",
+      // servicePrice: "",
+      // //User Request
+      // service: "",
+      // organization: "",
+      // schedule: "",
+      // address: "",
+      // phoneno: "",
+      // addressCheckBox: "",
     },
     errors: {},
     availabilityData: [],
