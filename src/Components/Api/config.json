@@ -1,4 +1,5 @@
 {
   "staffDuties": "http://localhost:3000/api/staffDuties",
-  "bookedSlots": "http://localhost:3000/api/bookedSlots"
+  "bookedSlots": "http://localhost:3000/api/bookedSlots",
+  "userRequest": "http://localhost:3000/api/userRequests"
 }

@@ -58,7 +58,7 @@ class Form extends React.Component {
     const day = m.format("dddd");
     const { data } = await axios.get(confiq.staffDuties + "?day=" + `${day}`);
     const { service, organization } = this.state.doctorForm;
-    console.log("Data got :", data);
+
     const availabilityData = data.filter(
       (d) =>
         d.service._id === service && d.serviceOrganization._id === organization
@@ -72,6 +72,7 @@ class Form extends React.Component {
 
     this.setState({ Conditionalservices: data.results });
   };
+
   handleChange = ({ currentTarget: input }) => {
     const errorMessage = this.validateProperty(input);
     const errors = { ...this.state.errors };
@@ -89,7 +90,13 @@ class Form extends React.Component {
       this.scheduleTime(input.value);
     }
   };
-  renderInput = (type, id, name, placeholder = "") => {
+
+  handleChangeForCheckBox = (e) => {
+    const doctorForm = { ...this.state.doctorForm };
+    doctorForm.onlyOnceCheckBox = e.target.checked;
+    this.setState({ doctorForm });
+  };
+  renderInput = (type, id, name, placeholder = "", step = "") => {
     const { doctorForm, errors } = this.state;
 
     return (
@@ -101,6 +108,7 @@ class Form extends React.Component {
           className="input"
           type={type}
           id={id}
+          step={step}
           onChange={this.handleChange}
         />
         {errors && errors[name] && <p className="error">{errors[name]}</p>}
@@ -109,12 +117,20 @@ class Form extends React.Component {
   };
 
   renderLabel = (labelName, ForHtml) => {
-    return <label htmlFor={ForHtml}>{labelName}</label>;
+    return <label htmlfor={ForHtml}>{labelName}</label>;
   };
   renderCheckBox = (id, name, value, msg) => {
+    const { doctorForm } = this.state;
     return (
       <article>
-        <input type="checkbox" id={id} name={name} value={value} />
+        <input
+          type="checkbox"
+          // checked="Only Once"
+          id={id}
+          name={name}
+          // value={doctorForm[name]}
+          onChange={this.handleChangeForCheckBox}
+        />
         <label className="chkBox-Msg" forHtml={id}>
           {msg}
         </label>
@@ -202,8 +218,18 @@ class Form extends React.Component {
     return <button className="btns small-btn">{btnName}</button>;
   };
 
-  renderMultiLineTextField = (rows, cols, id) => {
-    return <textarea rows={rows} cols={cols} id={id}></textarea>;
+  renderMultiLineTextField = (rows, cols, id, name) => {
+    const { doctorForm } = this.state;
+    return (
+      <textarea
+        rows={rows}
+        cols={cols}
+        id={id}
+        name={name}
+        value={doctorForm[name]}
+        onChange={this.handleChange}
+      ></textarea>
+    );
   };
 }
 

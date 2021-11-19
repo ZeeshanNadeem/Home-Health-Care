@@ -4,6 +4,7 @@ import axios from "axios";
 import Joi from "joi-browser";
 import Button from "@mui/material/Button";
 import CheckAvailability from "./Modal/CheckAvailability";
+import config from "../Api/config.json";
 
 class UserRequestService extends Form {
   state = {
@@ -13,8 +14,9 @@ class UserRequestService extends Form {
       schedule: "",
       address: "",
       phoneno: "",
-      addressCheckBox: "",
+      onlyOnceCheckBox: false,
       timeschedule: "",
+      address: "",
     },
     // services: [],
     organization: [],
@@ -36,10 +38,25 @@ class UserRequestService extends Form {
     schedule: Joi.string().required().label("Date"),
     address: Joi.string().required().label("address"),
     phoneno: Joi.number().required().label("Phone No"),
-    addressCheckBox: Joi.string().required().label("Service Organization"),
+    // onlyOnceCheckBox: Joi.string().required().label("Unchecked"),
     timeSchedule: Joi.string().required().label("Time"),
   };
-  handleSubmit = () => {};
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    const { doctorForm } = this.state;
+    const userRequest = {};
+    userRequest.OrganizationID = doctorForm.organization;
+    userRequest.ServiceID = doctorForm.service;
+    userRequest.Schedule = doctorForm.schedule;
+    userRequest.OnlyOnce = doctorForm.onlyOnceCheckBox;
+    userRequest.Address = doctorForm.address;
+    userRequest.PhoneNo = doctorForm.phoneno;
+    userRequest.Time = doctorForm.timeSchedule;
+    const { data } = await axios.post(
+      "http://localhost:3000/api/userRequests",
+      userRequest
+    );
+  };
   render() {
     const { services, organization, availabilityData } = this.state;
     return (
@@ -90,18 +107,24 @@ class UserRequestService extends Form {
 
             <article>{this.renderLabel("Time", "time")}</article>
             <article>
-              {this.renderInput("time", "timeSchedule", "timeSchedule", "Time")}
+              {this.renderInput(
+                "time",
+                "timeSchedule",
+                "timeSchedule",
+                "Time",
+                "3600000"
+              )}
             </article>
 
             {this.renderCheckBox(
-              "addressCheckBox",
-              "addressCheckBox",
-              "rememberMeChkBox",
+              "onlyOnceCheckBox",
+              "onlyOnceCheckBox",
+              "onlyOnceCheckBox",
               "Only Once"
             )}
             <article>{this.renderLabel("Address", "Address")}</article>
             <article>
-              {this.renderMultiLineTextField("3", "44", "address")}
+              {this.renderMultiLineTextField("3", "44", "address", "address")}
             </article>
             <article>{this.renderLabel("Phone No", "phoneno")}</article>
             <article>
