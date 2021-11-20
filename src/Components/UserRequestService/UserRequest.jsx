@@ -9,29 +9,35 @@ import config from "../Api/config.json";
 class UserRequestService extends Form {
   state = {
     doctorForm: {
+      staffMemberId: "",
       service: "",
       organization: "",
       schedule: "",
       address: "",
       phoneno: "",
       onlyOnceCheckBox: false,
-      timeschedule: "",
+      timeSchedule: "",
       address: "",
     },
     // services: [],
     organization: [],
     Conditionalservices: [],
     availabilityData: [],
+    bookedSlots: [],
   };
   async componentDidMount() {
     const { data: organization } = await axios.get(
       `http://localhost:3000/api/organization`
     );
+    const { data: bookedSlots } = await axios.get(
+      `http://localhost:3000/api/bookedSlots`
+    );
     this.setState({
       organization: organization,
+      bookedSlots,
     });
   }
-  componentDidUpdate() {}
+
   schema = {
     service: Joi.string().required().label("Service"),
     organization: Joi.string().required().label("Service Organization"),
@@ -44,18 +50,23 @@ class UserRequestService extends Form {
   handleSubmit = async (e) => {
     e.preventDefault();
     const { doctorForm } = this.state;
-    const userRequest = {};
-    userRequest.OrganizationID = doctorForm.organization;
-    userRequest.ServiceID = doctorForm.service;
-    userRequest.Schedule = doctorForm.schedule;
-    userRequest.OnlyOnce = doctorForm.onlyOnceCheckBox;
-    userRequest.Address = doctorForm.address;
-    userRequest.PhoneNo = doctorForm.phoneno;
-    userRequest.Time = doctorForm.timeSchedule;
-    const { data } = await axios.post(
-      "http://localhost:3000/api/userRequests",
-      userRequest
-    );
+    const { timeSchedule } = this.state.doctorForm;
+    const { availabilityData, bookedSlots } = this.state;
+    console.log("Availability :", timeSchedule);
+    console.log("availabilityData :", availabilityData);
+    console.log("Booked Slots :", bookedSlots);
+    // const userRequest = {};
+    // userRequest.OrganizationID = doctorForm.organization;
+    // userRequest.ServiceID = doctorForm.service;
+    // userRequest.Schedule = doctorForm.schedule;
+    // userRequest.OnlyOnce = doctorForm.onlyOnceCheckBox;
+    // userRequest.Address = doctorForm.address;
+    // userRequest.PhoneNo = doctorForm.phoneno;
+    // userRequest.Time = doctorForm.timeSchedule;
+    // const { data } = await axios.post(
+    //   "http://localhost:3000/api/userRequests",
+    //   userRequest
+    // );
   };
   render() {
     const { services, organization, availabilityData } = this.state;
