@@ -12,7 +12,9 @@ class NurseForm extends Form {
       dateOfBirth: "",
       staffType: "",
       qualification: "",
-      email: "",
+      availabilityForm: "",
+      availabilityTo: "",
+      // email: "",
       phone: "",
     },
     qualification: [],
@@ -24,7 +26,9 @@ class NurseForm extends Form {
     dateOfBirth: Joi.string().required().label("Date of Birth"),
     staffType: Joi.string().required().label("Staff Type"),
     qualification: Joi.string().required().label("Qualification"),
-    email: Joi.string().required().label("Email"),
+    availabilityForm: Joi.string().required().label("Availability From"),
+    availabilityTo: Joi.string().required().label("Availability To"),
+    // email: Joi.string().required().label("Email"),
     phone: Joi.number().required().label("Phone No"),
   };
 
@@ -37,7 +41,9 @@ class NurseForm extends Form {
       dateOfBirth: doctorForm.dateOfBirth,
       staffTypeID: doctorForm.staffType,
       qualificationID: doctorForm.qualification,
-      email: doctorForm.email,
+      availabilityForm: doctorForm.availabilityForm,
+      availabilityTo: doctorForm.availabilityTo,
+      // email: doctorForm.email,
       phone: doctorForm.phone,
     };
 
@@ -62,17 +68,21 @@ class NurseForm extends Form {
       dateOfBirth: doctorForm.dateOfBirth,
       staffTypeID: doctorForm.staffType,
       qualificationID: doctorForm.qualification,
-      email: doctorForm.email,
       phone: doctorForm.phone,
+      availabilityForm: doctorForm.availabilityForm,
+      availabilityTo: doctorForm.availabilityTo,
+      // email: doctorForm.email,
     };
 
     try {
+      console.log("staff Member :", addStaffMember);
       const { data: doctorPosted } = await axios.post(
         "http://localhost:3000/api/staff",
         addStaffMember
       );
       RefreshStaffMembers();
     } catch (ex) {
+      console.log("Ex:", ex);
       toast.error("Something went wrong..");
       return;
     }
@@ -93,6 +103,7 @@ class NurseForm extends Form {
       this.addAStaffMember();
       return;
     }
+    console.log("Error!!!", errors);
     toast.error("Something went wrong..");
   };
   async componentDidMount() {
@@ -113,8 +124,10 @@ class NurseForm extends Form {
       doctorForm.dateOfBirth = staffMemberData.dateOfBirth;
       doctorForm.staffType = staffMemberData.staffType._id;
       doctorForm.qualification = staffMemberData.qualification._id;
-      doctorForm.email = staffMemberData.email;
+      doctorForm.availabilityForm = staffMemberData.availabilityForm;
+      doctorForm.availabilityTo = staffMemberData.availabilityTo;
       doctorForm.phone = staffMemberData.phone;
+      // doctorForm.email = staffMemberData.email;
 
       this.setState({ doctorForm });
     }
@@ -124,7 +137,7 @@ class NurseForm extends Form {
     const { qualification, successMessage, serviceType } = this.state;
     return (
       <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
-        <ToastContainer />
+        {/* <ToastContainer /> */}
 
         <div className="doc-container">
           {successMessage && <Alert severity="success">{successMessage}</Alert>}
@@ -159,11 +172,36 @@ class NurseForm extends Form {
                 "qualification"
               )}
             </article>
+            <article>
+              {this.renderLabel("Availability From", "availabilityForm")}
+            </article>
+            <article>
+              {this.renderInput(
+                "time",
+                "availabilityForm",
+                "availabilityForm",
+                "availabilityForm",
+                "3600000"
+              )}
+            </article>
 
-            <article>{this.renderLabel("Email", "email")}</article>
+            <article>
+              {this.renderLabel("Availability To", "availabilityTo")}
+            </article>
+            <article>
+              {this.renderInput(
+                "time",
+                "availabilityTo",
+                "availabilityTo",
+                "availabilityTo",
+                "3600000"
+              )}
+            </article>
+
+            {/* <article>{this.renderLabel("Email", "email")}</article>
             <article>
               {this.renderInput("text", "email", "email", "Email")}
-            </article>
+            </article> */}
 
             <article>{this.renderLabel("Phone No", "phoneno")}</article>
             <article>

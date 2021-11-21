@@ -3,19 +3,20 @@ import { Container } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
 import NurseFrom from "../Forms/AddStaff";
+import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 
-// const style = {
-//   position: "absolute",
-//   top: "50%",
-//   left: "50%",
-//   transform: "translate(-50%, -50%)",
-//   width: 400,
-//   bgcolor: "background.paper",
-//   border: "2px solid #000",
-//   boxShadow: 24,
-//   p: 4,
-// };
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  // width: 400,
+  // bgcolor: "background.paper",
+  // border: "2px solid #000",
+  // boxShadow: 24,
+  // p: 4,
+};
 
 export default function AddStaffModle({ RefreshStaffMembers }) {
   const [open, setOpen] = React.useState(false);
@@ -36,9 +37,11 @@ export default function AddStaffModle({ RefreshStaffMembers }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Container>
-          <NurseFrom RefreshStaffMembers={RefreshStaffMembers} />
-        </Container>
+        <Box sx={style}>
+          <Container>
+            <NurseFrom RefreshStaffMembers={RefreshStaffMembers} />
+          </Container>
+        </Box>
       </Modal>
     </div>
   );

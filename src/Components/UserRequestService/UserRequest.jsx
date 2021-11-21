@@ -55,6 +55,34 @@ class UserRequestService extends Form {
     console.log("Availability :", timeSchedule);
     console.log("availabilityData :", availabilityData);
     console.log("Booked Slots :", bookedSlots);
+    const { data: staff } = await axios.get(config.staff);
+    console.log("Staff :", staff);
+
+    for (let i = i; i <= availabilityData; i++) {
+      if (
+        timeSchedule > availabilityData[i].Form &&
+        timeSchedule < availabilityData[i].To
+      ) {
+        for (let i = i; i <= bookedSlots; i++) {
+          if (
+            availabilityData[i].Form >= bookedSlots.Form &&
+            availabilityData[i].To <= bookedSlots.To
+          ) {
+            continue;
+          }
+        }
+      } else {
+        const userRequest = {};
+        userRequest.OrganizationID = doctorForm.organization;
+        userRequest.ServiceID = doctorForm.service;
+        userRequest.Schedule = doctorForm.schedule;
+        userRequest.OnlyOnce = doctorForm.onlyOnceCheckBox;
+        userRequest.Address = doctorForm.address;
+        userRequest.PhoneNo = doctorForm.phoneno;
+        userRequest.Time = doctorForm.timeSchedule;
+        const data = axios.post(config.staff);
+      }
+    }
     // const userRequest = {};
     // userRequest.OrganizationID = doctorForm.organization;
     // userRequest.ServiceID = doctorForm.service;
@@ -64,7 +92,7 @@ class UserRequestService extends Form {
     // userRequest.PhoneNo = doctorForm.phoneno;
     // userRequest.Time = doctorForm.timeSchedule;
     // const { data } = await axios.post(
-    //   "http://localhost:3000/api/userRequests",
+    //   "http://localhost:3iii/api/userRequests",
     //   userRequest
     // );
   };
@@ -122,8 +150,8 @@ class UserRequestService extends Form {
                 "time",
                 "timeSchedule",
                 "timeSchedule",
-                "Time",
-                "3600000"
+                "Time Schedule",
+                "36iiiii"
               )}
             </article>
 

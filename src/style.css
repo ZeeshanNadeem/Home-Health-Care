@@ -13,14 +13,14 @@
   border-radius: 8px;
   margin-top: -1.5rem;
 }
-
 .input {
   width: 100%;
-  margin-bottom: 0.5rem;
+  /* margin-bottom: 0.5rem; */
   border-radius: 2.5px;
   border: 0;
   height: 2.3rem;
 }
+
 input[type="checkbox"] {
   width: 2rem;
   height: 1rem;
@@ -43,7 +43,8 @@ label {
   letter-spacing: 1.5px;
   border: 0;
   border-radius: 3px;
-  margin-top: 2.4rem;
+  /* margin-top: 2.4rem; */
+  margin-top: 1rem;
 }
 
 .signup-page {

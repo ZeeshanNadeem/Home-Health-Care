@@ -93,7 +93,7 @@ const StaffPanel = () => {
   const RefreshStaffMembers = async () => {
     const { data: staff } = await axios.get(`http://localhost:3000/api/staff`);
 
-    setStaff(staff);
+    setStaff(staff.results);
   };
 
   const deleteAStaffMember = async (id) => {
@@ -164,7 +164,8 @@ const StaffPanel = () => {
                 <th scope="col">Date Of Birth</th>
                 <th scope="col">Occupation</th>
                 <th scope="col">Qualification</th>
-                <th scope="col">Email</th>
+                <th scope="col">Availability From</th>
+                <th scope="col">Availability To</th>
                 <th scope="col">Phone No</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
@@ -178,7 +179,9 @@ const StaffPanel = () => {
                   <td>{data.staffType.name}</td>
 
                   <td>{data.qualification.name}</td>
-                  <td>{data.email}</td>
+                  <td>{data.availabilityForm}</td>
+                  <td>{data.availabilityTo}</td>
+                  {/* <td>{data.email}</td> */}
                   <td>{data.phone}</td>
                   <td>
                     <Button
