@@ -16,7 +16,8 @@ class UserRequestService extends Form {
       address: "",
       phoneno: "",
       onlyOnceCheckBox: false,
-      timeSchedule: "",
+      ServiceNeededFrom: "",
+      ServiceNeededTo: "",
       address: "",
     },
     // services: [],
@@ -45,7 +46,8 @@ class UserRequestService extends Form {
     address: Joi.string().required().label("address"),
     phoneno: Joi.number().required().label("Phone No"),
     // onlyOnceCheckBox: Joi.string().required().label("Unchecked"),
-    timeSchedule: Joi.string().required().label("Time"),
+    ServiceNeededFrom: Joi.string().required().label("From"),
+    ServiceNeededTo: Joi.string().required().label("To"),
   };
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,12 +60,12 @@ class UserRequestService extends Form {
     const { data: staff } = await axios.get(config.staff);
     console.log("Staff :", staff);
 
-    for (let i = i; i <= availabilityData; i++) {
+    for (let i = 1; i <= availabilityData; i++) {
       if (
         timeSchedule > availabilityData[i].Form &&
         timeSchedule < availabilityData[i].To
       ) {
-        for (let i = i; i <= bookedSlots; i++) {
+        for (let i = 1; i <= bookedSlots; i++) {
           if (
             availabilityData[i].Form >= bookedSlots.Form &&
             availabilityData[i].To <= bookedSlots.To
@@ -144,14 +146,25 @@ class UserRequestService extends Form {
               <CheckAvailability availabilityData={availabilityData} />
             </span>
 
-            <article>{this.renderLabel("Time", "time")}</article>
+            <article>{this.renderLabel("From", "from")}</article>
             <article>
               {this.renderInput(
                 "time",
-                "timeSchedule",
-                "timeSchedule",
-                "Time Schedule",
-                "36iiiii"
+                "ServiceNeededFrom",
+                "ServiceNeededFrom",
+                "ServiceNeededFrom",
+                "3600000"
+              )}
+            </article>
+
+            <article>{this.renderLabel("To", "to")}</article>
+            <article>
+              {this.renderInput(
+                "time",
+                "ServiceNeededTo",
+                "ServiceNeededTo",
+                "ServiceNeededTo",
+                "3600000"
               )}
             </article>
 

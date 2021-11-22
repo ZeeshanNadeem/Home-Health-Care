@@ -25,7 +25,7 @@
 
 .input {
   width: 100%;
-  margin-bottom: 0.8rem;
+  /* margin-bottom: 0.8rem; */
   border-radius: 2.5px;
   border: 0;
   height: 2.3rem;
@@ -57,7 +57,7 @@ label {
   letter-spacing: 1.5px;
   border: 0;
   border-radius: 3px;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .signup-page {
@@ -238,7 +238,7 @@ a.text-sm.py-2.px-4.font-normal.block.w-full.whitespace-nowrap.bg-transparent.te
   flex-wrap: wrap;
 }
 select#staff {
-  margin-bottom: 0.3rem;
+  /* margin-bottom: 0.3rem; */
 }
 input#dob {
   text-indent: 0.34rem;
@@ -264,7 +264,7 @@ input#dob {
 
 .doc-header {
   margin-top: -0.5rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.2rem;
 }
 
 .doc-form > article {

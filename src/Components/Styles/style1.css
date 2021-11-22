@@ -164,7 +164,7 @@ table.table.doc-table {
 
 /* dropdown doctorForm & nurseForm */
 select#docQualification {
-  margin-bottom: 0.3rem;
+  /* margin-bottom: 0.3rem; */
 }
 
 /* Success Message Doctor Form */
