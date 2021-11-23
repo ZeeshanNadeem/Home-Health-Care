@@ -54,16 +54,20 @@ class Form extends React.Component {
     return Object.keys(errors).length === 0 ? null : errors;
   };
   scheduleTime = async (date) => {
-    const m = moment(date);
-    const day = m.format("dddd");
-    const { data } = await axios.get(confiq.staffDuties + "?day=" + `${day}`);
     const { service, organization } = this.state.doctorForm;
+    if (service && organization) {
+      const m = moment(date);
+      const day = m.format("dddd");
 
-    const availabilityData = data.filter(
-      (d) =>
-        d.service._id === service && d.serviceOrganization._id === organization
-    );
-    this.setState({ availabilityData });
+      const { data } = await axios.get(confiq.staffDuties + "?day=" + `${day}`);
+
+      const availabilityData = data.filter(
+        (d) =>
+          d.service._id === service &&
+          d.serviceOrganization._id === organization
+      );
+      this.setState({ availabilityData });
+    }
   };
   populateServices = async (inputValue) => {
     const { data } = await axios.get(
@@ -187,7 +191,7 @@ class Form extends React.Component {
           <option value="">{dropDownLabel}</option>
           {optionsArray.map((option) => (
             <option value={option._id} key={option._id}>
-              {option.serviceName || option.name}
+              {option.serviceName || option.name || option}
             </option>
           ))}
         </select>

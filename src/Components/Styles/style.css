@@ -43,6 +43,7 @@ article > input {
 label {
   font-weight: 600;
   font-size: 0.88rem;
+  text-transform: uppercase;
   /* margin-bottom: 0.2rem; */
 }
 
@@ -294,7 +295,11 @@ h1.sign-up-header-text.doc-header {
   margin-right: auto;
 }
 
-@media screen and (min-width: 200px) and (max-width: 790px) {
+.add-staff-form {
+  overflow-y: auto !important;
+}
+
+@media screen and (min-width: 200px) and (max-width: 449px) {
   h2.menu-title {
     padding: 0;
 
@@ -314,12 +319,102 @@ h1.sign-up-header-text.doc-header {
   button.btns {
     margin-top: 1rem;
   }
+  .add-staff-form {
+    /* width: 20rem; */
+    width: 90%;
+  }
+  .addStaff-Fields-grouping {
+    display: flex;
+    justify-content: space-between;
+  }
+  .addStaff-input,
+  select#staff,
+  input#dob,
+  select#docQualification,
+  .addStaff-special-fields {
+    width: 10rem;
+
+    /* padding-right: -0.5rem; */
+  }
+
+  .one-group-second-item {
+    margin-left: 0.5rem;
+  }
+  .one-group-first-item {
+    margin-left: -1.7rem;
+  }
+}
+
+@media screen and (min-width: 450px) and (max-width: 899px) {
+  h2.menu-title {
+    padding: 0;
+
+    font-size: 2rem;
+  }
+  .card-signup {
+    margin-top: 2rem;
+  }
+
+  .admin-routes {
+    display: block;
+  }
+  .menuBar-container {
+    width: 100vw;
+    text-align: center;
+  }
+  button.btns {
+    margin-top: 1rem;
+  }
+  .add-staff-form {
+    width: 30rem;
+    max-width: 30rem !important;
+  }
+  .addStaff-Fields-grouping {
+    display: flex;
+    justify-content: space-between;
+  }
+  .addStaff-input {
+    width: 10rem;
+  }
 }
 
 @media screen and (min-width: 900px) {
   .card-signup {
     width: 33rem;
   }
+  /* NewCode */
+  .add-staff-form {
+    width: 50rem;
+    max-width: 50rem !important;
+  }
+  .addStaff-Fields-grouping {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .addStaff-input,
+  select#staff,
+  input#dob,
+  select#docQualification,
+  .addStaff-special-fields {
+    width: 20rem;
+    /* margin-bottom: 1rem; */
+  }
+
+  /* .one-group-first-item,
+  .one-group-second-item {
+    margin-top: 1rem;
+  } */
+  .addStaff-group-alignment {
+    margin-top: 1rem;
+  }
+
+  .addStaff-btn {
+    padding-bottom: 1rem;
+  }
+
+  /* NewCode */
+
   .menuBar-container {
     height: 100vh;
     overflow: hidden;
@@ -328,6 +423,20 @@ h1.sign-up-header-text.doc-header {
     display: flex;
   }
 }
+
+/* .add-staff-form {
+  width: 50rem;
+  max-width: 50rem !important;
+  min-width: 300px !important;
+  overflow-x: scroll;
+}
+.addStaff-Fields-grouping {
+  display: flex;
+  justify-content: space-between;
+}
+.addStaff-input {
+  width: 20rem;
+} */
 
 /*AddService */
 

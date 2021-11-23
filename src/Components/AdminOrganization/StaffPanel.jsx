@@ -142,6 +142,7 @@ const StaffPanel = () => {
     <article className="ServicePanel-wrapper ">
       <article className="searchBar-wrapper">
         <ToastContainer />
+
         <input
           className="search-Bar"
           type="text"
@@ -161,11 +162,13 @@ const StaffPanel = () => {
             <thead className="table-th assign-duty-th">
               <tr>
                 <th scope="col">Full Name</th>
-                <th scope="col">Date Of Birth</th>
-                <th scope="col">Occupation</th>
+                <th scope="col">DOB</th>
+                <th scope="col">Designation</th>
                 <th scope="col">Qualification</th>
-                <th scope="col">Availability From</th>
-                <th scope="col">Availability To</th>
+                <th scope="col">AvailableFrom</th>
+                <th scope="col">AvailableTo</th>
+                <th scope="col">From Day</th>
+                <th scope="col">To Day</th>
                 <th scope="col">Phone No</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
@@ -179,8 +182,10 @@ const StaffPanel = () => {
                   <td>{data.staffType.name}</td>
 
                   <td>{data.qualification.name}</td>
-                  <td>{data.availabilityForm}</td>
+                  <td>{data.availabilityFrom}</td>
                   <td>{data.availabilityTo}</td>
+                  <td>{data.availabileDayFrom}</td>
+                  <td>{data.availabileDayTo}</td>
                   {/* <td>{data.email}</td> */}
                   <td>{data.phone}</td>
                   <td>

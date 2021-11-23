@@ -12,12 +12,15 @@ class NurseForm extends Form {
       dateOfBirth: "",
       staffType: "",
       qualification: "",
-      availabilityForm: "",
+      availabilityFrom: "",
       availabilityTo: "",
+      availabileDayFrom: "",
+      availabileDayTo: "",
       // email: "",
       phone: "",
     },
     qualification: [],
+    days: ["Monday", "Tuesday", "Wednesday", "Thrusday", "Friday", "Saturday"],
 
     serviceType: [],
   };
@@ -26,8 +29,10 @@ class NurseForm extends Form {
     dateOfBirth: Joi.string().required().label("Date of Birth"),
     staffType: Joi.string().required().label("Staff Type"),
     qualification: Joi.string().required().label("Qualification"),
-    availabilityForm: Joi.string().required().label("Availability From"),
+    availabilityFrom: Joi.string().required().label("Availability From"),
     availabilityTo: Joi.string().required().label("Availability To"),
+    availabileDayFrom: Joi.string().required().label("Available Day"),
+    availabileDayTo: Joi.string().required().label("Available Day"),
     // email: Joi.string().required().label("Email"),
     phone: Joi.number().required().label("Phone No"),
   };
@@ -41,8 +46,10 @@ class NurseForm extends Form {
       dateOfBirth: doctorForm.dateOfBirth,
       staffTypeID: doctorForm.staffType,
       qualificationID: doctorForm.qualification,
-      availabilityForm: doctorForm.availabilityForm,
+      availabilityFrom: doctorForm.availabilityFrom,
       availabilityTo: doctorForm.availabilityTo,
+      availabileDayFrom: doctorForm.availabileDayFrom,
+      availabileDayTo: doctorForm.availabileDayTo,
       // email: doctorForm.email,
       phone: doctorForm.phone,
     };
@@ -69,8 +76,10 @@ class NurseForm extends Form {
       staffTypeID: doctorForm.staffType,
       qualificationID: doctorForm.qualification,
       phone: doctorForm.phone,
-      availabilityForm: doctorForm.availabilityForm,
+      availabilityFrom: doctorForm.availabilityFrom,
       availabilityTo: doctorForm.availabilityTo,
+      availabileDayFrom: doctorForm.availabileDayFrom,
+      availabileDayTo: doctorForm.availabileDayTo,
       // email: doctorForm.email,
     };
 
@@ -124,8 +133,10 @@ class NurseForm extends Form {
       doctorForm.dateOfBirth = staffMemberData.dateOfBirth;
       doctorForm.staffType = staffMemberData.staffType._id;
       doctorForm.qualification = staffMemberData.qualification._id;
-      doctorForm.availabilityForm = staffMemberData.availabilityForm;
+      doctorForm.availabilityFrom = staffMemberData.availabilityFrom;
       doctorForm.availabilityTo = staffMemberData.availabilityTo;
+      doctorForm.availabileDayFrom = doctorForm.availabileDayFrom;
+      doctorForm.availabileDayTo = doctorForm.availabileDayTo;
       doctorForm.phone = staffMemberData.phone;
       // doctorForm.email = staffMemberData.email;
 
@@ -141,61 +152,126 @@ class NurseForm extends Form {
 
         <div className="doc-container">
           {successMessage && <Alert severity="success">{successMessage}</Alert>}
-          <div className="card-signup doc-form">
+          <div className="card-signup doc-form add-staff-form">
             <header>
               <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
                 Add A Staff Member
               </h1>
             </header>
-            <article>{this.renderLabel("FULL NAME", "fname")}</article>
-            <article>
-              {this.renderInput("text", "fname", "fullName", "Full Name")}
-            </article>
-            <article>{this.renderLabel("Date of Birth", "dob")}</article>
-            <article>
-              {this.renderInput("date", "dob", "dateOfBirth", "Date of Birth")}
+
+            <article className="addStaff-Fields-grouping">
+              <article className="one-group-first-item addStaff-group-alignment">
+                <article>{this.renderLabel("FULL NAME", "fname")}</article>
+                <article className="addStaff-input">
+                  {this.renderInput("text", "fname", "fullName", "Full Name")}
+                </article>
+              </article>
+
+              <article className="one-group-second-item addStaff-group-alignment">
+                <article>{this.renderLabel("Date of Birth", "dob")}</article>
+                <article>
+                  {this.renderInput(
+                    "date",
+                    "dob",
+                    "dateOfBirth",
+                    "Date of Birth"
+                  )}
+                </article>
+              </article>
             </article>
 
-            <article>{this.renderLabel("Staff Type", "staff")}</article>
-            <article>
-              {this.renderDropDown("Staff", serviceType, "staff", "staffType")}
+            <article className="addStaff-Fields-grouping">
+              <article className="one-group-first-item addStaff-group-alignment">
+                <article>{this.renderLabel("Staff Type", "staff")}</article>
+                <article className="input-addStaff">
+                  {this.renderDropDown(
+                    "Staff",
+                    serviceType,
+                    "staff",
+                    "staffType"
+                  )}
+                </article>
+              </article>
+
+              <article className="one-group-second-item addStaff-group-alignment">
+                <article>
+                  {this.renderLabel("Qualification", "qualification")}
+                </article>
+                <article className="input-addStaff">
+                  {this.renderDropDown(
+                    "Qualification",
+                    qualification,
+                    "docQualification",
+                    "qualification"
+                  )}
+                </article>
+              </article>
             </article>
 
-            <article>
-              {this.renderLabel("Qualification", "qualification")}
-            </article>
-            <article>
-              {this.renderDropDown(
-                "Qualification",
-                qualification,
-                "docQualification",
-                "qualification"
-              )}
-            </article>
-            <article>
-              {this.renderLabel("Availability From", "availabilityForm")}
-            </article>
-            <article>
-              {this.renderInput(
-                "time",
-                "availabilityForm",
-                "availabilityForm",
-                "availabilityForm",
-                "3600000"
-              )}
+            <article className="addStaff-Fields-grouping">
+              <article className="one-group-first-item addStaff-group-alignment">
+                <article>
+                  {this.renderLabel("Availability From", "availabilityFrom")}
+                </article>
+                <article className="addStaff-special-fields">
+                  {this.renderInput(
+                    "time",
+                    "availabilityFrom",
+                    "availabilityFrom",
+                    "availabilityFrom"
+                  )}
+                </article>
+              </article>
+
+              <article className="one-group-second-item addStaff-group-alignment">
+                <article>
+                  {this.renderLabel("Availability To", "availabilityTo")}
+                </article>
+                <article className="addStaff-special-fields">
+                  {this.renderInput(
+                    "time",
+                    "availabilityTo",
+                    "availabilityTo",
+                    "availabilityTo"
+                  )}
+                </article>
+              </article>
             </article>
 
-            <article>
-              {this.renderLabel("Availability To", "availabilityTo")}
-            </article>
-            <article>
-              {this.renderInput(
-                "time",
-                "availabilityTo",
-                "availabilityTo",
-                "availabilityTo",
-                "3600000"
-              )}
+            <article className="addStaff-Fields-grouping">
+              <article className="addStaff-input addStaff-group-alignment one-group-first-item">
+                <article>
+                  {this.renderLabel(
+                    "Availability Day From",
+                    "availabilityweekFrom"
+                  )}
+                </article>
+                <article className="addStaff-special-fields">
+                  {this.renderDropDown(
+                    "availabileDayFrom",
+                    this.state.days,
+                    "availabileDayFrom",
+                    "availabileDayFrom"
+                  )}
+                </article>
+              </article>
+
+              <article className="addStaff-input addStaff-group-alignment one-group-second-item">
+                <article>
+                  {this.renderLabel(
+                    "Availability Day From",
+                    "availabilityweekTo"
+                  )}
+                </article>
+                <article className="addStaff-special-fields">
+                  {this.renderDropDown(
+                    "availabileDayTo",
+                    this.state.days,
+                    "availabileDayTo",
+                    "availabileDayTo"
+                  )}
+                </article>
+              </article>
             </article>
 
             {/* <article>{this.renderLabel("Email", "email")}</article>
@@ -203,12 +279,16 @@ class NurseForm extends Form {
               {this.renderInput("text", "email", "email", "Email")}
             </article> */}
 
-            <article>{this.renderLabel("Phone No", "phoneno")}</article>
-            <article>
-              {this.renderInput("number", "phoneno", "phone", "Phone No")}
+            <article className="addStaff-group-alignment">
+              <article>{this.renderLabel("Phone No", "phoneno")}</article>
+              <article className="input-addStaff">
+                {this.renderInput("number", "phoneno", "phone", "Phone No")}
+              </article>
             </article>
 
-            {this.renderBtn("Save Staff Member")}
+            <article className="addStaff-group-alignment addStaff-btn">
+              {this.renderBtn("Save Staff Member")}
+            </article>
           </div>
         </div>
       </form>

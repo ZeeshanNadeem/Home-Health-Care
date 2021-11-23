@@ -77,7 +77,7 @@ const Admin = () => {
                   Manage Staff
                 </li>
               </Link>
-
+              {/* 
               <Link to="/admin/Requests">
                 <li className="admin-li">
                   <FontAwesomeIcon
@@ -86,7 +86,7 @@ const Admin = () => {
                   />
                   User Requests
                 </li>
-              </Link>
+              </Link> */}
             </ul>
           </article>
         </span>

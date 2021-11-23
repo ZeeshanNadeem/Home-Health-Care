@@ -325,3 +325,11 @@ article.searchBar-wrapper {
 .availability-table-th {
   color: #fff;
 }
+
+.input-addStaff > article > .error {
+  margin: 0;
+}
+
+.table-responsive {
+  margin: 0 1rem;
+}
