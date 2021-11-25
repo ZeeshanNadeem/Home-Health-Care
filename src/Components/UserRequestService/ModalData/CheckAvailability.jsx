@@ -5,21 +5,24 @@ import config from "../../Api/config.json";
 import axios from "axios";
 
 const CheckAvailability = ({ availabilityData }) => {
-  let [bookedSlots, setBookedSlots] = useState([]);
+  let [userRequests, setBookedSlots] = useState([]);
   // let [staffNo, setStaffNo] = useState(0);
   let stafCount = 0;
   useEffect(async () => {
-    if (bookedSlots.length === 0) {
-      const { data } = await axios.get(config.bookedSlots);
+    if (userRequests.length === 0) {
+      const { data } = await axios.get(config.userRequests);
 
       setBookedSlots(data);
     }
   });
 
-  const checkBookedSlots = (bookedSlots, staffDuties) => {
-    if (bookedSlots.staffDuty._id === staffDuties._id) {
+  const checkBookedSlots = (userRequests, staff) => {
+    if (userRequests.staffMemberAssigned._id === staff._id) {
       return (
-        bookedSlots.BookedSlotFrom + " to " + bookedSlots.BookedSlotTo + " "
+        userRequests.ServiceNeededFrom +
+        " to " +
+        userRequests.ServiceNeededTo +
+        " "
       );
     } else return false;
   };
@@ -35,20 +38,18 @@ const CheckAvailability = ({ availabilityData }) => {
         <thead>
           <tr>
             <th className="availability-table-th" scope="col">
-              Service Name
+              Service Staffs
             </th>
             {/* <th className="availability-table-th" scope="col">
               Organization
             </th> */}
             <th className="availability-table-th" scope="col">
-              Day
+              Timings
             </th>
             <th className="availability-table-th" scope="col">
-              From
+              From-To
             </th>
-            <th className="availability-table-th" scope="col">
-              To
-            </th>
+
             <th className="availability-table-th" scope="col">
               Booked-Slots
             </th>
@@ -60,17 +61,21 @@ const CheckAvailability = ({ availabilityData }) => {
         <tbody>
           {availabilityData.map((data) => (
             <tr key={data._id}>
-              <td className="availability-table-th">
+              {/* <td className="availability-table-th">
                 {data.service.serviceName} {staffNo()}
-              </td>
+              </td> */}
               {/* <td className="availability-table-th">
                 {data.serviceOrganization.name}
               </td> */}
-              <td className="availability-table-th">{data.Day}</td>
-              <td className="availability-table-th">{data.From}</td>
-              <td className="availability-table-th">{data.To}</td>
-              {bookedSlots.map((bookedSlots) => (
-                <td className="availability-table-th">
+              <td className="availability-table-th">{data.staffType.name}</td>
+              <td className="availability-table-th">
+                {data.availabilityFrom} to {data.availabilityTo}
+              </td>
+              <td className="availability-table-th">
+                {data.availabileDayFrom} to {data.availabileDayTo}
+              </td>
+              {userRequests.map((bookedSlots) => (
+                <td className="availability-table-th" key={bookedSlots._id}>
                   {checkBookedSlots(bookedSlots, data) ? (
                     <article>
                       {checkBookedSlots(bookedSlots, data)}
@@ -82,9 +87,9 @@ const CheckAvailability = ({ availabilityData }) => {
                   ) : (
                     "None"
                   )}
-                  {}
                 </td>
               ))}
+
               {/* <td className="availability-table-th">
                 {data.service.servicePrice}
               </td> */}

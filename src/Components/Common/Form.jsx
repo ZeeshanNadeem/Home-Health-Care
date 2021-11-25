@@ -58,15 +58,20 @@ class Form extends React.Component {
     if (service && organization) {
       const m = moment(date);
       const day = m.format("dddd");
-
-      const { data } = await axios.get(confiq.staffDuties + "?day=" + `${day}`);
-
-      const availabilityData = data.filter(
-        (d) =>
-          d.service._id === service &&
-          d.serviceOrganization._id === organization
+      const { service } = this.state.doctorForm;
+      const { data } = await axios.get(
+        confiq.staff + "?day=" + `${day}` + "?service=" + `${service}`
       );
-      this.setState({ availabilityData });
+      this.setState({ availabilityData: data.results });
+
+      // if (data) {
+      //   const availabilityData = data.results.filter(
+      //     (d) => d.staffType._id === service
+      //     // && d.serviceOrganization._id === organization
+      //   );
+      //   console.log("stafavailabilityData::", availabilityData);
+      //   this.setState({ availabilityData });
+      // }
     }
   };
   populateServices = async (inputValue) => {

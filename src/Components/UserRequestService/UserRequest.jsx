@@ -9,6 +9,7 @@ import config from "../Api/config.json";
 class UserRequestService extends Form {
   state = {
     doctorForm: {
+      fullname: "",
       staffMemberId: "",
       service: "",
       organization: "",
@@ -27,12 +28,8 @@ class UserRequestService extends Form {
     bookedSlots: [],
   };
   async componentDidMount() {
-    const { data: organization } = await axios.get(
-      `http://localhost:3000/api/organization`
-    );
-    const { data: bookedSlots } = await axios.get(
-      `http://localhost:3000/api/bookedSlots`
-    );
+    const { data: organization } = await axios.get(config.organizations);
+    const { data: bookedSlots } = await axios.get(config.userRequests);
     this.setState({
       organization: organization,
       bookedSlots,
@@ -40,6 +37,7 @@ class UserRequestService extends Form {
   }
 
   schema = {
+    fullname: Joi.string().required().label("Full Name"),
     service: Joi.string().required().label("Service"),
     organization: Joi.string().required().label("Service Organization"),
     schedule: Joi.string().required().label("Date"),
@@ -47,8 +45,9 @@ class UserRequestService extends Form {
     phoneno: Joi.number().required().label("Phone No"),
     // onlyOnceCheckBox: Joi.string().required().label("Unchecked"),
     ServiceNeededFrom: Joi.string().required().label("From"),
-    ServiceNeededTo: Joi.string().required().label("To"),
+    // ServiceNeededTo: Joi.string().required().label("To"),
   };
+
   handleSubmit = async (e) => {
     e.preventDefault();
     const { doctorForm } = this.state;
@@ -60,12 +59,12 @@ class UserRequestService extends Form {
     const { data: staff } = await axios.get(config.staff);
     console.log("Staff :", staff);
 
-    for (let i = 1; i <= availabilityData; i++) {
+    for (let i = 0; i <= availabilityData; i++) {
       if (
-        timeSchedule > availabilityData[i].Form &&
+        timeSchedule >= availabilityData[i].Form &&
         timeSchedule < availabilityData[i].To
       ) {
-        for (let i = 1; i <= bookedSlots; i++) {
+        for (let i = 0; i <= bookedSlots; i++) {
           if (
             availabilityData[i].Form >= bookedSlots.Form &&
             availabilityData[i].To <= bookedSlots.To
@@ -74,15 +73,19 @@ class UserRequestService extends Form {
           }
         }
       } else {
-        const userRequest = {};
-        userRequest.OrganizationID = doctorForm.organization;
-        userRequest.ServiceID = doctorForm.service;
-        userRequest.Schedule = doctorForm.schedule;
-        userRequest.OnlyOnce = doctorForm.onlyOnceCheckBox;
-        userRequest.Address = doctorForm.address;
-        userRequest.PhoneNo = doctorForm.phoneno;
-        userRequest.Time = doctorForm.timeSchedule;
-        const data = axios.post(config.staff);
+        // const userRequest = {};
+        // userRequest.staffMemberID = doctorForm.organization;
+        // userRequest.OrganizationID = doctorForm.service;
+        // userRequest.ServiceNeededFrom = doctorForm.schedule;
+        // userRequest.ServiceNeededTo = doctorForm.onlyOnceCheckBox;
+        // userRequest.ServiceID = doctorForm.address;
+        // userRequest.Schedule = doctorForm.phoneno;
+        // userRequest.OnlyOnce = doctorForm.timeSchedule;
+        // userRequest.Address = doctorForm.timeSchedule;
+        // userRequest.PhoneNo = doctorForm.timeSchedule;
+        // const data = axios.post(config.staff);
+        // console.log("Data posted !");
+        // break;
       }
     }
     // const userRequest = {};
@@ -114,74 +117,103 @@ class UserRequestService extends Form {
             {this.renderDropDown("Profession", profession, "serviceFor")}
           </article> */}
           <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
-            <article>{this.renderLabel("Organization", "serviceFor")}</article>
-            <article>
-              {this.renderDropDown(
-                "service For",
-                organization,
-                "serviceOrgranization",
-                "organization",
-                "Please Select an Organization"
-              )}
-            </article>
-            <article>{this.renderLabel("Service", "service")}</article>
-            <article>
-              {this.renderConditionalDropDown(
-                "service",
-                "service",
-                "Please Select a Service"
-              )}
+            <article className="user-request-input-wrapper">
+              <article>{this.renderLabel("Full Name", "fullName")}</article>
+              <article>
+                {this.renderInput("text", "fullname", "fullname", "Full Name")}
+              </article>
             </article>
 
-            <article>{this.renderLabel("Schedule", "schedule")}</article>
-            <article>
-              {this.renderInput(
-                "date",
-                "schedule",
-                "schedule",
-                "Schedule a Meeting"
-              )}
+            <article className="user-request-input-wrapper">
+              <article>
+                {this.renderLabel("Organization", "serviceFor")}
+              </article>
+              <article>
+                {this.renderDropDown(
+                  "service For",
+                  organization,
+                  "serviceOrgranization",
+                  "organization",
+                  "Please Select an Organization"
+                )}
+              </article>
             </article>
-            <span>
-              <CheckAvailability availabilityData={availabilityData} />
-            </span>
 
-            <article>{this.renderLabel("From", "from")}</article>
+            <article className="user-request-input-wrapper">
+              <article>{this.renderLabel("Service", "service")}</article>
+              <article>
+                {this.renderConditionalDropDown(
+                  "service",
+                  "service",
+                  "Please Select a Service"
+                )}
+              </article>
+            </article>
+
+            <article className="user-request-input-wrapper">
+              <article>{this.renderLabel("Schedule", "schedule")}</article>
+              <article>
+                {this.renderInput(
+                  "date",
+                  "schedule",
+                  "schedule",
+                  "Schedule a Meeting"
+                )}
+              </article>
+            </article>
+
+            <article className="user-request-input-wrapper">
+              <span>
+                <CheckAvailability availabilityData={availabilityData} />
+              </span>
+            </article>
+
+            <article className="user-request-input-wrapper">
+              <article>{this.renderLabel("Time", "from")}</article>
+              <article>
+                {this.renderInput(
+                  "time",
+                  "ServiceNeededFrom",
+                  "ServiceNeededFrom",
+                  "ServiceNeededFrom",
+                  "3600000"
+                )}
+              </article>
+            </article>
+
+            {/* <article>{this.renderLabel("To", "to")}</article>
             <article>
               {this.renderInput(
                 "time",
-                "ServiceNeededFrom",
-                "ServiceNeededFrom",
-                "ServiceNeededFrom",
-                "3600000"
-              )}
-            </article>
-
-            <article>{this.renderLabel("To", "to")}</article>
-            <article>
-              {this.renderInput(
-                "time",
                 "ServiceNeededTo",
                 "ServiceNeededTo",
                 "ServiceNeededTo",
                 "3600000"
               )}
+            </article> */}
+            <article className="user-request-input-wrapper">
+              {this.renderCheckBox(
+                "onlyOnceCheckBox",
+                "onlyOnceCheckBox",
+                "onlyOnceCheckBox",
+                "Only Once"
+              )}
             </article>
 
-            {this.renderCheckBox(
-              "onlyOnceCheckBox",
-              "onlyOnceCheckBox",
-              "onlyOnceCheckBox",
-              "Only Once"
-            )}
-            <article>{this.renderLabel("Address", "Address")}</article>
-            <article>
-              {this.renderMultiLineTextField("3", "44", "address", "address")}
+            <article className="user-request-input-wrapper">
+              <article>{this.renderLabel("Address", "Address")}</article>
+              <article>
+                {this.renderMultiLineTextField("3", "44", "address", "address")}
+              </article>
             </article>
-            <article>{this.renderLabel("Phone No", "phoneno")}</article>
-            <article>
-              {this.renderInput("number", "phoneno", "phoneno", "Phone No")}
+
+            <article className="user-request-input-wrapper">
+              <article>{this.renderLabel("Phone No", "phoneno")}</article>
+              <article>
+                {this.renderInput("number", "phoneno", "phoneno", "Phone No")}
+              </article>
             </article>
+
             {this.renderBtn("Schedule")}
           </form>
         </div>

@@ -2,5 +2,7 @@
   "staffDuties": "http://localhost:3000/api/staffDuties",
   "bookedSlots": "http://localhost:3000/api/bookedSlots",
   "userRequest": "http://localhost:3000/api/userRequests",
-  "staff": "http://localhost:3000/api/staff"
+  "staff": "http://localhost:3000/api/staff",
+  "userRequests": "http://localhost:3000/api/userRequests",
+  "organizations": "http://localhost:3000/api/organization"
 }
