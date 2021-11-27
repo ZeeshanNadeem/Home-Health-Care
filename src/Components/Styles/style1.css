@@ -333,3 +333,22 @@ article.searchBar-wrapper {
 .table-responsive {
   margin: 0 1rem;
 }
+
+/* signup-page-btn */
+.signup-page-btn {
+  padding-bottom: 2rem;
+  padding-top: 2rem;
+}
+
+/* ChkBox-signup-signup labels for txt fields  */
+.ChkBox-signup {
+  margin-top: 0.5rem;
+}
+
+.signup-label {
+  margin-top: 0.3rem;
+}
+
+.ChkBox-signup > article > label {
+  text-transform: none;
+}

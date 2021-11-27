@@ -12,7 +12,7 @@ const Card_ = ({ cardTitle, cardText, btnName, imgSrc }) => {
           <Card.Title>{cardTitle}</Card.Title>
           <Card.Text>{cardText}</Card.Text>
           <Link to="user/request">
-            <Button variant="primary">Book Now</Button>
+            <Button variant="primary">Set Up A Meeting</Button>
           </Link>
         </Card.Body>
       </Card>

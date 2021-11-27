@@ -28,6 +28,14 @@ const IndexDropdown = () => {
           e.preventDefault();
           dropdownPopoverShow ? closeDropdownPopover() : openDropdownPopover();
         }}
+        // onMouseEnter={(e) => {
+        //   e.preventDefault();
+        //   openDropdownPopover();
+        // }}
+        // onMouseLeave={(e) => {
+        //   e.preventDefault();
+        //   closeDropdownPopover();
+        // }}
       >
         Services
       </a>
@@ -43,7 +51,7 @@ const IndexDropdown = () => {
             "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
           }
         >
-          Admin Panel
+          Organization Admin
         </span>
 
         <Link
@@ -77,7 +85,7 @@ const IndexDropdown = () => {
             "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
           }
         >
-          Nurse
+          Staff
         </span>
         <Link
           to="/auth/login"
@@ -91,8 +99,8 @@ const IndexDropdown = () => {
         >
           Apply For Leave
         </Link>
-        <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100" />
-        <span
+        {/* <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100" /> */}
+        {/* <span
           className={
             "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
           }
@@ -111,7 +119,7 @@ const IndexDropdown = () => {
           className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
         >
           Apply for Leave
-        </Link>
+        </Link> */}
         <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
         <span
           className={
@@ -125,7 +133,7 @@ const IndexDropdown = () => {
           to="/profile"
           className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
         >
-          Add Organizations
+          Admin
         </Link>
         <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
         <span

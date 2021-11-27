@@ -2,6 +2,7 @@ import React from "react";
 import Form from "../Common/Form";
 import axios from "axios";
 import Joi from "joi-browser";
+import moment from "moment";
 import Button from "@mui/material/Button";
 import CheckAvailability from "./Modal/CheckAvailability";
 import config from "../Api/config.json";
@@ -16,7 +17,7 @@ class UserRequestService extends Form {
       schedule: "",
       address: "",
       phoneno: "",
-      onlyOnceCheckBox: false,
+      recursive: false,
       ServiceNeededFrom: "",
       ServiceNeededTo: "",
       address: "",
@@ -51,25 +52,54 @@ class UserRequestService extends Form {
   handleSubmit = async (e) => {
     e.preventDefault();
     const { doctorForm } = this.state;
-    const { timeSchedule } = this.state.doctorForm;
+    const { schedule } = this.state.doctorForm;
     const { availabilityData, bookedSlots } = this.state;
-    console.log("Availability :", timeSchedule);
+    const { ServiceNeededFrom } = this.state.doctorForm;
+    console.log("Availability :", schedule);
     console.log("availabilityData :", availabilityData);
     console.log("Booked Slots :", bookedSlots);
     const { data: staff } = await axios.get(config.staff);
     console.log("Staff :", staff);
 
-    for (let i = 0; i <= availabilityData; i++) {
+    for (let i = 0; i < availabilityData.length; i++) {
+      console.log("For Loop Starts..");
+      console.log("Availability data iteration:", availabilityData[i]);
+      let availableFromArr = availabilityData[i].availabilityFrom.split(":");
+      let availableToArr = availabilityData[i].availabilityTo.split(":");
+      console.log("User Selected Time :", ServiceNeededFrom);
+      let userSelectedTime = ServiceNeededFrom.split(":");
+      let availableFrom = availableFromArr[0];
+      let availabileTo = availableToArr[0];
+      let userSelectedTime_ = userSelectedTime[0];
+      console.log("Available Staff Availability From:", availableFrom);
+      console.log("Available Staff Availability To:", availabileTo);
+      console.log("User Selected Time:", userSelectedTime_);
+
       if (
-        timeSchedule >= availabilityData[i].Form &&
-        timeSchedule < availabilityData[i].To
+        userSelectedTime >= availableFrom &&
+        userSelectedTime < availabileTo
       ) {
-        for (let i = 0; i <= bookedSlots; i++) {
-          if (
-            availabilityData[i].Form >= bookedSlots.Form &&
-            availabilityData[i].To <= bookedSlots.To
-          ) {
+        console.log("Comparison ");
+        for (let i = 0; i < bookedSlots.length; i++) {
+          let bookedServiceFrom = bookedSlots[i].ServiceNeededFrom.split(":");
+          let bookedServiceFrom_ = bookedServiceFrom[0];
+          if (userSelectedTime === bookedServiceFrom_) {
             continue;
+          } else {
+            const userRequest = {};
+            userRequest.fullName = doctorForm.fullname;
+            userRequest.staffMemberID = availabilityData[i]._id;
+            userRequest.OrganizationID = doctorForm.organization;
+            userRequest.ServiceNeededFrom = doctorForm.ServiceNeededFrom;
+
+            userRequest.ServiceID = doctorForm.service;
+            userRequest.Schedule = doctorForm.schedule;
+            userRequest.Recursive = doctorForm.recursive;
+            userRequest.Address = doctorForm.address;
+            userRequest.PhoneNo = doctorForm.phoneno;
+            console.log("User Request sending to Post ::", userRequest);
+            const data = axios.post(config.userRequests, userRequest);
+            console.log("Data Posted User Request...");
           }
         }
       } else {
@@ -196,7 +226,7 @@ class UserRequestService extends Form {
                 "onlyOnceCheckBox",
                 "onlyOnceCheckBox",
                 "onlyOnceCheckBox",
-                "Only Once"
+                "Recursive"
               )}
             </article>
 

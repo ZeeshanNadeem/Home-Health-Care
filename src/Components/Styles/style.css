@@ -104,7 +104,15 @@ a.google.btn {
   height: 27rem;
   margin-top: 1rem;
 }
-
+.login-card {
+  height: 25rem !important;
+}
+.login-page-btn {
+  margin-top: 1.3rem;
+}
+.remember-me-chkBox {
+  margin-top: 0.5rem;
+}
 .btns:hover {
   background-color: #333;
 }
@@ -182,7 +190,7 @@ a.nav-li.nav-items {
   font-weight: 800;
   letter-spacing: 0.8px;
   border: 0;
-  margin-left: 1.2rem;
+  margin-left: 2rem;
   color: #000;
 }
 a.nav-li.nav-items:hover {
@@ -394,7 +402,7 @@ h1.sign-up-header-text.doc-header {
 
   .addStaff-input,
   select#staff,
-  input#dob,
+  .add-staff-dob > article > input#dob,
   select#docQualification,
   .addStaff-special-fields {
     width: 20rem;

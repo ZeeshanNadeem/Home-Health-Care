@@ -162,7 +162,7 @@ const StaffPanel = () => {
             <thead className="table-th assign-duty-th">
               <tr>
                 <th scope="col">Full Name</th>
-                <th scope="col">DOB</th>
+                {/* <th scope="col">DOB</th> */}
                 <th scope="col">Designation</th>
                 <th scope="col">Qualification</th>
                 <th scope="col">AvailableFrom</th>
@@ -178,7 +178,7 @@ const StaffPanel = () => {
               {staff.map((data) => (
                 <tr key={data._id}>
                   <td>{data.fullName}</td>
-                  <td>{data.dateOfBirth}</td>
+                  {/* <td>{data.dateOfBirth}</td> */}
                   <td>{data.staffType.name}</td>
 
                   <td>{data.qualification.name}</td>

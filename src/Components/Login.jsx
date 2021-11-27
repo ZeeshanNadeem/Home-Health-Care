@@ -7,8 +7,8 @@ class Login extends Form {
     return (
       <React.Fragment>
         <NavBar />
-        <article className="signup-page">
-          <main className="card-signup card-style animate__animated animate__fadeInLeft">
+        <article className="signup-page login-wrapper">
+          <main className="card-signup card-style animate__animated animate__fadeInLeft login-card">
             <header>
               <h1 className="sign-up-header-text animate__animated animate__zoomIn">
                 Login
@@ -23,13 +23,17 @@ class Login extends Form {
             <article>{this.renderLabel("Password", "password")}</article>
 
             <article>{this.renderInput("password", "pw", "pw")}</article>
-            {this.renderCheckBox(
-              "chkbox",
-              "chkbox",
-              "addCheckBox",
-              "Only Once"
-            )}
-            {this.renderBtn("Login")}
+            <article className="remember-me-chkBox">
+              {this.renderCheckBox(
+                "chkbox",
+                "chkbox",
+                "addCheckBox",
+                "Remember Me"
+              )}
+            </article>
+            <article className="login-page-btn">
+              {this.renderBtn("Login")}
+            </article>
           </main>
         </article>
       </React.Fragment>

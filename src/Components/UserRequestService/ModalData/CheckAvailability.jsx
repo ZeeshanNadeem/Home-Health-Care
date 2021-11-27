@@ -37,18 +37,18 @@ const CheckAvailability = ({ availabilityData }) => {
       <table className="table availability-table">
         <thead>
           <tr>
-            <th className="availability-table-th" scope="col">
-              Service Staffs
-            </th>
+            {/* <th className="availability-table-th" scope="col">
+              Available Staff
+            </th> */}
             {/* <th className="availability-table-th" scope="col">
               Organization
             </th> */}
             <th className="availability-table-th" scope="col">
               Timings
             </th>
-            <th className="availability-table-th" scope="col">
+            {/* <th className="availability-table-th" scope="col">
               From-To
-            </th>
+            </th> */}
 
             <th className="availability-table-th" scope="col">
               Booked-Slots
@@ -67,13 +67,13 @@ const CheckAvailability = ({ availabilityData }) => {
               {/* <td className="availability-table-th">
                 {data.serviceOrganization.name}
               </td> */}
-              <td className="availability-table-th">{data.staffType.name}</td>
+              {/* <td className="availability-table-th">{data.staffType.name}</td> */}
               <td className="availability-table-th">
                 {data.availabilityFrom} to {data.availabilityTo}
               </td>
-              <td className="availability-table-th">
+              {/* <td className="availability-table-th">
                 {data.availabileDayFrom} to {data.availabileDayTo}
-              </td>
+              </td> */}
               {userRequests.map((bookedSlots) => (
                 <td className="availability-table-th" key={bookedSlots._id}>
                   {checkBookedSlots(bookedSlots, data) ? (

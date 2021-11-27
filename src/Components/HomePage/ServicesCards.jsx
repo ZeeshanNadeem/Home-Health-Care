@@ -20,14 +20,14 @@ const ServicesCards = () => {
           cardTitle=""
           cardText=""
           btnName=""
-          cardTitle="Nursing Care"
+          cardTitle="Home Visits"
           imgSrc="https://homehealthcare.com.ph/assets/default/img/house.svg"
         />
         <Card_
           cardTitle=""
           cardText=""
           btnName=""
-          cardTitle="Doctor Care"
+          cardTitle="Nursing Care"
           imgSrc="https://homehealthcare.com.ph/assets/default/img/online.svg"
         />
         <Card_

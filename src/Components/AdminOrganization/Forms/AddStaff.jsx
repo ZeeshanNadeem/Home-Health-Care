@@ -169,7 +169,7 @@ class NurseForm extends Form {
 
               <article className="one-group-second-item addStaff-group-alignment">
                 <article>{this.renderLabel("Date of Birth", "dob")}</article>
-                <article>
+                <article className="add-staff-dob">
                   {this.renderInput(
                     "date",
                     "dob",
