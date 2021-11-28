@@ -20,7 +20,7 @@ export default function CheckAvailabilityPopover({ availabilityData }) {
   return (
     <span>
       <span onMouseEnter={handleClick} className="check-availability">
-        Availability Status
+        Check Availability
       </span>
       <Popover
         id={id}

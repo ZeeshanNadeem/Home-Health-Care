@@ -352,3 +352,13 @@ article.searchBar-wrapper {
 .ChkBox-signup > article > label {
   text-transform: none;
 }
+
+/* user-request-input-wrapper */
+
+.user-request-input-wrapper {
+  margin-top: 0.2rem;
+}
+
+.btn-user-request {
+  margin-top: 0.8rem;
+}

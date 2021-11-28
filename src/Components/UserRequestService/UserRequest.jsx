@@ -5,6 +5,8 @@ import Joi from "joi-browser";
 import moment from "moment";
 import Button from "@mui/material/Button";
 import CheckAvailability from "./Modal/CheckAvailability";
+import { toast, ToastContainer } from "react-toastify";
+
 import config from "../Api/config.json";
 
 class UserRequestService extends Form {
@@ -26,14 +28,14 @@ class UserRequestService extends Form {
     organization: [],
     Conditionalservices: [],
     availabilityData: [],
-    bookedSlots: [],
+    userRequests: [],
   };
   async componentDidMount() {
     const { data: organization } = await axios.get(config.organizations);
-    const { data: bookedSlots } = await axios.get(config.userRequests);
+    const { data: userRequests } = await axios.get(config.userRequests);
     this.setState({
       organization: organization,
-      bookedSlots,
+      userRequests,
     });
   }
 
@@ -49,92 +51,82 @@ class UserRequestService extends Form {
     // ServiceNeededTo: Joi.string().required().label("To"),
   };
 
-  handleSubmit = async (e) => {
-    e.preventDefault();
+  AssignAutomatedStaff = async () => {
     const { doctorForm } = this.state;
     const { schedule } = this.state.doctorForm;
-    const { availabilityData, bookedSlots } = this.state;
+    const { availabilityData, userRequests } = this.state;
     const { ServiceNeededFrom } = this.state.doctorForm;
-    console.log("Availability :", schedule);
-    console.log("availabilityData :", availabilityData);
-    console.log("Booked Slots :", bookedSlots);
-    const { data: staff } = await axios.get(config.staff);
-    console.log("Staff :", staff);
 
-    for (let i = 0; i < availabilityData.length; i++) {
-      console.log("For Loop Starts..");
-      console.log("Availability data iteration:", availabilityData[i]);
-      let availableFromArr = availabilityData[i].availabilityFrom.split(":");
-      let availableToArr = availabilityData[i].availabilityTo.split(":");
-      console.log("User Selected Time :", ServiceNeededFrom);
+    const { data: staff } = await axios.get(config.staff);
+
+    for (let j = 0; j < staff.results.length; j++) {
+      let availableFromArr = staff.results[j].availabilityFrom.split(":");
+      let availableToArr = staff.results[j].availabilityTo.split(":");
+
       let userSelectedTime = ServiceNeededFrom.split(":");
       let availableFrom = availableFromArr[0];
       let availabileTo = availableToArr[0];
       let userSelectedTime_ = userSelectedTime[0];
-      console.log("Available Staff Availability From:", availableFrom);
-      console.log("Available Staff Availability To:", availabileTo);
-      console.log("User Selected Time:", userSelectedTime_);
+      let bookedServiceFrom_ = null;
+      let bookedServiceFrom = null;
+      let gotSlotBooked = false;
 
       if (
-        userSelectedTime >= availableFrom &&
-        userSelectedTime < availabileTo
+        userSelectedTime_ >= availableFrom &&
+        userSelectedTime_ < availabileTo
       ) {
-        console.log("Comparison ");
-        for (let i = 0; i < bookedSlots.length; i++) {
-          let bookedServiceFrom = bookedSlots[i].ServiceNeededFrom.split(":");
-          let bookedServiceFrom_ = bookedServiceFrom[0];
-          if (userSelectedTime === bookedServiceFrom_) {
-            continue;
-          } else {
-            const userRequest = {};
-            userRequest.fullName = doctorForm.fullname;
-            userRequest.staffMemberID = availabilityData[i]._id;
-            userRequest.OrganizationID = doctorForm.organization;
-            userRequest.ServiceNeededFrom = doctorForm.ServiceNeededFrom;
+        for (let i = 0; i < userRequests.length; i++) {
+          if (
+            staff.results[j]._id === userRequests[i].staffMemberAssigned._id
+          ) {
+            bookedServiceFrom = userRequests[i].ServiceNeededFrom.split(":");
+            bookedServiceFrom_ = bookedServiceFrom[0];
 
-            userRequest.ServiceID = doctorForm.service;
-            userRequest.Schedule = doctorForm.schedule;
-            userRequest.Recursive = doctorForm.recursive;
-            userRequest.Address = doctorForm.address;
-            userRequest.PhoneNo = doctorForm.phoneno;
-            console.log("User Request sending to Post ::", userRequest);
-            const data = axios.post(config.userRequests, userRequest);
-            console.log("Data Posted User Request...");
+            if (userSelectedTime_ !== bookedServiceFrom_) {
+              continue;
+            } else {
+              gotSlotBooked = true;
+              break;
+            }
           }
         }
-      } else {
-        // const userRequest = {};
-        // userRequest.staffMemberID = doctorForm.organization;
-        // userRequest.OrganizationID = doctorForm.service;
-        // userRequest.ServiceNeededFrom = doctorForm.schedule;
-        // userRequest.ServiceNeededTo = doctorForm.onlyOnceCheckBox;
-        // userRequest.ServiceID = doctorForm.address;
-        // userRequest.Schedule = doctorForm.phoneno;
-        // userRequest.OnlyOnce = doctorForm.timeSchedule;
-        // userRequest.Address = doctorForm.timeSchedule;
-        // userRequest.PhoneNo = doctorForm.timeSchedule;
-        // const data = axios.post(config.staff);
-        // console.log("Data posted !");
-        // break;
+
+        if (!gotSlotBooked) {
+          const userRequest = {};
+          userRequest.fullName = doctorForm.fullname;
+          userRequest.staffMemberID = staff.results[j]._id;
+          userRequest.OrganizationID = doctorForm.organization;
+          userRequest.ServiceNeededFrom = doctorForm.ServiceNeededFrom;
+
+          userRequest.ServiceID = doctorForm.service;
+          userRequest.Schedule = doctorForm.schedule;
+          userRequest.Recursive = doctorForm.recursive;
+          userRequest.Address = doctorForm.address;
+          userRequest.PhoneNo = doctorForm.phoneno;
+
+          await axios.post(config.userRequests, userRequest);
+          toast.success("Meeting Scheduled");
+
+          break;
+        }
+        if (gotSlotBooked) {
+          toast.error("No Availability For the Specified Time!");
+          toast.error("Please Check Availability and then Schedule!");
+          break;
+        }
       }
     }
-    // const userRequest = {};
-    // userRequest.OrganizationID = doctorForm.organization;
-    // userRequest.ServiceID = doctorForm.service;
-    // userRequest.Schedule = doctorForm.schedule;
-    // userRequest.OnlyOnce = doctorForm.onlyOnceCheckBox;
-    // userRequest.Address = doctorForm.address;
-    // userRequest.PhoneNo = doctorForm.phoneno;
-    // userRequest.Time = doctorForm.timeSchedule;
-    // const { data } = await axios.post(
-    //   "http://localhost:3iii/api/userRequests",
-    //   userRequest
-    // );
+  };
+
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    await this.AssignAutomatedStaff();
   };
   render() {
     const { services, organization, availabilityData } = this.state;
     return (
       <div className="doc-container user-request-wrapper">
+        <ToastContainer />
         <div className="card-signup doc-form style-User-Request">
           <header>
             <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
@@ -244,7 +236,9 @@ class UserRequestService extends Form {
               </article>
             </article>
 
-            {this.renderBtn("Schedule")}
+            <article className="btn-user-request">
+              {this.renderBtn("Schedule")}
+            </article>
           </form>
         </div>
       </div>
