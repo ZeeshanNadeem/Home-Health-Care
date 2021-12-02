@@ -29,6 +29,7 @@ class UserRequestService extends Form {
     Conditionalservices: [],
     availabilityData: [],
     userRequests: [],
+    errors: [],
   };
   async componentDidMount() {
     const { data: organization } = await axios.get(config.organizations);
@@ -67,13 +68,54 @@ class UserRequestService extends Form {
       let availableFrom = availableFromArr[0];
       let availabileTo = availableToArr[0];
       let userSelectedTime_ = userSelectedTime[0];
+
+      if (
+        userSelectedTime_ == "01" ||
+        userSelectedTime_ == "02" ||
+        userSelectedTime_ == "03" ||
+        userSelectedTime_ == "04" ||
+        userSelectedTime_ == "05" ||
+        userSelectedTime_ == "06" ||
+        userSelectedTime_ == "07" ||
+        userSelectedTime_ == "08" ||
+        userSelectedTime_ == "09"
+      ) {
+        userSelectedTime_ = userSelectedTime_.replace(/^(?:00:)?0?/, "");
+      }
+      if (
+        availableFrom == "01" ||
+        availableFrom == "02" ||
+        availableFrom == "03" ||
+        availableFrom == "04" ||
+        availableFrom == "05" ||
+        availableFrom == "06" ||
+        availableFrom == "07" ||
+        availableFrom == "08" ||
+        availableFrom == "09"
+      ) {
+        availableFrom = availableFrom.replace(/^(?:00:)?0?/, "");
+      }
+
+      if (
+        availabileTo == "01" ||
+        availabileTo == "02" ||
+        availabileTo == "03" ||
+        availabileTo == "04" ||
+        availabileTo == "05" ||
+        availabileTo == "06" ||
+        availabileTo == "07" ||
+        availabileTo == "08" ||
+        availabileTo == "09"
+      ) {
+        availabileTo = availabileTo.replace(/^(?:00:)?0?/, "");
+      }
       let bookedServiceFrom_ = null;
       let bookedServiceFrom = null;
       let gotSlotBooked = false;
 
       if (
-        userSelectedTime_ >= availableFrom &&
-        userSelectedTime_ < availabileTo
+        parseInt(userSelectedTime_.trim()) >= parseInt(availableFrom.trim()) &&
+        parseInt(userSelectedTime_.trim()) < parseInt(availabileTo.trim())
       ) {
         for (let i = 0; i < userRequests.length; i++) {
           if (
@@ -86,6 +128,7 @@ class UserRequestService extends Form {
               continue;
             } else {
               gotSlotBooked = true;
+
               break;
             }
           }
@@ -120,7 +163,9 @@ class UserRequestService extends Form {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    await this.AssignAutomatedStaff();
+    const errors = this.validate();
+    this.setState({ errors: errors || {} });
+    if (!errors) await this.AssignAutomatedStaff();
   };
   render() {
     const { services, organization, availabilityData } = this.state;

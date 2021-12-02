@@ -38,6 +38,7 @@
     "install": "^0.13.0",
     "joi-browser": "13.4",
     "jquery": "^3.6.0",
+    "jwt-decode": "^2.2.0",
     "mdbreact": "^5.1.0",
     "moment": "^2.29.1",
     "npm": "^7.24.2",

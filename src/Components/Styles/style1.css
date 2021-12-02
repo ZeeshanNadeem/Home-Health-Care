@@ -288,7 +288,7 @@ article.searchBar-wrapper {
 }
 
 .service-card {
-  box-shadow: 0px 0px 30px 0px rgb(0 0 0 / 10%);
+  /* box-shadow: 0px 0px 30px 0px rgb(0 0 0 / 10%); */
 }
 
 .user-request-wrapper {
@@ -361,4 +361,84 @@ article.searchBar-wrapper {
 
 .btn-user-request {
   margin-top: 0.8rem;
+}
+/* NavBar on Homepage */
+.current-user:hover {
+  background-color: lightgrey;
+  color: var(--btnBackground);
+  border-radius: 20px;
+  padding: 0.3rem;
+}
+span.current-user {
+  display: flex;
+}
+p.logged-in-user {
+  margin-top: 0.5rem;
+  margin-left: 0.4rem;
+}
+p.logged-in-user {
+  /* margin-right: 1rem; */
+  color: #4682b4;
+  font-weight: 800;
+}
+
+.logout-iconText-wrapper {
+  display: flex;
+}
+
+.logout {
+  margin-top: 0.3rem;
+}
+
+.logout-iconText-wrapper {
+  padding-left: 1.2rem;
+}
+
+.logout-btn {
+  border: 2px solid var(--btnBackground);
+  background-color: var(--btnBackground) !important;
+}
+
+.logout-btn:hover {
+  background-color: #ac935e;
+}
+
+/* HHC TAG LINE */
+element.style {
+  text-align: center;
+  margin-top: 2.5rem;
+}
+
+.user-account-popover {
+  display: flex;
+  /* justify-content: center; */
+
+  margin-top: 1rem;
+  width: 15rem;
+}
+
+.logout-wrapper-icon {
+  background-color: rgb(228, 230, 235);
+  width: 2.2rem;
+  height: 2.2rem;
+  padding-top: 0.3rem;
+  padding-left: 0.7rem;
+  margin-right: 1rem;
+  border-radius: 20px;
+  margin-left: 2rem;
+}
+
+.user-account-menu-item {
+  margin-top: 0.3rem;
+  margin-left: 1.2rem;
+  color: #000;
+  font-weight: 600;
+}
+
+.my-home-visits-icon {
+  padding-left: 0.5rem;
+}
+
+.sheduled-visits {
+  margin-left: 0.3rem;
 }

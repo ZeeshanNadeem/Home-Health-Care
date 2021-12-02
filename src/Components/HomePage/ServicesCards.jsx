@@ -7,10 +7,10 @@ const ServicesCards = () => {
   return (
     <React.Fragment>
       <article style={{ textAlign: "center", marginTop: "4.5rem" }}>
-        <h2 className="msg-above-home-cards">
+        <h2 className="msg-above-home-cards animate__animated animate__fadeInUp">
           Discover Home Heath Care's <strong>ONLINE</strong> SERVICES!{" "}
         </h2>
-        <p>
+        <p className="fadeInUp animate__animated animate__fadeInUp">
           Home Health Care, Inc. has provided convenient support and treatment
           through house calls for the past 16 years.
         </p>

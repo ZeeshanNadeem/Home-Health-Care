@@ -1,9 +1,9 @@
 // import NavBar from "./Components/NavBar";
 import { Route } from "react-router-dom";
 
-import Login from "./Components/Login";
+import Login from "./Components/Login/LoginPage/Login";
 
-import SignUpNew from "./Components/SignUpNew";
+import SignUp from "./Components/SignUp/SignUpPage/SignUp";
 
 import Home from "./Components/HomePage/Home";
 
@@ -22,6 +22,9 @@ import UserScheduled from "./Components/UserScheduled";
 import Schedule from "./Components/Schedule";
 import Leave from "./Components/Leave";
 import StaffPanel from "./Components/AdminOrganization/StaffPanel";
+import Logout from "./Components/Logout/logout";
+import AppAdmin from "./Components/AppAdmin/PanelPages/Admin";
+import ManageOrganizations from "./Components/AppAdmin/PanelPages/ManageOrganizations";
 function App() {
   return (
     <article>
@@ -36,9 +39,15 @@ function App() {
         <Route path="/admin/Requests" component={AdminUserRequest} />
         {/* <Route path="/admin/Staff" component={AdminStaff} /> */}
       </article>
-      <Route exact path="/" component={Home} />
-      <Route exact path="/Signup" component={SignUpNew} />
+      <article class="admin-routes appAdmin">
+        <Route path="/app/admin" component={AppAdmin} />
+        <Route path="/app/admin/org" component={ManageOrganizations} />
+      </article>
+      <Route exact path="/" component={Login} />
+      <Route exact path="/Home" component={Home} />
+      <Route exact path="/Signup" component={SignUp} />
       <Route exact path="/Login" component={Login} />
+      <Route exact path="/Logout" component={Logout} />
       <Route exact path="/user/request" component={UserRequestService} />
     </article>
   );

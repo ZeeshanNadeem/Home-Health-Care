@@ -50,7 +50,11 @@ const CheckAvailability = ({ availabilityData }) => {
               From-To
             </th> */}
 
-            <th className="availability-table-th" scope="col">
+            <th
+              className="availability-table-th"
+              scope="col"
+              colSpan={userRequests.length}
+            >
               Booked-Slots
             </th>
             {/* <th className="availability-table-th" scope="col">

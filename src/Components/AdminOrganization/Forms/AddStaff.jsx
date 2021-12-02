@@ -84,7 +84,6 @@ class NurseForm extends Form {
     };
 
     try {
-      console.log("staff Member :", addStaffMember);
       const { data: doctorPosted } = await axios.post(
         "http://localhost:3000/api/staff",
         addStaffMember

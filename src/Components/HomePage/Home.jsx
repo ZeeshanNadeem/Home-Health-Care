@@ -3,6 +3,7 @@ import NavBar from "./NavBar";
 import Carasol from "./Carasol";
 // import SearchService from "./SearchService";
 import ServicesCards from "./ServicesCards";
+import Footer from "../Footer/footer";
 
 const Home = () => {
   return (
@@ -12,6 +13,7 @@ const Home = () => {
       <Carasol />
       {/* <SearchService /> */}
       <ServicesCards />
+      <Footer />
     </div>
   );
 };
