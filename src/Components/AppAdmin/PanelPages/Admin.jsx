@@ -41,7 +41,7 @@ const AppAdmin = () => {
                     icon={faUserPlus}
                     style={{ marginRight: "0.6rem" }}
                   />
-                  Organzation
+                  Organization
                 </li>
               </Link>
             </ul>

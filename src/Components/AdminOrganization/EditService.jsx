@@ -102,10 +102,6 @@ const EditService = () => {
       `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}`
     );
 
-    console.log(
-      `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}`
-    );
-    console.log("Results:::!", services);
     setServices(services.results);
   };
 

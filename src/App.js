@@ -25,6 +25,7 @@ import StaffPanel from "./Components/AdminOrganization/StaffPanel";
 import Logout from "./Components/Logout/logout";
 import AppAdmin from "./Components/AppAdmin/PanelPages/Admin";
 import ManageOrganizations from "./Components/AppAdmin/PanelPages/ManageOrganizations";
+import EditModalOrg from "./Components/AppAdmin/Modals/EditOrganizationModle";
 function App() {
   return (
     <article>
@@ -42,6 +43,7 @@ function App() {
       <article class="admin-routes appAdmin">
         <Route path="/app/admin" component={AppAdmin} />
         <Route path="/app/admin/org" component={ManageOrganizations} />
+        {/* <Route path="/app/admin/:id?" component={EditModalOrg} /> */}
       </article>
       <Route exact path="/" component={Login} />
       <Route exact path="/Home" component={Home} />

@@ -90,7 +90,6 @@ class NurseForm extends Form {
       );
       RefreshStaffMembers();
     } catch (ex) {
-      console.log("Ex:", ex);
       toast.error("Something went wrong..");
       return;
     }
@@ -111,7 +110,7 @@ class NurseForm extends Form {
       this.addAStaffMember();
       return;
     }
-    console.log("Error!!!", errors);
+
     toast.error("Something went wrong..");
   };
   async componentDidMount() {

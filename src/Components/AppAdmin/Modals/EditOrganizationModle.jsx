@@ -1,11 +1,15 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Container } from "@mui/material";
 import Modal from "@mui/material/Modal";
-import AddIcon from "@mui/icons-material/Add";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import AddOrganization from "../Forms/AddOrganization";
-import Fab from "@mui/material/Fab";
-
+import { useEffect } from "react";
+import Box from "@mui/material/Box";
 const style = {
   position: "absolute",
   top: "50%",
@@ -17,19 +21,20 @@ const style = {
   // boxShadow: 24,
   // p: 4,
 };
-
-export default function AddOrgModal({ reloadOrganzations }) {
+export default function EditModalOrg({ organizationData, reloadOrganzations }) {
   const [open, setOpen] = React.useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
     <div>
-      <article className="float-button">
-        <Fab color="primary" aria-label="add">
-          <AddIcon onClick={handleOpen} />
-        </Fab>
-      </article>
+      {/* <Link to={`/app/admin/${organizationData._id}`}> */}
+      <Button variant="contained" onClick={handleOpen}>
+        <FontAwesomeIcon icon={faEdit} style={{ marginRight: "0.6rem" }} />
+        Edit
+      </Button>
+      {/* </Link> */}
 
       <Modal
         open={open}
@@ -39,7 +44,10 @@ export default function AddOrgModal({ reloadOrganzations }) {
       >
         <Box sx={style}>
           <Container>
-            <AddOrganization reloadOrganzations={reloadOrganzations} />
+            <AddOrganization
+              organizationData={organizationData}
+              reloadOrganzations={reloadOrganzations}
+            />
           </Container>
         </Box>
       </Modal>

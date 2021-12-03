@@ -4,7 +4,36 @@
 }
 
 .manage-org-wrapper {
-  margin-top: 4rem;
+  margin-top: 1rem;
   margin-left: auto;
   margin-right: auto;
+}
+
+.app-admin-panel-label {
+  margin-top: 2rem;
+}
+
+.label {
+  margin-top: 1rem;
+}
+
+.addOrg {
+  height: 20rem;
+}
+
+.add-org {
+  margin-top: 1rem;
+}
+
+.add-org-wrapper {
+  margin-bottom: 10rem;
+}
+.organizations-table {
+  margin-bottom: 0.8rem;
+}
+
+@media screen and (min-width: 873px) {
+  .addOrg {
+    height: 18rem;
+  }
 }
