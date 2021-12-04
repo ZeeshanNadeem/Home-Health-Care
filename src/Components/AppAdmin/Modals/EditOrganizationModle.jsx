@@ -29,12 +29,12 @@ export default function EditModalOrg({ organizationData, reloadOrganzations }) {
 
   return (
     <div>
-      {/* <Link to={`/app/admin/${organizationData._id}`}> */}
-      <Button variant="contained" onClick={handleOpen}>
-        <FontAwesomeIcon icon={faEdit} style={{ marginRight: "0.6rem" }} />
-        Edit
-      </Button>
-      {/* </Link> */}
+      <Link to={`/app/admin/org/${organizationData._id}`}>
+        <Button variant="contained" onClick={handleOpen}>
+          <FontAwesomeIcon icon={faEdit} style={{ marginRight: "0.6rem" }} />
+          Edit
+        </Button>
+      </Link>
 
       <Modal
         open={open}

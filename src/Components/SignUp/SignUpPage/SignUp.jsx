@@ -4,6 +4,8 @@ import NavBar from "../../HomePage/NavBar";
 import signingUp from "../SigningUp/SignUp";
 import Joi from "joi-browser";
 import "animate.css";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 class SignUp extends Form {
   state = {
     doctorForm: {
@@ -11,6 +13,7 @@ class SignUp extends Form {
       dateOfBirth: "",
       email: "",
       password: "",
+      isOrganizationAdmin: false,
     },
     errors: {},
   };
@@ -20,6 +23,7 @@ class SignUp extends Form {
     dateOfBirth: Joi.string().required(),
     email: Joi.string().min(5).max(255).required().email(),
     password: Joi.string().min(5).max(255).required(),
+    isOrganizationAdmin: Joi.boolean().required(),
   };
 
   handleSubmit = async (e) => {
@@ -37,6 +41,7 @@ class SignUp extends Form {
           const error = { ...this.state.errors };
 
           error.email = ex.response.data;
+          toast.error(ex.response.data);
           this.setState({ errors: error });
         }
       }
@@ -46,7 +51,7 @@ class SignUp extends Form {
     return (
       <React.Fragment>
         <NavBar />
-
+        <ToastContainer />
         <form onSubmit={this.handleSubmit}>
           <article className="signup-page">
             <main className="card-signup animate__animated animate__fadeInLeft">
@@ -84,9 +89,9 @@ class SignUp extends Form {
               <article className="ChkBox-signup">
                 {this.renderCheckBox(
                   "checkbox",
-                  "checkbox",
-                  "agreedUser",
-                  "I Agree with the Privacy Policy"
+                  "isOrganizationAdmin",
+                  "isOrganizationAdmin",
+                  "Request To Be an Organization Admin"
                 )}
               </article>
               <article className="signup-page-btn">

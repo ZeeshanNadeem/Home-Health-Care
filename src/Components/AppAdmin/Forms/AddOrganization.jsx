@@ -35,7 +35,9 @@ class AddOrganization extends Form {
 
       try {
         await axios.put(
-          "http://localhost:3000/api/organizations" + organizationData._id,
+          "http://localhost:3000/api/organizations" +
+            "/" +
+            organizationData._id,
           { name: doctorForm.name }
         );
         reloadOrganzations();

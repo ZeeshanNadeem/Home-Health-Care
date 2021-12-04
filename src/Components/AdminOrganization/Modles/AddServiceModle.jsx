@@ -5,19 +5,20 @@ import AddService from "../Forms/AddService";
 import { Container } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import AddIcon from "@mui/icons-material/Add";
+import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
 
-// const style = {
-//   position: "absolute",
-//   top: "50%",
-//   left: "50%",
-//   transform: "translate(-50%, -50%)",
-//   width: 400,
-//   bgcolor: "background.paper",
-//   border: "2px solid #000",
-//   boxShadow: 24,
-//   p: 4,
-// };
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  // width: 400,
+  // bgcolor: "background.paper",
+  // border: "2px solid #000",
+  // boxShadow: 24,
+  // p: 4,
+};
 
 export default function BasicModal({ updateService }) {
   const [open, setOpen] = React.useState(false);
@@ -38,9 +39,11 @@ export default function BasicModal({ updateService }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Container>
-          <AddService updateService={updateService} />
-        </Container>
+        <Box sx={style}>
+          <Container>
+            <AddService updateService={updateService} />
+          </Container>
+        </Box>
       </Modal>
     </div>
   );

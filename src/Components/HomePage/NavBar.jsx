@@ -106,7 +106,7 @@ class NavBar extends Component {
                 <li className="nav-li">Sign Up</li>
               </Link>
             ) : (
-              <button className="nav-btn signup">
+              <button className="nav-btn signup signup-btn">
                 <Link to="/Signup">
                   <li className="signup-li">Sign Up</li>
                 </Link>

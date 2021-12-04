@@ -60,24 +60,28 @@ const IndexDropdown = () => {
           "bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48"
         }
       >
-        {!user.isAppAdmin && (
+        <article>
           <article>
-            <article>
-              <span
-                className={
-                  "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
-                }
-              >
-                Organization Admin
+            {user.isOrganizationAdmin === "Approved Admin" && (
+              <span>
+                <span
+                  className={
+                    "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
+                  }
+                >
+                  Organization Admin
+                </span>
+                <Link
+                  onClick={() => setDropdownPopoverShow(false)}
+                  to="/admin"
+                  className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+                >
+                  Admin
+                </Link>
+                <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100" />
               </span>
-              <Link
-                onClick={() => setDropdownPopoverShow(false)}
-                to="/admin"
-                className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-              >
-                Admin
-              </Link>
-              {/* /*{" "}
+            )}
+            {/* /*{" "}
               <Link
                 to="/admin/settings"
                 className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
@@ -96,30 +100,30 @@ const IndexDropdown = () => {
               >
                 Maps
               </Link>{" "} */}
-              <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100" />
-              <span
-                className={
-                  "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
-                }
-              >
-                Staff
-              </span>
-              <Link
-                to="/auth/login"
-                className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-              >
-                Schedule
-              </Link>
-              <Link
-                to="/auth/register"
-                className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-              >
-                Apply For Leave
-              </Link>
-            </article>
-            <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+
+            <span
+              className={
+                "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
+              }
+            >
+              Staff
+            </span>
+            <Link
+              to="/auth/login"
+              className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            >
+              Schedule
+            </Link>
+            <Link
+              to="/auth/register"
+              className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            >
+              Apply For Leave
+            </Link>
           </article>
-        )}
+          <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+        </article>
+
         {/* <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100" /> */}
         {/* <span
           className={
@@ -142,21 +146,24 @@ const IndexDropdown = () => {
           Apply for Leave
         </Link> */}
 
-        <span
-          className={
-            "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
-          }
-        >
-          App Admin
-        </span>
-
-        <Link
-          to="/app/admin"
-          className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-        >
-          Admin
-        </Link>
-        <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+        {user.isAppAdmin && (
+          <span>
+            <span
+              className={
+                "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
+              }
+            >
+              App Admin
+            </span>
+            <Link
+              to="/app/admin"
+              className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+            >
+              Admin
+            </Link>
+            <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+          </span>
+        )}
         <span
           className={
             "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"

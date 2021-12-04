@@ -19,9 +19,9 @@ class AddService extends Form {
   };
 
   async componentDidMount() {
-    const { data } = await axios.get("http://localhost:3000/api/organization");
+    const { data } = await axios.get("http://localhost:3000/api/organizations");
 
-    this.setState({ organizations: data });
+    this.setState({ organizations: data.results });
 
     const { serviceData } = this.props;
     const doctorForm = { ...this.state.doctorForm };
@@ -82,16 +82,16 @@ class AddService extends Form {
     const { successMessage, organizations } = this.state;
     return (
       <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
-        <article className="doc-container">
+        <article className="doc-container ">
           {successMessage && <ToastContainer />}
-          <article className="card-signup doc-form addservice">
+          <article className="card-signup doc-form addservice add-service-form-wrapper">
             <header>
               <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
                 Add A Service
               </h1>
             </header>
             <article>{this.renderLabel("SERVICE NAME", "fname")}</article>
-            <article>
+            <article className="add-service-input">
               {this.renderInput(
                 "text",
                 "serviceName",
@@ -102,7 +102,7 @@ class AddService extends Form {
             <article>
               {this.renderLabel("Organization", "serviceOrganization")}
             </article>
-            <article>
+            <article className="add-service-input">
               {/* {this.renderInput(
                 "text",
                 "serviceOrgranization",
@@ -118,7 +118,7 @@ class AddService extends Form {
               )}
             </article>
             <article>{this.renderLabel("Price", "service_price")}</article>
-            <article>
+            <article className="add-service-input">
               {this.renderInput(
                 "number",
                 "servicePrice",
@@ -126,7 +126,9 @@ class AddService extends Form {
                 "Service Price"
               )}
             </article>
-            {this.renderBtn("Add Service")}
+            <article className="add-service-btn">
+              {this.renderBtn("Add Service")}
+            </article>
           </article>
         </article>
       </form>

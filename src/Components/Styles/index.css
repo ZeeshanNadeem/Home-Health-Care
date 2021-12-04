@@ -137,6 +137,7 @@ a {
   .signup-li {
     color: var(--btnBackground);
   }
+
   .nav-btn.signup:hover {
     color: black !important;
   }

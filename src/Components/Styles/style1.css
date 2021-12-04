@@ -442,3 +442,20 @@ element.style {
 .sheduled-visits {
   margin-left: 0.3rem;
 }
+
+.add-service-wrapper {
+  /* height: 32rem; */
+}
+
+.add-service-input {
+  margin-bottom: 0.6rem;
+}
+
+.add-service-form-wrapper {
+  height: 25rem;
+  margin: 0;
+}
+
+.add-service-btn {
+  margin-top: 1.7rem;
+}

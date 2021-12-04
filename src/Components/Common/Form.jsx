@@ -102,7 +102,7 @@ class Form extends React.Component {
 
   handleChangeForCheckBox = (e) => {
     const doctorForm = { ...this.state.doctorForm };
-    doctorForm.onlyOnceCheckBox = e.target.checked;
+    doctorForm[e.currentTarget.name] = e.target.checked;
     this.setState({ doctorForm });
   };
   renderInput = (type, id, name, placeholder = "", step = "") => {

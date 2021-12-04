@@ -64,6 +64,8 @@ const ManageOrganizations = () => {
       setTotalPages(page);
 
       setOrganizations(organizations.results);
+    } else {
+      setTotalPages(totalPages);
     }
   };
 
@@ -104,7 +106,23 @@ const ManageOrganizations = () => {
     }
 
     setSearchedService(e.currentTarget.value);
-    //  PopulateTable();
+  };
+
+  const deleteOrganization = async (id) => {
+    const orignalOrganizations = organizations;
+    const newOrganizations = organizations.filter((o) => o._id !== id);
+    setOrganizations(newOrganizations);
+
+    try {
+      await axios.delete("http://localhost:3000/api/organizations" + "/" + id);
+      toast.success("Deleted");
+      await reloadOrganzations();
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404) {
+        toast.error("This post has already been deleted");
+      }
+      setOrganizations(orignalOrganizations);
+    }
   };
 
   return (
@@ -138,7 +156,12 @@ const ManageOrganizations = () => {
               <tr>
                 <td>{org.name}</td>
                 <td>
-                  <Button variant="contained">
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      deleteOrganization(org._id);
+                    }}
+                  >
                     <FontAwesomeIcon
                       icon={faTrash}
                       style={{ marginRight: "0.6rem" }}

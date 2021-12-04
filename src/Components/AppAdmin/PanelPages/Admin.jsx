@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faUserMd } from "@fortawesome/free-solid-svg-icons";
 
 import { Link } from "react-router-dom";
@@ -30,18 +30,18 @@ const AppAdmin = () => {
                     icon={faUserMd}
                     style={{ marginRight: "0.6rem" }}
                   />
-                  Manage Organzation
+                  Manage Organizations
                 </li>
               </Link>
 
-              <Link to="">
+              <Link to="/app/admin/requests">
                 <li className="admin-li app-admin-li">
                   {" "}
                   <FontAwesomeIcon
-                    icon={faUserPlus}
+                    icon={faUsers}
                     style={{ marginRight: "0.6rem" }}
                   />
-                  Organization
+                  Admin Requests
                 </li>
               </Link>
             </ul>
