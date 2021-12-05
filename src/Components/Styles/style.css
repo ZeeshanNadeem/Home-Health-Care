@@ -307,6 +307,10 @@ h1.sign-up-header-text.doc-header {
   overflow-y: auto !important;
 }
 
+add-staff-input-styling {
+  margin-top: 0.2rem;
+}
+
 @media screen and (min-width: 200px) and (max-width: 449px) {
   h2.menu-title {
     padding: 0;
@@ -335,25 +339,64 @@ h1.sign-up-header-text.doc-header {
     display: flex;
     justify-content: space-between;
   }
-  .addStaff-input,
-  select#staff,
-  input#dob,
-  select#docQualification,
-  .addStaff-special-fields {
-    width: 10rem;
 
-    /* padding-right: -0.5rem; */
+  article.input-addStaff,
+  input#availabilityTo {
+    width: 10rem !important;
   }
 
-  .one-group-second-item {
+  select#staff,
+  input#availabilityFrom,
+  input#availabilityTo,
+  select#availabileDayFrom,
+  select#docQualification,
+  .input-addStaff > article > input#password,
+  .input-addStaff > article > input#phoneno {
+    width: 7.5rem !important;
+  }
+  input#availabilityTo {
+    margin-right: 1.6rem;
+  }
+  select#docQualification {
+    margin-left: 0.8rem;
+  }
+  .input-addStaff > article > input#password {
+    margin-left: 0.9rem;
+  }
+  .input-addStaff > article > input#phoneno {
+    margin-left: -2rem;
+  }
+  select#availabileDayTo {
+    margin-left: -1.2rem !important;
+    /* margin-right: -5rem; */
+    width: 7.5rem !important;
+  }
+  .one-group-second-item,
+  .add-staff-dob > article > input#password {
     margin-left: 0.5rem;
   }
   .one-group-first-item {
-    margin-left: -1.7rem;
+    margin-left: 1rem;
   }
 }
 
 @media screen and (min-width: 450px) and (max-width: 899px) {
+  article.input-addStaff,
+  input#availabilityTo {
+    width: 10.1rem !important;
+  }
+
+  select#staff,
+  input#availabilityFrom,
+  select#availabileDayFrom {
+    width: 10.1rem !important;
+  }
+  select#availabileDayTo {
+    /* margin-left: 1rem !important; */
+    /* margin-right: -5rem; */
+    width: 10.1rem !important;
+  }
+
   h2.menu-title {
     padding: 0;
 
@@ -387,6 +430,31 @@ h1.sign-up-header-text.doc-header {
 }
 
 @media screen and (min-width: 900px) {
+  .one-group-first-item,
+  .addStaff-input,
+  select#staff,
+  .add-staff-dob > article > input#dob,
+  select#docQualification,
+  .addStaff-special-fields,
+  .add-staff-dob > article > input#password,
+  .input-addStaff input {
+    margin-right: 0.7rem;
+    margin-left: 0.7rem;
+  }
+
+  article.addStaff-group-alignment.addStaff-btn {
+    margin-left: 1rem;
+  }
+
+  .label-addStaff {
+    margin-right: 0.7rem;
+    margin-left: 0.7rem;
+  }
+
+  select#availabileDayTo {
+    margin-left: -0.7rem;
+  }
+
   .card-signup {
     width: 33rem;
   }
@@ -404,7 +472,9 @@ h1.sign-up-header-text.doc-header {
   select#staff,
   .add-staff-dob > article > input#dob,
   select#docQualification,
-  .addStaff-special-fields {
+  .addStaff-special-fields,
+  .add-staff-dob > article > input#password,
+  .input-addStaff input {
     width: 20rem;
     /* margin-bottom: 1rem; */
   }

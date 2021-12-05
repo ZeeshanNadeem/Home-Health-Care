@@ -4,18 +4,22 @@ import Form from "../../Common/Form";
 import Joi from "joi-browser";
 import Alert from "@material-ui/lab/Alert";
 import { toast, ToastContainer } from "react-toastify";
-
+import config from "../../Api/config.json";
 class NurseForm extends Form {
   state = {
     doctorForm: {
       fullName: "",
-      dateOfBirth: "",
+      // dateOfBirth: "",
+      email: "",
+      password: "",
       staffType: "",
       qualification: "",
       availabilityFrom: "",
       availabilityTo: "",
       availabileDayFrom: "",
       availabileDayTo: "",
+      email: "",
+      password: "",
       // email: "",
       phone: "",
     },
@@ -25,8 +29,10 @@ class NurseForm extends Form {
     serviceType: [],
   };
   schema = {
-    fullName: Joi.string().required().label("Full Name"),
-    dateOfBirth: Joi.string().required().label("Date of Birth"),
+    fullName: Joi.string().min(5).max(50).required().label("FullName"),
+    // dateOfBirth: Joi.string().required().label("Date of Birth"),
+    email: Joi.string().min(5).max(255).required().email().label("Email"),
+    password: Joi.string().min(5).max(255).required().label("Password"),
     staffType: Joi.string().required().label("Staff Type"),
     qualification: Joi.string().required().label("Qualification"),
     availabilityFrom: Joi.string().required().label("Availability From"),
@@ -43,7 +49,9 @@ class NurseForm extends Form {
     const { doctorForm } = this.state;
     const updateStaff = {
       fullName: doctorForm.fullName,
-      dateOfBirth: doctorForm.dateOfBirth,
+      // dateOfBirth: doctorForm.dateOfBirth,
+      email: doctorForm.email,
+      password: doctorForm.password,
       staffTypeID: doctorForm.staffType,
       qualificationID: doctorForm.qualification,
       availabilityFrom: doctorForm.availabilityFrom,
@@ -72,7 +80,9 @@ class NurseForm extends Form {
 
     const addStaffMember = {
       fullName: doctorForm.fullName,
-      dateOfBirth: doctorForm.dateOfBirth,
+      // dateOfBirth: doctorForm.dateOfBirth,
+      email: doctorForm.email,
+      password: doctorForm.password,
       staffTypeID: doctorForm.staffType,
       qualificationID: doctorForm.qualification,
       phone: doctorForm.phone,
@@ -82,18 +92,33 @@ class NurseForm extends Form {
       availabileDayTo: doctorForm.availabileDayTo,
       // email: doctorForm.email,
     };
-
+    //  const user = {
+    //    staffTypeID: doctorForm.staffType,
+    //    qualificationID: doctorForm.qualification,
+    //    phone: doctorForm.phone,
+    //    availabilityFrom: doctorForm.availabilityFrom,
+    //    availabilityTo: doctorForm.availabilityTo,
+    //    availabileDayFrom: doctorForm.availabileDayFrom,
+    //    availabileDayTo: doctorForm.availabileDayTo,
+    //  };
     try {
-      const { data: doctorPosted } = await axios.post(
+      const { data: staffAdded } = await axios.post(
         "http://localhost:3000/api/staff",
         addStaffMember
       );
+
       RefreshStaffMembers();
+      const userObj = {};
+      userObj.fullName = addStaffMember.fullName;
+      userObj.email = addStaffMember.email;
+      userObj.password = addStaffMember.password;
+      userObj.staffMemberID = staffAdded._id;
+      await axios.post(config.apiEndPoint + "/user", userObj);
     } catch (ex) {
-      toast.error("Something went wrong..");
+      toast.error(ex.response.data);
       return;
     }
-    toast.success("Staff member has been added!");
+    toast.success("Staff member Added!");
   };
 
   handleSubmit = async (e) => {
@@ -126,15 +151,18 @@ class NurseForm extends Form {
     const doctorForm = { ...this.state.doctorForm };
 
     //Pre-Populating Staff Form
+    console.log("Prepoulations obj::", staffMemberData);
     if (staffMemberData) {
       doctorForm.fullName = staffMemberData.fullName;
-      doctorForm.dateOfBirth = staffMemberData.dateOfBirth;
+      // doctorForm.dateOfBirth = staffMemberData.dateOfBirth;
+      doctorForm.email = staffMemberData.email;
+      doctorForm.password = staffMemberData.password;
       doctorForm.staffType = staffMemberData.staffType._id;
       doctorForm.qualification = staffMemberData.qualification._id;
       doctorForm.availabilityFrom = staffMemberData.availabilityFrom;
       doctorForm.availabilityTo = staffMemberData.availabilityTo;
-      doctorForm.availabileDayFrom = doctorForm.availabileDayFrom;
-      doctorForm.availabileDayTo = doctorForm.availabileDayTo;
+      doctorForm.availabileDayFrom = staffMemberData.availabileDayFrom;
+      doctorForm.availabileDayTo = staffMemberData.availabileDayTo;
       doctorForm.phone = staffMemberData.phone;
       // doctorForm.email = staffMemberData.email;
 
@@ -157,42 +185,17 @@ class NurseForm extends Form {
               </h1>
             </header>
 
-            <article className="addStaff-Fields-grouping">
+            <article className="addStaff-Fields-grouping add-staff-input-styling">
               <article className="one-group-first-item addStaff-group-alignment">
-                <article>{this.renderLabel("FULL NAME", "fname")}</article>
+                <article className="label-addStaff">
+                  {this.renderLabel("FULL NAME", "fname")}
+                </article>
                 <article className="addStaff-input">
                   {this.renderInput("text", "fname", "fullName", "Full Name")}
                 </article>
               </article>
-
               <article className="one-group-second-item addStaff-group-alignment">
-                <article>{this.renderLabel("Date of Birth", "dob")}</article>
-                <article className="add-staff-dob">
-                  {this.renderInput(
-                    "date",
-                    "dob",
-                    "dateOfBirth",
-                    "Date of Birth"
-                  )}
-                </article>
-              </article>
-            </article>
-
-            <article className="addStaff-Fields-grouping">
-              <article className="one-group-first-item addStaff-group-alignment">
-                <article>{this.renderLabel("Staff Type", "staff")}</article>
-                <article className="input-addStaff">
-                  {this.renderDropDown(
-                    "Staff",
-                    serviceType,
-                    "staff",
-                    "staffType"
-                  )}
-                </article>
-              </article>
-
-              <article className="one-group-second-item addStaff-group-alignment">
-                <article>
+                <article className="label-addStaff">
                   {this.renderLabel("Qualification", "qualification")}
                 </article>
                 <article className="input-addStaff">
@@ -204,12 +207,72 @@ class NurseForm extends Form {
                   )}
                 </article>
               </article>
+              {/* <article className="one-group-second-item addStaff-group-alignment">
+                <article>{this.renderLabel("Date of Birth", "dob")}</article>
+                <article className="add-staff-dob">
+                  {this.renderInput(
+                    "date",
+                    "dob",
+                    "dateOfBirth",
+                    "Date of Birth"
+                  )}
+                </article>
+              </article> */}
+            </article>
+
+            <article className="addStaff-Fields-grouping add-staff-input-styling">
+              <article className="one-group-first-item addStaff-group-alignment">
+                <article className="label-addStaff">
+                  {this.renderLabel("Email", "Email")}
+                </article>
+                <article className="addStaff-input">
+                  {this.renderInput("text", "email", "email", "email")}
+                </article>
+              </article>
+
+              <article className="one-group-second-item addStaff-group-alignment">
+                <article className="label-addStaff">
+                  {this.renderLabel("Password", "Password")}
+                </article>
+                <article className="input-addStaff">
+                  {this.renderInput(
+                    "password",
+                    "password",
+                    "password",
+                    "password"
+                  )}
+                </article>
+              </article>
             </article>
 
             <article className="addStaff-Fields-grouping">
               <article className="one-group-first-item addStaff-group-alignment">
-                <article>
-                  {this.renderLabel("Availability From", "availabilityFrom")}
+                <article className="label-addStaff">
+                  {this.renderLabel("Staff Type", "staff")}
+                </article>
+                <article className="input-addStaff">
+                  {this.renderDropDown(
+                    "Staff",
+                    serviceType,
+                    "staff",
+                    "staffType"
+                  )}
+                </article>
+              </article>
+              <article className="one-group-second-item addStaff-group-alignment">
+                <article className="label-addStaff">
+                  {this.renderLabel("Phone No", "phoneno")}
+                </article>
+                <article className="input-addStaff">
+                  {this.renderInput("number", "phoneno", "phone", "Phone No")}
+                </article>
+              </article>
+            </article>
+
+            <article className="addStaff-Fields-grouping">
+              <article className="one-group-first-item addStaff-group-alignment">
+                <article className="label-addStaff">
+                  {this.renderLabel("Available From", "availabilityFrom")}
                 </article>
                 <article className="addStaff-special-fields">
                   {this.renderInput(
@@ -222,8 +285,8 @@ class NurseForm extends Form {
               </article>
 
               <article className="one-group-second-item addStaff-group-alignment">
-                <article>
-                  {this.renderLabel("Availability To", "availabilityTo")}
+                <article className="label-addStaff">
+                  {this.renderLabel("Available To", "availabilityTo")}
                 </article>
                 <article className="addStaff-special-fields">
                   {this.renderInput(
@@ -238,9 +301,9 @@ class NurseForm extends Form {
 
             <article className="addStaff-Fields-grouping">
               <article className="addStaff-input addStaff-group-alignment one-group-first-item">
-                <article>
+                <article className="label-addStaff">
                   {this.renderLabel(
-                    "Availability Day From",
+                    "Availabile Day From",
                     "availabilityweekFrom"
                   )}
                 </article>
@@ -255,11 +318,8 @@ class NurseForm extends Form {
               </article>
 
               <article className="addStaff-input addStaff-group-alignment one-group-second-item">
-                <article>
-                  {this.renderLabel(
-                    "Availability Day From",
-                    "availabilityweekTo"
-                  )}
+                <article className="label-addStaff">
+                  {this.renderLabel("Available Day To", "availabilityweekTo")}
                 </article>
                 <article className="addStaff-special-fields">
                   {this.renderDropDown(
@@ -276,13 +336,6 @@ class NurseForm extends Form {
             <article>
               {this.renderInput("text", "email", "email", "Email")}
             </article> */}
-
-            <article className="addStaff-group-alignment">
-              <article>{this.renderLabel("Phone No", "phoneno")}</article>
-              <article className="input-addStaff">
-                {this.renderInput("number", "phoneno", "phone", "Phone No")}
-              </article>
-            </article>
 
             <article className="addStaff-group-alignment addStaff-btn">
               {this.renderBtn("Save Staff Member")}

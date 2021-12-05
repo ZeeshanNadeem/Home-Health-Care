@@ -4,6 +4,6 @@
   "userRequest": "http://localhost:3000/api/userRequests",
   "staff": "http://localhost:3000/api/staff",
   "userRequests": "http://localhost:3000/api/userRequests",
-  "organizations": "http://localhost:3000/api/organization",
+  "organizations": "http://localhost:3000/api/organizations",
   "apiEndPoint": "http://localhost:3000/api"
 }

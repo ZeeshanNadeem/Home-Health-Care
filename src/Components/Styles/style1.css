@@ -459,3 +459,7 @@ element.style {
 .add-service-btn {
   margin-top: 1.7rem;
 }
+
+.table.table-schedule {
+  margin-left: 0.5rem;
+}

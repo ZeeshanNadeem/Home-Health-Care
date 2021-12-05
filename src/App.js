@@ -19,21 +19,27 @@ import NurseForm from "./Components/AdminOrganization/Forms/AddStaff";
 import AdminUserRequest from "./Components/AdminOrganization/AdminUserRequest";
 import AdminStaff from "./Components/AdminOrganization/AdminStaff";
 import UserScheduled from "./Components/UserScheduled";
-import Schedule from "./Components/Schedule";
+
 import Leave from "./Components/Leave";
 import StaffPanel from "./Components/AdminOrganization/StaffPanel";
 import Logout from "./Components/Logout/logout";
 import AppAdmin from "./Components/AppAdmin/PanelPages/Admin";
 import ManageOrganizations from "./Components/AppAdmin/PanelPages/ManageOrganizations";
 import EditModalOrg from "./Components/AppAdmin/Modals/EditOrganizationModle";
+import Schedule from "./Components/Staff/StaffPages/Schedule";
 import OrganizationAdminRequests from "./Components/AppAdmin/PanelPages/OrganizationAdminRequests";
+import ContactUs from "./Components/Maps/ContactUs";
 function App() {
+  const isLoggedIn = localStorage.getItem("token");
   return (
     <article>
       {/* <Schedule /> */}
       {/* <Leave /> */}
       {/* <Schedule /> */}
       {/* <EditService /> */}
+
+      {/* var isLoggedIn = localStorage.getItem("token");
+      <Route path="/" exact component={isLoggedIn ? Dashboard : Login} /> */}
       <article class="admin-routes">
         <Route path="/admin" component={Admin} />
         <Route path="/admin/Nurse" component={StaffPanel} />
@@ -49,12 +55,14 @@ function App() {
           component={OrganizationAdminRequests}
         />
       </article>
-      <Route exact path="/" component={Home} />
+      <Route exact path="/" component={isLoggedIn ? Home : Login} />
       {/* <Route exact path="/Home" component={Home} /> */}
       <Route exact path="/Signup" component={SignUp} />
-      <Route exact path="/Login" component={Login} />
+      <Route exact path="/Home" component={Home} />
       <Route exact path="/Logout" component={Logout} />
       <Route exact path="/user/request" component={UserRequestService} />
+      <Route exact path="/staff/schedule" component={Schedule} />
+      <Route exact path="/contactUs" component={Schedule} />
     </article>
   );
 }

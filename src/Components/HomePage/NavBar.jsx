@@ -57,7 +57,7 @@ class NavBar extends Component {
         ></img>
 
         <ul className="nav-items">
-          <Link to="/">
+          <Link to="/Home">
             <li className="nav-li">Home</li>
           </Link>
 
@@ -65,7 +65,9 @@ class NavBar extends Component {
           <IndexDropdown />
 
           <li className="nav-li">About Us</li>
+
           <li className="nav-li">Contact Us</li>
+
           {/* {user ? this.UserNameNav() : ""} */}
           {user && (
             <li>

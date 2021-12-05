@@ -101,27 +101,32 @@ const IndexDropdown = () => {
                 Maps
               </Link>{" "} */}
 
-            <span
-              className={
-                "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
-              }
-            >
-              Staff
-            </span>
-            <Link
-              to="/auth/login"
-              className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-            >
-              Schedule
-            </Link>
-            <Link
-              to="/auth/register"
-              className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-            >
-              Apply For Leave
-            </Link>
+            {user.staffMember && (
+              <span>
+                <span
+                  className={
+                    "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
+                  }
+                >
+                  Staff
+                </span>
+                <Link
+                  to="/staff/schedule"
+                  className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+                >
+                  Schedule
+                </Link>
+                <Link
+                  to="/auth/register"
+                  className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+                >
+                  Apply For Leave
+                </Link>
+
+                <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+              </span>
+            )}
           </article>
-          <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
         </article>
 
         {/* <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100" /> */}

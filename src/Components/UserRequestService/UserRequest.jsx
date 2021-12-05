@@ -13,7 +13,7 @@ class UserRequestService extends Form {
   state = {
     doctorForm: {
       fullname: "",
-      staffMemberId: "",
+      // staffMemberId: "",
       service: "",
       organization: "",
       schedule: "",
@@ -21,7 +21,7 @@ class UserRequestService extends Form {
       phoneno: "",
       recursive: false,
       ServiceNeededFrom: "",
-      ServiceNeededTo: "",
+      // ServiceNeededTo: "",
       address: "",
     },
     // services: [],
@@ -35,7 +35,7 @@ class UserRequestService extends Form {
     const { data: organization } = await axios.get(config.organizations);
     const { data: userRequests } = await axios.get(config.userRequests);
     this.setState({
-      organization: organization,
+      organization: organization.results,
       userRequests,
     });
   }
@@ -46,6 +46,8 @@ class UserRequestService extends Form {
     organization: Joi.string().required().label("Service Organization"),
     schedule: Joi.string().required().label("Date"),
     address: Joi.string().required().label("address"),
+    // staffMemberId: Joi.string(),
+    recursive: Joi.boolean().required(),
     phoneno: Joi.number().required().label("Phone No"),
     // onlyOnceCheckBox: Joi.string().required().label("Unchecked"),
     ServiceNeededFrom: Joi.string().required().label("From"),
@@ -123,6 +125,22 @@ class UserRequestService extends Form {
           ) {
             bookedServiceFrom = userRequests[i].ServiceNeededFrom.split(":");
             bookedServiceFrom_ = bookedServiceFrom[0];
+            if (
+              bookedServiceFrom_ == "01" ||
+              bookedServiceFrom_ == "02" ||
+              bookedServiceFrom_ == "03" ||
+              bookedServiceFrom_ == "04" ||
+              bookedServiceFrom_ == "05" ||
+              bookedServiceFrom_ == "06" ||
+              bookedServiceFrom_ == "07" ||
+              bookedServiceFrom_ == "08" ||
+              bookedServiceFrom_ == "09"
+            ) {
+              bookedServiceFrom_ = bookedServiceFrom_.replace(
+                /^(?:00:)?0?/,
+                ""
+              );
+            }
 
             if (userSelectedTime_ !== bookedServiceFrom_) {
               continue;
@@ -147,8 +165,12 @@ class UserRequestService extends Form {
           userRequest.Address = doctorForm.address;
           userRequest.PhoneNo = doctorForm.phoneno;
 
-          await axios.post(config.userRequests, userRequest);
-          toast.success("Meeting Scheduled");
+          try {
+            await axios.post(config.userRequest, userRequest);
+            toast.success("Meeting Scheduled");
+          } catch (ex) {
+            toast.error(ex.response.data);
+          }
 
           break;
         }

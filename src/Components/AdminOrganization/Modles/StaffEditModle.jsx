@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import NurseForm from "../Forms/AddStaff";
+import Box from "@mui/material/Box";
 import { useEffect } from "react";
 
 export default function EditModal({ staffMemberData, RefreshStaffMembers }) {
@@ -15,6 +16,17 @@ export default function EditModal({ staffMemberData, RefreshStaffMembers }) {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    // width: 400,
+    // bgcolor: "background.paper",
+    // border: "2px solid #000",
+    // boxShadow: 24,
+    // p: 4,
+  };
 
   return (
     <div>
@@ -31,12 +43,14 @@ export default function EditModal({ staffMemberData, RefreshStaffMembers }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Container>
-          <NurseForm
-            staffMemberData={staffMemberData}
-            RefreshStaffMembers={RefreshStaffMembers}
-          />
-        </Container>
+        <Box sx={style}>
+          <Container>
+            <NurseForm
+              staffMemberData={staffMemberData}
+              RefreshStaffMembers={RefreshStaffMembers}
+            />
+          </Container>
+        </Box>
       </Modal>
     </div>
   );
