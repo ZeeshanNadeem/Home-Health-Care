@@ -12,17 +12,17 @@ import config from "../Api/config.json";
 class UserRequestService extends Form {
   state = {
     doctorForm: {
-      fullname: "",
+      fullname: "xyz",
       // staffMemberId: "",
       service: "",
-      organization: "",
-      schedule: "",
-      address: "",
-      phoneno: "",
+      organization: "618a7b3592c7e9d6236734a2",
+      schedule: "2021-02-10",
+      address: "E11 islamabad",
+      phoneno: "03448123901",
       recursive: false,
-      ServiceNeededFrom: "",
+      ServiceNeededFrom: "9:00",
       // ServiceNeededTo: "",
-      address: "",
+      // address: "",
     },
     // services: [],
     organization: [],
@@ -30,13 +30,18 @@ class UserRequestService extends Form {
     availabilityData: [],
     userRequests: [],
     errors: [],
+    staffLeaves: [],
   };
   async componentDidMount() {
     const { data: organization } = await axios.get(config.organizations);
     const { data: userRequests } = await axios.get(config.userRequests);
+    const { data: staffLeaves } = await axios.get(
+      config.apiEndPoint + "/staffLeave"
+    );
     this.setState({
       organization: organization.results,
       userRequests,
+      staffLeaves,
     });
   }
 
@@ -61,6 +66,7 @@ class UserRequestService extends Form {
     const { ServiceNeededFrom } = this.state.doctorForm;
 
     const { data: staff } = await axios.get(config.staff);
+    const { staffLeaves } = this.state;
 
     for (let j = 0; j < staff.results.length; j++) {
       let availableFromArr = staff.results[j].availabilityFrom.split(":");
@@ -114,6 +120,7 @@ class UserRequestService extends Form {
       let bookedServiceFrom_ = null;
       let bookedServiceFrom = null;
       let gotSlotBooked = false;
+      let staffOnLeave = false;
 
       if (
         parseInt(userSelectedTime_.trim()) >= parseInt(availableFrom.trim()) &&
@@ -151,8 +158,69 @@ class UserRequestService extends Form {
             }
           }
         }
-
         if (!gotSlotBooked) {
+          for (let z = 0; z < staffLeaves.length; z++) {
+            if (staff.results[j]._id === staffLeaves[z].staff._id) {
+              if (staffLeaves[z].leaveFrom === schedule) {
+                staffOnLeave = true;
+                break;
+              } else {
+                const leaveFromArr = staffLeaves[z].leaveFrom.split("-");
+                const leaveToArr = staffLeaves[z].leaveTo.split("-");
+                const scheduleArr = schedule.split("-");
+
+                let leaveFormYear = leaveFromArr[0];
+                let leaveFormMonth = leaveFromArr[1];
+                let leaveFromDay = leaveFromArr[2];
+
+                let leaveToYear = leaveToArr[0];
+                let leaveToMonth = leaveToArr[1];
+                let leaveToDay = leaveToArr[2];
+
+                let userScheduleDateYear = scheduleArr[0];
+                let userScheduleDateMonth = scheduleArr[1];
+                let userScheduleDateDay = scheduleArr[2];
+
+                leaveFormYear = leaveFormYear.replace(/^(?:00:)?0?/, "");
+                leaveFormMonth = leaveFormMonth.replace(/^(?:00:)?0?/, "");
+                leaveFromDay = leaveFromDay.replace(/^(?:00:)?0?/, "");
+
+                leaveToYear = leaveToYear.replace(/^(?:00:)?0?/, "");
+                leaveToMonth = leaveToMonth.replace(/^(?:00:)?0?/, "");
+                leaveToDay = leaveToDay.replace(/^(?:00:)?0?/, "");
+
+                userScheduleDateYear = userScheduleDateYear.replace(
+                  /^(?:00:)?0?/,
+                  ""
+                );
+                userScheduleDateMonth = userScheduleDateMonth.replace(
+                  /^(?:00:)?0?/,
+                  ""
+                );
+                userScheduleDateDay = userScheduleDateDay.replace(
+                  /^(?:00:)?0?/,
+                  ""
+                );
+
+                if (
+                  userScheduleDateYear >= leaveFormYear &&
+                  userScheduleDateYear <= leaveToYear
+                ) {
+                  const checkBetweenMonths =
+                    leaveFormMonth - userScheduleDateMonth;
+                  const checkBetweenMonth2 =
+                    leaveToMonth - userScheduleDateMonth;
+
+                  if (checkBetweenMonths > 0 && checkBetweenMonth2 > 0) {
+                    staffOnLeave = true;
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        }
+        if (!gotSlotBooked && !staffOnLeave) {
           const userRequest = {};
           userRequest.fullName = doctorForm.fullname;
           userRequest.staffMemberID = staff.results[j]._id;
@@ -177,6 +245,11 @@ class UserRequestService extends Form {
         if (gotSlotBooked) {
           toast.error("No Availability For the Specified Time!");
           toast.error("Please Check Availability and then Schedule!");
+          break;
+        }
+        if (staffOnLeave) {
+          toast.error("Staff is on Leave");
+
           break;
         }
       }
