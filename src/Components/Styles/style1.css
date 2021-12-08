@@ -463,3 +463,15 @@ element.style {
 .table.table-schedule {
   margin-left: 0.5rem;
 }
+
+.app-admin-pagination {
+  margin-top: 0.9rem;
+}
+
+.staff-leave {
+  height: 18rem;
+}
+
+.staff-leave-btn {
+  margin-top: 2rem;
+}

@@ -77,12 +77,12 @@ class NavBar extends Component {
 
           {!user ? (
             openToggler ? (
-              <Link to="/Login">
+              <Link to="/">
                 <li className="nav-li">Login</li>
               </Link>
             ) : (
               <button className="nav-btn login">
-                <Link className="login-li" to="/Login">
+                <Link className="login-li" to="/">
                   <li>Login And Get Started</li>
                 </Link>
               </button>

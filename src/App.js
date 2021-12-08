@@ -20,7 +20,7 @@ import AdminUserRequest from "./Components/AdminOrganization/AdminUserRequest";
 import AdminStaff from "./Components/AdminOrganization/AdminStaff";
 import UserScheduled from "./Components/UserScheduled";
 
-import Leave from "./Components/Leave";
+import Leave from "./Components/StaffLeave/Leave";
 import StaffPanel from "./Components/AdminOrganization/StaffPanel";
 import Logout from "./Components/Logout/logout";
 import AppAdmin from "./Components/AppAdmin/PanelPages/Admin";
@@ -29,6 +29,7 @@ import EditModalOrg from "./Components/AppAdmin/Modals/EditOrganizationModle";
 import Schedule from "./Components/Staff/StaffPages/Schedule";
 import OrganizationAdminRequests from "./Components/AppAdmin/PanelPages/OrganizationAdminRequests";
 import ContactUs from "./Components/Maps/ContactUs";
+import SignUpAsOrganization from "./Components/SignUp/SignUpPage/SignUpOrganization";
 function App() {
   const isLoggedIn = localStorage.getItem("token");
   return (
@@ -58,11 +59,17 @@ function App() {
       <Route exact path="/" component={isLoggedIn ? Home : Login} />
       {/* <Route exact path="/Home" component={Home} /> */}
       <Route exact path="/Signup" component={SignUp} />
+      <Route
+        exact
+        path="/SignUp/Organization"
+        component={SignUpAsOrganization}
+      />
       <Route exact path="/Home" component={Home} />
       <Route exact path="/Logout" component={Logout} />
       <Route exact path="/user/request" component={UserRequestService} />
       <Route exact path="/staff/schedule" component={Schedule} />
-      <Route exact path="/contactUs" component={Schedule} />
+      {/* <Route exact path="/contactUs" component={Schedule} /> */}
+      <Route exact path="/staff/leave" component={Leave} />
     </article>
   );
 }

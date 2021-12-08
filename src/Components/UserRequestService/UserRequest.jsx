@@ -72,42 +72,42 @@ class UserRequestService extends Form {
       let userSelectedTime_ = userSelectedTime[0];
 
       if (
-        userSelectedTime_ == "01" ||
-        userSelectedTime_ == "02" ||
-        userSelectedTime_ == "03" ||
-        userSelectedTime_ == "04" ||
-        userSelectedTime_ == "05" ||
-        userSelectedTime_ == "06" ||
-        userSelectedTime_ == "07" ||
-        userSelectedTime_ == "08" ||
-        userSelectedTime_ == "09"
+        userSelectedTime_ === "01" ||
+        userSelectedTime_ === "02" ||
+        userSelectedTime_ === "03" ||
+        userSelectedTime_ === "04" ||
+        userSelectedTime_ === "05" ||
+        userSelectedTime_ === "06" ||
+        userSelectedTime_ === "07" ||
+        userSelectedTime_ === "08" ||
+        userSelectedTime_ === "09"
       ) {
         userSelectedTime_ = userSelectedTime_.replace(/^(?:00:)?0?/, "");
       }
       if (
-        availableFrom == "01" ||
-        availableFrom == "02" ||
-        availableFrom == "03" ||
-        availableFrom == "04" ||
-        availableFrom == "05" ||
-        availableFrom == "06" ||
-        availableFrom == "07" ||
-        availableFrom == "08" ||
-        availableFrom == "09"
+        availableFrom === "01" ||
+        availableFrom === "02" ||
+        availableFrom === "03" ||
+        availableFrom === "04" ||
+        availableFrom === "05" ||
+        availableFrom === "06" ||
+        availableFrom === "07" ||
+        availableFrom === "08" ||
+        availableFrom === "09"
       ) {
         availableFrom = availableFrom.replace(/^(?:00:)?0?/, "");
       }
 
       if (
-        availabileTo == "01" ||
-        availabileTo == "02" ||
-        availabileTo == "03" ||
-        availabileTo == "04" ||
-        availabileTo == "05" ||
-        availabileTo == "06" ||
-        availabileTo == "07" ||
-        availabileTo == "08" ||
-        availabileTo == "09"
+        availabileTo === "01" ||
+        availabileTo === "02" ||
+        availabileTo === "03" ||
+        availabileTo === "04" ||
+        availabileTo === "05" ||
+        availabileTo === "06" ||
+        availabileTo === "07" ||
+        availabileTo === "08" ||
+        availabileTo === "09"
       ) {
         availabileTo = availabileTo.replace(/^(?:00:)?0?/, "");
       }
@@ -126,15 +126,15 @@ class UserRequestService extends Form {
             bookedServiceFrom = userRequests[i].ServiceNeededFrom.split(":");
             bookedServiceFrom_ = bookedServiceFrom[0];
             if (
-              bookedServiceFrom_ == "01" ||
-              bookedServiceFrom_ == "02" ||
-              bookedServiceFrom_ == "03" ||
-              bookedServiceFrom_ == "04" ||
-              bookedServiceFrom_ == "05" ||
-              bookedServiceFrom_ == "06" ||
-              bookedServiceFrom_ == "07" ||
-              bookedServiceFrom_ == "08" ||
-              bookedServiceFrom_ == "09"
+              bookedServiceFrom_ === "01" ||
+              bookedServiceFrom_ === "02" ||
+              bookedServiceFrom_ === "03" ||
+              bookedServiceFrom_ === "04" ||
+              bookedServiceFrom_ === "05" ||
+              bookedServiceFrom_ === "06" ||
+              bookedServiceFrom_ === "07" ||
+              bookedServiceFrom_ === "08" ||
+              bookedServiceFrom_ === "09"
             ) {
               bookedServiceFrom_ = bookedServiceFrom_.replace(
                 /^(?:00:)?0?/,

@@ -37,7 +37,7 @@ const ServicesCards = () => {
           cardTitle="Physiotherapy Care"
           imgSrc="https://homehealthcare.com.ph/assets/default/img/online.svg"
         />
-        <Card_
+        {/* <Card_
           cardTitle=""
           cardText=""
           btnName=""
@@ -57,7 +57,7 @@ const ServicesCards = () => {
           btnName=""
           cardTitle="Sampling Care"
           imgSrc={urine}
-        />
+        /> */}
       </article>
     </React.Fragment>
   );

@@ -437,7 +437,8 @@ add-staff-input-styling {
   select#docQualification,
   .addStaff-special-fields,
   .add-staff-dob > article > input#password,
-  .input-addStaff input {
+  .input-addStaff input,
+  select#serviceID {
     margin-right: 0.7rem;
     margin-left: 0.7rem;
   }
@@ -474,7 +475,8 @@ add-staff-input-styling {
   select#docQualification,
   .addStaff-special-fields,
   .add-staff-dob > article > input#password,
-  .input-addStaff input {
+  .input-addStaff input,
+  select#serviceID {
     width: 20rem;
     /* margin-bottom: 1rem; */
   }

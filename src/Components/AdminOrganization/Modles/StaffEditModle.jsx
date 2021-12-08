@@ -48,6 +48,7 @@ export default function EditModal({ staffMemberData, RefreshStaffMembers }) {
             <NurseForm
               staffMemberData={staffMemberData}
               RefreshStaffMembers={RefreshStaffMembers}
+              isEditModel="EditModel"
             />
           </Container>
         </Box>

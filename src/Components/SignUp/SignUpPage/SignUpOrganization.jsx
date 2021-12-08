@@ -6,19 +6,20 @@ import Joi from "joi-browser";
 import "animate.css";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHospitalAlt, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-class SignUp extends Form {
+import axios from "axios";
+import config from "../../Api/config.json";
+class SignUpAsOrganization extends Form {
   state = {
     doctorForm: {
       fullName: "",
       dateOfBirth: "",
       email: "",
       password: "",
-      isOrganizationAdmin: false,
+      isOrganizationAdmin: true,
+      OrganizationID: "",
     },
     errors: {},
+    organizations: [],
   };
 
   schema = {
@@ -27,7 +28,13 @@ class SignUp extends Form {
     email: Joi.string().min(5).max(255).required().email(),
     password: Joi.string().min(5).max(255).required(),
     isOrganizationAdmin: Joi.boolean().required(),
+    OrganizationID: Joi.string().required(),
   };
+
+  async componentDidMount() {
+    const { data } = await axios.get(config.apiEndPoint + "/organizations");
+    this.setState({ organizations: data.results });
+  }
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,7 +64,7 @@ class SignUp extends Form {
         <ToastContainer />
         <form onSubmit={this.handleSubmit}>
           <article className="signup-page">
-            <main className="card-signup signup-style animate__animated animate__fadeInLeft">
+            <main className="card-signup signup-style-org animate__animated animate__fadeInLeft">
               <header>
                 <h1 className="sign-up-header-text animate__animated animate__zoomIn">
                   Sign Up
@@ -90,6 +97,18 @@ class SignUp extends Form {
                 </article>
                 <article>{this.renderInput("text", "email", "email")}</article> */}
 
+              <article className="signup-label">
+                {this.renderLabel("Organization", "organization")}
+              </article>
+              <article>
+                {this.renderDropDown(
+                  "service For",
+                  this.state.organizations,
+                  "OrganizationID",
+                  "OrganizationID",
+                  "Which Organization Do You Belong To?"
+                )}
+              </article>
               {/* <article className="ChkBox-signup">
                 {this.renderCheckBox(
                   "checkbox",
@@ -98,27 +117,13 @@ class SignUp extends Form {
                   "Request To Be an Organization Admin"
                 )}
               </article> */}
-              <article
-                style={{
-                  // textAlign: "center",
-                  marginTop: "0.3rem",
-                  fontWeight: "600",
-                  color: "#142F43",
-                }}
-              >
-                <FontAwesomeIcon
-                  icon={faSignInAlt}
-                  style={{ marginRight: "0.3rem" }}
-                />
-                <Link to="/SignUp/Organization">
-                  <span className="signup-org" style={{ color: "#142F43" }}>
-                    <strong>SignUp As An Organization?</strong>
-                  </span>
-                </Link>
-              </article>
+
               <article className="signup-page-btn">
                 {this.renderBtn("Sign Up")}
               </article>
+              {/* <a href="#" className="google btn">
+                  <i className="fa fa-google fa-fw"></i> SignUp with Google
+                </a> */}
             </main>
           </article>
         </form>
@@ -127,4 +132,4 @@ class SignUp extends Form {
   }
 }
 
-export default SignUp;
+export default SignUpAsOrganization;

@@ -3,6 +3,7 @@ import { Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import config from "../Api/config.json";
 import EditModal from "./Modles/MoodleForEdit";
 import { Paper } from "@material-ui/core";
 import Fab from "@mui/material/Fab";
@@ -107,6 +108,12 @@ const StaffPanel = () => {
       const { data: services } = await axios.get(
         "http://localhost:3000/api/staff"
       );
+      const { data: userObjInTable } = await axios.get(
+        config.apiEndPoint + `/user/${id}`
+      );
+      await axios.delete(
+        "http://localhost:3000/api/user" + "/" + userObjInTable._id
+      );
     } catch (ex) {
       if (ex.response && ex.response.status === 404) {
         toast.error("This post has already been deleted");
@@ -179,7 +186,7 @@ const StaffPanel = () => {
                 <tr key={data._id}>
                   <td>{data.fullName}</td>
                   {/* <td>{data.dateOfBirth}</td> */}
-                  <td>{data.staffType.name}</td>
+                  <td>{data.staffSpeciality.name}</td>
 
                   <td>{data.qualification.name}</td>
                   <td>{data.availabilityFrom}</td>

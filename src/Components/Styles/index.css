@@ -327,13 +327,27 @@ a {
 .signup-page {
   background: url("../../Images/bg1.png");
   object-fit: cover;
-  height: 100vh;
+  height: 85.9vh;
   background-color: var(--bgColor);
   background-position: center;
   background-size: cover;
   overflow: hidden;
 }
+.signup-style {
+  margin-top: 1rem;
+}
+.login-home-pg {
+  display: flex;
+  align-items: center;
+  overflow-y: hidden !important;
+}
+.signup-style-org {
+  margin-top: 0.3rem;
+}
 
+.login-style-card {
+  margin-bottom: 3rem;
+}
 .txt {
   display: flex;
   justify-content: center;

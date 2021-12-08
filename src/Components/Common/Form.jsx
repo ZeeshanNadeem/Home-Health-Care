@@ -59,10 +59,15 @@ class Form extends React.Component {
       const m = moment(date);
       const day = m.format("dddd");
       const { service } = this.state.doctorForm;
+      const { organization } = this.state.doctorForm;
       const { data } = await axios.get(
-        confiq.staff + "?day=" + `${day}` + "?service=" + `${service}`
+        confiq.staff +
+          `/?day=${day}&service=${service}&organization=${organization}`
       );
-      this.setState({ availabilityData: data.results });
+      console.log(
+        `http://localhost:3000/api/staff/?day=${day}&service=${service}&organization=${organization}`
+      );
+      this.setState({ availabilityData: data });
 
       // if (data) {
       //   const availabilityData = data.results.filter(

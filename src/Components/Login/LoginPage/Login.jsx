@@ -46,8 +46,8 @@ class Login extends Form {
       <React.Fragment>
         <NavBar />
         <form onSubmit={this.handleSubmit}>
-          <article className="signup-page login-wrapper">
-            <main className="card-signup card-style animate__animated animate__fadeInLeft login-card">
+          <article className="signup-page login-wrapper login-home-pg">
+            <main className="card-signup card-style animate__animated animate__fadeInLeft login-card login-style-card">
               <header>
                 <h1 className="sign-up-header-text animate__animated animate__zoomIn">
                   Login
