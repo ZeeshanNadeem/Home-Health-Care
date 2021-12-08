@@ -12,15 +12,15 @@ import config from "../Api/config.json";
 class UserRequestService extends Form {
   state = {
     doctorForm: {
-      fullname: "xyz",
+      fullname: "",
       // staffMemberId: "",
       service: "",
-      organization: "618a7b3592c7e9d6236734a2",
-      schedule: "2021-02-10",
-      address: "E11 islamabad",
-      phoneno: "03448123901",
+      organization: "",
+      schedule: "",
+      address: "",
+      phoneno: "",
       recursive: false,
-      ServiceNeededFrom: "9:00",
+      ServiceNeededFrom: "",
       // ServiceNeededTo: "",
       // address: "",
     },
@@ -249,7 +249,7 @@ class UserRequestService extends Form {
         }
         if (staffOnLeave) {
           toast.error("Staff is on Leave");
-
+          toast.error("Please Check Availability and then Schedule!");
           break;
         }
       }

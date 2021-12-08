@@ -64,9 +64,7 @@ class Form extends React.Component {
         confiq.staff +
           `/?day=${day}&service=${service}&organization=${organization}`
       );
-      console.log(
-        `http://localhost:3000/api/staff/?day=${day}&service=${service}&organization=${organization}`
-      );
+
       this.setState({ availabilityData: data });
 
       // if (data) {

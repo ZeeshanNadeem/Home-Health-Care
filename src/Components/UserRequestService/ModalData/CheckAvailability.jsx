@@ -6,12 +6,16 @@ import axios from "axios";
 
 const CheckAvailability = ({ availabilityData }) => {
   let [userRequests, setBookedSlots] = useState([]);
+  let [staffLeaves, setStaffLeaves] = useState([]);
   // let [staffNo, setStaffNo] = useState(0);
   let stafCount = 0;
   useEffect(async () => {
     if (userRequests.length === 0) {
       const { data } = await axios.get(config.userRequests);
-
+      const { data: staffLeaves } = await axios.get(
+        config.apiEndPoint + "/staffLeave"
+      );
+      setStaffLeaves(setStaffLeaves);
       setBookedSlots(data);
     }
   });
@@ -89,7 +93,7 @@ const CheckAvailability = ({ availabilityData }) => {
                       />
                     </article>
                   ) : (
-                    "None"
+                    ""
                   )}
                 </td>
               ))}
