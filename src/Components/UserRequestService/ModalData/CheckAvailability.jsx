@@ -4,7 +4,7 @@ import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import config from "../../Api/config.json";
 import axios from "axios";
 
-const CheckAvailability = ({ availabilityData }) => {
+const CheckAvailability = ({ availabilityData, userScheduledDate }) => {
   let [userRequests, setBookedSlots] = useState([]);
   let [staffLeaves, setStaffLeaves] = useState([]);
   // let [staffNo, setStaffNo] = useState(0);
@@ -21,7 +21,10 @@ const CheckAvailability = ({ availabilityData }) => {
   });
 
   const checkBookedSlots = (userRequests, staff) => {
-    if (userRequests.staffMemberAssigned._id === staff._id) {
+    if (
+      userRequests.staffMemberAssigned._id === staff._id &&
+      userRequests.Schedule === userScheduledDate
+    ) {
       return (
         userRequests.ServiceNeededFrom +
         " to " +

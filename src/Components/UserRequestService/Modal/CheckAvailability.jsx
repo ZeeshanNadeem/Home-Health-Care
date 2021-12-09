@@ -4,7 +4,10 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import CheckAvailability from "../ModalData/CheckAvailability";
 
-export default function CheckAvailabilityPopover({ availabilityData }) {
+export default function CheckAvailabilityPopover({
+  availabilityData,
+  userScheduledDate,
+}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -17,6 +20,7 @@ export default function CheckAvailabilityPopover({ availabilityData }) {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+  console.log("YLOOOO::", userScheduledDate);
   return (
     <span>
       <span onMouseEnter={handleClick} className="check-availability">
@@ -32,7 +36,10 @@ export default function CheckAvailabilityPopover({ availabilityData }) {
           horizontal: "left",
         }}
       >
-        <CheckAvailability availabilityData={availabilityData} />
+        <CheckAvailability
+          availabilityData={availabilityData}
+          userScheduledDate={userScheduledDate}
+        />
       </Popover>
     </span>
   );

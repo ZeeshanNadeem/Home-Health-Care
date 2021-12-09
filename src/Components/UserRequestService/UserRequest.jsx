@@ -67,8 +67,14 @@ class UserRequestService extends Form {
 
     const { data: staff } = await axios.get(config.staff);
     const { staffLeaves } = this.state;
+    let bookedServiceFrom_ = null;
+    let bookedServiceFrom = null;
+    let gotSlotBooked = false;
+    let staffOnLeave = false;
 
     for (let j = 0; j < staff.results.length; j++) {
+      gotSlotBooked = false;
+      staffOnLeave = false;
       let availableFromArr = staff.results[j].availabilityFrom.split(":");
       let availableToArr = staff.results[j].availabilityTo.split(":");
 
@@ -117,10 +123,6 @@ class UserRequestService extends Form {
       ) {
         availabileTo = availabileTo.replace(/^(?:00:)?0?/, "");
       }
-      let bookedServiceFrom_ = null;
-      let bookedServiceFrom = null;
-      let gotSlotBooked = false;
-      let staffOnLeave = false;
 
       if (
         parseInt(userSelectedTime_.trim()) >= parseInt(availableFrom.trim()) &&
@@ -242,17 +244,15 @@ class UserRequestService extends Form {
 
           break;
         }
-        if (gotSlotBooked) {
-          toast.error("No Availability For the Specified Time!");
-          toast.error("Please Check Availability and then Schedule!");
-          break;
-        }
-        if (staffOnLeave) {
-          toast.error("Staff is on Leave");
-          toast.error("Please Check Availability and then Schedule!");
-          break;
-        }
       }
+    }
+    if (gotSlotBooked) {
+      toast.error("No Availability For the Specified Time!");
+      toast.error("Please Check Availability and then Schedule!");
+    }
+    if (staffOnLeave) {
+      toast.error("Staff is on Leave");
+      toast.error("Please Check Availability and then Schedule!");
     }
   };
 
@@ -264,6 +264,7 @@ class UserRequestService extends Form {
   };
   render() {
     const { services, organization, availabilityData } = this.state;
+    const { schedule } = this.state.doctorForm;
     return (
       <div className="doc-container user-request-wrapper">
         <ToastContainer />
@@ -325,12 +326,6 @@ class UserRequestService extends Form {
             </article>
 
             <article className="user-request-input-wrapper">
-              <span>
-                <CheckAvailability availabilityData={availabilityData} />
-              </span>
-            </article>
-
-            <article className="user-request-input-wrapper">
               <article>{this.renderLabel("Time", "from")}</article>
               <article>
                 {this.renderInput(
@@ -341,6 +336,15 @@ class UserRequestService extends Form {
                   "3600000"
                 )}
               </article>
+            </article>
+
+            <article className="user-request-input-wrapper">
+              <div>
+                <CheckAvailability
+                  availabilityData={availabilityData}
+                  userScheduledDate={schedule}
+                />
+              </div>
             </article>
 
             {/* <article>{this.renderLabel("To", "to")}</article>

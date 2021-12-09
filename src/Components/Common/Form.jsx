@@ -4,7 +4,7 @@ import getDay from "date-fns/getDay";
 import Joi from "joi-browser";
 import axios from "axios";
 import moment from "moment";
-import confiq from "../Api/config.json";
+import config from "../Api/config.json";
 
 class Form extends React.Component {
   state = {
@@ -53,30 +53,163 @@ class Form extends React.Component {
 
     return Object.keys(errors).length === 0 ? null : errors;
   };
+
+  //Deleting those staff members who are on Leave.
+  //When staff member leave comes in between user required service date.
+  //Those staff members shouldn't be displayed in check availability
+  StaffLeaves = async (staff) => {
+    const { data: staffLeaves } = await axios.get(
+      config.apiEndPoint + "/staffLeave"
+    );
+    const { schedule } = this.state.doctorForm;
+    let filteredStaff = [];
+    for (let i = 0; i < staff.length; i++) {
+      let staffOnLeave = false;
+      for (let j = 0; j < staffLeaves.length; j++) {
+        if (staff[i]._id === staffLeaves[j].staff._id) {
+          if (staffLeaves[j].leaveFrom === schedule) {
+            staffOnLeave = true;
+            // if (filteredStaff.length > 0) {
+            staff = staff.filter((s) => s._id !== staffLeaves[j].staff._id);
+            // } else {
+            //   staff = staff.filter((s) => s._id !== staffLeaves[j].staff._id);
+            // }
+
+            break;
+          } else {
+            const leaveFromArr = staffLeaves[j].leaveFrom.split("-");
+            const leaveToArr = staffLeaves[j].leaveTo.split("-");
+            const scheduleArr = schedule.split("-");
+
+            let leaveFormYear = leaveFromArr[0];
+            let leaveFormMonth = leaveFromArr[1];
+            let leaveFromDay = leaveFromArr[2];
+
+            let leaveToYear = leaveToArr[0];
+            let leaveToMonth = leaveToArr[1];
+            let leaveToDay = leaveToArr[2];
+
+            let userScheduleDateYear = scheduleArr[0];
+            let userScheduleDateMonth = scheduleArr[1];
+            let userScheduleDateDay = scheduleArr[2];
+
+            leaveFormYear = leaveFormYear.replace(/^(?:00:)?0?/, "");
+            leaveFormMonth = leaveFormMonth.replace(/^(?:00:)?0?/, "");
+            leaveFromDay = leaveFromDay.replace(/^(?:00:)?0?/, "");
+
+            leaveToYear = leaveToYear.replace(/^(?:00:)?0?/, "");
+            leaveToMonth = leaveToMonth.replace(/^(?:00:)?0?/, "");
+            leaveToDay = leaveToDay.replace(/^(?:00:)?0?/, "");
+
+            userScheduleDateYear = userScheduleDateYear.replace(
+              /^(?:00:)?0?/,
+              ""
+            );
+            userScheduleDateMonth = userScheduleDateMonth.replace(
+              /^(?:00:)?0?/,
+              ""
+            );
+            userScheduleDateDay = userScheduleDateDay.replace(
+              /^(?:00:)?0?/,
+              ""
+            );
+
+            if (
+              userScheduleDateYear >= leaveFormYear &&
+              userScheduleDateYear <= leaveToYear
+            ) {
+              const checkBetweenMonths = leaveFormMonth - userScheduleDateMonth;
+              const checkBetweenMonth2 = leaveToMonth - userScheduleDateMonth;
+
+              if (checkBetweenMonths > 0 && checkBetweenMonth2 > 0) {
+                staffOnLeave = true;
+                // if (filteredStaff.length > 0) {
+                staff = staff.filter((s) => s._id !== staffLeaves[j].staff._id);
+                // } else {
+                //   filteredStaff = staff.filter(
+                //     (s) => s._id !== staffLeaves[j].staff._id
+                //   );
+                // }
+
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+    return staff;
+  };
+
+  //Deleting those staff members who are currently on bookedSlots Leave.
+  //When user requests a service on a date
+  //When staff member's booked Slot comes in between user required service date.
+  //Those staff members shouldn't be displayed in check availability
+  StaffBookedSlots = async (staff) => {
+    const { data: userRequests } = await axios.get(
+      config.apiEndPoint + "/userRequests"
+    );
+    const { schedule } = this.state.doctorForm;
+    const { ServiceNeededFrom } = this.state.doctorForm;
+
+    for (let i = 0; i < staff.length; i++) {
+      for (let j = 0; j < userRequests.length; j++) {
+        if (staff[i]._id === userRequests[j].staffMemberAssigned._id) {
+          if (userRequests[j].Schedule === schedule) {
+            let userSelectedTime = ServiceNeededFrom.split(":");
+            let userSelectedTime_ = userSelectedTime[0];
+            userSelectedTime_ = userSelectedTime_.replace(/^(?:00:)?0?/, "");
+
+            let userRequestsArr = userRequests[i].ServiceNeededFrom.split(":");
+            let userRequestServiceNeededFrom = userRequestsArr[0];
+            userRequestServiceNeededFrom = userRequestServiceNeededFrom.replace(
+              /^(?:00:)?0?/,
+              ""
+            );
+
+            let userRequestsToArr = userRequests[i].ServiceNeededTo.split(":");
+            let userRequestServiceNeededTo = userRequestsToArr[0];
+            userRequestServiceNeededTo = userRequestServiceNeededTo.replace(
+              /^(?:00:)?0?/,
+              ""
+            );
+
+            if (
+              userSelectedTime_ >= userRequestServiceNeededFrom &&
+              userSelectedTime_ <= userRequestServiceNeededTo
+            ) {
+              staff = staff.filter(
+                (s) => s._id !== userRequests[i].staffMemberAssigned._id
+              );
+            }
+          }
+        }
+      }
+    }
+    return staff;
+  };
+
   scheduleTime = async (date) => {
-    const { service, organization } = this.state.doctorForm;
+    const { service, organization, schedule, ServiceNeededFrom } =
+      this.state.doctorForm;
     if (service && organization) {
       const m = moment(date);
       const day = m.format("dddd");
       const { service } = this.state.doctorForm;
       const { organization } = this.state.doctorForm;
       const { data } = await axios.get(
-        confiq.staff +
+        config.staff +
           `/?day=${day}&service=${service}&organization=${organization}`
       );
+      let filteredStaff_ = [];
+      const filteredStaff = await this.StaffLeaves(data);
 
-      this.setState({ availabilityData: data });
+      filteredStaff_ = await this.StaffBookedSlots(filteredStaff);
 
-      // if (data) {
-      //   const availabilityData = data.results.filter(
-      //     (d) => d.staffType._id === service
-      //     // && d.serviceOrganization._id === organization
-      //   );
-      //   console.log("stafavailabilityData::", availabilityData);
-      //   this.setState({ availabilityData });
-      // }
+      this.setState({ availabilityData: filteredStaff_ });
     }
   };
+
   populateServices = async (inputValue) => {
     const { data } = await axios.get(
       `http://localhost:3000/api/services?organization=${inputValue}`
@@ -95,10 +228,17 @@ class Form extends React.Component {
     doctorForm[input.name] = input.value;
 
     this.setState({ doctorForm, errors });
-
+    const { service, organization, schedule, ServiceNeededFrom } =
+      this.state.doctorForm;
     if (input.name === "organization") {
       this.populateServices(input.value);
-    } else if (input.name === "schedule") {
+    } else if (
+      ServiceNeededFrom &&
+      service &&
+      organization &&
+      schedule &&
+      ServiceNeededFrom
+    ) {
       this.scheduleTime(input.value);
     }
   };

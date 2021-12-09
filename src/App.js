@@ -18,7 +18,6 @@ import NurseForm from "./Components/AdminOrganization/Forms/AddStaff";
 // import AdminNav from "./Components/AdminNav";
 import AdminUserRequest from "./Components/AdminOrganization/AdminUserRequest";
 import AdminStaff from "./Components/AdminOrganization/AdminStaff";
-import UserScheduled from "./Components/UserScheduled";
 
 import Leave from "./Components/StaffLeave/Leave";
 import StaffPanel from "./Components/AdminOrganization/StaffPanel";
@@ -58,7 +57,7 @@ function App() {
       </article>
       <Route exact path="/" component={isLoggedIn ? Home : Login} />
       {/* <Route exact path="/Home" component={Home} /> */}
-      <Route exact path="/Signup" component={SignUp} />
+      <Route exact path="/Signup" component={isLoggedIn ? Home : SignUp} />
       <Route
         exact
         path="/SignUp/Organization"
