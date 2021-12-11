@@ -69,6 +69,8 @@ class UserRequestService extends Form {
     const { staffLeaves } = this.state;
     let bookedServiceFrom_ = null;
     let bookedServiceFrom = null;
+    let bookedServiceTo_ = null;
+    let bookedServiceTo = null;
     let gotSlotBooked = false;
     let staffOnLeave = false;
 
@@ -133,6 +135,8 @@ class UserRequestService extends Form {
             staff.results[j]._id === userRequests[i].staffMemberAssigned._id
           ) {
             bookedServiceFrom = userRequests[i].ServiceNeededFrom.split(":");
+            bookedServiceTo = userRequests[i].ServiceNeededTo.split(":");
+            bookedServiceTo_ = bookedServiceTo[0];
             bookedServiceFrom_ = bookedServiceFrom[0];
             if (
               bookedServiceFrom_ === "01" ||
@@ -151,7 +155,10 @@ class UserRequestService extends Form {
               );
             }
 
-            if (userSelectedTime_ !== bookedServiceFrom_) {
+            if (
+              userSelectedTime_ >= bookedServiceFrom_ &&
+              !(parseInt(userSelectedTime_) + 1 <= bookedServiceTo_)
+            ) {
               continue;
             } else {
               gotSlotBooked = true;
@@ -251,7 +258,6 @@ class UserRequestService extends Form {
       toast.error("Please Check Availability and then Schedule!");
     }
     if (staffOnLeave) {
-      toast.error("Staff is on Leave");
       toast.error("Please Check Availability and then Schedule!");
     }
   };
