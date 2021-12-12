@@ -20,7 +20,7 @@ export default function CheckAvailabilityPopover({
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-  console.log("YLOOOO::", userScheduledDate);
+
   return (
     <span>
       <span onMouseEnter={handleClick} className="check-availability">

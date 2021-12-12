@@ -59,6 +59,19 @@ class UserRequestService extends Form {
     // ServiceNeededTo: Joi.string().required().label("To"),
   };
 
+  //This function takes userSelected Date
+  //Matches it with the staff's
+  //Returns true or false
+  //True means user has selected Date at that date where
+  //that staff is booked
+  MatchUserSelected = (BookedStaffDate) => {
+    if (BookedStaffDate === this.state.doctorForm.schedule) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   AssignAutomatedStaff = async () => {
     const { doctorForm } = this.state;
     const { schedule } = this.state.doctorForm;
@@ -73,10 +86,12 @@ class UserRequestService extends Form {
     let bookedServiceTo = null;
     let gotSlotBooked = false;
     let staffOnLeave = false;
+    let liesBetween = false;
 
     for (let j = 0; j < staff.results.length; j++) {
       gotSlotBooked = false;
       staffOnLeave = false;
+      liesBetween = false;
       let availableFromArr = staff.results[j].availabilityFrom.split(":");
       let availableToArr = staff.results[j].availabilityTo.split(":");
 
@@ -125,12 +140,24 @@ class UserRequestService extends Form {
       ) {
         availabileTo = availabileTo.replace(/^(?:00:)?0?/, "");
       }
+      //Checking if userSelected time comes in between a staff duty
+      //If yes then we proceed further else check for other staff member
+      userSelectedTime_ = parseInt(userSelectedTime_.trim());
+      const StaffAvailableForm = parseInt(availableFrom.trim());
+      const StaffAvailableTo = parseInt(availabileTo.trim());
 
-      if (
-        parseInt(userSelectedTime_.trim()) >= parseInt(availableFrom.trim()) &&
-        parseInt(userSelectedTime_.trim()) < parseInt(availabileTo.trim())
-      ) {
+      //Logic to check userSelected Time lies between
+      //staff's duty or not
+      for (let s = StaffAvailableForm; s <= StaffAvailableTo; s++) {
+        if (s === userSelectedTime_) {
+          liesBetween = true;
+          break;
+        }
+      }
+
+      if (liesBetween) {
         for (let i = 0; i < userRequests.length; i++) {
+          if (staffOnLeave || gotSlotBooked) break;
           if (
             staff.results[j]._id === userRequests[i].staffMemberAssigned._id
           ) {
@@ -154,19 +181,26 @@ class UserRequestService extends Form {
                 ""
               );
             }
-
+            //Checking If staff booked service time
+            //lies between user requested time
             if (
               userSelectedTime_ >= bookedServiceFrom_ &&
-              !(parseInt(userSelectedTime_) + 1 <= bookedServiceTo_)
+              userSelectedTime_ <= bookedServiceTo_
             ) {
-              continue;
+              const staffDutyOnSameDay = this.MatchUserSelected(
+                userRequests[i].Schedule
+              );
+              if (staffDutyOnSameDay) {
+                gotSlotBooked = true;
+                break;
+              }
             } else {
-              gotSlotBooked = true;
-
-              break;
+              continue;
             }
           }
         }
+        // If that staff hasn't gotten any slot booked at user Selected Service Time
+        // Then Checking whether is on leave at user selected date for service
         if (!gotSlotBooked) {
           for (let z = 0; z < staffLeaves.length; z++) {
             if (staff.results[j]._id === staffLeaves[z].staff._id) {
@@ -229,35 +263,35 @@ class UserRequestService extends Form {
             }
           }
         }
-        if (!gotSlotBooked && !staffOnLeave) {
-          const userRequest = {};
-          userRequest.fullName = doctorForm.fullname;
-          userRequest.staffMemberID = staff.results[j]._id;
-          userRequest.OrganizationID = doctorForm.organization;
-          userRequest.ServiceNeededFrom = doctorForm.ServiceNeededFrom;
+      }
+      // IF That staff is neither on leave nor got slot booked in that time
+      // Assigning that staff a duty
+      if (!gotSlotBooked && !staffOnLeave && liesBetween) {
+        const userRequest = {};
+        userRequest.fullName = doctorForm.fullname;
+        userRequest.staffMemberID = staff.results[j]._id;
+        userRequest.OrganizationID = doctorForm.organization;
+        userRequest.ServiceNeededFrom = doctorForm.ServiceNeededFrom;
 
-          userRequest.ServiceID = doctorForm.service;
-          userRequest.Schedule = doctorForm.schedule;
-          userRequest.Recursive = doctorForm.recursive;
-          userRequest.Address = doctorForm.address;
-          userRequest.PhoneNo = doctorForm.phoneno;
+        userRequest.ServiceID = doctorForm.service;
+        userRequest.Schedule = doctorForm.schedule;
+        userRequest.Recursive = doctorForm.recursive;
+        userRequest.Address = doctorForm.address;
+        userRequest.PhoneNo = doctorForm.phoneno;
 
-          try {
-            await axios.post(config.userRequest, userRequest);
-            toast.success("Meeting Scheduled");
-          } catch (ex) {
-            toast.error(ex.response.data);
-          }
-
-          break;
+        try {
+          await axios.post(config.userRequest, userRequest);
+          toast.success("Meeting Scheduled");
+        } catch (ex) {
+          toast.error(ex.response.data);
         }
+
+        // break;
+        return;
       }
     }
-    if (gotSlotBooked) {
+    if (gotSlotBooked || !liesBetween || staffOnLeave) {
       toast.error("No Availability For the Specified Time!");
-      toast.error("Please Check Availability and then Schedule!");
-    }
-    if (staffOnLeave) {
       toast.error("Please Check Availability and then Schedule!");
     }
   };

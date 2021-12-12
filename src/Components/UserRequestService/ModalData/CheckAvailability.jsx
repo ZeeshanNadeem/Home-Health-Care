@@ -38,76 +38,78 @@ const CheckAvailability = ({ availabilityData, userScheduledDate }) => {
     stafCount = stafCount + 1;
     return stafCount;
   };
-
+  console.log("Availability ::", availabilityData);
   return (
     <article>
-      <table className="table availability-table">
-        <thead>
-          <tr>
-            {/* <th className="availability-table-th" scope="col">
+      {availabilityData && availabilityData.length > 0 && (
+        <table className="table availability-table">
+          <thead>
+            <tr>
+              {/* <th className="availability-table-th" scope="col">
               Available Staff
             </th> */}
-            {/* <th className="availability-table-th" scope="col">
+              {/* <th className="availability-table-th" scope="col">
               Organization
             </th> */}
-            <th className="availability-table-th" scope="col">
-              Timings
-            </th>
-            {/* <th className="availability-table-th" scope="col">
+              <th className="availability-table-th" scope="col">
+                Timings
+              </th>
+              {/* <th className="availability-table-th" scope="col">
               From-To
             </th> */}
 
-            <th
-              className="availability-table-th"
-              scope="col"
-              colSpan={userRequests.length}
-            >
-              Booked-Slots
-            </th>
-            {/* <th className="availability-table-th" scope="col">
+              <th
+                className="availability-table-th"
+                scope="col"
+                colSpan={userRequests.length}
+              >
+                Booked-Slots
+              </th>
+              {/* <th className="availability-table-th" scope="col">
               Service Cost
             </th> */}
-          </tr>
-        </thead>
-        <tbody>
-          {availabilityData.map((data) => (
-            <tr key={data._id}>
-              {/* <td className="availability-table-th">
+            </tr>
+          </thead>
+          <tbody>
+            {availabilityData.map((data) => (
+              <tr key={data._id}>
+                {/* <td className="availability-table-th">
                 {data.service.serviceName} {staffNo()}
               </td> */}
-              {/* <td className="availability-table-th">
+                {/* <td className="availability-table-th">
                 {data.serviceOrganization.name}
               </td> */}
-              {/* <td className="availability-table-th">{data.staffType.name}</td> */}
-              <td className="availability-table-th">
-                {data.availabilityFrom} to {data.availabilityTo}
-              </td>
-              {/* <td className="availability-table-th">
+                {/* <td className="availability-table-th">{data.staffType.name}</td> */}
+                <td className="availability-table-th">
+                  {data.availabilityFrom} to {data.availabilityTo}
+                </td>
+                {/* <td className="availability-table-th">
                 {data.availabileDayFrom} to {data.availabileDayTo}
               </td> */}
-              {userRequests.map((bookedSlots) => (
-                <td className="availability-table-th" key={bookedSlots._id}>
-                  {checkBookedSlots(bookedSlots, data) ? (
-                    <article>
-                      {checkBookedSlots(bookedSlots, data)}
-                      <FontAwesomeIcon
-                        icon={faCheckCircle}
-                        style={{ color: "#4E9F3D" }}
-                      />
-                    </article>
-                  ) : (
-                    ""
-                  )}
-                </td>
-              ))}
+                {userRequests.map((bookedSlots) => (
+                  <td className="availability-table-th" key={bookedSlots._id}>
+                    {checkBookedSlots(bookedSlots, data) ? (
+                      <article>
+                        {checkBookedSlots(bookedSlots, data)}
+                        <FontAwesomeIcon
+                          icon={faCheckCircle}
+                          style={{ color: "#4E9F3D" }}
+                        />
+                      </article>
+                    ) : (
+                      ""
+                    )}
+                  </td>
+                ))}
 
-              {/* <td className="availability-table-th">
+                {/* <td className="availability-table-th">
                 {data.service.servicePrice}
               </td> */}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </article>
   );
 };

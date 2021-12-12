@@ -156,32 +156,32 @@ class Form extends React.Component {
       for (let j = 0; j < userRequests.length; j++) {
         if (staff[i]._id === userRequests[j].staffMemberAssigned._id) {
           if (userRequests[j].Schedule === schedule) {
-            let userSelectedTime = ServiceNeededFrom.split(":");
-            let userSelectedTime_ = userSelectedTime[0];
-            userSelectedTime_ = userSelectedTime_.replace(/^(?:00:)?0?/, "");
-
-            let userRequestsArr = userRequests[i].ServiceNeededFrom.split(":");
-            let userRequestServiceNeededFrom = userRequestsArr[0];
-            userRequestServiceNeededFrom = userRequestServiceNeededFrom.replace(
-              /^(?:00:)?0?/,
-              ""
-            );
-
-            let userRequestsToArr = userRequests[i].ServiceNeededTo.split(":");
-            let userRequestServiceNeededTo = userRequestsToArr[0];
-            userRequestServiceNeededTo = userRequestServiceNeededTo.replace(
-              /^(?:00:)?0?/,
-              ""
-            );
-
-            if (
-              userSelectedTime_ >= userRequestServiceNeededFrom &&
-              userSelectedTime_ <= userRequestServiceNeededTo
-            ) {
-              staff = staff.filter(
-                (s) => s._id !== userRequests[i].staffMemberAssigned._id
-              );
-            }
+            // let userSelectedTime = ServiceNeededFrom.split(":");
+            // let userSelectedTime_ = userSelectedTime[0];
+            // userSelectedTime_ = userSelectedTime_.replace(/^(?:00:)?0?/, "");
+            // let userRequestsArr = userRequests[i].ServiceNeededFrom.split(":");
+            // let userRequestServiceNeededFrom = userRequestsArr[0];
+            // userRequestServiceNeededFrom = userRequestServiceNeededFrom.replace(
+            //   /^(?:00:)?0?/,
+            //   ""
+            // );
+            // let userRequestsToArr = userRequests[i].ServiceNeededTo.split(":");
+            // let userRequestServiceNeededTo = userRequestsToArr[0];
+            // userRequestServiceNeededTo = userRequestServiceNeededTo.replace(
+            //   /^(?:00:)?0?/,
+            //   ""
+            // );
+            // if (
+            //   userSelectedTime_ >= userRequestServiceNeededFrom &&
+            //   userSelectedTime_ <= userRequestServiceNeededTo
+            // ) {
+            //   if (staff.length === 0) {
+            //     return staff;
+            //   }
+            //   staff = staff.filter(
+            //     (s) => s._id !== userRequests[i].staffMemberAssigned._id
+            //   );
+            // }
           }
         }
       }
@@ -204,9 +204,9 @@ class Form extends React.Component {
       let filteredStaff_ = [];
       const filteredStaff = await this.StaffLeaves(data);
 
-      filteredStaff_ = await this.StaffBookedSlots(filteredStaff);
+      // filteredStaff_ = await this.StaffBookedSlots(filteredStaff);
 
-      this.setState({ availabilityData: filteredStaff_ });
+      this.setState({ availabilityData: filteredStaff });
     }
   };
 
@@ -232,13 +232,7 @@ class Form extends React.Component {
       this.state.doctorForm;
     if (input.name === "organization") {
       this.populateServices(input.value);
-    } else if (
-      ServiceNeededFrom &&
-      service &&
-      organization &&
-      schedule &&
-      ServiceNeededFrom
-    ) {
+    } else if (service && organization && schedule) {
       this.scheduleTime(input.value);
     }
   };
