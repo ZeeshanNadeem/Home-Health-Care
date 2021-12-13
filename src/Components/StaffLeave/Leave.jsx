@@ -24,11 +24,12 @@ class Leave extends Form {
     leave_to: Joi.string().required().label("Leave To"),
   };
 
-  AssignAutomatedStaff = async (staffTookLeave) => {
-    const { doctorForm } = this.state;
-    const { schedule } = this.state.doctorForm;
-    const { availabilityData, userRequests } = this.state;
-    const { ServiceNeededFrom } = this.state.doctorForm;
+  AssignAutomatedStaffDuty = async (serviceDemander) => {
+    const { schedule } = serviceDemander;
+    const { data: userRequests } = await axios.get(
+      config.apiEndPoint + `/userRequests`
+    );
+    const { ServiceNeededFrom } = serviceDemander;
 
     const { data: staff } = await axios.get(config.staff);
     const { staffLeaves } = this.state;
@@ -220,16 +221,8 @@ class Leave extends Form {
       // Assigning that staff a duty
       if (!gotSlotBooked && !staffOnLeave && liesBetween) {
         const userRequest = {};
-        userRequest.fullName = doctorForm.fullname;
-        userRequest.staffMemberID = staff.results[j]._id;
-        userRequest.OrganizationID = doctorForm.organization;
-        userRequest.ServiceNeededFrom = doctorForm.ServiceNeededFrom;
 
-        userRequest.ServiceID = doctorForm.service;
-        userRequest.Schedule = doctorForm.schedule;
-        userRequest.Recursive = doctorForm.recursive;
-        userRequest.Address = doctorForm.address;
-        userRequest.PhoneNo = doctorForm.phoneno;
+        serviceDemander.staffMemberID = staff.results[j]._id;
 
         try {
           await axios.post(config.userRequest, userRequest);
@@ -248,7 +241,43 @@ class Leave extends Form {
     }
   };
 
+  AssignAutomatedStaff = async (staffTookLeave) => {
+    const { data: userRequests } = await axios.get(
+      config.apiEndPoint + `/userRequests`
+    );
+    for (let u = 0; u < userRequests.length; u++) {
+      if (userRequests[u].staffMemberAssigned._id === staffTookLeave._id) {
+        const {
+          fullName,
+          Organization,
+          Service,
+          ServiceNeededFrom,
+          ServiceNeededTo,
+          Recursive,
+          Address,
+          PhoneNo,
+        } = userRequests[u];
+        const obj = {
+          fullName: fullName,
+          Organization: Organization,
+          Service: Service,
+          ServiceNeededFrom: ServiceNeededFrom,
+          ServiceNeededTo: ServiceNeededTo,
+          Recursive: Recursive,
+          Address: Address,
+          PhoneNo: PhoneNo,
+        };
+        const { data: userRequests } = await axios.delete(
+          config.apiEndPoint +
+            `/userRequests?deleteDuty=abc?DeleteID=${userRequests[u]._id}`
+        );
+        this.AssignAutomatedStaffDuty(obj);
+      }
+    }
+  };
+
   AssignSubstituteStaff = async () => {
+    const { user } = this.state.user;
     const { data } = await axios.get(
       config.apiEndPoint + `?staffMemberId=${user.staffMemberId}`
     );
