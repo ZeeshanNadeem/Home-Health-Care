@@ -242,7 +242,7 @@ class Form extends React.Component {
     doctorForm[e.currentTarget.name] = e.target.checked;
     this.setState({ doctorForm });
   };
-  renderInput = (type, id, name, placeholder = "", step = "") => {
+  renderInput = (type, id, name, placeholder = "", minDate = "") => {
     const { doctorForm, errors } = this.state;
 
     return (
@@ -254,8 +254,8 @@ class Form extends React.Component {
           className="input"
           type={type}
           id={id}
-          step={step}
           onChange={this.handleChange}
+          min={minDate}
         />
         {errors && errors[name] && <p className="error">{errors[name]}</p>}
       </article>

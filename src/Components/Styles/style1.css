@@ -469,9 +469,15 @@ element.style {
 }
 
 .staff-leave {
-  height: 18rem;
+  height: 20rem;
 }
 
 .staff-leave-btn {
   margin-top: 2rem;
+}
+
+.leave-header {
+  margin: 0;
+  text-align: center;
+  padding: 0;
 }

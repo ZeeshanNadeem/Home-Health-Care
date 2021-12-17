@@ -12,10 +12,12 @@ class Leave extends Form {
       leave_to: "",
     },
     user: "",
+    minDate: "",
   };
   componentDidMount() {
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
+
     this.setState({ user });
   }
 
@@ -24,15 +26,29 @@ class Leave extends Form {
     leave_to: Joi.string().required().label("Leave To"),
   };
 
+  MatchUserSelected = (BookedStaffDate) => {
+    if (BookedStaffDate === this.state.doctorForm.schedule) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   AssignAutomatedStaffDuty = async (serviceDemander) => {
-    const { schedule } = serviceDemander;
+    const { Schedule, Service, Organization } = serviceDemander;
     const { data: userRequests } = await axios.get(
       config.apiEndPoint + `/userRequests`
     );
     const { ServiceNeededFrom } = serviceDemander;
 
-    const { data: staff } = await axios.get(config.staff);
-    const { staffLeaves } = this.state;
+    // const { data: staff } = await axios.get(config.staff);
+    const { data: staffGot } = await axios.get(
+      config.staff +
+        `/?day=abc&service=${Service._id}&organization=${Organization._id}`
+    );
+    const { data: staffLeaves } = await axios.get(
+      config.apiEndPoint + "/staffLeave"
+    );
     let bookedServiceFrom_ = null;
     let bookedServiceFrom = null;
     let bookedServiceTo_ = null;
@@ -41,12 +57,12 @@ class Leave extends Form {
     let staffOnLeave = false;
     let liesBetween = false;
 
-    for (let j = 0; j < staff.results.length; j++) {
+    for (let j = 0; j < staffGot.length; j++) {
       gotSlotBooked = false;
       staffOnLeave = false;
       liesBetween = false;
-      let availableFromArr = staff.results[j].availabilityFrom.split(":");
-      let availableToArr = staff.results[j].availabilityTo.split(":");
+      let availableFromArr = staffGot[j].availabilityFrom.split(":");
+      let availableToArr = staffGot[j].availabilityTo.split(":");
 
       let userSelectedTime = ServiceNeededFrom.split(":");
       let availableFrom = availableFromArr[0];
@@ -111,9 +127,7 @@ class Leave extends Form {
       if (liesBetween) {
         for (let i = 0; i < userRequests.length; i++) {
           if (staffOnLeave || gotSlotBooked) break;
-          if (
-            staff.results[j]._id === userRequests[i].staffMemberAssigned._id
-          ) {
+          if (staffGot[j]._id === userRequests[i].staffMemberAssigned._id) {
             bookedServiceFrom = userRequests[i].ServiceNeededFrom.split(":");
             bookedServiceTo = userRequests[i].ServiceNeededTo.split(":");
             bookedServiceTo_ = bookedServiceTo[0];
@@ -156,14 +170,14 @@ class Leave extends Form {
         // Then Checking whether is on leave at user selected date for service
         if (!gotSlotBooked) {
           for (let z = 0; z < staffLeaves.length; z++) {
-            if (staff.results[j]._id === staffLeaves[z].staff._id) {
-              if (staffLeaves[z].leaveFrom === schedule) {
+            if (staffGot[j]._id === staffLeaves[z].staff._id) {
+              if (staffLeaves[z].leaveFrom === Schedule) {
                 staffOnLeave = true;
                 break;
               } else {
                 const leaveFromArr = staffLeaves[z].leaveFrom.split("-");
                 const leaveToArr = staffLeaves[z].leaveTo.split("-");
-                const scheduleArr = schedule.split("-");
+                const scheduleArr = Schedule.split("-");
 
                 let leaveFormYear = leaveFromArr[0];
                 let leaveFormMonth = leaveFromArr[1];
@@ -220,13 +234,14 @@ class Leave extends Form {
       // IF That staff is neither on leave nor got slot booked in that time
       // Assigning that staff a duty
       if (!gotSlotBooked && !staffOnLeave && liesBetween) {
-        const userRequest = {};
-
-        serviceDemander.staffMemberID = staff.results[j]._id;
+        serviceDemander.staffMemberID = staffGot[j]._id;
 
         try {
-          await axios.post(config.userRequest, userRequest);
-          toast.success("Meeting Scheduled");
+          await axios.post(
+            "http://localhost:3000/api/userRequests?assignDuty=abc",
+            serviceDemander
+          );
+          toast.success("Substitute Staff Member has been assigned");
         } catch (ex) {
           toast.error(ex.response.data);
         }
@@ -236,53 +251,143 @@ class Leave extends Form {
       }
     }
     if (gotSlotBooked || !liesBetween || staffOnLeave) {
-      toast.error("No Availability For the Specified Time!");
-      toast.error("Please Check Availability and then Schedule!");
+      const jwt = localStorage.getItem("token");
+      const user = jwtDecode(jwt);
+      serviceDemander.staffMemberID = user._id;
+      await axios.post(
+        "http://localhost:3000/api/userRequests?assignDuty=abc",
+        serviceDemander
+      );
+      toast.error("You can't take a leave on this date");
+      toast.error("No Staff Member Availabile To Assign Your Shift!");
     }
   };
 
-  AssignAutomatedStaff = async (staffTookLeave) => {
-    const { data: userRequests } = await axios.get(
-      config.apiEndPoint + `/userRequests`
-    );
-    for (let u = 0; u < userRequests.length; u++) {
-      if (userRequests[u].staffMemberAssigned._id === staffTookLeave._id) {
-        const {
-          fullName,
-          Organization,
-          Service,
-          ServiceNeededFrom,
-          ServiceNeededTo,
-          Recursive,
-          Address,
-          PhoneNo,
-        } = userRequests[u];
-        const obj = {
-          fullName: fullName,
-          Organization: Organization,
-          Service: Service,
-          ServiceNeededFrom: ServiceNeededFrom,
-          ServiceNeededTo: ServiceNeededTo,
-          Recursive: Recursive,
-          Address: Address,
-          PhoneNo: PhoneNo,
-        };
-        const { data: userRequests } = await axios.delete(
-          config.apiEndPoint +
-            `/userRequests?deleteDuty=abc?DeleteID=${userRequests[u]._id}`
-        );
-        this.AssignAutomatedStaffDuty(obj);
+  //This function checks if the required staff member
+  //who took leave its assigned duties need to rescheduled
+  //or not
+  ReScheduleDuty = async (userRequestStaff, leave_from, leave_to) => {
+    let leave_from_ = leave_from.split("-");
+    let leave_form_year = leave_from_[0];
+    let leave_from_month = leave_from_[1];
+    let leave_from_day = leave_from_[2];
+
+    leave_form_year = leave_form_year.replace(/^(?:00:)?0?/, "");
+    leave_from_month = leave_from_month.replace(/^(?:00:)?0?/, "");
+    leave_from_day = leave_from_day.replace(/^(?:00:)?0?/, "");
+
+    let leave_to_ = leave_to.split("-");
+    let leave_to_year = leave_to_[0];
+    let leave_to_month = leave_to_[1];
+    let leave_to_day = leave_to_[2];
+
+    leave_to_year = leave_to_year.replace(/^(?:00:)?0?/, "");
+    leave_to_month = leave_to_month.replace(/^(?:00:)?0?/, "");
+    leave_to_day = leave_to_day.replace(/^(?:00:)?0?/, "");
+
+    for (let i = 0; i < userRequestStaff.length; i++) {
+      let schedule = userRequestStaff[i].Schedule.split("-");
+      let scheduleYear = schedule[0];
+      let scheduleMonth = schedule[1];
+      let scheduleDay = schedule[2];
+
+      scheduleYear = scheduleYear.replace(/^(?:00:)?0?/, "");
+      scheduleMonth = scheduleMonth.replace(/^(?:00:)?0?/, "");
+      scheduleDay = scheduleDay.replace(/^(?:00:)?0?/, "");
+
+      const {
+        fullName,
+        Organization,
+        Service,
+        Schedule,
+        ServiceNeededFrom,
+        ServiceNeededTo,
+        Recursive,
+        Address,
+        PhoneNo,
+      } = userRequestStaff[i];
+      const customer = {
+        fullName: fullName,
+        Organization: Organization,
+        Service: Service,
+        Schedule: Schedule,
+        ServiceNeededFrom: ServiceNeededFrom,
+        ServiceNeededTo: ServiceNeededTo,
+        Recursive: Recursive,
+        Address: Address,
+        PhoneNo: PhoneNo,
+      };
+
+      if (scheduleYear >= leave_form_year && scheduleYear <= leave_to_year) {
+        if (leave_to_year > scheduleYear && leave_from_month <= scheduleMonth) {
+          //leaves comes between duty
+
+          if (
+            leave_from_month === scheduleMonth &&
+            scheduleDay >= leave_from_day
+          ) {
+            await axios.delete(
+              config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
+            );
+            this.AssignAutomatedStaffDuty(customer);
+          } else {
+            await axios.delete(
+              config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
+            );
+            this.AssignAutomatedStaffDuty(customer);
+          }
+        } else if (
+          parseInt(scheduleMonth) >= parseInt(leave_from_month) &&
+          parseInt(scheduleMonth) <= parseInt(leave_to_month)
+        ) {
+          if (
+            leave_to_month === scheduleMonth &&
+            scheduleDay >= leave_from_day &&
+            scheduleDay <= leave_to_day
+          ) {
+            await axios.delete(
+              config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
+            );
+            this.AssignAutomatedStaffDuty(customer);
+          } else if (leave_to_month !== scheduleMonth) {
+            await axios.delete(
+              config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
+            );
+            this.AssignAutomatedStaffDuty(customer);
+          }
+        } else if (
+          scheduleYear === leave_form_year &&
+          scheduleYear === leave_to_year &&
+          scheduleMonth === leave_from_month &&
+          scheduleMonth === leave_to_month
+        ) {
+          if (scheduleDay >= leave_from_day && scheduleDay <= leave_to_day) {
+            await axios.delete(
+              config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
+            );
+            this.AssignAutomatedStaffDuty(customer);
+          }
+        } else if (
+          leave_from_month < scheduleMonth &&
+          scheduleMonth < leave_to_month
+        ) {
+          await axios.delete(
+            config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
+          );
+          this.AssignAutomatedStaffDuty(customer);
+        }
       }
     }
   };
 
-  AssignSubstituteStaff = async () => {
-    const { user } = this.state.user;
+  AssignSubstituteStaff = async (leave_from, leave_to) => {
+    const jwt = localStorage.getItem("token");
+    const user = jwtDecode(jwt);
     const { data } = await axios.get(
-      config.apiEndPoint + `?staffMemberId=${user.staffMemberId}`
+      config.apiEndPoint + `/userRequests?staffMemberId=${user.staffMember._id}`
     );
 
-    this.AssignAutomatedStaff(data);
+    this.ReScheduleDuty(data, leave_from, leave_to);
   };
 
   handleSubmit = async (e) => {
@@ -297,32 +402,54 @@ class Leave extends Form {
         staffID: this.state.user.staffMember._id,
       };
       try {
-        await axios.post(config.apiEndPoint + "/staffLeave", leave);
+        const { data: leaveGot } = await await axios.post(
+          config.apiEndPoint + "/staffLeave",
+          leave
+        );
         toast.success("Leave Scheduled!");
-        this.AssignSubstituteStaff();
+        this.AssignSubstituteStaff(leaveGot.leaveFrom, leaveGot.leaveTo);
       } catch (ex) {
         toast.error(ex.response.data);
       }
     }
   };
   render() {
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    if (day < 10) day = "0" + day;
+    let year = date.getUTCFullYear();
+    if (month < 10) month = "0" + month;
+    let maxDate = year + "-" + month + "-" + "31";
+    let minDate = year + "-" + month + "-" + day;
+
     return (
       <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
         <ToastContainer />
         <div className="leave">
           <main className="card-signup staff-leave card-style animate__animated animate__fadeInLeft">
+            <h2 className="leave-header">Leave</h2>
+
             <article>{this.renderLabel("From", "leave_from")}</article>
             <article>
               {this.renderInput(
                 "date",
                 "leave_from",
                 "leave_from",
-                "leave_from"
+                "leave_from",
+                minDate,
+                maxDate
               )}
             </article>
             <article>{this.renderLabel("To", "leave_to")}</article>
             <article>
-              {this.renderInput("date", "leave_to", "leave_to", "leave_to")}
+              {this.renderInput(
+                "date",
+                "leave_to",
+                "leave_to",
+                "leave_to",
+                minDate
+              )}
             </article>
             <article className="staff-leave-btn">
               {this.renderBtn("Apply For Leave")}

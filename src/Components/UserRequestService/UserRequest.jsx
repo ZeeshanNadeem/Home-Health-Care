@@ -77,8 +77,13 @@ class UserRequestService extends Form {
     const { schedule } = this.state.doctorForm;
     const { availabilityData, userRequests } = this.state;
     const { ServiceNeededFrom } = this.state.doctorForm;
+    const { organization, service } = this.state.doctorForm;
+    const { data: staff } = await axios.get(
+      config.staff + `/?day=abc&service=${service}&organization=${organization}`
+    );
 
-    const { data: staff } = await axios.get(config.staff);
+    // const { data: staff } = await axios.get(config.staff);
+
     const { staffLeaves } = this.state;
     let bookedServiceFrom_ = null;
     let bookedServiceFrom = null;
@@ -88,12 +93,12 @@ class UserRequestService extends Form {
     let staffOnLeave = false;
     let liesBetween = false;
 
-    for (let j = 0; j < staff.results.length; j++) {
+    for (let j = 0; j < staff.length; j++) {
       gotSlotBooked = false;
       staffOnLeave = false;
       liesBetween = false;
-      let availableFromArr = staff.results[j].availabilityFrom.split(":");
-      let availableToArr = staff.results[j].availabilityTo.split(":");
+      let availableFromArr = staff[j].availabilityFrom.split(":");
+      let availableToArr = staff[j].availabilityTo.split(":");
 
       let userSelectedTime = ServiceNeededFrom.split(":");
       let availableFrom = availableFromArr[0];
@@ -158,9 +163,7 @@ class UserRequestService extends Form {
       if (liesBetween) {
         for (let i = 0; i < userRequests.length; i++) {
           if (staffOnLeave || gotSlotBooked) break;
-          if (
-            staff.results[j]._id === userRequests[i].staffMemberAssigned._id
-          ) {
+          if (staff[j]._id === userRequests[i].staffMemberAssigned._id) {
             bookedServiceFrom = userRequests[i].ServiceNeededFrom.split(":");
             bookedServiceTo = userRequests[i].ServiceNeededTo.split(":");
             bookedServiceTo_ = bookedServiceTo[0];
@@ -203,7 +206,7 @@ class UserRequestService extends Form {
         // Then Checking whether is on leave at user selected date for service
         if (!gotSlotBooked) {
           for (let z = 0; z < staffLeaves.length; z++) {
-            if (staff.results[j]._id === staffLeaves[z].staff._id) {
+            if (staff[j]._id === staffLeaves[z].staff._id) {
               if (staffLeaves[z].leaveFrom === schedule) {
                 staffOnLeave = true;
                 break;
@@ -269,7 +272,7 @@ class UserRequestService extends Form {
       if (!gotSlotBooked && !staffOnLeave && liesBetween) {
         const userRequest = {};
         userRequest.fullName = doctorForm.fullname;
-        userRequest.staffMemberID = staff.results[j]._id;
+        userRequest.staffMemberID = staff[j]._id;
         userRequest.OrganizationID = doctorForm.organization;
         userRequest.ServiceNeededFrom = doctorForm.ServiceNeededFrom;
 
