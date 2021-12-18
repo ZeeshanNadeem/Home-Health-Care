@@ -27,8 +27,48 @@ class Leave extends Form {
   };
 
   MatchUserSelected = (BookedStaffDate) => {
-    if (BookedStaffDate === this.state.doctorForm.schedule) {
-      return true;
+    let BookedStaffDate_ = BookedStaffDate.split("-");
+    let BookedStaffDateYear = BookedStaffDate_[0];
+    let BookedStaffDateMonth = BookedStaffDate_[1];
+    let BookedStaffDateDay = BookedStaffDate_[2];
+
+    BookedStaffDateYear = BookedStaffDateYear.replace(/^(?:00:)?0?/, "");
+    BookedStaffDateMonth = BookedStaffDateMonth.replace(/^(?:00:)?0?/, "");
+    BookedStaffDateDay = BookedStaffDateDay.replace(/^(?:00:)?0?/, "");
+
+    let leave_from_ = this.state.doctorForm.leave_from.split("-");
+    let leave_from_year = leave_from_[0];
+    let leave_from_month = leave_from_[1];
+    let leave_from_day = leave_from_[2];
+
+    leave_from_year = leave_from_year.replace(/^(?:00:)?0?/, "");
+    leave_from_month = leave_from_month.replace(/^(?:00:)?0?/, "");
+    leave_from_day = leave_from_day.replace(/^(?:00:)?0?/, "");
+
+    let leave_to_ = this.state.doctorForm.leave_to.split("-");
+    let leave_to_year = leave_to_[0];
+    let leave_to_month = leave_to_[1];
+    let leave_to_day = leave_to_[2];
+
+    leave_to_year = leave_to_year.replace(/^(?:00:)?0?/, "");
+    leave_to_month = leave_to_month.replace(/^(?:00:)?0?/, "");
+    leave_to_day = leave_to_day.replace(/^(?:00:)?0?/, "");
+
+    if (
+      BookedStaffDateYear >= leave_from_year &&
+      BookedStaffDateYear <= leave_to_year
+    ) {
+      if (
+        BookedStaffDateMonth >= leave_from_month &&
+        BookedStaffDateMonth <= leave_to_month
+      ) {
+        if (
+          BookedStaffDateDay >= leave_from_day &&
+          BookedStaffDateDay <= leave_to_day
+        ) {
+          return true;
+        }
+      }
     } else {
       return false;
     }
@@ -150,6 +190,9 @@ class Leave extends Form {
             }
             //Checking If staff booked service time
             //lies between user requested time
+            //If time lies between then we check weather
+            //its the day in between where user demands service
+            //If yes then its slot is booked
             if (
               userSelectedTime_ >= bookedServiceFrom_ &&
               userSelectedTime_ <= bookedServiceTo_
@@ -241,6 +284,7 @@ class Leave extends Form {
             "http://localhost:3000/api/userRequests?assignDuty=abc",
             serviceDemander
           );
+          toast.success("Leave Scheduled!");
           toast.success("Substitute Staff Member has been assigned");
         } catch (ex) {
           toast.error(ex.response.data);
@@ -253,11 +297,23 @@ class Leave extends Form {
     if (gotSlotBooked || !liesBetween || staffOnLeave) {
       const jwt = localStorage.getItem("token");
       const user = jwtDecode(jwt);
-      serviceDemander.staffMemberID = user._id;
-      await axios.post(
-        "http://localhost:3000/api/userRequests?assignDuty=abc",
-        serviceDemander
-      );
+      serviceDemander.staffMemberID = user.staffMember._id;
+      try {
+        await axios.post(
+          "http://localhost:3000/api/userRequests?assignDuty=abc",
+          serviceDemander
+        );
+      } catch (ex) {
+        toast.error(ex.response.data);
+      }
+      try {
+        await axios.get(
+          `http://localhost:3000/api/StaffLeave?delete=ab&id=${this.state.leaveGot._id}`
+        );
+      } catch (ex) {
+        toast.error(ex.response.data);
+      }
+
       toast.error("You can't take a leave on this date");
       toast.error("No Staff Member Availabile To Assign Your Shift!");
     }
@@ -406,7 +462,9 @@ class Leave extends Form {
           config.apiEndPoint + "/staffLeave",
           leave
         );
-        toast.success("Leave Scheduled!");
+
+        // toast.success("Leave Scheduled!");
+        this.setState({ leaveGot });
         this.AssignSubstituteStaff(leaveGot.leaveFrom, leaveGot.leaveTo);
       } catch (ex) {
         toast.error(ex.response.data);

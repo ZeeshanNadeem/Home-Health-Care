@@ -11,7 +11,7 @@ const UserProfileMenu = () => {
         <article className="logout-wrapper-icon my-home-visits-icon">
           <FontAwesomeIcon icon={faHouseUser} style={{ marginTop: "0.2rem" }} />
         </article>
-        <Link to="/logout" className="user-account-menu-item sheduled-visits">
+        <Link to="/Ratting" className="user-account-menu-item sheduled-visits">
           <span>Scheduled Visits</span>
         </Link>
       </span>
