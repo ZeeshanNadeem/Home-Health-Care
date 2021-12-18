@@ -359,7 +359,17 @@ article.searchBar-wrapper {
   margin-top: 0.2rem;
 }
 
+p.error.er {
+  margin-top: -11px;
+}
+.errorClass {
+  margin-bottom: -12px;
+}
+
 .btn-user-request {
+  margin-top: 2rem;
+}
+article.btn-user-request.errorClass {
   margin-top: 0.8rem;
 }
 /* NavBar on Homepage */
@@ -480,4 +490,36 @@ element.style {
   margin: 0;
   text-align: center;
   padding: 0;
+}
+
+.availability-style {
+  cursor: pointer;
+}
+
+.check-availability-tag {
+  padding: 0 0.5rem;
+  font-weight: bold;
+  color: #9b0000;
+}
+
+.user-req {
+  overflow-y: auto;
+}
+
+.css-1ygcj2i-MuiTableCell-root {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  letter-spacing: 0.01071em;
+  display: table-cell;
+  vertical-align: inherit;
+  border-bottom: 1px solid rgba(224, 224, 224, 1);
+  text-align: left;
+  padding: 16px;
+  color: #000b49;
+}
+
+.btn-mui {
+  background-color: #1976d2;
 }

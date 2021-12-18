@@ -6,49 +6,145 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import jwtDecode from "jwt-decode";
+import { useState } from "react";
+import { useEffect } from "react";
+import config from "../../Api/config.json";
+import axios from "axios";
+import Rating from "@mui/material/Rating";
+import Button from "@mui/material/Button";
+import RattingModal from "./RattingModal/RattingModal";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
+import { withStyles } from "@material-ui/core/styles";
 
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
+const styles = {
+  root: {
+    background: "#1976d2",
+  },
+};
 
-export default function BasicTable() {
+const Ratting = (props) => {
+  const [user, setUser] = useState("");
+  const [userRequests, setUserRequests] = useState([]);
+  const { classes } = props;
+  useEffect(() => {
+    try {
+      const jwt = localStorage.getItem("token");
+      const user = jwtDecode(jwt);
+      setUser(user);
+    } catch (ex) {}
+
+    async function fetchData() {
+      if (user) {
+        const { data: userRequest } = await axios.get(
+          config.apiEndPoint + `/userRequests?userID=${user._id}`
+        );
+        console.log("userRequest::", userRequest);
+        setUserRequests(userRequest);
+      }
+    }
+    fetchData();
+  }, []);
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 50 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell>Calories</TableCell>
-            <TableCell>Fat(g)</TableCell>
-            <TableCell>Carbs(g)</TableCell>
-            <TableCell>Protein(g)</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell>{row.calories}</TableCell>
-              <TableCell>{row.fat}</TableCell>
-              <TableCell>{row.carbs}</TableCell>
-              <TableCell>{row.protein}</TableCell>
+    <article>
+      <h3 style={{ marginLeft: "2rem", marginTop: "1rem", color: "#424242" }}>
+        My Scheduled Meetings
+      </h3>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 50 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Service</TableCell>
+              <TableCell>Organization</TableCell>
+              <TableCell>Cost</TableCell>
+              <TableCell>From</TableCell>
+              <TableCell>To</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell></TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {userRequests.map((row) => (
+              <TableRow
+                key={row._id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {row.Service.serviceName}
+                </TableCell>
+                <TableCell>{row.Organization.name}</TableCell>
+                <TableCell>{row.Service.servicePrice}</TableCell>
+                <TableCell>{row.ServiceNeededFrom}</TableCell>
+                <TableCell>{row.ServiceNeededTo}</TableCell>
+                <TableCell>{row.Schedule}</TableCell>
+                <TableCell>
+                  <RattingModal />
+
+                  {/* <Rating
+                    name="size-large no-value"
+                    defaultValue={2}
+                    size="large"
+                  /> */}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </article>
   );
-}
+};
+
+export default Ratting;
+
+// export default async function BasicTable() {
+//   const [user, setUser] = useState("");
+//   const [userRequests, setUserRequests] = useState([]);
+
+//   useEffect(async () => {
+//     try {
+//       const jwt = localStorage.getItem("token");
+//       const user = jwtDecode(jwt);
+//       setUser(user);
+//     } catch (ex) {}
+
+//     const { data: userRequest } = await axios.get(
+//       config.apiEndPoint + `/userRequests?userID=${user._id}`
+//     );
+//     console.log("user Requests ::", userRequest);
+//     setUserRequests(userRequest);
+//   }, []);
+//   return (
+//     <TableContainer component={Paper}>
+//       <Table sx={{ minWidth: 50 }} aria-label="simple table">
+//         <TableHead>
+//           <TableRow>
+//             <TableCell>Service</TableCell>
+//             <TableCell>Organization</TableCell>
+//             <TableCell>Cost</TableCell>
+//             <TableCell>From</TableCell>
+//             <TableCell>To</TableCell>
+//             <TableCell>Date</TableCell>
+//           </TableRow>
+//         </TableHead>
+//         <TableBody>
+//           {userRequests.map((row) => (
+//             <TableRow
+//               key={row._id}
+//               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+//             >
+//               <TableCell component="th" scope="row">
+//                 {row.Service.serviceName}
+//               </TableCell>
+//               <TableCell>{row.Organization.name}</TableCell>
+//               <TableCell>{row.Service.servicePrice}</TableCell>
+//               <TableCell>{row.ServiceNeededFrom}</TableCell>
+//               <TableCell>{row.ServiceNeededTo}</TableCell>
+//               <TableCell>{row.Schedule}</TableCell>
+//             </TableRow>
+//           ))}
+//         </TableBody>
+//       </Table>
+//     </TableContainer>
+//   );
+// }

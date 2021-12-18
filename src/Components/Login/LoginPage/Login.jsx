@@ -30,7 +30,9 @@ class Login extends Form {
           doctorForm.password
         );
         localStorage.setItem("token", jwt);
-        window.location = "/Home";
+        if (this.props.history.location.pathname) {
+          window.location = this.props.history.location.pathname;
+        } else window.location = "/Home";
       } catch (ex) {
         if (ex.response && ex.response.status === 400) {
           const error = { ...this.state.errors };

@@ -26,7 +26,6 @@ const IndexDropdown = () => {
       const jwt = localStorage.getItem("token");
       const user = jwtDecode(jwt);
       setUser(user);
-      console.log("Current use IndexDropDown:", user);
     } catch (ex) {}
   }, []);
 

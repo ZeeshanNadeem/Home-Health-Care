@@ -41,7 +41,7 @@ const CheckAvailability = ({ availabilityData, userScheduledDate }) => {
   console.log("Availability ::", availabilityData);
   return (
     <article>
-      {availabilityData && availabilityData.length > 0 && (
+      {availabilityData.length > 0 ? (
         <table className="table availability-table">
           <thead>
             <tr>
@@ -109,6 +109,10 @@ const CheckAvailability = ({ availabilityData, userScheduledDate }) => {
             ))}
           </tbody>
         </table>
+      ) : (
+        <p className="check-availability-tag">
+          Please Select Service and Organization first
+        </p>
       )}
     </article>
   );

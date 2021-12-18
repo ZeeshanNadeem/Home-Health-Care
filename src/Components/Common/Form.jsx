@@ -190,8 +190,7 @@ class Form extends React.Component {
   };
 
   scheduleTime = async (date) => {
-    const { service, organization, schedule, ServiceNeededFrom } =
-      this.state.doctorForm;
+    const { service, organization } = this.state.doctorForm;
     if (service && organization) {
       const m = moment(date);
       const day = m.format("dddd");
@@ -228,11 +227,10 @@ class Form extends React.Component {
     doctorForm[input.name] = input.value;
 
     this.setState({ doctorForm, errors });
-    const { service, organization, schedule, ServiceNeededFrom } =
-      this.state.doctorForm;
+    const { service, organization } = this.state.doctorForm;
     if (input.name === "organization") {
       this.populateServices(input.value);
-    } else if (service && organization && schedule) {
+    } else if (service && organization) {
       this.scheduleTime(input.value);
     }
   };
@@ -242,7 +240,14 @@ class Form extends React.Component {
     doctorForm[e.currentTarget.name] = e.target.checked;
     this.setState({ doctorForm });
   };
-  renderInput = (type, id, name, placeholder = "", minDate = "") => {
+  renderInput = (
+    type,
+    id,
+    name,
+    placeholder = "",
+    minDate = "",
+    maxDate = ""
+  ) => {
     const { doctorForm, errors } = this.state;
 
     return (
@@ -256,6 +261,7 @@ class Form extends React.Component {
           id={id}
           onChange={this.handleChange}
           min={minDate}
+          max={maxDate}
         />
         {errors && errors[name] && <p className="error">{errors[name]}</p>}
       </article>
@@ -365,16 +371,19 @@ class Form extends React.Component {
   };
 
   renderMultiLineTextField = (rows, cols, id, name) => {
-    const { doctorForm } = this.state;
+    const { doctorForm, errors } = this.state;
     return (
-      <textarea
-        rows={rows}
-        cols={cols}
-        id={id}
-        name={name}
-        value={doctorForm[name]}
-        onChange={this.handleChange}
-      ></textarea>
+      <article>
+        <textarea
+          rows={rows}
+          cols={cols}
+          id={id}
+          name={name}
+          value={doctorForm[name]}
+          onChange={this.handleChange}
+        ></textarea>
+        {errors && errors[name] && <p className="error er">{errors[name]}</p>}
+      </article>
     );
   };
 }

@@ -506,7 +506,8 @@ class Leave extends Form {
                 "leave_to",
                 "leave_to",
                 "leave_to",
-                minDate
+                minDate,
+                maxDate
               )}
             </article>
             <article className="staff-leave-btn">

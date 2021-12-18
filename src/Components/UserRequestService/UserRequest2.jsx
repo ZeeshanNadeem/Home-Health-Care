@@ -6,23 +6,21 @@ import moment from "moment";
 import Button from "@mui/material/Button";
 import CheckAvailability from "./Modal/CheckAvailability";
 import { toast, ToastContainer } from "react-toastify";
-import { Link } from "react-router-dom";
-import jwtDecode from "jwt-decode";
 
 import config from "../Api/config.json";
 
 class UserRequestService extends Form {
   state = {
     doctorForm: {
-      fullname: "",
-      // staffMemberId: "",
-      service: "",
-      organization: "",
-      schedule: "",
+      //   fullname: "",
+      //   // staffMemberId: "",
+      //   service: "",
+      //   organization: "",
+      //   schedule: "",
       address: "",
       phoneno: "",
-      // recursive: false,
-      ServiceNeededFrom: "",
+      //   recursive: false,
+      //   ServiceNeededFrom: "",
       // ServiceNeededTo: "",
       // address: "",
     },
@@ -55,11 +53,6 @@ class UserRequestService extends Form {
     let maxDate = year + "-" + month + "-" + "31";
     let minDate = year + "-" + month + "-" + day;
     this.setState({ maxDate, minDate });
-    try {
-      const jwt = localStorage.getItem("token");
-      const user = jwtDecode(jwt);
-      this.setState({ user });
-    } catch (ex) {}
   }
 
   schema = {
@@ -67,13 +60,12 @@ class UserRequestService extends Form {
     service: Joi.string().required().label("Service"),
     organization: Joi.string().required().label("Service Organization"),
     schedule: Joi.string().required().label("Date"),
-    address: Joi.string().required().label("Address"),
-
+    address: Joi.string().required().label("address"),
     // staffMemberId: Joi.string(),
-    // recursive: Joi.boolean().required(),
+    recursive: Joi.boolean().required(),
     phoneno: Joi.number().required().label("Phone No"),
     // onlyOnceCheckBox: Joi.string().required().label("Unchecked"),
-    ServiceNeededFrom: Joi.string().required().label("Time"),
+    ServiceNeededFrom: Joi.string().required().label("From"),
     // ServiceNeededTo: Joi.string().required().label("To"),
   };
 
@@ -290,14 +282,13 @@ class UserRequestService extends Form {
       if (!gotSlotBooked && !staffOnLeave && liesBetween) {
         const userRequest = {};
         userRequest.fullName = doctorForm.fullname;
-        userRequest.userID = this.state.user._id;
         userRequest.staffMemberID = staff[j]._id;
         userRequest.OrganizationID = doctorForm.organization;
         userRequest.ServiceNeededFrom = doctorForm.ServiceNeededFrom;
 
         userRequest.ServiceID = doctorForm.service;
         userRequest.Schedule = doctorForm.schedule;
-        // userRequest.Recursive = doctorForm.recursive;
+        userRequest.Recursive = doctorForm.recursive;
         userRequest.Address = doctorForm.address;
         userRequest.PhoneNo = doctorForm.phoneno;
 
@@ -322,16 +313,13 @@ class UserRequestService extends Form {
     e.preventDefault();
     const errors = this.validate();
     this.setState({ errors: errors || {} });
-    const errorClass = errors ? "errorClass" : "";
-    this.setState({ errorClass });
     if (!errors) await this.AssignAutomatedStaff();
   };
   render() {
     const { services, organization, availabilityData } = this.state;
     const { schedule } = this.state.doctorForm;
-
     return (
-      <div className="doc-container user-request-wrapper user-req">
+      <div className="doc-container user-request-wrapper">
         <ToastContainer />
         <div className="card-signup doc-form style-User-Request">
           <header>
@@ -345,125 +333,21 @@ class UserRequestService extends Form {
             {this.renderDropDown("Profession", profession, "serviceFor")}
           </article> */}
           <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <article>{this.renderLabel("Full Name", "fullName")}</article>
-              <article>
-                {this.renderInput("text", "fullname", "fullname", "Full Name")}
-              </article>
-            </article>
-
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <article>
-                {this.renderLabel("Organization", "serviceFor")}
-              </article>
-              <article>
-                {this.renderDropDown(
-                  "service For",
-                  organization,
-                  "serviceOrgranization",
-                  "organization",
-                  "Please Select an Organization"
-                )}
-              </article>
-            </article>
-
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <article>{this.renderLabel("Service", "service")}</article>
-              <article>
-                {this.renderConditionalDropDown(
-                  "service",
-                  "service",
-                  "Please Select a Service"
-                )}
-              </article>
-            </article>
-
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <article>{this.renderLabel("Schedule", "schedule")}</article>
-              <article>
-                {this.renderInput(
-                  "date",
-                  "schedule",
-                  "schedule",
-                  "Schedule a Meeting",
-                  this.state.minDate,
-                  this.state.maxDate
-                )}
-              </article>
-            </article>
-
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <div>
-                <CheckAvailability
-                  availabilityData={availabilityData}
-                  userScheduledDate={schedule}
-                />
-              </div>
-            </article>
-
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <article>{this.renderLabel("Time", "from")}</article>
-              <article>
-                {this.renderInput(
-                  "time",
-                  "ServiceNeededFrom",
-                  "ServiceNeededFrom",
-                  "ServiceNeededFrom",
-                  "3600000"
-                )}
-              </article>
-            </article>
-
-            {/* <article>{this.renderLabel("To", "to")}</article>
-            <article>
-              {this.renderInput(
-                "time",
-                "ServiceNeededTo",
-                "ServiceNeededTo",
-                "ServiceNeededTo",
-                "3600000"
-              )}
-            </article> */}
-            {/* <article className="user-request-input-wrapper">
-              {this.renderCheckBox(
-                "onlyOnceCheckBox",
-                "onlyOnceCheckBox",
-                "onlyOnceCheckBox",
-                "Recursive"
-              )}
-            </article> */}
-
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
+            <article className="user-request-input-wrapper">
               <article>{this.renderLabel("Address", "Address")}</article>
               <article>
                 {this.renderMultiLineTextField("3", "44", "address", "address")}
               </article>
             </article>
 
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
+            <article className="user-request-input-wrapper">
               <article>{this.renderLabel("Phone No", "phoneno")}</article>
               <article>
                 {this.renderInput("number", "phoneno", "phoneno", "Phone No")}
               </article>
             </article>
 
-            <article className={`btn-user-request ${this.state.errorClass}`}>
+            <article className="btn-user-request">
               {this.renderBtn("Schedule")}
             </article>
           </form>

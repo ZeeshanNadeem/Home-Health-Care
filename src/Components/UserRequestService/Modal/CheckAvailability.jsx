@@ -3,6 +3,8 @@ import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import CheckAvailability from "../ModalData/CheckAvailability";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default function CheckAvailabilityPopover({
   availabilityData,
@@ -22,9 +24,12 @@ export default function CheckAvailabilityPopover({
   const id = open ? "simple-popover" : undefined;
 
   return (
-    <span>
+    <span className="availability-style">
       <span onMouseEnter={handleClick} className="check-availability">
-        Check Availability
+        Check-Availability{" "}
+        {availabilityData.length > 0 && (
+          <FontAwesomeIcon icon={faCheckCircle} style={{ color: "#4E9F3D" }} />
+        )}
       </span>
       <Popover
         id={id}
