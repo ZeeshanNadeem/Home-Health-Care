@@ -28,10 +28,12 @@ const Ratting = (props) => {
   const [userRequests, setUserRequests] = useState([]);
   const { classes } = props;
   useEffect(() => {
+    let user = "";
     try {
       const jwt = localStorage.getItem("token");
-      const user = jwtDecode(jwt);
+      user = jwtDecode(jwt);
       setUser(user);
+      console.log(user);
     } catch (ex) {}
 
     async function fetchData() {
@@ -39,12 +41,13 @@ const Ratting = (props) => {
         const { data: userRequest } = await axios.get(
           config.apiEndPoint + `/userRequests?userID=${user._id}`
         );
-        console.log("userRequest::", userRequest);
+
         setUserRequests(userRequest);
       }
     }
     fetchData();
-  }, []);
+  }, [userRequests]);
+
   return (
     <article>
       <h3 style={{ marginLeft: "2rem", marginTop: "1rem", color: "#424242" }}>
@@ -78,7 +81,7 @@ const Ratting = (props) => {
                 <TableCell>{row.ServiceNeededTo}</TableCell>
                 <TableCell>{row.Schedule}</TableCell>
                 <TableCell>
-                  <RattingModal />
+                  <RattingModal row={row} />
 
                   {/* <Rating
                     name="size-large no-value"

@@ -523,3 +523,14 @@ element.style {
 .btn-mui {
   background-color: #1976d2;
 }
+
+.star {
+  transform: translateX(40px);
+  transform: scale(1.8);
+}
+
+.undefined.react-stars {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -1rem;
+}
