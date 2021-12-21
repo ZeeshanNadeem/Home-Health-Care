@@ -1,10 +1,46 @@
 import React from "react";
 import { Avatar, Typography } from "@material-ui/core";
 import ReactStars from "react-rating-stars-component";
+import { toast, ToastContainer } from "react-toastify";
+import config from "../../Api/config.json";
+import axios from "axios";
 
-const RattingModelData = ({ row }) => {
-  const ratingChanged = (ratting) => {
-    alert(`Ratting Selected ${ratting}`);
+const RattingModelData = ({ row, updateRating }) => {
+  const ratingChanged = async (ratting) => {
+    const RatingAvg = row.staffMemberAssigned.RatingAvgCount + 1;
+    let rating_ = (row.staffMemberAssigned.Rating + ratting) / RatingAvg;
+    console.log("row::", row);
+    try {
+      await axios.patch(
+        config.apiEndPoint + `/staff/${row.staffMemberAssigned._id}`,
+        {
+          Rating: rating_,
+          RatingAvgCount: RatingAvg,
+        }
+      );
+
+      await axios.patch(
+        config.apiEndPoint +
+          `/userRequests?staffMemberID=${row.staffMemberAssigned._id}`,
+        {
+          Rating: rating_,
+          RatingAvgCount: RatingAvg,
+        }
+      );
+      await axios.patch(
+        config.apiEndPoint +
+          `/user?staffMemberID=${row.staffMemberAssigned._id}`,
+        {
+          Rating: rating_,
+          RatingAvgCount: RatingAvg,
+        }
+
+        // await axios.delete(config.apiEndPoint+`${}`)
+      );
+      updateRating(row._id);
+    } catch (ex) {
+      toast.error(ex.response.data);
+    }
   };
   return (
     <div>
@@ -35,7 +71,6 @@ const RattingModelData = ({ row }) => {
       >
         {row.staffMemberAssigned.fullName}
       </h4>
-
       <ReactStars
         count={5}
         style={{

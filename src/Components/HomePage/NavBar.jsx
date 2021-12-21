@@ -66,7 +66,9 @@ class NavBar extends Component {
 
           <li className="nav-li">About Us</li>
 
-          <li className="nav-li">Contact Us</li>
+          <Link to="contact">
+            <li className="nav-li">Contact Us</li>
+          </Link>
 
           {/* {user ? this.UserNameNav() : ""} */}
           {user && (

@@ -7,7 +7,9 @@ import { Avatar, Typography } from "@material-ui/core";
 import ReactStars from "react-rating-stars-component";
 import Stack from "@mui/material/Stack";
 import RattingModelData from "../../RattingModalData/data";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 const style = {
   position: "absolute",
   top: "50%",
@@ -59,7 +61,7 @@ function ChildModal({ row }) {
   );
 }
 
-export default function NestedModal({ row }) {
+export default function NestedModal({ row, updateRating }) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -70,9 +72,13 @@ export default function NestedModal({ row }) {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleOpen}>
-        Confirm Service Completed
-      </Button>
+      <article onClick={handleOpen}>
+        <Button variant="outlined">
+          Rate US
+          <FontAwesomeIcon icon={faThumbsUp} style={{ marginLeft: "6px" }} />
+        </Button>
+      </article>
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -80,7 +86,7 @@ export default function NestedModal({ row }) {
         aria-describedby="parent-modal-description"
       >
         <Box sx={{ ...style, width: 400 }}>
-          <RattingModelData row={row} />
+          <RattingModelData row={row} updateRating={updateRating} />
         </Box>
       </Modal>
     </div>

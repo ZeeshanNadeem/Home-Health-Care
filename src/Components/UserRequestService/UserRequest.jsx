@@ -110,6 +110,7 @@ class UserRequestService extends Form {
     let gotSlotBooked = false;
     let staffOnLeave = false;
     let liesBetween = false;
+    let tempArray = [];
 
     for (let j = 0; j < staff.length; j++) {
       gotSlotBooked = false;
@@ -285,37 +286,82 @@ class UserRequestService extends Form {
           }
         }
       }
+      if (!gotSlotBooked && !staffOnLeave && liesBetween) {
+        tempArray.push(staff[j]);
+      }
+
       // IF That staff is neither on leave nor got slot booked in that time
       // Assigning that staff a duty
-      if (!gotSlotBooked && !staffOnLeave && liesBetween) {
-        const userRequest = {};
-        userRequest.fullName = doctorForm.fullname;
-        userRequest.userID = this.state.user._id;
-        userRequest.staffMemberID = staff[j]._id;
-        userRequest.OrganizationID = doctorForm.organization;
-        userRequest.ServiceNeededFrom = doctorForm.ServiceNeededFrom;
+      if (
+        !gotSlotBooked &&
+        !staffOnLeave &&
+        liesBetween &&
+        j === staff.length - 1
+      ) {
+        if (tempArray.length > 0) {
+          let maxIndex = null;
+          for (let c = 0; c < tempArray.length - 1; c++) {
+            for (let k = 1; k < tempArray.length; k++) {
+              if (tempArray[c].Rating > tempArray[k].Rating) {
+                maxIndex = c;
+              } else maxIndex = k;
+            }
+          }
 
-        userRequest.ServiceID = doctorForm.service;
-        userRequest.Schedule = doctorForm.schedule;
-        // userRequest.Recursive = doctorForm.recursive;
-        userRequest.Address = doctorForm.address;
-        userRequest.PhoneNo = doctorForm.phoneno;
+          const userRequest = {};
+          userRequest.fullName = doctorForm.fullname;
+          userRequest.userID = this.state.user._id;
+          userRequest.staffMemberID = tempArray[maxIndex]._id;
+          userRequest.OrganizationID = doctorForm.organization;
+          userRequest.ServiceNeededFrom = doctorForm.ServiceNeededFrom;
 
-        try {
-          await axios.post(config.userRequest, userRequest);
-          toast.success("Meeting Scheduled");
-        } catch (ex) {
-          toast.error(ex.response.data);
+          userRequest.ServiceID = doctorForm.service;
+          userRequest.Schedule = doctorForm.schedule;
+          // userRequest.Recursive = doctorForm.recursive;
+          userRequest.Address = doctorForm.address;
+          userRequest.PhoneNo = doctorForm.phoneno;
+
+          try {
+            await axios.post(config.userRequest, userRequest);
+            toast.success("Meeting Scheduled");
+          } catch (ex) {
+            toast.error(ex.response.data);
+          }
+
+          return;
         }
 
-        // break;
-        return;
+        // const userRequest = {};
+        // userRequest.fullName = doctorForm.fullname;
+        // userRequest.userID = this.state.user._id;
+        // userRequest.staffMemberID = staff[j]._id;
+        // userRequest.OrganizationID = doctorForm.organization;
+        // userRequest.ServiceNeededFrom = doctorForm.ServiceNeededFrom;
+
+        // userRequest.ServiceID = doctorForm.service;
+        // userRequest.Schedule = doctorForm.schedule;
+        // // userRequest.Recursive = doctorForm.recursive;
+        // userRequest.Address = doctorForm.address;
+        // userRequest.PhoneNo = doctorForm.phoneno;
+
+        // try {
+        //   await axios.post(config.userRequest, userRequest);
+        //   toast.success("Meeting Scheduled");
+        // } catch (ex) {
+        //   toast.error(ex.response.data);
+        // }
+
+        // return;
       }
     }
-    if (gotSlotBooked || !liesBetween || staffOnLeave) {
+    if (tempArray.length === 0) {
       toast.error("No Availability For the Specified Time!");
       toast.error("Please Check Availability and then Schedule!");
     }
+    // if (gotSlotBooked || !liesBetween || staffOnLeave ) {
+    //   toast.error("No Availability For the Specified Time!");
+    //   toast.error("Please Check Availability and then Schedule!");
+    // }
   };
 
   handleSubmit = async (e) => {

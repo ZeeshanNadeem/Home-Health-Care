@@ -30,6 +30,7 @@ import OrganizationAdminRequests from "./Components/AppAdmin/PanelPages/Organiza
 import ContactUs from "./Components/Maps/ContactUs";
 import SignUpAsOrganization from "./Components/SignUp/SignUpPage/SignUpOrganization";
 import Ratting from "./Components/Ratting/UI/Ratting";
+import ConfirmMeeting from "./Components/UserRequestService/ConfirmMeeting";
 
 function App() {
   const isLoggedIn = localStorage.getItem("token");
@@ -75,9 +76,10 @@ function App() {
         // component={UserRequestService}
       />
       <Route exact path="/staff/schedule" component={Schedule} />
-      {/* <Route exact path="/contactUs" component={Schedule} /> */}
+      <Route exact path="/contact" component={ContactUs} />
       <Route exact path="/staff/leave/:id?" component={Leave} />
       <Route exact path="/Ratting" component={Ratting} />
+      <Route exact path="/Confirm/Meeting" component={ConfirmMeeting} />
     </article>
   );
 }

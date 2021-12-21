@@ -128,6 +128,9 @@ class NurseForm extends Form {
       availabilityTo: doctorForm.availabilityTo,
       availabileDayFrom: doctorForm.availabileDayFrom,
       availabileDayTo: doctorForm.availabileDayTo,
+      Rating: 0,
+      RatingAvgCount: 0,
+
       // email: doctorForm.email,
     };
     //  const user = {
