@@ -26,7 +26,7 @@ export default function CheckAvailabilityPopover({
   return (
     <span className="availability-style">
       <span onMouseEnter={handleClick} className="check-availability">
-        Check-Availability{" "}
+        Check-Today's-Availability
         {availabilityData.length > 0 && (
           <FontAwesomeIcon icon={faCheckCircle} style={{ color: "#4E9F3D" }} />
         )}

@@ -44,9 +44,9 @@
   margin-right: 4.5rem;
 }
 
-.style-User-Request {
+/* .style-User-Request {
   height: 45.5rem;
-}
+} */
 
 /* EditService */
 .icon-name {
@@ -355,10 +355,6 @@ article.searchBar-wrapper {
 
 /* user-request-input-wrapper */
 
-.user-request-input-wrapper {
-  margin-top: 0.2rem;
-}
-
 p.error.er {
   margin-top: -11px;
 }
@@ -372,6 +368,11 @@ p.error.er {
 article.btn-user-request.errorClass {
   margin-top: 0.8rem;
 }
+article.user-request-input-wrapper {
+  margin-top: 0.2rem;
+  /* margin-bottom: 1px; */
+}
+
 /* NavBar on Homepage */
 .current-user:hover {
   background-color: lightgrey;
@@ -571,4 +572,8 @@ li.nav-li {
   font-size: 0.9rem;
   /* margin-left: 1rem; */
   margin-right: 1rem;
+}
+
+.check-availability {
+  color: #1a72ca;
 }

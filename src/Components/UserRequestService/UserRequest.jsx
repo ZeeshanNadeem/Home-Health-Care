@@ -6,6 +6,8 @@ import moment from "moment";
 import Button from "@mui/material/Button";
 import CheckAvailability from "./Modal/CheckAvailability";
 import { toast, ToastContainer } from "react-toastify";
+import UserRequestContext from "./Context/UserContext";
+
 import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
@@ -23,6 +25,8 @@ class UserRequestService extends Form {
       phoneno: "",
       // recursive: false,
       ServiceNeededFrom: "",
+      email: "",
+      city: "",
       // ServiceNeededTo: "",
       // address: "",
     },
@@ -33,6 +37,7 @@ class UserRequestService extends Form {
     userRequests: [],
     errors: [],
     staffLeaves: [],
+    cites: ["Islamabad", "Rawalpindi"],
   };
   async componentDidMount() {
     const { data: organization } = await axios.get(config.organizations);
@@ -68,13 +73,10 @@ class UserRequestService extends Form {
     organization: Joi.string().required().label("Service Organization"),
     schedule: Joi.string().required().label("Date"),
     address: Joi.string().required().label("Address"),
-
-    // staffMemberId: Joi.string(),
-    // recursive: Joi.boolean().required(),
     phoneno: Joi.number().required().label("Phone No"),
-    // onlyOnceCheckBox: Joi.string().required().label("Unchecked"),
     ServiceNeededFrom: Joi.string().required().label("Time"),
-    // ServiceNeededTo: Joi.string().required().label("To"),
+    city: Joi.string().required().label("City"),
+    email: Joi.string().required().label("Email"),
   };
 
   //This function takes userSelected Date
@@ -96,8 +98,11 @@ class UserRequestService extends Form {
     const { availabilityData, userRequests } = this.state;
     const { ServiceNeededFrom } = this.state.doctorForm;
     const { organization, service } = this.state.doctorForm;
+    const m = moment(this.state.doctorForm.schedule);
+    const dayNo = m.day();
     const { data: staff } = await axios.get(
-      config.staff + `/?day=abc&service=${service}&organization=${organization}`
+      config.staff +
+        `/?day=${dayNo}&service=${service}&organization=${organization}`
     );
 
     // const { data: staff } = await axios.get(config.staff);
@@ -320,6 +325,8 @@ class UserRequestService extends Form {
           // userRequest.Recursive = doctorForm.recursive;
           userRequest.Address = doctorForm.address;
           userRequest.PhoneNo = doctorForm.phoneno;
+          userRequest.city = doctorForm.city;
+          userRequest.email = doctorForm.email;
 
           try {
             await axios.post(config.userRequest, userRequest);
@@ -377,144 +384,169 @@ class UserRequestService extends Form {
     const { schedule } = this.state.doctorForm;
 
     return (
-      <div className="doc-container user-request-wrapper user-req">
-        <ToastContainer />
-        <div className="card-signup doc-form style-User-Request">
-          <header>
-            <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
-              Schedule A Service
-            </h1>
-          </header>
-
-          {/* <article>{this.renderLabel("Organization", "serviceFor")}</article>
-          <article>
-            {this.renderDropDown("Profession", profession, "serviceFor")}
-          </article> */}
-          <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <article>{this.renderLabel("Full Name", "fullName")}</article>
-              <article>
-                {this.renderInput("text", "fullname", "fullname", "Full Name")}
-              </article>
-            </article>
-
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <article>
-                {this.renderLabel("Organization", "serviceFor")}
-              </article>
-              <article>
-                {this.renderDropDown(
-                  "service For",
-                  organization,
-                  "serviceOrgranization",
-                  "organization",
-                  "Please Select an Organization"
-                )}
-              </article>
-            </article>
-
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <article>{this.renderLabel("Service", "service")}</article>
-              <article>
-                {this.renderConditionalDropDown(
-                  "service",
-                  "service",
-                  "Please Select a Service"
-                )}
-              </article>
-            </article>
-
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <article>{this.renderLabel("Schedule", "schedule")}</article>
-              <article>
-                {this.renderInput(
-                  "date",
-                  "schedule",
-                  "schedule",
-                  "Schedule a Meeting",
-                  this.state.minDate,
-                  this.state.maxDate
-                )}
-              </article>
-            </article>
-
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <div>
-                <CheckAvailability
-                  availabilityData={availabilityData}
-                  userScheduledDate={schedule}
-                />
-              </div>
-            </article>
-
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <article>{this.renderLabel("Time", "from")}</article>
-              <article>
-                {this.renderInput(
-                  "time",
-                  "ServiceNeededFrom",
-                  "ServiceNeededFrom",
-                  "ServiceNeededFrom",
-                  "3600000"
-                )}
-              </article>
-            </article>
-
-            {/* <article>{this.renderLabel("To", "to")}</article>
+      <UserRequestContext.Provider value={this.state.doctorForm}>
+        <div className="doc-container user-request-wrapper user-req">
+          <ToastContainer />
+          <div className="card-signup doc-form style-User-Request user-req-card user-req-layout">
+            <header>
+              <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
+                Schedule A Service
+              </h1>
+            </header>
+            {/* <article>{this.renderLabel("Organization", "serviceFor")}</article>
             <article>
-              {this.renderInput(
-                "time",
-                "ServiceNeededTo",
-                "ServiceNeededTo",
-                "ServiceNeededTo",
-                "3600000"
-              )}
+              {this.renderDropDown("Profession", profession, "serviceFor")}
             </article> */}
-            {/* <article className="user-request-input-wrapper">
-              {this.renderCheckBox(
-                "onlyOnceCheckBox",
-                "onlyOnceCheckBox",
-                "onlyOnceCheckBox",
-                "Recursive"
-              )}
-            </article> */}
-
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <article>{this.renderLabel("Address", "Address")}</article>
-              <article>
-                {this.renderMultiLineTextField("3", "44", "address", "address")}
+            <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
+              <article className="row row-grid">
+                <article
+                  className={`user-request-input-wrapper ${this.state.errorClass}`}
+                >
+                  <article>{this.renderLabel("Full Name", "fullName")}</article>
+                  <article>
+                    {this.renderInput(
+                      "text",
+                      "fullname",
+                      "fullname",
+                      "Full Name"
+                    )}
+                  </article>
+                </article>
+                <article
+                  className={`user-request-input-wrapper ${this.state.errorClass}`}
+                >
+                  <article>
+                    {this.renderLabel("Organization", "serviceFor")}
+                  </article>
+                  <article>
+                    {this.renderDropDown(
+                      "service For",
+                      organization,
+                      "serviceOrgranization",
+                      "organization",
+                      "Please Select an Organization"
+                    )}
+                  </article>
+                </article>
               </article>
-            </article>
 
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass}`}
-            >
-              <article>{this.renderLabel("Phone No", "phoneno")}</article>
-              <article>
-                {this.renderInput("number", "phoneno", "phoneno", "Phone No")}
+              <article className="row">
+                <article
+                  className={`user-request-input-wrapper ${this.state.errorClass}`}
+                >
+                  <article>{this.renderLabel("Service", "service")}</article>
+                  <article>
+                    {this.renderConditionalDropDown(
+                      "service",
+                      "service",
+                      "Please Select a Service"
+                    )}
+                  </article>
+                </article>
+                <article
+                  className={`user-request-input-wrapper ${this.state.errorClass}`}
+                >
+                  <article>{this.renderLabel("Schedule", "schedule")}</article>
+                  <article>
+                    {this.renderInput(
+                      "date",
+                      "schedule",
+                      "schedule",
+                      "Schedule a Meeting",
+                      this.state.minDate,
+                      this.state.maxDate
+                    )}
+                  </article>
+                  <article
+                    className={`user-request-input-wrapper ${this.state.errorClass}`}
+                  >
+                    <div>
+                      <CheckAvailability
+                        availabilityData={availabilityData}
+                        userScheduledDate={schedule}
+                      />
+                    </div>
+                  </article>
+                </article>
               </article>
-            </article>
 
-            <article className={`btn-user-request ${this.state.errorClass}`}>
-              {this.renderBtn("Schedule")}
-            </article>
-          </form>
+              <article className="row row-grid email-txt">
+                <article className="email-label">
+                  <article>{this.renderLabel("Email", "Email")}</article>
+                  <article>
+                    {this.renderInput("email", "email", "email", "Email")}
+                  </article>
+                </article>
+
+                <article>
+                  <article>{this.renderLabel("Phone No", "phoneno")}</article>
+                  <article>
+                    {this.renderInput(
+                      "number",
+                      "phoneno",
+                      "phoneno",
+                      "Phone No"
+                    )}
+                  </article>
+                </article>
+              </article>
+
+              <article className="row row-grid">
+                <article>
+                  <article
+                    className={`user-request-input-wrapper ${this.state.errorClass}`}
+                  >
+                    <article>{this.renderLabel("Time", "from")}</article>
+                    <article>
+                      {this.renderInput(
+                        "time",
+                        "ServiceNeededFrom",
+                        "ServiceNeededFrom",
+                        "ServiceNeededFrom",
+                        "3600000"
+                      )}
+                    </article>
+                  </article>
+                </article>
+                <article>
+                  <article>{this.renderLabel("City", "city")}</article>
+                  <article>
+                    {this.renderDropDown(
+                      "City",
+                      this.state.cites,
+                      "city",
+                      "city",
+                      "Please Select Your City"
+                    )}
+                  </article>
+                </article>
+              </article>
+
+              <article
+                className={`user-request-input-wrapper ${this.state.errorClass} address-grid`}
+              >
+                <article>
+                  <article>{this.renderLabel("Address", "Address")}</article>
+                  <article className="address-txt">
+                    {this.renderMultiLineTextField(
+                      this.state.height,
+                      this.state.adressWidth,
+                      "address",
+                      "address"
+                    )}
+                  </article>
+                </article>
+              </article>
+
+              <article
+                className={`btn-user-request ${this.state.errorClass} schedule-btn`}
+              >
+                {this.renderBtn("Schedule")}
+              </article>
+            </form>
+          </div>
         </div>
-      </div>
+      </UserRequestContext.Provider>
     );
   }
 }

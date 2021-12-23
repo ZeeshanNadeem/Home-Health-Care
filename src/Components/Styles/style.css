@@ -311,7 +311,28 @@ add-staff-input-styling {
   margin-top: 0.2rem;
 }
 
+textarea#address {
+  width: 100%;
+  height: 7rem;
+}
+
+.user-req-card {
+  height: 45rem;
+}
+
 @media screen and (min-width: 200px) and (max-width: 449px) {
+  .btn-user-request {
+    margin-top: 0 !important;
+  }
+  .schedule-btn {
+    margin-top: 0;
+  }
+  article.email-label {
+    margin-top: 0.9rem;
+  }
+  .style-User-Request {
+    height: 62.5rem;
+  }
   h2.menu-title {
     padding: 0;
 
@@ -380,7 +401,76 @@ add-staff-input-styling {
   }
 }
 
+@media screen and (min-width: 1000px) {
+  article.email-label {
+    margin-top: 0 !important;
+  }
+  .schedule-btn {
+    margin-top: 1rem;
+  }
+  p.error.er {
+    margin-top: -0.4rem !important;
+  }
+  article.time.user-request-input-wrapper.errorClass {
+    margin-bottom: 0.2rem;
+  }
+  .address-grid {
+    display: grid;
+    grid-template: repeat(1, 11rem) / repeat(1, 44.5rem);
+
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+  }
+
+  article.user-request-input-wrapper.errorClass {
+    align-self: flex-start;
+  }
+  article.user-request-input-wrapper.undefined {
+    align-self: self-start;
+  }
+
+  .user-req-card,
+  .style-User-Request {
+    width: 49rem !important;
+    height: 43rem !important;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
+  .address-txt {
+    /* width: 20rem; */
+  }
+  .row {
+    display: grid !important;
+    grid-template: repeat(1, 6.4rem) / repeat(2, 23rem);
+    justify-items: center;
+    /* align-items: center; */
+    justify-content: center;
+    align-content: center;
+  }
+
+  article.row.row-grid {
+    grid-template: repeat(1, 5rem) / repeat(2, 23rem);
+    grid-template: repeat;
+  }
+  .user-req-layout {
+    max-width: 50rem;
+  }
+}
+
 @media screen and (min-width: 450px) and (max-width: 899px) {
+  .btn-user-request {
+    margin-top: 0 !important;
+  }
+  .schedule-btn {
+    margin-top: 0;
+  }
+  article.email-label {
+    margin-top: 0.9rem;
+  }
+  .style-User-Request {
+    height: 62.5rem;
+  }
   article.input-addStaff,
   input#availabilityTo {
     width: 10.1rem !important;
@@ -430,6 +520,19 @@ add-staff-input-styling {
 }
 
 @media screen and (min-width: 900px) {
+  .btn-user-request {
+    margin-top: 0 !important;
+  }
+  .schedule-btn {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  article.email-label {
+    margin-top: 0.9rem;
+  }
+  .style-User-Request {
+    height: 62.5rem;
+  }
   .one-group-first-item,
   .addStaff-input,
   select#staff,
@@ -457,12 +560,13 @@ add-staff-input-styling {
   }
 
   .card-signup {
-    width: 33rem;
+    width: 60rem;
   }
   /* NewCode */
   .add-staff-form {
-    width: 50rem;
-    max-width: 50rem !important;
+    width: 52rem;
+
+    max-width: 60rem !important;
   }
   .addStaff-Fields-grouping {
     display: flex;

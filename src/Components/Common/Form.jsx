@@ -189,16 +189,20 @@ class Form extends React.Component {
     return staff;
   };
 
-  scheduleTime = async (date) => {
+  scheduleTime = async (date, doctorForm) => {
     const { service, organization } = this.state.doctorForm;
     if (service && organization) {
-      const m = moment(date);
+      const m = moment(doctorForm.schedule);
       const day = m.format("dddd");
-      const { service } = this.state.doctorForm;
-      const { organization } = this.state.doctorForm;
+
+      const d = new Date();
+      const dayNo = m.day();
+      console.log("Day no:", dayNo);
+      const { service: serviceGot } = doctorForm;
+      const { organization: orgGot } = doctorForm;
       const { data } = await axios.get(
         config.staff +
-          `/?day=${day}&service=${service}&organization=${organization}`
+          `/?day=${dayNo}&service=${serviceGot}&organization=${orgGot}`
       );
       let filteredStaff_ = [];
       const filteredStaff = await this.StaffLeaves(data);
@@ -227,11 +231,11 @@ class Form extends React.Component {
     doctorForm[input.name] = input.value;
 
     this.setState({ doctorForm, errors });
-    const { service, organization } = this.state.doctorForm;
+    const { service, organization } = doctorForm;
     if (input.name === "organization") {
       this.populateServices(input.value);
     } else if (service && organization) {
-      this.scheduleTime(input.value);
+      this.scheduleTime(input.value, doctorForm);
     }
   };
 

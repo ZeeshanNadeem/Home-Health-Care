@@ -26,7 +26,36 @@ class NurseForm extends Form {
     },
     qualification: [],
     user: "",
-    days: ["Monday", "Tuesday", "Wednesday", "Thrusday", "Friday", "Saturday"],
+    days: [
+      {
+        name: "Monday",
+        _id: 0,
+      },
+      {
+        name: "Tuesday",
+        _id: 1,
+      },
+      {
+        name: "Wednesday",
+        _id: 2,
+      },
+      {
+        name: "Thrusday",
+        _id: 3,
+      },
+      {
+        name: "Friday",
+        _id: 4,
+      },
+      {
+        name: "Saturday",
+        _id: 5,
+      },
+      {
+        name: "Sunday",
+        _id: 6,
+      },
+    ],
     isEditModel: "",
     services: [],
   };

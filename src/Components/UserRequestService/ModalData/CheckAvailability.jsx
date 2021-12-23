@@ -111,7 +111,7 @@ const CheckAvailability = ({ availabilityData, userScheduledDate }) => {
         </table>
       ) : (
         <p className="check-availability-tag">
-          Please Select Service and Organization first
+          NONE, Please Select Service and Organization first
         </p>
       )}
     </article>

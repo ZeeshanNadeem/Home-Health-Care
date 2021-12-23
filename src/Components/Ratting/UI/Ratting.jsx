@@ -39,6 +39,7 @@ const Ratting = (props) => {
 
     async function fetchData() {
       if (user) {
+        // http://localhost:3000/api/userRequests?userID=61c07922764f46e1cbe43b96
         const { data: userRequest } = await axios.get(
           config.apiEndPoint + `/userRequests?userID=${user._id}`
         );
