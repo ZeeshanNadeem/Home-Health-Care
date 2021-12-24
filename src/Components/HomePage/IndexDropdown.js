@@ -31,8 +31,8 @@ const IndexDropdown = () => {
 
   return (
     <>
-      <a
-        className="nav-li nav-items"
+      <Link
+        className="nav-li nav-items services-li"
         href="#pablo"
         ref={btnDropdownRef}
         // onMouseEnter={(e) => {
@@ -50,7 +50,7 @@ const IndexDropdown = () => {
         }}
       >
         Services
-      </a>
+      </Link>
       <div
         ref={popoverDropdownRef}
         className={

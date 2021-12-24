@@ -56,6 +56,32 @@ class NurseForm extends Form {
         _id: 6,
       },
     ],
+    timeArr: [
+      "1:00",
+      "2:00",
+      "3:00",
+      "4:00",
+      "5:00",
+      "6:00",
+      "7:00",
+      "8:00",
+      "9:00",
+      "10:00",
+      "11:00",
+      "12:00",
+      "13:00",
+      "14:00",
+      "15:00",
+      "16:00",
+      "17:00",
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00",
+      "22:00",
+      "23:00",
+      "24:00",
+    ],
     isEditModel: "",
     services: [],
   };
@@ -355,12 +381,18 @@ class NurseForm extends Form {
                   {this.renderLabel("Available From", "availabilityFrom")}
                 </article>
                 <article className="addStaff-special-fields">
-                  {this.renderInput(
+                  {this.renderDropDown(
+                    "time",
+                    this.state.timeArr,
+                    "availabilityFrom",
+                    "availabilityFrom"
+                  )}
+                  {/* {this.renderInput(
                     "time",
                     "availabilityFrom",
                     "availabilityFrom",
                     "availabilityFrom"
-                  )}
+                  )} */}
                 </article>
               </article>
 
@@ -369,9 +401,15 @@ class NurseForm extends Form {
                   {this.renderLabel("Available To", "availabilityTo")}
                 </article>
                 <article className="addStaff-special-fields">
-                  {this.renderInput(
+                  {/* {this.renderInput(
                     "time",
                     "availabilityTo",
+                    "availabilityTo",
+                    "availabilityTo"
+                  )} */}
+                  {this.renderDropDown(
+                    "time",
+                    this.state.timeArr,
                     "availabilityTo",
                     "availabilityTo"
                   )}

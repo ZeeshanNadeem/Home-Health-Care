@@ -6,18 +6,19 @@ import ServicesCards from "./ServicesCards";
 import Footer from "../Footer/footer";
 import { useEffect } from "react";
 
-const Home = () => {
+const Home = ({ setProgress }) => {
   useEffect(() => {
     document.title = "Home Health Care";
   }, []);
   return (
     <div>
-      <NavBar />
+      <NavBar setProgress={setProgress} />
 
-      <Carasol />
-      {/* <SearchService /> */}
-      <ServicesCards />
-      <Footer />
+      <Carasol setProgress={setProgress} />
+
+      <ServicesCards setProgress={setProgress} />
+
+      <Footer setProgress={setProgress} />
     </div>
   );
 };

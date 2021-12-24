@@ -38,8 +38,35 @@ class UserRequestService extends Form {
     errors: [],
     staffLeaves: [],
     cites: ["Islamabad", "Rawalpindi"],
+    timeArr: [
+      "1:00",
+      "2:00",
+      "3:00",
+      "4:00",
+      "5:00",
+      "6:00",
+      "7:00",
+      "8:00",
+      "9:00",
+      "10:00",
+      "11:00",
+      "12:00",
+      "13:00",
+      "14:00",
+      "15:00",
+      "16:00",
+      "17:00",
+      "18:00",
+      "19:00",
+      "20:00",
+      "21:00",
+      "22:00",
+      "23:00",
+      "24:00",
+    ],
   };
   async componentDidMount() {
+    this.props.setProgress(0);
     const { data: organization } = await axios.get(config.organizations);
     const { data: userRequests } = await axios.get(config.userRequests);
     const { data: staffLeaves } = await axios.get(
@@ -50,7 +77,7 @@ class UserRequestService extends Form {
       userRequests,
       staffLeaves,
     });
-
+    this.props.setProgress(20);
     let date = new Date();
     let month = date.getMonth() + 1;
     let day = date.getDate();
@@ -64,6 +91,8 @@ class UserRequestService extends Form {
       const jwt = localStorage.getItem("token");
       const user = jwtDecode(jwt);
       this.setState({ user });
+      this.props.setProgress(50);
+      this.props.setProgress(100);
     } catch (ex) {}
   }
 
@@ -303,6 +332,7 @@ class UserRequestService extends Form {
         liesBetween &&
         j === staff.length - 1
       ) {
+        //Assigning duty on the basis of rating
         if (tempArray.length > 0) {
           let maxIndex = null;
           for (let c = 0; c < tempArray.length - 1; c++) {
@@ -312,7 +342,7 @@ class UserRequestService extends Form {
               } else maxIndex = k;
             }
           }
-
+          if (!maxIndex) maxIndex = 0;
           const userRequest = {};
           userRequest.fullName = doctorForm.fullname;
           userRequest.userID = this.state.user._id;
@@ -329,11 +359,16 @@ class UserRequestService extends Form {
           userRequest.email = doctorForm.email;
 
           try {
-            await axios.post(config.userRequest, userRequest);
-            toast.success("Meeting Scheduled");
+            await axios.post(
+              config.apiEndPoint + "/confirmService",
+              userRequest
+            );
+
+            // toast.success("Meeting Scheduled");
           } catch (ex) {
             toast.error(ex.response.data);
           }
+          this.props.history.push("/Confirm/Meeting");
 
           return;
         }
@@ -384,120 +419,114 @@ class UserRequestService extends Form {
     const { schedule } = this.state.doctorForm;
 
     return (
-      <UserRequestContext.Provider value={this.state.doctorForm}>
-        <div className="doc-container user-request-wrapper user-req">
-          <ToastContainer />
-          <div className="card-signup doc-form style-User-Request user-req-card user-req-layout">
-            <header>
-              <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
-                Schedule A Service
-              </h1>
-            </header>
-            {/* <article>{this.renderLabel("Organization", "serviceFor")}</article>
+      <div className="doc-container user-request-wrapper user-req">
+        <ToastContainer />
+        <div className="card-signup doc-form style-User-Request user-req-card user-req-layout">
+          <header>
+            <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
+              Schedule A Service
+            </h1>
+          </header>
+          {/* <article>{this.renderLabel("Organization", "serviceFor")}</article>
             <article>
               {this.renderDropDown("Profession", profession, "serviceFor")}
             </article> */}
-            <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
-              <article className="row row-grid">
-                <article
-                  className={`user-request-input-wrapper ${this.state.errorClass}`}
-                >
-                  <article>{this.renderLabel("Full Name", "fullName")}</article>
-                  <article>
-                    {this.renderInput(
-                      "text",
-                      "fullname",
-                      "fullname",
-                      "Full Name"
-                    )}
-                  </article>
-                </article>
-                <article
-                  className={`user-request-input-wrapper ${this.state.errorClass}`}
-                >
-                  <article>
-                    {this.renderLabel("Organization", "serviceFor")}
-                  </article>
-                  <article>
-                    {this.renderDropDown(
-                      "service For",
-                      organization,
-                      "serviceOrgranization",
-                      "organization",
-                      "Please Select an Organization"
-                    )}
-                  </article>
-                </article>
-              </article>
-
-              <article className="row">
-                <article
-                  className={`user-request-input-wrapper ${this.state.errorClass}`}
-                >
-                  <article>{this.renderLabel("Service", "service")}</article>
-                  <article>
-                    {this.renderConditionalDropDown(
-                      "service",
-                      "service",
-                      "Please Select a Service"
-                    )}
-                  </article>
-                </article>
-                <article
-                  className={`user-request-input-wrapper ${this.state.errorClass}`}
-                >
-                  <article>{this.renderLabel("Schedule", "schedule")}</article>
-                  <article>
-                    {this.renderInput(
-                      "date",
-                      "schedule",
-                      "schedule",
-                      "Schedule a Meeting",
-                      this.state.minDate,
-                      this.state.maxDate
-                    )}
-                  </article>
-                  <article
-                    className={`user-request-input-wrapper ${this.state.errorClass}`}
-                  >
-                    <div>
-                      <CheckAvailability
-                        availabilityData={availabilityData}
-                        userScheduledDate={schedule}
-                      />
-                    </div>
-                  </article>
-                </article>
-              </article>
-
-              <article className="row row-grid email-txt">
-                <article className="email-label">
-                  <article>{this.renderLabel("Email", "Email")}</article>
-                  <article>
-                    {this.renderInput("email", "email", "email", "Email")}
-                  </article>
-                </article>
-
+          <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
+            <article className="row row-grid">
+              <article
+                className={`user-request-input-wrapper ${this.state.errorClass}`}
+              >
+                <article>{this.renderLabel("Full Name", "fullName")}</article>
                 <article>
-                  <article>{this.renderLabel("Phone No", "phoneno")}</article>
-                  <article>
-                    {this.renderInput(
-                      "number",
-                      "phoneno",
-                      "phoneno",
-                      "Phone No"
-                    )}
-                  </article>
+                  {this.renderInput(
+                    "text",
+                    "fullname",
+                    "fullname",
+                    "Full Name"
+                  )}
+                </article>
+              </article>
+              <article
+                className={`user-request-input-wrapper ${this.state.errorClass}`}
+              >
+                <article>
+                  {this.renderLabel("Organization", "serviceFor")}
+                </article>
+                <article>
+                  {this.renderDropDown(
+                    "service For",
+                    organization,
+                    "serviceOrgranization",
+                    "organization",
+                    "Please Select an Organization"
+                  )}
+                </article>
+              </article>
+            </article>
+
+            <article className="row">
+              <article
+                className={`user-request-input-wrapper ${this.state.errorClass}`}
+              >
+                <article>{this.renderLabel("Service", "service")}</article>
+                <article>
+                  {this.renderConditionalDropDown(
+                    "service",
+                    "service",
+                    "Please Select a Service"
+                  )}
+                </article>
+              </article>
+              <article
+                className={`user-request-input-wrapper ${this.state.errorClass}`}
+              >
+                <article>{this.renderLabel("Schedule", "schedule")}</article>
+                <article>
+                  {this.renderInput(
+                    "date",
+                    "schedule",
+                    "schedule",
+                    "Schedule a Meeting",
+                    this.state.minDate,
+                    this.state.maxDate
+                  )}
+                </article>
+                <article
+                  className={`user-request-input-wrapper ${this.state.errorClass}`}
+                >
+                  <div>
+                    <CheckAvailability
+                      availabilityData={availabilityData}
+                      userScheduledDate={schedule}
+                    />
+                  </div>
+                </article>
+              </article>
+            </article>
+
+            <article className="row row-grid email-txt">
+              <article className="email-label">
+                <article>{this.renderLabel("Email", "Email")}</article>
+                <article>
+                  {this.renderInput("email", "email", "email", "Email")}
                 </article>
               </article>
 
-              <article className="row row-grid">
+              <article>
+                <article>{this.renderLabel("Phone No", "phoneno")}</article>
                 <article>
-                  <article
-                    className={`user-request-input-wrapper ${this.state.errorClass}`}
-                  >
-                    <article>{this.renderLabel("Time", "from")}</article>
-                    <article>
+                  {this.renderInput("number", "phoneno", "phoneno", "Phone No")}
+                </article>
+              </article>
+            </article>
+
+            <article className="row row-grid">
+              <article>
+                <article
+                  className={`user-request-input-wrapper ${this.state.errorClass}`}
+                >
+                  <article>{this.renderLabel("Time", "from")}</article>
+                  {/* <article>
                       {this.renderInput(
                         "time",
                         "ServiceNeededFrom",
@@ -505,48 +534,56 @@ class UserRequestService extends Form {
                         "ServiceNeededFrom",
                         "3600000"
                       )}
-                    </article>
-                  </article>
-                </article>
-                <article>
-                  <article>{this.renderLabel("City", "city")}</article>
+                    </article> */}
+
                   <article>
                     {this.renderDropDown(
-                      "City",
-                      this.state.cites,
-                      "city",
-                      "city",
-                      "Please Select Your City"
+                      "time",
+                      this.state.timeArr,
+                      "ServiceNeededFrom",
+                      "ServiceNeededFrom"
                     )}
                   </article>
                 </article>
               </article>
-
-              <article
-                className={`user-request-input-wrapper ${this.state.errorClass} address-grid`}
-              >
+              <article>
+                <article>{this.renderLabel("City", "city")}</article>
                 <article>
-                  <article>{this.renderLabel("Address", "Address")}</article>
-                  <article className="address-txt">
-                    {this.renderMultiLineTextField(
-                      this.state.height,
-                      this.state.adressWidth,
-                      "address",
-                      "address"
-                    )}
-                  </article>
+                  {this.renderDropDown(
+                    "City",
+                    this.state.cites,
+                    "city",
+                    "city",
+                    "Please Select Your City"
+                  )}
                 </article>
               </article>
+            </article>
 
-              <article
-                className={`btn-user-request ${this.state.errorClass} schedule-btn`}
-              >
-                {this.renderBtn("Schedule")}
+            <article
+              className={`user-request-input-wrapper ${this.state.errorClass} address-grid`}
+            >
+              <article>
+                <article>{this.renderLabel("Address", "Address")}</article>
+                <article className="address-txt">
+                  {this.renderMultiLineTextField(
+                    this.state.height,
+                    this.state.adressWidth,
+                    "address",
+                    "address"
+                  )}
+                </article>
               </article>
-            </form>
-          </div>
+            </article>
+
+            <article
+              className={`btn-user-request ${this.state.errorClass} schedule-btn`}
+            >
+              {this.renderBtn("Schedule")}
+            </article>
+          </form>
         </div>
-      </UserRequestContext.Provider>
+      </div>
     );
   }
 }

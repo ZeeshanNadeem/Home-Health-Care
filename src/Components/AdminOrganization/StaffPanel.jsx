@@ -42,7 +42,7 @@ const StaffPanel = () => {
   //Or Without any searched Value.
   const PopulateTable = async () => {
     let page = "";
-    console.log("POP searchedStaff::", searchedStaff);
+
     if (searchedStaff) {
       const { data } = await axios.get(`http://localhost:3000/api/staff`);
 
@@ -61,11 +61,6 @@ const StaffPanel = () => {
 
       setStaff(searchedResults);
 
-      console.log(
-        "searchedResults.length === 0 :::",
-        searchedResults.length === 0
-      );
-      console.log("searchedStaff:::", searchedStaff);
       if (searchedResults.length === 0 && searchedStaff) {
         toast.error("No Results Found!");
       }
@@ -145,6 +140,16 @@ const StaffPanel = () => {
 
     // PopulateTable();
   };
+
+  const checkDay = (availabileDay) => {
+    if (availabileDay === 0) return "Monday";
+    else if (availabileDay === 1) return "Tuesday";
+    else if (availabileDay === 2) return "Wednesday";
+    else if (availabileDay === 3) return "Thrusday";
+    else if (availabileDay == 4) return "Friday";
+    else if (availabileDay === 5) return "Saturday";
+    else return "Sunday";
+  };
   return (
     <article className="ServicePanel-wrapper ">
       <article className="searchBar-wrapper">
@@ -191,8 +196,8 @@ const StaffPanel = () => {
                   <td>{data.qualification.name}</td>
                   <td>{data.availabilityFrom}</td>
                   <td>{data.availabilityTo}</td>
-                  <td>{data.availabileDayFrom}</td>
-                  <td>{data.availabileDayTo}</td>
+                  <td>{checkDay(data.availabileDayFrom)}</td>
+                  <td>{checkDay(data.availabileDayTo)}</td>
                   {/* <td>{data.email}</td> */}
                   <td>{data.phone}</td>
                   <td>

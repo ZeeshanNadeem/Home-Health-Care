@@ -185,13 +185,24 @@ a.nav-li.nav-items {
   padding-top: 0;
   font-family: Inter;
   padding-bottom: 0;
-  padding-right: 0.6rem;
+  /* padding-right: 0.6rem; */
+
   font-size: 0.99rem;
   font-weight: 800;
   letter-spacing: 0.8px;
   border: 0;
-  margin-left: 2rem;
+  /* margin-left: 2rem; */
   color: #000;
+}
+.nav-li {
+  margin-right: 1rem;
+}
+
+a.nav-li.nav-items.services-li {
+  margin-left: 1rem;
+  font-size: 0.9333rem;
+  font-family: Inter, "Times New Roman", Times, serif;
+  letter-spacing: 0.8px;
 }
 a.nav-li.nav-items:hover {
   color: #dc4d40 !important;
@@ -660,9 +671,12 @@ input.search-input {
   display: grid;
   width: 100%;
 
-  grid-template: repeat(2, 330px) / repeat(3, 320px);
+  grid-template: repeat(1, 330px) / repeat(3, 320px);
 
   justify-content: center;
+  align-content: center;
+  align-items: center;
+
   column-gap: 2rem;
   row-gap: 1rem;
 }

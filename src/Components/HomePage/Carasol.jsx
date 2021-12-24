@@ -11,10 +11,11 @@ import img9 from "../../Images/img5.jpg";
 
 import img10 from "../../Images/img10.jpg";
 
-const Carasol = () => {
+const Carasol = ({ setProgress }) => {
   return (
     <Carousel>
       <Carousel.Item>
+        {setProgress(40)}
         <img
           style={{ height: "37rem" }}
           className="d-block w-100 carasol-img"
@@ -76,6 +77,7 @@ const Carasol = () => {
           alt="First slide"
         />
       </Carousel.Item>
+      {setProgress(60)}
       {/* <Carousel.Item>
         <img
           style={{ height: "37rem" }}

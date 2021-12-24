@@ -3,9 +3,10 @@ import Card_ from "./Card";
 import vaccination4 from "../../Images/vaccination4.jpg";
 import doc1 from "../../Images/aides2.jpg";
 import urine from "../../Images/urine9.jpg";
-const ServicesCards = () => {
+const ServicesCards = ({ setProgress }) => {
   return (
     <React.Fragment>
+      {setProgress(70)}
       <article style={{ textAlign: "center", marginTop: "4.5rem" }}>
         <h2 className="msg-above-home-cards animate__animated animate__fadeInUp">
           Discover Home Heath Care's <strong>ONLINE</strong> SERVICES!{" "}
@@ -58,6 +59,7 @@ const ServicesCards = () => {
           cardTitle="Sampling Care"
           imgSrc={urine}
         /> */}
+        {setProgress(80)}
       </article>
     </React.Fragment>
   );

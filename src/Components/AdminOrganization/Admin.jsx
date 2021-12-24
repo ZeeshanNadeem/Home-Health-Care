@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import DoctorForm from "../DoctorForm";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,7 +21,7 @@ import NurseForm from "./Forms/AddStaff";
 import AdminNav from "../AdminNav";
 import { Link } from "react-router-dom";
 import "animate.css";
-const Admin = () => {
+const Admin = ({ setProgress }) => {
   const [showDocDetials, setDocDetails] = useState("");
   const [menuBarZindex, setMenuBarZindex] = useState("");
   const DoctorDetailsHandler = (name) => {
@@ -30,6 +30,14 @@ const Admin = () => {
       setMenuBarZindex("MenuBarZIndex");
     }
   };
+  useEffect(() => {
+    setProgress(0);
+    setProgress(10);
+    setProgress(20);
+    setProgress(40);
+    setProgress(100);
+  }, []);
+
   return (
     <article className="admin-wrapper">
       <span className="admin-top">
