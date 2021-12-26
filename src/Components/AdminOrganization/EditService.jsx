@@ -14,17 +14,22 @@ import { TextField } from "@mui/material";
 
 import Pagination from "@mui/material/Pagination";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import jwtDecode from "jwt-decode";
 
 const EditService = () => {
   const [services, setServices] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSelected, setPageSelected] = useState(1);
   const [searchedService, setSearchedService] = useState("");
+  const [user, setUser] = React.useState([]);
   const [pageSize] = useState(9);
 
   const getTotalDocuments = async () => {
+    const jwt = localStorage.getItem("token");
+    const user = jwtDecode(jwt);
+    setUser(user);
     const { data: totalDocuments } = await axios.get(
-      `http://localhost:3000/api/services`
+      `http://localhost:3000/api/services?organization=${user.Organization._id}`
     );
     return totalDocuments;
   };
@@ -37,7 +42,11 @@ const EditService = () => {
 
     //When Searched Value Exists.
     if (searchedService) {
-      const { data } = await axios.get(`http://localhost:3000/api/services`);
+      const jwt = localStorage.getItem("token");
+      const user = jwtDecode(jwt);
+      const { data } = await axios.get(
+        `http://localhost:3000/api/services?organization=${user.Organization._id}`
+      );
       const searchedResults = data.results.filter((d) =>
         d.serviceName.toUpperCase().startsWith(searchedService.toUpperCase())
       );
@@ -57,9 +66,11 @@ const EditService = () => {
       }
       return;
     }
+    const jwt = localStorage.getItem("token");
+    const user = jwtDecode(jwt);
     //When Searched Value Doesn't Exist.
     const { data } = await axios.get(
-      `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}&searchedString=${searchedService}`
+      `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}&searchedString=${searchedService}&organization=${user.Organization._id}`
     );
     const totalDocuments = await getTotalDocuments();
 
@@ -98,8 +109,10 @@ const EditService = () => {
     }
   };
   const updateService = async () => {
+    const jwt = localStorage.getItem("token");
+    const user = jwtDecode(jwt);
     const { data: services } = await axios.get(
-      `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}`
+      `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}&organization=${user.Organization._id}`
     );
 
     setServices(services.results);
@@ -114,7 +127,7 @@ const EditService = () => {
     let page = "";
     if (!e.currentTarget.value) {
       const { data } = await axios.get(
-        `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}`
+        `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}&Organization=${user.Organization._id}`
       );
       setServices(data.results);
       const totalDocuments = await getTotalDocuments();
@@ -141,7 +154,7 @@ const EditService = () => {
           <input
             className="search-Bar"
             type="text"
-            placeholder="Search Service"
+            placeholder="Search A Service..."
             value={searchedService}
             onChange={handleChange}
           />

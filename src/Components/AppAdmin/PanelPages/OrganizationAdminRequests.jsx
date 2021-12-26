@@ -173,6 +173,7 @@ const OrganizationAdminRequests = () => {
                     <td>
                       <Link to={`/app/admin/requests/${admin._id}`}>
                         <Button
+                          style={{ backgroundColor: "#1E5128" }}
                           variant="contained"
                           onClick={() => ApproveAdminRequests(admin)}
                         >

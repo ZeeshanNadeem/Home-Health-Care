@@ -575,8 +575,8 @@ textarea#address {
   }
   /* NewCode */
   .add-staff-form {
-    width: 52rem;
-
+    /* width: 52rem; */
+    width: 50rem;
     max-width: 60rem !important;
   }
   .addStaff-Fields-grouping {
@@ -616,6 +616,9 @@ textarea#address {
   }
   .admin-routes {
     display: flex;
+  }
+  select#availabileDayTo {
+    margin-left: -8px;
   }
 }
 

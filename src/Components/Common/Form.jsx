@@ -197,7 +197,7 @@ class Form extends React.Component {
 
       const d = new Date();
       const dayNo = m.day();
-      console.log("Day no:", dayNo);
+
       const { service: serviceGot } = doctorForm;
       const { organization: orgGot } = doctorForm;
       const { data } = await axios.get(
@@ -250,7 +250,8 @@ class Form extends React.Component {
     name,
     placeholder = "",
     minDate = "",
-    maxDate = ""
+    maxDate = "",
+    readonly = ""
   ) => {
     const { doctorForm, errors } = this.state;
 
@@ -266,6 +267,7 @@ class Form extends React.Component {
           onChange={this.handleChange}
           min={minDate}
           max={maxDate}
+          readOnly={readonly}
         />
         {errors && errors[name] && <p className="error">{errors[name]}</p>}
       </article>
@@ -314,7 +316,7 @@ class Form extends React.Component {
           {Conditionalservices.length > 0 && <option value="">{label}</option>}
           {Conditionalservices ? (
             Conditionalservices.map((option) => (
-              <option value={option._id} key={option._id}>
+              <option value={option.serviceName} key={option._id}>
                 {option.serviceName}
               </option>
             ))

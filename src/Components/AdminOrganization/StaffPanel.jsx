@@ -22,6 +22,7 @@ import Pagination from "@mui/material/Pagination";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import StaffEditModle from "./Modles/StaffEditModle";
 import AddStaffModle from "./Modles/AddStaffModle";
+import jwtDecode from "jwt-decode";
 
 const StaffPanel = () => {
   const [staff, setStaff] = useState([]);
@@ -31,8 +32,10 @@ const StaffPanel = () => {
 
   const [pageSize] = useState(9);
   const getTotalDocuments = async () => {
+    const jwt = localStorage.getItem("token");
+    const user = jwtDecode(jwt);
     const { data: totalDocuments } = await axios.get(
-      `http://localhost:3000/api/staff`
+      `http://localhost:3000/api/staff?organizationID=${user.Organization._id}`
     );
     return totalDocuments;
   };
@@ -42,9 +45,14 @@ const StaffPanel = () => {
   //Or Without any searched Value.
   const PopulateTable = async () => {
     let page = "";
-
+    const jwt = localStorage.getItem("token");
+    const user = jwtDecode(jwt);
     if (searchedStaff) {
-      const { data } = await axios.get(`http://localhost:3000/api/staff`);
+      //If user had searched a staff member
+
+      const { data } = await axios.get(
+        `http://localhost:3000/api/staff?organizationID=${user.Organization._id}`
+      );
 
       const searchedResults = data.results.filter((d) =>
         d.fullName.toUpperCase().startsWith(searchedStaff.toUpperCase())
@@ -66,8 +74,10 @@ const StaffPanel = () => {
       }
       return;
     }
+    //If user hasn't searched a staff member
+    //This part gets executed
     const { data } = await axios.get(
-      `http://localhost:3000/api/staff?page=${pageSelected}&limit=${pageSize}&searchedString=${searchedStaff}`
+      `http://localhost:3000/api/staff?page=${pageSelected}&limit=${pageSize}&searchedString=${searchedStaff}&organizationID=${user.Organization._id}`
     );
     const totalDocuments = await getTotalDocuments();
 
@@ -87,7 +97,13 @@ const StaffPanel = () => {
   }, [pageSelected, searchedStaff]);
 
   const RefreshStaffMembers = async () => {
-    const { data: staff } = await axios.get(`http://localhost:3000/api/staff`);
+    const jwt = localStorage.getItem("token");
+    const user = jwtDecode(jwt);
+    const { data: staff } = await axios.get(
+      `http://localhost:3000/api/staff?organizationID=${user.Organization._id}`
+    );
+    if (staff.results.length > 9) window.location = "/admin/Nurse";
+    RefreshStaffMembers();
 
     setStaff(staff.results);
   };
@@ -109,6 +125,7 @@ const StaffPanel = () => {
       await axios.delete(
         "http://localhost:3000/api/user" + "/" + userObjInTable._id
       );
+      RefreshStaffMembers();
     } catch (ex) {
       if (ex.response && ex.response.status === 404) {
         toast.error("This post has already been deleted");
@@ -119,8 +136,10 @@ const StaffPanel = () => {
   const handleChange = async (e) => {
     let page = "";
     if (!e.currentTarget.value) {
+      const jwt = localStorage.getItem("token");
+      const user = jwtDecode(jwt);
       const { data } = await axios.get(
-        `http://localhost:3000/api/staff?page=${pageSelected}&limit=${pageSize}`
+        `http://localhost:3000/api/staff?page=${pageSelected}&limit=${pageSize}&organizationID=${user.Organization._id}`
       );
       setStaff(data.results);
       const totalDocuments = await getTotalDocuments();
@@ -158,7 +177,7 @@ const StaffPanel = () => {
         <input
           className="search-Bar"
           type="text"
-          placeholder="Staff Name"
+          placeholder="Search A Staff Member..."
           value={searchedStaff}
           onChange={handleChange}
         />

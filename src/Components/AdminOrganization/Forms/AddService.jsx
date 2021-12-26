@@ -5,6 +5,7 @@ import Joi from "joi-browser";
 import { toast, ToastContainer } from "react-toastify";
 import EditService from "../EditService";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 
 class AddService extends Form {
   state = {
@@ -20,6 +21,11 @@ class AddService extends Form {
 
   async componentDidMount() {
     const { data } = await axios.get("http://localhost:3000/api/organizations");
+    const jwt = localStorage.getItem("token");
+    const user = jwtDecode(jwt);
+    const doctorForm1 = { ...this.state.doctorForm };
+    doctorForm1.serviceOrgranization = user.Organization.name;
+    this.setState({ doctorForm: doctorForm1 });
 
     this.setState({ organizations: data.results });
 
@@ -27,7 +33,7 @@ class AddService extends Form {
     const doctorForm = { ...this.state.doctorForm };
     if (serviceData) {
       doctorForm.serviceName = serviceData.serviceName;
-      doctorForm.serviceOrgranization = serviceData.serviceOrgranization;
+      doctorForm.serviceOrgranization = user.Organization.name;
       doctorForm.servicePrice = serviceData.servicePrice;
       this.setState({ doctorForm });
     }
@@ -42,25 +48,31 @@ class AddService extends Form {
 
     if (serviceData) {
       const { doctorForm } = this.state;
-
+      const updateServiceObj = {
+        serviceName: doctorForm.serviceName,
+        serviceOrgranization: serviceData.serviceOrgranization._id,
+        servicePrice: doctorForm.servicePrice,
+      };
       try {
         await axios.put(
           "http://localhost:3000/api/services" + "/" + serviceData._id,
-          doctorForm
+          updateServiceObj
         );
         updateService();
         toast.success("Service Updated");
       } catch (ex) {
-        toast.error("Something went wrong");
+        toast.error(ex.response.data);
       }
 
       return;
     }
     if (!errors) {
       const { doctorForm } = this.state;
+      const jwt = localStorage.getItem("token");
+      const user = jwtDecode(jwt);
       const service = {
         serviceName: doctorForm.serviceName,
-        serviceOrgranization: doctorForm.serviceOrgranization,
+        serviceOrgranization: user.Organization._id,
         servicePrice: doctorForm.servicePrice,
       };
       try {
@@ -83,7 +95,7 @@ class AddService extends Form {
     return (
       <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
         <article className="doc-container ">
-          {successMessage && <ToastContainer />}
+          {/* {successMessage && <ToastContainer />} */}
           <article className="card-signup doc-form addservice add-service-form-wrapper">
             <header>
               <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
@@ -103,18 +115,20 @@ class AddService extends Form {
               {this.renderLabel("Organization", "serviceOrganization")}
             </article>
             <article className="add-service-input">
-              {/* {this.renderInput(
-                "text",
-                "serviceOrgranization",
-                "serviceOrgranization",
-                "Service Organization"
-              )} */}
-              {/* label, optionsArray, id, name */}
-              {this.renderDropDown(
+              {/* {this.renderDropDown(
                 "serviceOrgranization",
                 this.state.organizations,
                 "serviceOrgranization",
                 "serviceOrgranization"
+              )} */}
+              {this.renderInput(
+                "text",
+                "serviceOrgranization",
+                "serviceOrgranization",
+                "",
+                "",
+                "",
+                "readonly"
               )}
             </article>
             <article>{this.renderLabel("Price", "service_price")}</article>

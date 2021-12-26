@@ -129,26 +129,31 @@ class NurseForm extends Form {
       availabilityTo: doctorForm.availabilityTo,
       availabileDayFrom: doctorForm.availabileDayFrom,
       availabileDayTo: doctorForm.availabileDayTo,
+      Rating: userObj.staffMember.Rating,
+      RatingAvgCount: userObj.staffMember.RatingAvgCount,
       // email: doctorForm.email,
       phone: doctorForm.phone,
     };
 
     const updateUser = {
       fullName: doctorForm.fullName,
-      serviceID: doctorForm.serviceID,
-      Organization: user.Organization,
-      qualificationID: doctorForm.qualification,
-      availabilityFrom: doctorForm.availabilityFrom,
-      availabilityTo: doctorForm.availabilityTo,
-      availabileDayFrom: doctorForm.availabileDayFrom,
-      availabileDayTo: doctorForm.availabileDayTo,
-      phone: doctorForm.phone,
+      staffID: staffMemberData._id,
+      // serviceID: doctorForm.serviceID,
+      // Organization: user.Organization,
+      // qualificationID: doctorForm.qualification,
+      // availabilityFrom: doctorForm.availabilityFrom,
+      // availabilityTo: doctorForm.availabilityTo,
+      // availabileDayFrom: doctorForm.availabileDayFrom,
+      // availabileDayTo: doctorForm.availabileDayTo,
+      // phone: doctorForm.phone,
     };
     try {
       await axios.put(
         "http://localhost:3000/api/staff" + "/" + staffMemberData._id,
         updateStaff
       );
+
+      RefreshStaffMembers();
       RefreshStaffMembers();
       const { data: userObjInTable } = await axios.get(
         config.apiEndPoint + `/user/${staffMemberData._id}`
@@ -240,6 +245,23 @@ class NurseForm extends Form {
 
     toast.error("Something went wrong..");
   };
+
+  getUniqueArray = (array) => {
+    let unique = [];
+
+    for (let i = 0; i < array.length; i++) {
+      let GotDuplicated = false;
+      for (let j = 0; j < unique.length; j++) {
+        if (unique[j].serviceName === array[i].serviceName) {
+          GotDuplicated = true;
+          break;
+        }
+      }
+      if (!GotDuplicated) unique.push(array[i]);
+    }
+    return unique;
+  };
+
   async componentDidMount() {
     const { isEditModel } = this.props;
     this.setState({ isEditModel });
@@ -247,9 +269,11 @@ class NurseForm extends Form {
       "http://localhost:3000/api/qualification"
     );
 
-    const { data: services } = await axios.get(
+    let { data: services } = await axios.get(
       "http://localhost:3000/api/services"
     );
+
+    let uniqueServices = this.getUniqueArray(services.results);
     const { staffMemberData } = this.props;
 
     const doctorForm = { ...this.state.doctorForm };
@@ -271,10 +295,11 @@ class NurseForm extends Form {
 
       this.setState({ doctorForm });
     }
-    this.setState({ qualification, services: services.results });
+    this.setState({ qualification, services: uniqueServices });
   }
   render() {
-    const { qualification, successMessage, services } = this.state;
+    const { qualification, successMessage, services, servicesStaff } =
+      this.state;
     const { isEditModel } = this.props;
     return (
       <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
@@ -307,7 +332,8 @@ class NurseForm extends Form {
                     "Qualification",
                     qualification,
                     "docQualification",
-                    "qualification"
+                    "qualification",
+                    "Please Select Qualification"
                   )}
                 </article>
               </article>
@@ -361,7 +387,8 @@ class NurseForm extends Form {
                     "Staff",
                     services,
                     "serviceID",
-                    "serviceID"
+                    "serviceID",
+                    "Please Select Speciality"
                   )}
                 </article>
               </article>
@@ -385,7 +412,8 @@ class NurseForm extends Form {
                     "time",
                     this.state.timeArr,
                     "availabilityFrom",
-                    "availabilityFrom"
+                    "availabilityFrom",
+                    "Please Select Time"
                   )}
                   {/* {this.renderInput(
                     "time",
@@ -411,7 +439,8 @@ class NurseForm extends Form {
                     "time",
                     this.state.timeArr,
                     "availabilityTo",
-                    "availabilityTo"
+                    "availabilityTo",
+                    "Please Select Time"
                   )}
                 </article>
               </article>
@@ -430,7 +459,8 @@ class NurseForm extends Form {
                     "availabileDayFrom",
                     this.state.days,
                     "availabileDayFrom",
-                    "availabileDayFrom"
+                    "availabileDayFrom",
+                    "Please Select Availability"
                   )}
                 </article>
               </article>
@@ -444,7 +474,8 @@ class NurseForm extends Form {
                     "availabileDayTo",
                     this.state.days,
                     "availabileDayTo",
-                    "availabileDayTo"
+                    "availabileDayTo",
+                    "Please Select Availability"
                   )}
                 </article>
               </article>
