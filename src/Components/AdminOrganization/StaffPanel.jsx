@@ -24,7 +24,7 @@ import StaffEditModle from "./Modles/StaffEditModle";
 import AddStaffModle from "./Modles/AddStaffModle";
 import jwtDecode from "jwt-decode";
 
-const StaffPanel = () => {
+const StaffPanel = ({ setProgress }) => {
   const [staff, setStaff] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [searchedStaff, setSearchedStaff] = useState("");
@@ -47,6 +47,7 @@ const StaffPanel = () => {
     let page = "";
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
+    setProgress(10);
     if (searchedStaff) {
       //If user had searched a staff member
 
@@ -57,9 +58,9 @@ const StaffPanel = () => {
       const searchedResults = data.results.filter((d) =>
         d.fullName.toUpperCase().startsWith(searchedStaff.toUpperCase())
       );
-
+      setProgress(30);
       const totalDocuments = await getTotalDocuments();
-
+      setProgress(70);
       if (searchedStaff) {
         page = Math.ceil(searchedResults.length / pageSize);
       } else {
@@ -72,6 +73,7 @@ const StaffPanel = () => {
       if (searchedResults.length === 0 && searchedStaff) {
         toast.error("No Results Found!");
       }
+      setProgress(100);
       return;
     }
     //If user hasn't searched a staff member
@@ -79,8 +81,9 @@ const StaffPanel = () => {
     const { data } = await axios.get(
       `http://localhost:3000/api/staff?page=${pageSelected}&limit=${pageSize}&searchedString=${searchedStaff}&organizationID=${user.Organization._id}`
     );
+    setProgress(30);
     const totalDocuments = await getTotalDocuments();
-
+    setProgress(70);
     if (data.results.length > 0) {
       if (searchedStaff) {
         page = Math.ceil(totalDocuments.results.length / pageSize);
@@ -91,6 +94,7 @@ const StaffPanel = () => {
 
       setStaff(data.results);
     }
+    setProgress(100);
   };
   useEffect(async () => {
     PopulateTable();
@@ -100,10 +104,9 @@ const StaffPanel = () => {
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
     const { data: staff } = await axios.get(
-      `http://localhost:3000/api/staff?organizationID=${user.Organization._id}`
+      `http://localhost:3000/api/staff?page=${totalPages}&limit=${pageSize}&organizationID=${user.Organization._id}`
     );
-    if (staff.results.length > 9) window.location = "/admin/Nurse";
-    RefreshStaffMembers();
+    if (staff.results.length === 9) window.location = "/admin/Nurse";
 
     setStaff(staff.results);
   };
@@ -115,7 +118,7 @@ const StaffPanel = () => {
 
     try {
       await axios.delete("http://localhost:3000/api/staff" + "/" + id);
-      toast.success("Deleted");
+      // toast.success("Deleted");
       const { data: services } = await axios.get(
         "http://localhost:3000/api/staff"
       );
@@ -125,7 +128,14 @@ const StaffPanel = () => {
       await axios.delete(
         "http://localhost:3000/api/user" + "/" + userObjInTable._id
       );
-      RefreshStaffMembers();
+      const jwt = localStorage.getItem("token");
+      const user = jwtDecode(jwt);
+      const { data: servicesPerCurrentPage } = await axios.get(
+        `http://localhost:3000/api/staff?page=${pageSelected}&limit=${pageSize}&organizationID=${user.Organization._id}`
+      );
+      if (servicesPerCurrentPage.results.length === 0)
+        window.location = "/admin/Nurse";
+      // RefreshStaffMembers();
     } catch (ex) {
       if (ex.response && ex.response.status === 404) {
         toast.error("This post has already been deleted");
@@ -171,21 +181,26 @@ const StaffPanel = () => {
   };
   return (
     <article className="ServicePanel-wrapper ">
-      <article className="searchBar-wrapper">
-        <ToastContainer />
+      {(staff.length > 0 || searchedStaff) && (
+        <article className="searchBar-wrapper">
+          <ToastContainer />
 
-        <input
-          className="search-Bar"
-          type="text"
-          placeholder="Search A Staff Member..."
-          value={searchedStaff}
-          onChange={handleChange}
-        />
-        <button className="search-btn" onClick={PopulateTable}>
-          <FontAwesomeIcon icon={faSearch} style={{ marginRight: "0.6rem" }} />
-          Search
-        </button>
-      </article>
+          <input
+            className="search-Bar"
+            type="text"
+            placeholder="Search A Staff Member..."
+            value={searchedStaff}
+            onChange={handleChange}
+          />
+          <button className="search-btn" onClick={PopulateTable}>
+            <FontAwesomeIcon
+              icon={faSearch}
+              style={{ marginRight: "0.6rem" }}
+            />
+            Search
+          </button>
+        </article>
+      )}
       <AddStaffModle RefreshStaffMembers={RefreshStaffMembers} />
       {staff.length > 0 && (
         <article className="table-responsive">

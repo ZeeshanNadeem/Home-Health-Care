@@ -189,6 +189,8 @@ class Form extends React.Component {
     return staff;
   };
 
+  //Showing available staff on a paticular date
+  //Filling availableData array
   scheduleTime = async (date, doctorForm) => {
     const { service, organization } = this.state.doctorForm;
     if (service && organization) {
@@ -204,7 +206,7 @@ class Form extends React.Component {
         config.staff +
           `/?day=${dayNo}&service=${serviceGot}&organization=${orgGot}`
       );
-      let filteredStaff_ = [];
+      // let filteredStaff_ = [];
       const filteredStaff = await this.StaffLeaves(data);
 
       // filteredStaff_ = await this.StaffBookedSlots(filteredStaff);
@@ -213,6 +215,9 @@ class Form extends React.Component {
     }
   };
 
+  //When user selects an organization on a drop down on userRequest Page
+  //Populating the current organization's services in the next dropdown that
+  // is service
   populateServices = async (inputValue) => {
     const { data } = await axios.get(
       `http://localhost:3000/api/services?organization=${inputValue}`
@@ -316,7 +321,7 @@ class Form extends React.Component {
           {Conditionalservices.length > 0 && <option value="">{label}</option>}
           {Conditionalservices ? (
             Conditionalservices.map((option) => (
-              <option value={option.serviceName} key={option._id}>
+              <option value={option._id} key={option._id}>
                 {option.serviceName}
               </option>
             ))

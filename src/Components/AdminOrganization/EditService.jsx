@@ -16,7 +16,7 @@ import Pagination from "@mui/material/Pagination";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import jwtDecode from "jwt-decode";
 
-const EditService = () => {
+const EditService = ({ setProgress }) => {
   const [services, setServices] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSelected, setPageSelected] = useState(1);
@@ -39,7 +39,7 @@ const EditService = () => {
   //Or Without any searched Value.
   const PopulateTable = async () => {
     let page = "";
-
+    setProgress(10);
     //When Searched Value Exists.
     if (searchedService) {
       const jwt = localStorage.getItem("token");
@@ -47,6 +47,7 @@ const EditService = () => {
       const { data } = await axios.get(
         `http://localhost:3000/api/services?organization=${user.Organization._id}`
       );
+      setProgress(30);
       const searchedResults = data.results.filter((d) =>
         d.serviceName.toUpperCase().startsWith(searchedService.toUpperCase())
       );
@@ -59,11 +60,12 @@ const EditService = () => {
         page = Math.ceil(searchedResults.length / pageSize);
       }
       setTotalPages(page);
-
+      setProgress(70);
       setServices(searchedResults);
       if (searchedResults.length === 0 && searchedService) {
         toast.error("No Results Found!");
       }
+      setProgress(100);
       return;
     }
     const jwt = localStorage.getItem("token");
@@ -72,8 +74,9 @@ const EditService = () => {
     const { data } = await axios.get(
       `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}&searchedString=${searchedService}&organization=${user.Organization._id}`
     );
-    const totalDocuments = await getTotalDocuments();
 
+    const totalDocuments = await getTotalDocuments();
+    setProgress(70);
     if (data.results.length > 0) {
       if (searchedService) {
         page = Math.ceil(totalDocuments.results.length / pageSize);
@@ -84,6 +87,7 @@ const EditService = () => {
 
       setServices(data.results);
     }
+    setProgress(100);
   };
 
   useEffect(async () => {
@@ -97,14 +101,21 @@ const EditService = () => {
 
     try {
       await axios.delete("http://localhost:3000/api/services" + "/" + id);
-      toast.success("Deleted");
+      // toast.success("Deleted");
+
       const { data: services } = await axios.get(
         "http://localhost:3000/api/services"
       );
+      const { data: servicesPerCurrentPage } = await axios.get(
+        `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}&organization=${user.Organization._id}`
+      );
+      if (servicesPerCurrentPage.results.length === 0)
+        window.location = "/admin/Services";
     } catch (ex) {
       if (ex.response && ex.response.status === 404) {
         toast.error("This post has already been deleted");
       }
+
       setServices(orignalServices);
     }
   };
@@ -115,6 +126,11 @@ const EditService = () => {
       `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}&organization=${user.Organization._id}`
     );
 
+    const { data: allOrganizations } = await axios.get(
+      `http://localhost:3000/api/services?page=${totalPages}&limit=${pageSize}&organization=${user.Organization._id}`
+    );
+    if (allOrganizations.results.length === 9)
+      window.location = "/admin/Services";
     setServices(services.results);
   };
 
@@ -150,22 +166,24 @@ const EditService = () => {
   return (
     <article className="ServicePanel-wrapper ">
       <React.Fragment>
-        <article className="searchBar-wrapper">
-          <input
-            className="search-Bar"
-            type="text"
-            placeholder="Search A Service..."
-            value={searchedService}
-            onChange={handleChange}
-          />
-          <button className="search-btn" onClick={PopulateTable}>
-            <FontAwesomeIcon
-              icon={faSearch}
-              style={{ marginRight: "0.6rem" }}
+        {(services.length > 0 || searchedService) && (
+          <article className="searchBar-wrapper">
+            <input
+              className="search-Bar"
+              type="text"
+              placeholder="Search A Service..."
+              value={searchedService}
+              onChange={handleChange}
             />
-            Search
-          </button>
-        </article>
+            <button className="search-btn" onClick={PopulateTable}>
+              <FontAwesomeIcon
+                icon={faSearch}
+                style={{ marginRight: "0.6rem" }}
+              />
+              Search
+            </button>
+          </article>
+        )}
 
         <article className="editService-container editService-style">
           <ToastContainer />

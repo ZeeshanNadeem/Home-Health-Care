@@ -207,7 +207,10 @@ class UserRequestService extends Form {
       //Logic to check userSelected Time lies between
       //staff's duty or not
       for (let s = StaffAvailableForm; s <= StaffAvailableTo; s++) {
-        if (s === userSelectedTime_) {
+        if (
+          s === userSelectedTime_ &&
+          userSelectedTime_ + 2 <= StaffAvailableTo
+        ) {
           liesBetween = true;
           break;
         }
@@ -240,8 +243,10 @@ class UserRequestService extends Form {
             //Checking If staff booked service time
             //lies between user requested time
             if (
-              userSelectedTime_ >= bookedServiceFrom_ &&
-              userSelectedTime_ <= bookedServiceTo_
+              (userSelectedTime_ >= bookedServiceFrom_ &&
+                userSelectedTime_ < bookedServiceTo_) ||
+              (userSelectedTime_ + 2 > bookedServiceFrom_ &&
+                userSelectedTime_ + 2 < bookedServiceTo_)
             ) {
               const staffDutyOnSameDay = this.MatchUserSelected(
                 userRequests[i].Schedule
@@ -421,168 +426,168 @@ class UserRequestService extends Form {
     return (
       <div className="doc-container user-request-wrapper user-req">
         <ToastContainer />
-        <div className="card-signup doc-form style-User-Request user-req-card user-req-layout">
-          <header>
-            <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
-              Schedule A Service
-            </h1>
-          </header>
-          {/* <article>{this.renderLabel("Organization", "serviceFor")}</article>
-            <article>
-              {this.renderDropDown("Profession", profession, "serviceFor")}
-            </article> */}
-          <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
-            <article className="row row-grid">
-              <article
-                className={`user-request-input-wrapper ${this.state.errorClass}`}
-              >
-                <article>{this.renderLabel("Full Name", "fullName")}</article>
-                <article>
-                  {this.renderInput(
-                    "text",
-                    "fullname",
-                    "fullname",
-                    "Full Name"
-                  )}
-                </article>
-              </article>
-              <article
-                className={`user-request-input-wrapper ${this.state.errorClass}`}
-              >
-                <article>
-                  {this.renderLabel("Organization", "serviceFor")}
-                </article>
-                <article>
-                  {this.renderDropDown(
-                    "service For",
-                    organization,
-                    "serviceOrgranization",
-                    "organization",
-                    "Please Select an Organization"
-                  )}
-                </article>
-              </article>
-            </article>
-
-            <article className="row">
-              <article
-                className={`user-request-input-wrapper ${this.state.errorClass}`}
-              >
-                <article>{this.renderLabel("Service", "service")}</article>
-                <article>
-                  {this.renderConditionalDropDown(
-                    "service",
-                    "service",
-                    "Please Select a Service"
-                  )}
-                </article>
-              </article>
-              <article
-                className={`user-request-input-wrapper ${this.state.errorClass}`}
-              >
-                <article>{this.renderLabel("Schedule", "schedule")}</article>
-                <article>
-                  {this.renderInput(
-                    "date",
-                    "schedule",
-                    "schedule",
-                    "Schedule a Meeting",
-                    this.state.minDate,
-                    this.state.maxDate
-                  )}
+        <article className="wrapper-user-req">
+          <div className="card-signup doc-form style-User-Request user-req-card user-req-layout">
+            <header>
+              <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
+                Schedule A Service
+              </h1>
+            </header>
+            {/* <article>{this.renderLabel("Organization", "serviceFor")}</article>
+              <article>
+                {this.renderDropDown("Profession", profession, "serviceFor")}
+              </article> */}
+            <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
+              <article className="row row-grid">
+                <article
+                  className={`user-request-input-wrapper ${this.state.errorClass}`}
+                >
+                  <article>{this.renderLabel("Full Name", "fullName")}</article>
+                  <article>
+                    {this.renderInput(
+                      "text",
+                      "fullname",
+                      "fullname",
+                      "Full Name"
+                    )}
+                  </article>
                 </article>
                 <article
                   className={`user-request-input-wrapper ${this.state.errorClass}`}
                 >
-                  <div>
-                    <CheckAvailability
-                      availabilityData={availabilityData}
-                      userScheduledDate={schedule}
-                    />
-                  </div>
-                </article>
-              </article>
-            </article>
-
-            <article className="row row-grid email-txt">
-              <article className="email-label">
-                <article>{this.renderLabel("Email", "Email")}</article>
-                <article>
-                  {this.renderInput("email", "email", "email", "Email")}
-                </article>
-              </article>
-
-              <article>
-                <article>{this.renderLabel("Phone No", "phoneno")}</article>
-                <article>
-                  {this.renderInput("number", "phoneno", "phoneno", "Phone No")}
-                </article>
-              </article>
-            </article>
-
-            <article className="row row-grid">
-              <article>
-                <article
-                  className={`user-request-input-wrapper ${this.state.errorClass}`}
-                >
-                  <article>{this.renderLabel("Time", "from")}</article>
-                  {/* <article>
-                      {this.renderInput(
-                        "time",
-                        "ServiceNeededFrom",
-                        "ServiceNeededFrom",
-                        "ServiceNeededFrom",
-                        "3600000"
-                      )}
-                    </article> */}
-
+                  <article>
+                    {this.renderLabel("Organization", "serviceFor")}
+                  </article>
                   <article>
                     {this.renderDropDown(
-                      "time",
-                      this.state.timeArr,
-                      "ServiceNeededFrom",
-                      "ServiceNeededFrom"
+                      "service For",
+                      organization,
+                      "serviceOrgranization",
+                      "organization",
+                      "Please Select an Organization"
                     )}
                   </article>
                 </article>
               </article>
-              <article>
-                <article>{this.renderLabel("City", "city")}</article>
+              <article className="row">
+                <article
+                  className={`user-request-input-wrapper ${this.state.errorClass}`}
+                >
+                  <article>{this.renderLabel("Service", "service")}</article>
+                  <article>
+                    {this.renderConditionalDropDown(
+                      "service",
+                      "service",
+                      "Please Select a Service"
+                    )}
+                  </article>
+                </article>
+                <article
+                  className={`user-request-input-wrapper ${this.state.errorClass}`}
+                >
+                  <article>{this.renderLabel("Schedule", "schedule")}</article>
+                  <article>
+                    {this.renderInput(
+                      "date",
+                      "schedule",
+                      "schedule",
+                      "Schedule a Meeting",
+                      this.state.minDate,
+                      this.state.maxDate
+                    )}
+                  </article>
+                  <article
+                    className={`user-request-input-wrapper ${this.state.errorClass}`}
+                  >
+                    <div>
+                      <CheckAvailability
+                        availabilityData={availabilityData}
+                        userScheduledDate={schedule}
+                      />
+                    </div>
+                  </article>
+                </article>
+              </article>
+              <article className="row row-grid email-txt">
+                <article className="email-label">
+                  <article>{this.renderLabel("Email", "Email")}</article>
+                  <article>
+                    {this.renderInput("email", "email", "email", "Email")}
+                  </article>
+                </article>
                 <article>
-                  {this.renderDropDown(
-                    "City",
-                    this.state.cites,
-                    "city",
-                    "city",
-                    "Please Select Your City"
-                  )}
+                  <article>{this.renderLabel("Phone No", "phoneno")}</article>
+                  <article>
+                    {this.renderInput(
+                      "number",
+                      "phoneno",
+                      "phoneno",
+                      "Phone No"
+                    )}
+                  </article>
                 </article>
               </article>
-            </article>
-
-            <article
-              className={`user-request-input-wrapper ${this.state.errorClass} address-grid`}
-            >
-              <article>
-                <article>{this.renderLabel("Address", "Address")}</article>
-                <article className="address-txt">
-                  {this.renderMultiLineTextField(
-                    this.state.height,
-                    this.state.adressWidth,
-                    "address",
-                    "address"
-                  )}
+              <article className="row row-grid">
+                <article>
+                  <article
+                    className={`user-request-input-wrapper ${this.state.errorClass}`}
+                  >
+                    <article>{this.renderLabel("Time", "from")}</article>
+                    {/* <article>
+                        {this.renderInput(
+                          "time",
+                          "ServiceNeededFrom",
+                          "ServiceNeededFrom",
+                          "ServiceNeededFrom",
+                          "3600000"
+                        )}
+                      </article> */}
+                    <article>
+                      {this.renderDropDown(
+                        "time",
+                        this.state.timeArr,
+                        "ServiceNeededFrom",
+                        "ServiceNeededFrom"
+                      )}
+                    </article>
+                  </article>
+                </article>
+                <article>
+                  <article>{this.renderLabel("City", "city")}</article>
+                  <article>
+                    {this.renderDropDown(
+                      "City",
+                      this.state.cites,
+                      "city",
+                      "city",
+                      "Please Select Your City"
+                    )}
+                  </article>
                 </article>
               </article>
-            </article>
-
-            <article
-              className={`btn-user-request ${this.state.errorClass} schedule-btn`}
-            >
-              {this.renderBtn("Schedule")}
-            </article>
-          </form>
-        </div>
+              <article
+                className={`user-request-input-wrapper ${this.state.errorClass} address-grid`}
+              >
+                <article>
+                  <article>{this.renderLabel("Address", "Address")}</article>
+                  <article className="address-txt">
+                    {this.renderMultiLineTextField(
+                      this.state.height,
+                      this.state.adressWidth,
+                      "address",
+                      "address"
+                    )}
+                  </article>
+                </article>
+              </article>
+              <article
+                className={`btn-user-request ${this.state.errorClass} schedule-btn`}
+              >
+                {this.renderBtn("Schedule")}
+              </article>
+            </form>
+          </div>
+        </article>
       </div>
     );
   }

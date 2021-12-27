@@ -31,7 +31,7 @@ class NavBar extends Component {
   };
   UserNameNav = () => {
     const { user } = this.state;
-    this.props.setProgress(30);
+    this.props.setProgress(10);
     return (
       <li className="nav-li">
         <span className="current-user">

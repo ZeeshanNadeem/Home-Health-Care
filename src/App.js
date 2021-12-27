@@ -93,7 +93,7 @@ const App = () => {
         exact
         path="/"
         render={(props) =>
-          isLoggedIn ? (
+          isLoggedIn !== null ? (
             <Home setProgress={setProgress} {...props} />
           ) : (
             <Login setProgress={setProgress} {...props} />
@@ -106,7 +106,6 @@ const App = () => {
       <Route
         exact
         path="/Signup"
-        component={isLoggedIn ? Home : SignUp}
         render={(props) =>
           isLoggedIn ? (
             <Home setProgress={setProgress} {...props} />

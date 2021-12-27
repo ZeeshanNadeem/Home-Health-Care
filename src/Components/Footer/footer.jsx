@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Footer = ({ setProgress }) => {
   return (
     <div>
-      {setProgress(90)}
-      <footer id="footer" classNameName="footer-1">
+      {setProgress(60)}
+      <footer id="footer" className="footer-1">
         <div className="main-footer widgets-dark typo-light">
           <div className="container">
             <div className="row-footer">

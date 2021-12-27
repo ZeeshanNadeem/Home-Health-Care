@@ -58,6 +58,8 @@ class SignUpAsOrganization extends Form {
     }
   };
   render() {
+    const year = new Date().getFullYear();
+    const dobSignUpMaxDate = year + "-12-31";
     return (
       <React.Fragment>
         <NavBar />
@@ -80,7 +82,14 @@ class SignUpAsOrganization extends Form {
                 {this.renderLabel("Date of Birth", "dob")}
               </article>
               <article>
-                {this.renderInput("date", "dateOfBirth", "dateOfBirth")}
+                {this.renderInput(
+                  "date",
+                  "dateOfBirth",
+                  "dateOfBirth",
+                  "",
+                  "",
+                  dobSignUpMaxDate
+                )}
               </article>
               <article className="signup-label">
                 {this.renderLabel("Email", "email")}

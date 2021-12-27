@@ -269,11 +269,18 @@ class NurseForm extends Form {
       "http://localhost:3000/api/qualification"
     );
 
+    const jwt = localStorage.getItem("token");
+    const user = jwtDecode(jwt);
+
     let { data: services } = await axios.get(
-      "http://localhost:3000/api/services"
+      `http://localhost:3000/api/services?organization=${user.Organization._id}`
     );
 
-    let uniqueServices = this.getUniqueArray(services.results);
+    // let { data: services } = await axios.get(
+    //   "http://localhost:3000/api/services"
+    // );
+
+    // let  uniqueServices= this.getUniqueArray(services.results);
     const { staffMemberData } = this.props;
 
     const doctorForm = { ...this.state.doctorForm };
@@ -295,7 +302,7 @@ class NurseForm extends Form {
 
       this.setState({ doctorForm });
     }
-    this.setState({ qualification, services: uniqueServices });
+    this.setState({ qualification, services: services.results });
   }
   render() {
     const { qualification, successMessage, services, servicesStaff } =

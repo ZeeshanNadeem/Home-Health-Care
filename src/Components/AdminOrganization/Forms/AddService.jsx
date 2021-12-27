@@ -76,7 +76,10 @@ class AddService extends Form {
         servicePrice: doctorForm.servicePrice,
       };
       try {
-        await axios.post("http://localhost:3000/api/services", service);
+        const { data: services } = await axios.post(
+          "http://localhost:3000/api/services",
+          service
+        );
         this.setState({ successMessage: "Service has been added" });
         toast.success("Service has been added");
 

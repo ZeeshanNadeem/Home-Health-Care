@@ -108,7 +108,8 @@ class ConfirmMeeting extends Form {
                       Timing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span className="style-meeting-detials-2">
-                      {data.ServiceNeededFrom} to {data.ServiceNeededTo}
+                      {data.ServiceNeededFrom} to {data.ServiceNeededTo}&nbsp;
+                      (Travel Time Included)
                     </span>
                   </p>
 

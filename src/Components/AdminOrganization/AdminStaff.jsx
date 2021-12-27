@@ -15,15 +15,17 @@ import { TextField } from "@mui/material";
 import Pagination from "@mui/material/Pagination";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
-const AdminStaff = () => {
+const AdminStaff = ({ setProgress }) => {
   const [services, setServices] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSelected, setPageSelected] = useState(1);
   const [searchedService, setSearchedService] = useState("");
   useEffect(async () => {
+    setProgress(10);
     const { data } = await axios.get(
       `http://localhost:3000/api/services?page=${pageSelected}&limit=${4}&searchedString=${searchedService}`
     );
+    setProgress(30);
     const { data: totalDocuments } = await axios.get(
       `http://localhost:3000/api/services`
     );
@@ -33,10 +35,11 @@ const AdminStaff = () => {
     } else {
       page = Math.ceil(totalDocuments.results.length / 4);
     }
-
+    setProgress(70);
     setTotalPages(page);
 
     setServices(data.results);
+    setProgress(100);
   }, [pageSelected]);
 
   const deleteService = async (id) => {

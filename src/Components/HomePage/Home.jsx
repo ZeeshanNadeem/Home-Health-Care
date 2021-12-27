@@ -12,9 +12,13 @@ const Home = ({ setProgress }) => {
   const [user, setUser] = React.useState([]);
   useEffect(() => {
     const jwt = localStorage.getItem("token");
-    const user = jwtDecode(jwt);
-    setUser(user);
-    if (user.isOrganizationAdmin === "pending") {
+    let userGot = "";
+    if (jwt) {
+      userGot = jwtDecode(jwt);
+      setUser(userGot);
+    }
+
+    if (userGot.isOrganizationAdmin === "pending") {
       toast.info("App Admin will respond to your request shortly");
       toast.info("Then you can manage your organization");
     }

@@ -48,8 +48,8 @@ class Login extends Form {
       <React.Fragment>
         <NavBar />
         <form onSubmit={this.handleSubmit}>
-          <article className="signup-page login-wrapper login-home-pg">
-            <main className="card-signup card-style animate__animated animate__fadeInLeft login-card login-style-card">
+          <article className="signup-page login-wrapper login-home-pg ">
+            <main className="login- card-signup card-style animate__animated animate__fadeInLeft login-card login-style-card">
               <header>
                 <h1 className="sign-up-header-text animate__animated animate__zoomIn">
                   Login
@@ -61,15 +61,8 @@ class Login extends Form {
               <article>
                 {this.renderInput("password", "password", "password")}
               </article>
-              <article className="remember-me-chkBox">
-                {this.renderCheckBox(
-                  "chkbox",
-                  "chkbox",
-                  "addCheckBox",
-                  "Remember Me"
-                )}
-              </article>
-              <article className="login-page-btn">
+
+              <article className="login-page-btn login-btn-styling-">
                 {this.renderBtn("Login")}
               </article>
             </main>

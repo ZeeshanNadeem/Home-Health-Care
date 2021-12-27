@@ -503,10 +503,6 @@ element.style {
   color: #9b0000;
 }
 
-.user-req {
-  overflow-y: auto;
-}
-
 .css-1ygcj2i-MuiTableCell-root {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-weight: 500;
@@ -655,4 +651,8 @@ li.nav-li {
 }
 .meeting-info-heading {
   font-weight: 900;
+}
+
+.login-btn-styling- {
+  margin-top: 2rem;
 }

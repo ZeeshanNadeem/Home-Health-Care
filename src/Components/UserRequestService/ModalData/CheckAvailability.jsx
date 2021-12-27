@@ -34,11 +34,16 @@ const CheckAvailability = ({ availabilityData, userScheduledDate }) => {
     } else return false;
   };
 
+  // const getAvailability=(bookedSlotsArr,StaffArr){
+  //   const { data: allBookedSlots } = await axios.get(
+  //       `config.apiEndPoint + /staffLeave`
+  //     );
+  // }
   const staffNo = () => {
     stafCount = stafCount + 1;
     return stafCount;
   };
-  console.log("Availability ::", availabilityData);
+
   return (
     <article>
       {availabilityData.length > 0 ? (
@@ -73,19 +78,10 @@ const CheckAvailability = ({ availabilityData, userScheduledDate }) => {
           <tbody>
             {availabilityData.map((data) => (
               <tr key={data._id}>
-                {/* <td className="availability-table-th">
-                {data.service.serviceName} {staffNo()}
-              </td> */}
-                {/* <td className="availability-table-th">
-                {data.serviceOrganization.name}
-              </td> */}
-                {/* <td className="availability-table-th">{data.staffType.name}</td> */}
                 <td className="availability-table-th">
                   {data.availabilityFrom} to {data.availabilityTo}
                 </td>
-                {/* <td className="availability-table-th">
-                {data.availabileDayFrom} to {data.availabileDayTo}
-              </td> */}
+
                 {userRequests.map((bookedSlots) => (
                   <td className="availability-table-th" key={bookedSlots._id}>
                     {checkBookedSlots(bookedSlots, data) ? (
@@ -110,9 +106,7 @@ const CheckAvailability = ({ availabilityData, userScheduledDate }) => {
           </tbody>
         </table>
       ) : (
-        <p className="check-availability-tag">
-          NONE, Please Select Service and Organization first
-        </p>
+        <p className="check-availability-tag">Not Available Today!</p>
       )}
     </article>
   );

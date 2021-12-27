@@ -105,7 +105,7 @@ a.google.btn {
   margin-top: 1rem;
 }
 .login-card {
-  height: 25rem !important;
+  height: 24.4rem !important;
 }
 .login-page-btn {
   margin-top: 1.3rem;
@@ -330,8 +330,14 @@ textarea#address {
 .user-req-card {
   height: 45rem;
 }
+.user-req {
+  overflow-y: auto !important;
+}
 
 @media screen and (min-width: 200px) and (max-width: 449px) {
+  .user-req {
+    overflow-y: auto;
+  }
   .btn-user-request {
     margin-top: 0 !important;
   }
@@ -412,64 +418,11 @@ textarea#address {
   }
 }
 
-@media screen and (min-width: 1000px) {
-  article.email-label {
-    margin-top: 0 !important;
-  }
-  .schedule-btn {
-    margin-top: 1rem;
-  }
-  p.error.er {
-    margin-top: -0.4rem !important;
-  }
-  article.time.user-request-input-wrapper.errorClass {
-    margin-bottom: 0.2rem;
-  }
-  .address-grid {
-    display: grid;
-    grid-template: repeat(1, 11rem) / repeat(1, 44.5rem);
-
-    align-items: center;
-    justify-content: center;
-    align-content: center;
-  }
-
-  article.user-request-input-wrapper.errorClass {
-    align-self: flex-start;
-  }
-  article.user-request-input-wrapper.undefined {
-    align-self: self-start;
-  }
-
-  .user-req-card,
-  .style-User-Request {
-    width: 49rem !important;
-    height: 43rem !important;
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-  }
-  .address-txt {
-    /* width: 20rem; */
-  }
-  .row {
-    display: grid !important;
-    grid-template: repeat(1, 6.4rem) / repeat(2, 23rem);
-    justify-items: center;
-    /* align-items: center; */
-    justify-content: center;
-    align-content: center;
-  }
-
-  article.row.row-grid {
-    grid-template: repeat(1, 5rem) / repeat(2, 23rem);
-    grid-template: repeat;
-  }
-  .user-req-layout {
-    max-width: 50rem;
-  }
-}
-
 @media screen and (min-width: 450px) and (max-width: 899px) {
+  .user-req {
+    overflow-y: auto;
+  }
+
   .btn-user-request {
     margin-top: 0 !important;
   }
@@ -531,6 +484,10 @@ textarea#address {
 }
 
 @media screen and (min-width: 900px) {
+  .user-req {
+    overflow-y: auto;
+  }
+
   .btn-user-request {
     margin-top: 0 !important;
   }
@@ -619,6 +576,66 @@ textarea#address {
   }
   select#availabileDayTo {
     margin-left: -8px;
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .user-req {
+    overflow-y: hidden !important;
+  }
+  article.email-label {
+    margin-top: 0 !important;
+  }
+  .schedule-btn {
+    margin-top: 1rem;
+  }
+  p.error.er {
+    margin-top: -0.4rem !important;
+  }
+  article.time.user-request-input-wrapper.errorClass {
+    margin-bottom: 0.2rem;
+  }
+  .address-grid {
+    display: grid;
+    grid-template: repeat(1, 11rem) / repeat(1, 44.5rem);
+
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+  }
+
+  article.user-request-input-wrapper.errorClass {
+    align-self: flex-start;
+  }
+  article.user-request-input-wrapper.undefined {
+    align-self: self-start;
+  }
+
+  .user-req-card,
+  .style-User-Request {
+    width: 49rem !important;
+    height: 43rem !important;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
+  .address-txt {
+    /* width: 20rem; */
+  }
+  .row {
+    display: grid !important;
+    grid-template: repeat(1, 6.4rem) / repeat(2, 23rem);
+    justify-items: center;
+    /* align-items: center; */
+    justify-content: center;
+    align-content: center;
+  }
+
+  article.row.row-grid {
+    grid-template: repeat(1, 5rem) / repeat(2, 23rem);
+    grid-template: repeat;
+  }
+  .user-req-layout {
+    max-width: 50rem;
   }
 }
 

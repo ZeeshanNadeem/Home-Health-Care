@@ -22,30 +22,69 @@ export default function CheckAvailabilityPopover({
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+  const width = window.innerWidth;
+  console.log("WIdht:", width);
+  let tabMode = false;
+  if (width < 1000) {
+    tabMode = true;
+  }
 
   return (
     <span className="availability-style">
-      <span onMouseEnter={handleClick} className="check-availability">
-        Check-Today's-Availability
-        {availabilityData.length > 0 && (
-          <FontAwesomeIcon icon={faCheckCircle} style={{ color: "#4E9F3D" }} />
-        )}
-      </span>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onMouseOut={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-      >
-        <CheckAvailability
-          availabilityData={availabilityData}
-          userScheduledDate={userScheduledDate}
-        />
-      </Popover>
+      {tabMode ? (
+        <span onClick={handleClick} className="check-availability">
+          Check-Today's-Availability
+          {availabilityData.length > 0 && (
+            <FontAwesomeIcon
+              icon={faCheckCircle}
+              style={{ color: "#4E9F3D" }}
+            />
+          )}
+        </span>
+      ) : (
+        <span onMouseEnter={handleClick} className="check-availability">
+          Check-Today's-Availability
+          {availabilityData.length > 0 && (
+            <FontAwesomeIcon
+              icon={faCheckCircle}
+              style={{ color: "#4E9F3D" }}
+            />
+          )}
+        </span>
+      )}
+      {tabMode ? (
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClick={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+        >
+          <CheckAvailability
+            availabilityData={availabilityData}
+            userScheduledDate={userScheduledDate}
+          />
+        </Popover>
+      ) : (
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onMouseOut={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+        >
+          <CheckAvailability
+            availabilityData={availabilityData}
+            userScheduledDate={userScheduledDate}
+          />
+        </Popover>
+      )}
     </span>
   );
 }
