@@ -318,42 +318,7 @@ class UserRequestService extends Form {
   render() {
     const { services, organization, availabilityData } = this.state;
     const { schedule } = this.state.doctorForm;
-    return (
-      <div className="doc-container user-request-wrapper">
-        <ToastContainer />
-        <div className="card-signup doc-form style-User-Request">
-          <header>
-            <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
-              Schedule A Service
-            </h1>
-          </header>
-
-          {/* <article>{this.renderLabel("Organization", "serviceFor")}</article>
-          <article>
-            {this.renderDropDown("Profession", profession, "serviceFor")}
-          </article> */}
-          <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
-            <article className="user-request-input-wrapper">
-              <article>{this.renderLabel("Address", "Address")}</article>
-              <article>
-                {this.renderMultiLineTextField("3", "44", "address", "address")}
-              </article>
-            </article>
-
-            <article className="user-request-input-wrapper">
-              <article>{this.renderLabel("Phone No", "phoneno")}</article>
-              <article>
-                {this.renderInput("number", "phoneno", "phoneno", "Phone No")}
-              </article>
-            </article>
-
-            <article className="btn-user-request">
-              {this.renderBtn("Schedule")}
-            </article>
-          </form>
-        </div>
-      </div>
-    );
+    return <div></div>;
   }
 }
 

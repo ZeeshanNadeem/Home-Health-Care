@@ -81,12 +81,17 @@ class ConfirmMeeting extends Form {
             <main className="confirm-meeting-card card-signup card-style animate__animated animate__fadeInLeft">
               {this.state.confirmMeeting.map((data) => (
                 <article>
+                  {/* <span
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  > */}
                   <h4
                     className="meeting-info-heading"
                     style={{ marginBottom: "2rem" }}
                   >
                     Meeting Confirmation
                   </h4>
+                  {/* <button className="payment-btn">Payment On Arrival</button> */}
+                  {/* </span> */}
                   <p>
                     <span className="confirm-title">
                       Name&nbsp;&nbsp;&nbsp;&nbsp;

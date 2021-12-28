@@ -8,7 +8,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-const OrganizationAdminRequests = () => {
+const OrganizationAdminRequests = ({ setProgress }) => {
   const [pendingAdmins, setPendingAdmins] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSelected, setPageSelected] = useState(1);
@@ -16,8 +16,14 @@ const OrganizationAdminRequests = () => {
   const [pageSize] = useState(9);
 
   useEffect(() => {
+    setProgress(0);
+    setProgress(10);
+    setProgress(20);
+
     getPendingOrganizationAdmins();
+    setProgress(40);
     fetchOrganizations();
+    setProgress(100);
   }, [pageSelected, searchedAdmin]);
 
   const getPendingOrganizationAdmins = async () => {

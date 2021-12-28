@@ -26,13 +26,21 @@ const Home = ({ setProgress }) => {
   }, []);
   return (
     <div>
+      {setProgress(0)}
+
       <NavBar setProgress={setProgress} />
+      {setProgress(10)}
       <ToastContainer />
+      {setProgress(20)}
+
       <Carasol setProgress={setProgress} />
 
+      {setProgress(40)}
       <ServicesCards setProgress={setProgress} />
+      {setProgress(80)}
 
       <Footer setProgress={setProgress} />
+      {setProgress(100)}
     </div>
   );
 };

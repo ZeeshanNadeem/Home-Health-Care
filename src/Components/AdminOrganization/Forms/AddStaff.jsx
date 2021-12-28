@@ -29,31 +29,31 @@ class NurseForm extends Form {
     days: [
       {
         name: "Monday",
-        _id: 0,
-      },
-      {
-        name: "Tuesday",
         _id: 1,
       },
       {
-        name: "Wednesday",
+        name: "Tuesday",
         _id: 2,
       },
       {
-        name: "Thrusday",
+        name: "Wednesday",
         _id: 3,
       },
       {
-        name: "Friday",
+        name: "Thrusday",
         _id: 4,
       },
       {
-        name: "Saturday",
+        name: "Friday",
         _id: 5,
       },
       {
-        name: "Sunday",
+        name: "Saturday",
         _id: 6,
+      },
+      {
+        name: "Sunday",
+        _id: 7,
       },
     ],
     timeArr: [

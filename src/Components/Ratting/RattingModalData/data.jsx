@@ -9,7 +9,7 @@ const RattingModelData = ({ row, updateRating }) => {
   const ratingChanged = async (ratting) => {
     const RatingAvg = row.staffMemberAssigned.RatingAvgCount + 1;
     let rating_ = (row.staffMemberAssigned.Rating + ratting) / RatingAvg;
-    console.log("row::", row);
+
     try {
       await axios.patch(
         config.apiEndPoint + `/staff/${row.staffMemberAssigned._id}`,

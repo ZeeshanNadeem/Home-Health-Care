@@ -6,7 +6,6 @@ import urine from "../../Images/urine9.jpg";
 const ServicesCards = ({ setProgress }) => {
   return (
     <React.Fragment>
-      {setProgress(40)}
       <article style={{ textAlign: "center", marginTop: "4.5rem" }}>
         <h2 className="msg-above-home-cards animate__animated animate__fadeInUp">
           Discover Home Heath Care's <strong>ONLINE</strong> SERVICES!{" "}

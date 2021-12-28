@@ -20,7 +20,6 @@ class NavBar extends Component {
       const jwt = localStorage.getItem("token");
       const user = jwtDecode(jwt);
       this.setState({ user });
-      this.props.setProgress(10);
     } catch (ex) {}
   }
 
@@ -31,7 +30,7 @@ class NavBar extends Component {
   };
   UserNameNav = () => {
     const { user } = this.state;
-    this.props.setProgress(10);
+
     return (
       <li className="nav-li">
         <span className="current-user">

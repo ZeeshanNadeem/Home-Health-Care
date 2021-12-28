@@ -23,7 +23,7 @@ export default function CheckAvailabilityPopover({
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
   const width = window.innerWidth;
-  console.log("WIdht:", width);
+
   let tabMode = false;
   if (width < 1000) {
     tabMode = true;
@@ -42,7 +42,11 @@ export default function CheckAvailabilityPopover({
           )}
         </span>
       ) : (
-        <span onMouseEnter={handleClick} className="check-availability">
+        <span
+          // onMouseEnter={handleClick}
+          onClick={handleClick}
+          className="check-availability"
+        >
           Check-Today's-Availability
           {availabilityData.length > 0 && (
             <FontAwesomeIcon
@@ -73,7 +77,8 @@ export default function CheckAvailabilityPopover({
           id={id}
           open={open}
           anchorEl={anchorEl}
-          onMouseOut={handleClose}
+          // onMouseOut={handleClose}
+          onClick={handleClose}
           anchorOrigin={{
             vertical: "bottom",
             horizontal: "left",

@@ -171,12 +171,13 @@ const StaffPanel = ({ setProgress }) => {
   };
 
   const checkDay = (availabileDay) => {
-    if (availabileDay === 0) return "Monday";
-    else if (availabileDay === 1) return "Tuesday";
-    else if (availabileDay === 2) return "Wednesday";
-    else if (availabileDay === 3) return "Thrusday";
-    else if (availabileDay == 4) return "Friday";
-    else if (availabileDay === 5) return "Saturday";
+    if (availabileDay === 7) return "Sunday";
+    else if (availabileDay === 1) return "Monday";
+    else if (availabileDay === 2) return "Tuesday";
+    else if (availabileDay === 3) return "Wednesday";
+    else if (availabileDay === 4) return "Thrusday";
+    else if (availabileDay === 5) return "Friday";
+    else if (availabileDay === 6) return "Saturday";
     else return "Sunday";
   };
   return (

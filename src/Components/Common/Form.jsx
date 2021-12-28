@@ -93,26 +93,20 @@ class Form extends React.Component {
             let userScheduleDateMonth = scheduleArr[1];
             let userScheduleDateDay = scheduleArr[2];
 
-            leaveFormYear = leaveFormYear.replace(/^(?:00:)?0?/, "");
-            leaveFormMonth = leaveFormMonth.replace(/^(?:00:)?0?/, "");
-            leaveFromDay = leaveFromDay.replace(/^(?:00:)?0?/, "");
+            leaveFormYear = leaveFormYear.replace(/^(?:)?0?/, "");
+            leaveFormMonth = leaveFormMonth.replace(/^(?:)?0?/, "");
+            leaveFromDay = leaveFromDay.replace(/^(?:)?0?/, "");
 
-            leaveToYear = leaveToYear.replace(/^(?:00:)?0?/, "");
-            leaveToMonth = leaveToMonth.replace(/^(?:00:)?0?/, "");
-            leaveToDay = leaveToDay.replace(/^(?:00:)?0?/, "");
+            leaveToYear = leaveToYear.replace(/^(?:)?0?/, "");
+            leaveToMonth = leaveToMonth.replace(/^(?:)?0?/, "");
+            leaveToDay = leaveToDay.replace(/^(?:)?0?/, "");
 
-            userScheduleDateYear = userScheduleDateYear.replace(
-              /^(?:00:)?0?/,
-              ""
-            );
+            userScheduleDateYear = userScheduleDateYear.replace(/^(?:)?0?/, "");
             userScheduleDateMonth = userScheduleDateMonth.replace(
-              /^(?:00:)?0?/,
+              /^(?:)?0?/,
               ""
             );
-            userScheduleDateDay = userScheduleDateDay.replace(
-              /^(?:00:)?0?/,
-              ""
-            );
+            userScheduleDateDay = userScheduleDateDay.replace(/^(?:)?0?/, "");
 
             if (
               userScheduleDateYear >= leaveFormYear &&
@@ -158,17 +152,17 @@ class Form extends React.Component {
           if (userRequests[j].Schedule === schedule) {
             // let userSelectedTime = ServiceNeededFrom.split(":");
             // let userSelectedTime_ = userSelectedTime[0];
-            // userSelectedTime_ = userSelectedTime_.replace(/^(?:00:)?0?/, "");
+            // userSelectedTime_ = userSelectedTime_.replace(/^(?:)?0?/, "");
             // let userRequestsArr = userRequests[i].ServiceNeededFrom.split(":");
             // let userRequestServiceNeededFrom = userRequestsArr[0];
             // userRequestServiceNeededFrom = userRequestServiceNeededFrom.replace(
-            //   /^(?:00:)?0?/,
+            //   /^(?:)?0?/,
             //   ""
             // );
             // let userRequestsToArr = userRequests[i].ServiceNeededTo.split(":");
             // let userRequestServiceNeededTo = userRequestsToArr[0];
             // userRequestServiceNeededTo = userRequestServiceNeededTo.replace(
-            //   /^(?:00:)?0?/,
+            //   /^(?:)?0?/,
             //   ""
             // );
             // if (
@@ -198,14 +192,15 @@ class Form extends React.Component {
       const day = m.format("dddd");
 
       const d = new Date();
-      const dayNo = m.day();
-
+      let dayNo = m.day();
+      if (dayNo === "0") dayNo = 7;
       const { service: serviceGot } = doctorForm;
       const { organization: orgGot } = doctorForm;
       const { data } = await axios.get(
         config.staff +
           `/?day=${dayNo}&service=${serviceGot}&organization=${orgGot}`
       );
+
       // let filteredStaff_ = [];
       const filteredStaff = await this.StaffLeaves(data);
 
@@ -226,6 +221,63 @@ class Form extends React.Component {
     this.setState({ Conditionalservices: data.results });
   };
 
+  filterTime = (schedule) => {
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    let year = date.getUTCFullYear();
+    let TodayDate = year + "-" + month + "-" + day;
+    let { timeArr } = this.state;
+    let duplicationTime = [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20",
+      "21",
+      "22",
+      "23",
+      "24",
+    ];
+
+    if (TodayDate === schedule) {
+      let currentHour = date.getHours();
+      if (currentHour === "12") currentHour = "24";
+      else currentHour = currentHour + 12;
+      const minutes = date.getMinutes();
+      let filteredTime;
+
+      if (minutes === "0" || minutes === "00")
+        filteredTime = duplicationTime.filter((x) => x >= currentHour);
+      else filteredTime = duplicationTime.filter((x) => x > currentHour);
+
+      for (let i = 0; i < filteredTime.length; i++) {
+        filteredTime[i] = filteredTime[i] + ":00";
+      }
+
+      this.setState({ timeArr: filteredTime });
+    } else {
+      for (let i = 0; i < duplicationTime.length; i++) {
+        duplicationTime[i] = duplicationTime[i] + ":00";
+      }
+      this.setState({ timeArr: duplicationTime });
+    }
+  };
   handleChange = ({ currentTarget: input }) => {
     const errorMessage = this.validateProperty(input);
     const errors = { ...this.state.errors };
@@ -237,6 +289,9 @@ class Form extends React.Component {
 
     this.setState({ doctorForm, errors });
     const { service, organization } = doctorForm;
+    if (input.name === "schedule") {
+      this.filterTime(input.value);
+    }
     if (input.name === "organization") {
       this.populateServices(input.value);
     } else if (service && organization) {
@@ -318,7 +373,11 @@ class Form extends React.Component {
           aria-label="Default select example"
           onChange={this.handleChange}
         >
-          {Conditionalservices.length > 0 && <option value="">{label}</option>}
+          {Conditionalservices.length > 0 ? (
+            <option value="">{label}</option>
+          ) : (
+            <option value="">Choose An Organization First</option>
+          )}
           {Conditionalservices ? (
             Conditionalservices.map((option) => (
               <option value={option._id} key={option._id}>

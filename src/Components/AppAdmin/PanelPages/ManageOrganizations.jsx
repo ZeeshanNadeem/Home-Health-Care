@@ -10,7 +10,7 @@ import EditModalOrg from "../Modals/EditOrganizationModle";
 import config from "../../Api/config.json";
 import axios from "axios";
 
-const ManageOrganizations = () => {
+const ManageOrganizations = ({ setProgress }) => {
   let [organizations, setOrganizations] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSelected, setPageSelected] = useState(1);
@@ -24,6 +24,7 @@ const ManageOrganizations = () => {
   //To Be Displayed in a Table
   //Or Without any searched Value.
   const fetchOrganizations = async () => {
+    setProgress(0);
     let page = "";
 
     //When Searched Value Exists.
@@ -31,29 +32,34 @@ const ManageOrganizations = () => {
       const { data } = await axios.get(
         `http://localhost:3000/api/organizations`
       );
+      setProgress(30);
       const searchedResults = data.results.filter((d) =>
         d.name.toUpperCase().startsWith(searchedService.toUpperCase())
       );
 
       const totalDocuments = await getTotalDocuments();
-
+      setProgress(40);
       if (searchedService) {
         page = Math.ceil(searchedResults.length / pageSize);
       } else {
         page = Math.ceil(searchedResults.length / pageSize);
       }
       setTotalPages(page);
-
+      setProgress(60);
       setOrganizations(searchedResults);
       if (searchedResults.length === 0 && searchedService) {
         toast.error("No Results Found!");
       }
+      setProgress(80);
+      setProgress(100);
       return;
     }
+    setProgress(10);
     const { data: organizations } = await axios.get(
       config.apiEndPoint +
         `/organizations?page=${pageSelected}&limit=${pageSize}`
     );
+    setProgress(30);
     const totalDocuments = await getTotalDocuments();
     if (organizations.results.length > 0) {
       if (!searchedService) {
@@ -61,11 +67,18 @@ const ManageOrganizations = () => {
       } else {
         page = Math.ceil(totalDocuments.results.length / pageSize);
       }
+      setProgress(40);
       setTotalPages(page);
-
+      setProgress(60);
+      setProgress(80);
+      setProgress(100);
       setOrganizations(organizations.results);
     } else {
+      setProgress(40);
       setTotalPages(totalPages);
+      setProgress(60);
+      setProgress(80);
+      setProgress(100);
     }
   };
 

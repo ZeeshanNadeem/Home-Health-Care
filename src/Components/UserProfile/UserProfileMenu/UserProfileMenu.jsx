@@ -7,18 +7,37 @@ import jwtDecode from "jwt-decode";
 import { useState } from "react";
 
 const UserProfileMenu = () => {
+  const [user, setUser] = React.useState([]);
+  useEffect(() => {
+    const jwt = localStorage.getItem("token");
+    let userGot = "";
+    if (jwt) {
+      userGot = jwtDecode(jwt);
+      setUser(userGot);
+    }
+  }, []);
   return (
     <article>
-      <span className="user-account-popover">
-        <article className="logout-wrapper-icon my-home-visits-icon">
-          <FontAwesomeIcon icon={faHouseUser} style={{ marginTop: "0.2rem" }} />
-        </article>
-        <Link to="/Ratting" className="user-account-menu-item sheduled-visits">
-          <span>Scheduled Visits</span>
-        </Link>
-      </span>
+      {!user.isOrganizationAdmin && !user.isAppAdmin && !user.staffMember && (
+        <span>
+          <span className="user-account-popover">
+            <article className="logout-wrapper-icon my-home-visits-icon">
+              <FontAwesomeIcon
+                icon={faHouseUser}
+                style={{ marginTop: "0.2rem" }}
+              />
+            </article>
+            <Link
+              to="/Ratting"
+              className="user-account-menu-item sheduled-visits"
+            >
+              <span>Scheduled Visits</span>
+            </Link>
+          </span>
+          <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+        </span>
+      )}
 
-      <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
       <span className="user-account-popover">
         <article className="logout-wrapper-icon">
           <FontAwesomeIcon

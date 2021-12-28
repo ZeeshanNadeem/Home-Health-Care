@@ -45,3 +45,13 @@
 .wrapper-user-req {
   margin-top: 0.5rem;
 }
+
+.payment-btn {
+  background: #1b0760;
+  height: 2rem;
+  padding: 0 1rem;
+  border-radius: 20px;
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+}

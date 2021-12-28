@@ -15,7 +15,6 @@ const Carasol = ({ setProgress }) => {
   return (
     <Carousel>
       <Carousel.Item>
-        {setProgress(20)}
         <img
           style={{ height: "37rem" }}
           className="d-block w-100 carasol-img"

@@ -29,6 +29,8 @@ const Ratting = (props) => {
   const [userRequests, setUserRequests] = useState([]);
   const { classes } = props;
   useEffect(() => {
+    props.setProgress(0);
+
     let user = "";
     try {
       const jwt = localStorage.getItem("token");
@@ -36,7 +38,7 @@ const Ratting = (props) => {
       setUser(user);
       console.log(user);
     } catch (ex) {}
-
+    props.setProgress(10);
     async function fetchData() {
       if (user) {
         // http://localhost:3000/api/userRequests?userID=61c07922764f46e1cbe43b96
@@ -46,6 +48,9 @@ const Ratting = (props) => {
 
         setUserRequests(userRequest);
       }
+      props.setProgress(20);
+      props.setProgress(40);
+      props.setProgress(100);
     }
     fetchData();
   }, []);

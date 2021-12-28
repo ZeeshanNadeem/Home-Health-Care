@@ -7,7 +7,7 @@ import { faUserMd } from "@fortawesome/free-solid-svg-icons";
 
 import { Link } from "react-router-dom";
 import "animate.css";
-const AppAdmin = () => {
+const AppAdmin = ({ setProgress }) => {
   const [showDocDetials, setDocDetails] = useState("");
   const [menuBarZindex, setMenuBarZindex] = useState("");
   const DoctorDetailsHandler = (name) => {
@@ -16,6 +16,13 @@ const AppAdmin = () => {
       setMenuBarZindex("MenuBarZIndex");
     }
   };
+  React.useEffect(() => {
+    setProgress(0);
+    setProgress(10);
+    setProgress(20);
+    setProgress(40);
+    setProgress(100);
+  }, []);
   return (
     <article className="admin-wrapper app-admin-wrapper">
       <span className="admin-top">
