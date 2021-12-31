@@ -316,10 +316,14 @@ article.searchBar-wrapper {
   color: #fff;
   line-height: 1.4;
   text-transform: uppercase;
-  background-color: #36304a;
+  background-color: #04293a;
   border: 1px solid black;
   border-collapse: collapse;
-  /* background-color: #10182b; */
+  margin-bottom: 0 !important;
+  /* background-color: #041C32; */
+}
+.availability-header {
+  letter-spacing: 1px;
 }
 
 .availability-table-th {

@@ -48,8 +48,8 @@ class ConfirmMeeting extends Form {
       PhoneNo: confirmMeeting[0].PhoneNo,
       Schedule: confirmMeeting[0].Schedule,
       Service: confirmMeeting[0].Service,
-      ServiceNeededFrom: confirmMeeting[0].ServiceNeededFrom,
-      ServiceNeededTo: confirmMeeting[0].ServiceNeededTo,
+      ServiceNeededTime: confirmMeeting[0].ServiceNeededTime,
+      // ServiceNeededTo: confirmMeeting[0].ServiceNeededTo,
       rated: confirmMeeting[0].rated,
       staffMemberAssigned: confirmMeeting[0].staffMemberAssigned,
       user: confirmMeeting[0].user,
@@ -113,8 +113,7 @@ class ConfirmMeeting extends Form {
                       Timing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span className="style-meeting-detials-2">
-                      {data.ServiceNeededFrom} to {data.ServiceNeededTo}&nbsp;
-                      (Travel Time Included)
+                      {data.ServiceNeededTime}&nbsp; (Travel Time Included)
                     </span>
                   </p>
 

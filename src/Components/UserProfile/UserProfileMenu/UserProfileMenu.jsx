@@ -18,7 +18,7 @@ const UserProfileMenu = () => {
   }, []);
   return (
     <article>
-      {!user.isOrganizationAdmin && !user.isAppAdmin && !user.staffMember && (
+      {
         <span>
           <span className="user-account-popover">
             <article className="logout-wrapper-icon my-home-visits-icon">
@@ -36,7 +36,7 @@ const UserProfileMenu = () => {
           </span>
           <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
         </span>
-      )}
+      }
 
       <span className="user-account-popover">
         <article className="logout-wrapper-icon">

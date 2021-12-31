@@ -39,30 +39,39 @@ class UserRequestService extends Form {
     staffLeaves: [],
     cites: ["Islamabad", "Rawalpindi"],
     timeArr: [
-      "1:00",
-      "2:00",
-      "3:00",
-      "4:00",
-      "5:00",
-      "6:00",
-      "7:00",
-      "8:00",
-      "9:00",
-      "10:00",
-      "11:00",
-      "12:00",
-      "13:00",
-      "14:00",
-      "15:00",
-      "16:00",
-      "17:00",
-      "18:00",
-      "19:00",
-      "20:00",
-      "21:00",
-      "22:00",
-      "23:00",
-      "24:00",
+      {
+        _id: "24:00-3:00",
+        name: "12 AM to 3 AM",
+      },
+      {
+        _id: "3:00-6:00",
+        name: "3 AM to 6 AM",
+      },
+
+      {
+        _id: "6:00-9:00",
+        name: "6 AM to 9 AM",
+      },
+      {
+        _id: "9:00-12:00",
+        name: "9 AM to 12 PM",
+      },
+      {
+        _id: "12:00-15:00",
+        name: "12 PM to 3 PM",
+      },
+      {
+        _id: "15:00-18:00",
+        name: "3 PM to 6 PM",
+      },
+      {
+        _id: "18:00-21:00",
+        name: "6 PM to 9 PM",
+      },
+      {
+        _id: "21:00-24:00",
+        name: "9 PM to 12 AM",
+      },
     ],
   };
   async componentDidMount() {
@@ -82,7 +91,7 @@ class UserRequestService extends Form {
     let month = date.getMonth() + 1;
     let day = date.getDate();
     if (day < 10) day = "0" + day;
-    let year = date.getUTCFullYear();
+    let year = date.getFullYear();
     if (month < 10) month = "0" + month;
     let maxDate = year + "-" + month + "-" + "31";
     let minDate = year + "-" + month + "-" + day;
@@ -143,111 +152,86 @@ class UserRequestService extends Form {
     let bookedServiceTo = null;
     let gotSlotBooked = false;
     let staffOnLeave = false;
-    let liesBetween = false;
+
     let tempArray = [];
 
     for (let j = 0; j < staff.length; j++) {
       gotSlotBooked = false;
       staffOnLeave = false;
-      liesBetween = false;
+
       let availableFromArr = staff[j].availabilityFrom.split(":");
       let availableToArr = staff[j].availabilityTo.split(":");
 
-      let userSelectedTime = ServiceNeededFrom.split(":");
-      let availableFrom = availableFromArr[0];
-      let availabileTo = availableToArr[0];
+      let userSelectedTime = ServiceNeededFrom.split("-");
+      let temp = userSelectedTime[0].split(":");
+      let temp1 = userSelectedTime[1].split(":");
+      let availableFrom = temp[0];
+      let availabileTo = temp1[0];
       let userSelectedTime_ = userSelectedTime[0];
 
-      if (
-        userSelectedTime_ === "01" ||
-        userSelectedTime_ === "02" ||
-        userSelectedTime_ === "03" ||
-        userSelectedTime_ === "04" ||
-        userSelectedTime_ === "05" ||
-        userSelectedTime_ === "06" ||
-        userSelectedTime_ === "07" ||
-        userSelectedTime_ === "08" ||
-        userSelectedTime_ === "09"
-      ) {
-        userSelectedTime_ = userSelectedTime_.replace(/^(?:00:)?0?/, "");
-      }
-      if (
-        availableFrom === "01" ||
-        availableFrom === "02" ||
-        availableFrom === "03" ||
-        availableFrom === "04" ||
-        availableFrom === "05" ||
-        availableFrom === "06" ||
-        availableFrom === "07" ||
-        availableFrom === "08" ||
-        availableFrom === "09"
-      ) {
-        availableFrom = availableFrom.replace(/^(?:00:)?0?/, "");
-      }
+      let userSelectedSlot_From = availableFrom.replace(/^(?:00:)?0?/, "");
+      let userSelectedSlot_To = availabileTo.replace(/^(?:00:)?0?/, "");
+      userSelectedTime_ = userSelectedTime_.replace(/^(?:00:)?0?/, "");
 
-      if (
-        availabileTo === "01" ||
-        availabileTo === "02" ||
-        availabileTo === "03" ||
-        availabileTo === "04" ||
-        availabileTo === "05" ||
-        availabileTo === "06" ||
-        availabileTo === "07" ||
-        availabileTo === "08" ||
-        availabileTo === "09"
-      ) {
-        availabileTo = availabileTo.replace(/^(?:00:)?0?/, "");
-      }
       //Checking if userSelected time comes in between a staff duty
       //If yes then we proceed further else check for other staff member
       userSelectedTime_ = parseInt(userSelectedTime_.trim());
-      const StaffAvailableForm = parseInt(availableFrom.trim());
-      const StaffAvailableTo = parseInt(availabileTo.trim());
+      const StaffAvailableForm = parseInt(availableFromArr[0].trim());
+      const StaffAvailableTo = parseInt(availableToArr[0].trim());
 
       //Logic to check userSelected Time lies between
       //staff's duty or not
-      for (let s = StaffAvailableForm; s <= StaffAvailableTo; s++) {
-        if (
-          s === userSelectedTime_ &&
-          userSelectedTime_ + 2 <= StaffAvailableTo
-        ) {
+
+      let liesBetween = false;
+      let check1 = false;
+      let check2 = false;
+
+      for (let count = StaffAvailableForm; count <= StaffAvailableTo; count++) {
+        if (parseInt(count) === parseInt(userSelectedSlot_From)) {
+          check1 = true;
+        }
+        if (parseInt(count) === parseInt(userSelectedSlot_To)) {
+          check2 = true;
+        }
+        if (check1 && check2) {
           liesBetween = true;
           break;
         }
       }
 
       if (liesBetween) {
+        // for (let s = StaffAvailableForm; s <= StaffAvailableTo; s++) {
+        //   if (
+        //     s === userSelectedTime_ &&
+        //     userSelectedTime_ + 2 <= StaffAvailableTo
+        //   ) {
+        //     liesBetween = true;
+        //     break;
+        //   }
+        // }
+
         for (let i = 0; i < userRequests.length; i++) {
           if (staffOnLeave || gotSlotBooked) break;
           if (staff[j]._id === userRequests[i].staffMemberAssigned._id) {
-            bookedServiceFrom = userRequests[i].ServiceNeededFrom.split(":");
-            bookedServiceTo = userRequests[i].ServiceNeededTo.split(":");
-            bookedServiceTo_ = bookedServiceTo[0];
-            bookedServiceFrom_ = bookedServiceFrom[0];
-            if (
-              bookedServiceFrom_ === "01" ||
-              bookedServiceFrom_ === "02" ||
-              bookedServiceFrom_ === "03" ||
-              bookedServiceFrom_ === "04" ||
-              bookedServiceFrom_ === "05" ||
-              bookedServiceFrom_ === "06" ||
-              bookedServiceFrom_ === "07" ||
-              bookedServiceFrom_ === "08" ||
-              bookedServiceFrom_ === "09"
-            ) {
-              bookedServiceFrom_ = bookedServiceFrom_.replace(
-                /^(?:00:)?0?/,
-                ""
-              );
-            }
+            bookedServiceFrom = userRequests[i].ServiceNeededTime.split("-");
+
+            let temp = bookedServiceFrom[0].split(":");
+            let temp1 = bookedServiceFrom[1].split(":");
+            bookedServiceTo_ = temp[0];
+            bookedServiceFrom_ = temp1[0];
+
+            bookedServiceFrom_ = bookedServiceFrom_.replace(/^(?:00:)?0?/, "");
+
             //Checking If staff booked service time
             //lies between user requested time
-            if (
-              (userSelectedTime_ >= bookedServiceFrom_ &&
-                userSelectedTime_ < bookedServiceTo_) ||
-              (userSelectedTime_ + 2 > bookedServiceFrom_ &&
-                userSelectedTime_ + 2 < bookedServiceTo_)
-            ) {
+
+            // if (
+            //   (userSelectedTime_ >= bookedServiceFrom_ &&
+            //     userSelectedTime_ < bookedServiceTo_) ||
+            //   (userSelectedTime_ + 3 > bookedServiceFrom_ &&
+            //     userSelectedTime_ + 3 < bookedServiceTo_)
+            // ) {
+            if (userRequests[i].ServiceNeededTime === ServiceNeededFrom) {
               const staffDutyOnSameDay = this.MatchUserSelected(
                 userRequests[i].Schedule
               );
@@ -353,7 +337,7 @@ class UserRequestService extends Form {
           userRequest.userID = this.state.user._id;
           userRequest.staffMemberID = tempArray[maxIndex]._id;
           userRequest.OrganizationID = doctorForm.organization;
-          userRequest.ServiceNeededFrom = doctorForm.ServiceNeededFrom;
+          userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
 
           userRequest.ServiceID = doctorForm.service;
           userRequest.Schedule = doctorForm.schedule;

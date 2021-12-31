@@ -205,8 +205,8 @@ class Form extends React.Component {
       const filteredStaff = await this.StaffLeaves(data);
 
       // filteredStaff_ = await this.StaffBookedSlots(filteredStaff);
-
-      this.setState({ availabilityData: filteredStaff });
+      if (filteredStaff) this.setState({ availabilityData: filteredStaff });
+      else this.setState({ availabilityData: data });
     }
   };
 
@@ -254,28 +254,142 @@ class Form extends React.Component {
       "23",
       "24",
     ];
+    let timeArrDuplication = [
+      {
+        _id: "12",
+        name: "12 PM",
+      },
+      {
+        _id: "13",
+        name: "1 PM",
+      },
+
+      {
+        _id: "14",
+        name: "2 PM",
+      },
+      {
+        _id: "15",
+        name: "3 PM",
+      },
+      {
+        _id: "16",
+        name: "4 PM",
+      },
+      {
+        _id: "17",
+        name: "5 PM",
+      },
+      {
+        _id: "18",
+        name: "6 PM",
+      },
+      {
+        _id: "19",
+        name: "7 PM",
+      },
+      {
+        _id: "20",
+        name: "8 PM",
+      },
+      {
+        _id: "21",
+        name: "9 PM",
+      },
+      {
+        _id: "22",
+        name: "10 PM",
+      },
+      {
+        _id: "23",
+        name: "11 PM",
+      },
+      {
+        _id: "24",
+        name: "12 AM",
+      },
+      {
+        _id: "1",
+        name: "1 AM",
+      },
+      {
+        _id: "2",
+        name: "2 AM",
+      },
+      {
+        _id: "3",
+        name: "3 AM",
+      },
+      {
+        _id: "4",
+        name: "4 AM",
+      },
+      {
+        _id: "5",
+        name: "5 AM",
+      },
+      {
+        _id: "6",
+        name: "6 AM",
+      },
+
+      {
+        _id: "7",
+        name: "7 AM",
+      },
+      {
+        _id: "8",
+        name: "8 AM",
+      },
+      {
+        _id: "9",
+        name: "9 AM",
+      },
+      {
+        _id: "10",
+        name: "10 AM",
+      },
+      {
+        _id: "11",
+        name: "11 AM",
+      },
+      {
+        _id: "24:00",
+        name: "12 AM",
+      },
+    ];
 
     if (TodayDate === schedule) {
       let currentHour = date.getHours();
-      if (currentHour === "12") currentHour = "24";
-      else currentHour = currentHour + 12;
+      // const time12Hour = date.toLocaleString("en-US", {
+      //   hour: "numeric",
+      //   hour12: true,
+      // });
+      // if (time12Hour.includes("12 AM")) {
+      //   currentHour = "24";
+      // }
+      // if (currentHour === "12") currentHour = "24";
+      if (currentHour === "00") currentHour = 24 + ":00";
+      // else currentHour = currentHour + 12;
       const minutes = date.getMinutes();
       let filteredTime;
 
       if (minutes === "0" || minutes === "00")
-        filteredTime = duplicationTime.filter((x) => x >= currentHour);
-      else filteredTime = duplicationTime.filter((x) => x > currentHour);
+        filteredTime = timeArrDuplication.filter((x) => x._id >= currentHour);
+      else {
+        filteredTime = timeArrDuplication.filter((x) => x._id > currentHour);
+      }
 
       for (let i = 0; i < filteredTime.length; i++) {
-        filteredTime[i] = filteredTime[i] + ":00";
+        filteredTime[i]._id = filteredTime[i]._id + ":00";
       }
 
       this.setState({ timeArr: filteredTime });
     } else {
-      for (let i = 0; i < duplicationTime.length; i++) {
-        duplicationTime[i] = duplicationTime[i] + ":00";
+      for (let i = 0; i < timeArrDuplication.length; i++) {
+        timeArrDuplication[i] = timeArrDuplication[i] + ":00";
       }
-      this.setState({ timeArr: duplicationTime });
+      this.setState({ timeArr: timeArrDuplication });
     }
   };
   handleChange = ({ currentTarget: input }) => {
@@ -290,7 +404,7 @@ class Form extends React.Component {
     this.setState({ doctorForm, errors });
     const { service, organization } = doctorForm;
     if (input.name === "schedule") {
-      this.filterTime(input.value);
+      // this.filterTime(input.value);
     }
     if (input.name === "organization") {
       this.populateServices(input.value);

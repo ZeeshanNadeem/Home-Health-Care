@@ -1,11 +1,11 @@
 import * as React from "react";
 import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+
 import CheckAvailability from "../ModalData/CheckAvailability";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-
+import axios from "axios";
+import config from "../../Api/config.json";
 export default function CheckAvailabilityPopover({
   availabilityData,
   userScheduledDate,
@@ -15,6 +15,12 @@ export default function CheckAvailabilityPopover({
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const [userRequests, setUserRequests] = React.useState([]);
+  React.useEffect(async () => {
+    const { data } = await axios.get(config.apiEndPoint + "/userRequests");
+    setUserRequests(data);
+  }, []);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -70,6 +76,7 @@ export default function CheckAvailabilityPopover({
           <CheckAvailability
             availabilityData={availabilityData}
             userScheduledDate={userScheduledDate}
+            userRequests={userRequests}
           />
         </Popover>
       ) : (
@@ -87,6 +94,7 @@ export default function CheckAvailabilityPopover({
           <CheckAvailability
             availabilityData={availabilityData}
             userScheduledDate={userScheduledDate}
+            userRequests={userRequests}
           />
         </Popover>
       )}
