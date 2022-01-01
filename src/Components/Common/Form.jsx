@@ -224,31 +224,33 @@ class Form extends React.Component {
   filterTime = (schedule) => {
     let date = new Date();
     let month = date.getMonth() + 1;
+    if (month < 10) month = "0" + month;
+
     let day = date.getDate();
+    if (day < 10) day = "0" + day;
     let year = date.getUTCFullYear();
     let TodayDate = year + "-" + month + "-" + day;
-    let { timeArr } = this.state;
-   
-    let timeArrDup=[
+
+    let timeArr = [
       {
-        _id: "24:00-3:00",
+        _id: "00:00-3:00",
         name: "12 AM to 3 AM",
       },
       {
-        _id: "3:00-6:00",
+        _id: "03:00-6:00",
         name: "3 AM to 6 AM",
       },
 
       {
-        _id: "6:00-9:00",
+        _id: "06:00-09:00",
         name: "6 AM to 9 AM",
       },
       {
-        _id: "9:00-12:00",
+        _id: "09:00-12:00",
         name: "9 AM to 12 PM",
       },
       {
-        _id: "12:00-15:00",
+        _id: "012:00-15:00",
         name: "12 PM to 3 PM",
       },
       {
@@ -260,41 +262,47 @@ class Form extends React.Component {
         name: "6 PM to 9 PM",
       },
       {
-        _id: "21:00-24:00",
+        _id: "21:00-00:00",
         name: "9 PM to 12 AM",
       },
-    ],
+    ];
 
     if (TodayDate === schedule) {
-      let currentHour = date.getHours();
-     
-      for(let i=0;i<timeArrDup;i++){
-        let temp1=timeArrDup[i].split('-');
-        let temp2=temp1[0].split(":");
-        let temp3=temp1[1].split(":");
+      for (let i = 0; i < timeArr.length; i++) {
+        let currentHour = date.getHours();
+        let temp1 = timeArr[i]._id.split("-");
+        let slotFrom = temp1[0];
+        let slotTo = temp1[1];
+        let format = "hh:mm";
+        if (currentHour < 10) currentHour = "0" + currentHour;
+        currentHour = currentHour + ":00";
+        let currentHour_ = moment(currentHour, format),
+          beforeTime = moment(slotFrom, format),
+          afterTime = moment(slotTo, format);
+
+        if (
+          currentHour_.isBetween(beforeTime, afterTime) ||
+          currentHour_.isBefore(beforeTime, afterTime)
+        ) {
+        } else {
+          if (currentHour_.isSame(beforeTime)) {
+            console.log("SAME");
+          } else delete timeArr[i];
+        }
       }
 
-      // if (currentHour === "00") currentHour = 24 + ":00";
-      // // else currentHour = currentHour + 12;
-      // const minutes = date.getMinutes();
-      // let filteredTime;
+      // let format = "hh:mm";
+      // let time = moment("02:00", format),
+      //   beforeTime = moment("00:00", format),
+      //   afterTime = moment("03:00", format);
 
-      // if (minutes === "0" || minutes === "00")
-      //   filteredTime = timeArrDuplication.filter((x) => x._id >= currentHour);
-      // else {
-      //   filteredTime = timeArrDuplication.filter((x) => x._id > currentHour);
+      // if (time.isBetween(beforeTime, afterTime)) {
+      //   console.log("is between");
+      // } else {
+      //   console.log("is not between");
       // }
 
-      // for (let i = 0; i < filteredTime.length; i++) {
-      //   filteredTime[i]._id = filteredTime[i]._id + ":00";
-      // }
-
-      // this.setState({ timeArr: filteredTime });
-    } else {
-      for (let i = 0; i < timeArrDuplication.length; i++) {
-        timeArrDuplication[i] = timeArrDuplication[i] + ":00";
-      }
-      this.setState({ timeArr: timeArrDuplication });
+      this.setState({ timeArr });
     }
   };
   handleChange = ({ currentTarget: input }) => {
@@ -309,7 +317,7 @@ class Form extends React.Component {
     this.setState({ doctorForm, errors });
     const { service, organization } = doctorForm;
     if (input.name === "schedule") {
-      // this.filterTime(input.value);
+      this.filterTime(input.value);
     }
     if (input.name === "organization") {
       this.populateServices(input.value);
