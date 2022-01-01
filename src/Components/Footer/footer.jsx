@@ -105,7 +105,7 @@ const Footer = ({ setProgress }) => {
                       href="mailto:info@domain.com"
                       title="glorythemes"
                     >
-                      HomeHealthCare@hotmail.com
+                      HomeHealthCare@gmail.com
                     </Link>
                   </p>
 

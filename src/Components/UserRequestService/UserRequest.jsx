@@ -3,14 +3,9 @@ import Form from "../Common/Form";
 import axios from "axios";
 import Joi from "joi-browser";
 import moment from "moment";
-import Button from "@mui/material/Button";
 import CheckAvailability from "./Modal/CheckAvailability";
 import { toast, ToastContainer } from "react-toastify";
-import UserRequestContext from "./Context/UserContext";
-
-import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
-
 import config from "../Api/config.json";
 
 class UserRequestService extends Form {
@@ -75,6 +70,13 @@ class UserRequestService extends Form {
     ],
   };
   async componentDidMount() {
+    const jwt = localStorage.getItem("token");
+    const user = jwtDecode(jwt);
+    const isUser =
+      !user.isAppAdmin &&
+      !user.staffMember &&
+      user.isOrganizationAdmin === "false";
+    if (!isUser) this.props.history.push("/");
     this.props.setProgress(0);
     const { data: organization } = await axios.get(config.organizations);
     const { data: userRequests } = await axios.get(config.userRequests);
@@ -118,9 +120,9 @@ class UserRequestService extends Form {
   };
 
   //This function takes userSelected Date
-  //Matches it with the staff's
+  //Matches it with the staff's duty date
   //Returns true or false
-  //True means user has selected Date at that date where
+  //True means user has requested service at that date where
   //that staff is booked
   MatchUserSelected = (BookedStaffDate) => {
     if (BookedStaffDate === this.state.doctorForm.schedule) {
@@ -181,7 +183,6 @@ class UserRequestService extends Form {
 
       //Logic to check userSelected Time lies between
       //staff's duty or not
-
       let liesBetween = false;
       let check1 = false;
       let check2 = false;
@@ -200,16 +201,6 @@ class UserRequestService extends Form {
       }
 
       if (liesBetween) {
-        // for (let s = StaffAvailableForm; s <= StaffAvailableTo; s++) {
-        //   if (
-        //     s === userSelectedTime_ &&
-        //     userSelectedTime_ + 2 <= StaffAvailableTo
-        //   ) {
-        //     liesBetween = true;
-        //     break;
-        //   }
-        // }
-
         for (let i = 0; i < userRequests.length; i++) {
           if (staffOnLeave || gotSlotBooked) break;
           if (staff[j]._id === userRequests[i].staffMemberAssigned._id) {
@@ -385,7 +376,43 @@ class UserRequestService extends Form {
         // return;
       }
     }
-    if (tempArray.length === 0) {
+    //Assigning duty on the basis of rating
+    if (tempArray.length > 0) {
+      let maxIndex = null;
+      for (let c = 0; c < tempArray.length - 1; c++) {
+        for (let k = 1; k < tempArray.length; k++) {
+          if (tempArray[c].Rating > tempArray[k].Rating) {
+            maxIndex = c;
+          } else maxIndex = k;
+        }
+      }
+      if (!maxIndex) maxIndex = 0;
+      const userRequest = {};
+      userRequest.fullName = doctorForm.fullname;
+      userRequest.userID = this.state.user._id;
+      userRequest.staffMemberID = tempArray[maxIndex]._id;
+      userRequest.OrganizationID = doctorForm.organization;
+      userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
+
+      userRequest.ServiceID = doctorForm.service;
+      userRequest.Schedule = doctorForm.schedule;
+      // userRequest.Recursive = doctorForm.recursive;
+      userRequest.Address = doctorForm.address;
+      userRequest.PhoneNo = doctorForm.phoneno;
+      userRequest.city = doctorForm.city;
+      userRequest.email = doctorForm.email;
+
+      try {
+        await axios.post(config.apiEndPoint + "/confirmService", userRequest);
+
+        // toast.success("Meeting Scheduled");
+      } catch (ex) {
+        toast.error(ex.response.data);
+      }
+      this.props.history.push("/Confirm/Meeting");
+
+      return;
+    } else if (tempArray.length === 0) {
       toast.error("No Availability For the Specified Time!");
       toast.error("Please Check Availability and then Schedule!");
     }

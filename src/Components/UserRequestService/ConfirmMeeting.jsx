@@ -29,6 +29,7 @@ class ConfirmMeeting extends Form {
       }
     }
     const { data } = await axios.get(config.apiEndPoint + "/confirmService");
+    if (data.length === 0) this.props.history.replace("/");
     this.props.setProgress(70);
     this.setState({ confirmMeeting: data });
     this.props.setProgress(100);
@@ -66,7 +67,7 @@ class ConfirmMeeting extends Form {
 
       toast.success("Meeting Scheduled");
       setTimeout(() => {
-        this.props.history.push("/user/request");
+        this.props.history.replace("/user/request");
       }, 4100);
     } catch (ex) {
       toast.error(ex.response.data);

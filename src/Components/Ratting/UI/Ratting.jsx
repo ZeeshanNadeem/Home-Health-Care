@@ -36,7 +36,6 @@ const Ratting = (props) => {
       const jwt = localStorage.getItem("token");
       user = jwtDecode(jwt);
       setUser(user);
-      console.log(user);
     } catch (ex) {}
     props.setProgress(10);
     async function fetchData() {
@@ -57,14 +56,17 @@ const Ratting = (props) => {
 
   const checkRequest = (row) => {
     const d = new Date();
-    const day = d.getDate();
-    const month = d.getMonth() + 1;
+    let day = d.getDate();
+    let month = d.getMonth() + 1;
     const time = d.getHours();
     const year = d.getFullYear();
+    if (month < 10) month = "0" + month;
+    if (day < 10) day = "0" + day;
     const todaysDate = year + "-" + month + "-" + day;
-    const serviceNeededTo = row.ServiceNeededTo;
-    let serviceNeededTo_ = serviceNeededTo.split(":");
-    let serviceNeededToHourUser = serviceNeededTo_[0];
+    const serviceNeededTo = row.ServiceNeededTime;
+    let serviceNeededTo_ = serviceNeededTo.split("-");
+    let temp1 = serviceNeededTo_[1].split(":");
+    let serviceNeededToHourUser = temp1[0];
     const UserSelectedDate = row.Schedule;
     if (UserSelectedDate === todaysDate) {
       if (time >= serviceNeededToHourUser) {
@@ -121,14 +123,18 @@ const Ratting = (props) => {
 
   const checkRequestStatus = (row) => {
     const d = new Date();
-    const day = d.getDate();
-    const month = d.getMonth() + 1;
+    let day = d.getDate();
+    let month = d.getMonth() + 1;
     const time = d.getHours();
     const year = d.getFullYear();
+    if (month < 10) month = "0" + month;
+    if (day < 10) day = "0" + day;
     const todaysDate = year + "-" + month + "-" + day;
-    const serviceNeededTo = row.ServiceNeededTo;
-    let serviceNeededTo_ = serviceNeededTo.split(":");
-    let serviceNeededToHourUser = serviceNeededTo_[0];
+    const serviceNeededTo = row.ServiceNeededTime;
+    let serviceNeededTo_ = serviceNeededTo.split("-");
+    let temp1 = serviceNeededTo_[0].split(":");
+    let temp2 = serviceNeededTo_[1].split(":");
+    let serviceNeededToHourUser = temp2[0];
     const UserSelectedDate = row.Schedule;
     if (UserSelectedDate === todaysDate) {
       if (time >= serviceNeededToHourUser) {
@@ -164,8 +170,8 @@ const Ratting = (props) => {
               <TableCell>Service</TableCell>
               <TableCell>Organization</TableCell>
               <TableCell>Cost</TableCell>
-              <TableCell>From</TableCell>
-              <TableCell>To</TableCell>
+              <TableCell>Slot</TableCell>
+
               <TableCell>Date</TableCell>
               <TableCell align="left"></TableCell>
               <TableCell align="left"></TableCell>
@@ -182,8 +188,8 @@ const Ratting = (props) => {
                 </TableCell>
                 <TableCell>{row.Organization.name}</TableCell>
                 <TableCell>{row.Service.servicePrice}</TableCell>
-                <TableCell>{row.ServiceNeededFrom}</TableCell>
-                <TableCell>{row.ServiceNeededTo}</TableCell>
+                <TableCell>{row.ServiceNeededTime}</TableCell>
+
                 <TableCell>{row.Schedule}</TableCell>
                 <TableCell align="left">{checkRequest(row)}</TableCell>
                 <TableCell>

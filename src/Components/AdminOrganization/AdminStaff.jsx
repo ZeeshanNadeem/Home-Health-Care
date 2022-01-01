@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import EditModal from "./Modles/MoodleForEdit";
-import { Paper } from "@material-ui/core";
 
 import BasicModal from "./Modles/AddServiceModle";
-import AddService from "./Forms/AddService";
+
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-import { TextField } from "@mui/material";
+
 // import Paginating from "./Common/Paginating";
 import Pagination from "@mui/material/Pagination";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -21,25 +20,28 @@ const AdminStaff = ({ setProgress }) => {
   const [pageSelected, setPageSelected] = useState(1);
   const [searchedService, setSearchedService] = useState("");
   useEffect(async () => {
-    setProgress(10);
-    const { data } = await axios.get(
-      `http://localhost:3000/api/services?page=${pageSelected}&limit=${4}&searchedString=${searchedService}`
-    );
-    setProgress(30);
-    const { data: totalDocuments } = await axios.get(
-      `http://localhost:3000/api/services`
-    );
-    let page = "";
-    if (searchedService) {
-      page = Math.ceil(data.results.length / 4);
-    } else {
-      page = Math.ceil(totalDocuments.results.length / 4);
-    }
-    setProgress(70);
-    setTotalPages(page);
+    async function fetchData() {
+      setProgress(10);
+      const { data } = await axios.get(
+        `http://localhost:3000/api/services?page=${pageSelected}&limit=${4}&searchedString=${searchedService}`
+      );
+      setProgress(30);
+      const { data: totalDocuments } = await axios.get(
+        `http://localhost:3000/api/services`
+      );
+      let page = "";
+      if (searchedService) {
+        page = Math.ceil(data.results.length / 4);
+      } else {
+        page = Math.ceil(totalDocuments.results.length / 4);
+      }
+      setProgress(70);
+      setTotalPages(page);
 
-    setServices(data.results);
-    setProgress(100);
+      setServices(data.results);
+      setProgress(100);
+    }
+    fetchData();
   }, [pageSelected]);
 
   const deleteService = async (id) => {

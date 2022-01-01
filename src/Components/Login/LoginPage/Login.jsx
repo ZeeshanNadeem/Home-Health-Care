@@ -32,7 +32,7 @@ class Login extends Form {
         localStorage.setItem("token", jwt);
         if (this.props.history.location.pathname) {
           window.location = this.props.history.location.pathname;
-        } else window.location = "/Home";
+        } else window.location.replace = "/Home";
       } catch (ex) {
         if (ex.response && ex.response.status === 400) {
           const error = { ...this.state.errors };

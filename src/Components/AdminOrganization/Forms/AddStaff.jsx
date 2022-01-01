@@ -80,7 +80,7 @@ class NurseForm extends Form {
       "21:00",
       "22:00",
       "23:00",
-      "00:00",
+      "24:00",
     ],
     isEditModel: "",
     services: [],

@@ -10,21 +10,17 @@ import Home from "./Components/HomePage/Home";
 import Admin from "./Components/AdminOrganization/Admin";
 
 import UserRequestService from "./Components/UserRequestService/UserRequest";
-import AddService from "./Components/AdminOrganization/Forms/AddService";
+
 import EditService from "./Components/AdminOrganization/EditService";
-import EditModal from "./Components/AdminOrganization/Modles/MoodleForEdit";
-// import DoctorForm from "./Components/DoctorForm";
-import NurseForm from "./Components/AdminOrganization/Forms/AddStaff";
-// import AdminNav from "./Components/AdminNav";
+
 import AdminUserRequest from "./Components/AdminOrganization/AdminUserRequest";
-import AdminStaff from "./Components/AdminOrganization/AdminStaff";
 
 import Leave from "./Components/StaffLeave/Leave";
 import StaffPanel from "./Components/AdminOrganization/StaffPanel";
 import Logout from "./Components/Logout/logout";
 import AppAdmin from "./Components/AppAdmin/PanelPages/Admin";
 import ManageOrganizations from "./Components/AppAdmin/PanelPages/ManageOrganizations";
-import EditModalOrg from "./Components/AppAdmin/Modals/EditOrganizationModle";
+
 import Schedule from "./Components/Staff/StaffPages/Schedule";
 import OrganizationAdminRequests from "./Components/AppAdmin/PanelPages/OrganizationAdminRequests";
 import ContactUs from "./Components/Maps/ContactUs";

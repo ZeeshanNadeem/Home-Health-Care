@@ -3,22 +3,9 @@ import React, { useEffect, useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import {
-  faFemale,
-  faMale,
-  faUserFriends,
-  faUsers,
-} from "@fortawesome/free-solid-svg-icons";
-
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { faUserMd } from "@fortawesome/free-solid-svg-icons";
 
-import EditService from "./EditService";
-import AdminUserRequest from "./AdminUserRequest";
-import AssignDuty from "../AssignDuty";
-import AddService from "./Forms/AddService";
-import NurseForm from "./Forms/AddStaff";
-import AdminNav from "../AdminNav";
 import { Link } from "react-router-dom";
 import "animate.css";
 const Admin = ({ setProgress }) => {
@@ -45,25 +32,6 @@ const Admin = ({ setProgress }) => {
           <article className={`menuBar-container ${menuBarZindex}`}>
             <ul className="menu-items">
               <h2 className="menu-title animate__heartBeat">Admin</h2>
-              {/* <Link to="/admin/doctor">
-                <li className="li-add-doc admin-li">
-                  <FontAwesomeIcon
-                    icon={faUserPlus}
-                    style={{ marginRight: "0.6rem" }}
-                  />
-                  Add A Doctor
-                </li>
-              </Link> */}
-              {/* <Link to="/admin/Nurse">
-                <li className="admin-li">
-                  {" "}
-                  <FontAwesomeIcon
-                    icon={faUserPlus}
-                    style={{ marginRight: "0.6rem" }}
-                  />
-                  Staff
-                </li>
-              </Link> */}
 
               <Link to="/admin/Services">
                 <li className="admin-li frist-li">
@@ -85,16 +53,6 @@ const Admin = ({ setProgress }) => {
                   Manage Staff
                 </li>
               </Link>
-              {/* 
-              <Link to="/admin/Requests">
-                <li className="admin-li">
-                  <FontAwesomeIcon
-                    icon={faUsers}
-                    style={{ marginRight: "0.6rem" }}
-                  />
-                  User Requests
-                </li>
-              </Link> */}
             </ul>
           </article>
         </span>

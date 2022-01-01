@@ -228,163 +228,68 @@ class Form extends React.Component {
     let year = date.getUTCFullYear();
     let TodayDate = year + "-" + month + "-" + day;
     let { timeArr } = this.state;
-    let duplicationTime = [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-      "11",
-      "12",
-      "13",
-      "14",
-      "15",
-      "16",
-      "17",
-      "18",
-      "19",
-      "20",
-      "21",
-      "22",
-      "23",
-      "24",
-    ];
-    let timeArrDuplication = [
+   
+    let timeArrDup=[
       {
-        _id: "12",
-        name: "12 PM",
+        _id: "24:00-3:00",
+        name: "12 AM to 3 AM",
       },
       {
-        _id: "13",
-        name: "1 PM",
+        _id: "3:00-6:00",
+        name: "3 AM to 6 AM",
       },
 
       {
-        _id: "14",
-        name: "2 PM",
+        _id: "6:00-9:00",
+        name: "6 AM to 9 AM",
       },
       {
-        _id: "15",
-        name: "3 PM",
+        _id: "9:00-12:00",
+        name: "9 AM to 12 PM",
       },
       {
-        _id: "16",
-        name: "4 PM",
+        _id: "12:00-15:00",
+        name: "12 PM to 3 PM",
       },
       {
-        _id: "17",
-        name: "5 PM",
+        _id: "15:00-18:00",
+        name: "3 PM to 6 PM",
       },
       {
-        _id: "18",
-        name: "6 PM",
+        _id: "18:00-21:00",
+        name: "6 PM to 9 PM",
       },
       {
-        _id: "19",
-        name: "7 PM",
+        _id: "21:00-24:00",
+        name: "9 PM to 12 AM",
       },
-      {
-        _id: "20",
-        name: "8 PM",
-      },
-      {
-        _id: "21",
-        name: "9 PM",
-      },
-      {
-        _id: "22",
-        name: "10 PM",
-      },
-      {
-        _id: "23",
-        name: "11 PM",
-      },
-      {
-        _id: "24",
-        name: "12 AM",
-      },
-      {
-        _id: "1",
-        name: "1 AM",
-      },
-      {
-        _id: "2",
-        name: "2 AM",
-      },
-      {
-        _id: "3",
-        name: "3 AM",
-      },
-      {
-        _id: "4",
-        name: "4 AM",
-      },
-      {
-        _id: "5",
-        name: "5 AM",
-      },
-      {
-        _id: "6",
-        name: "6 AM",
-      },
-
-      {
-        _id: "7",
-        name: "7 AM",
-      },
-      {
-        _id: "8",
-        name: "8 AM",
-      },
-      {
-        _id: "9",
-        name: "9 AM",
-      },
-      {
-        _id: "10",
-        name: "10 AM",
-      },
-      {
-        _id: "11",
-        name: "11 AM",
-      },
-      {
-        _id: "24:00",
-        name: "12 AM",
-      },
-    ];
+    ],
 
     if (TodayDate === schedule) {
       let currentHour = date.getHours();
-      // const time12Hour = date.toLocaleString("en-US", {
-      //   hour: "numeric",
-      //   hour12: true,
-      // });
-      // if (time12Hour.includes("12 AM")) {
-      //   currentHour = "24";
+     
+      for(let i=0;i<timeArrDup;i++){
+        let temp1=timeArrDup[i].split('-');
+        let temp2=temp1[0].split(":");
+        let temp3=temp1[1].split(":");
+      }
+
+      // if (currentHour === "00") currentHour = 24 + ":00";
+      // // else currentHour = currentHour + 12;
+      // const minutes = date.getMinutes();
+      // let filteredTime;
+
+      // if (minutes === "0" || minutes === "00")
+      //   filteredTime = timeArrDuplication.filter((x) => x._id >= currentHour);
+      // else {
+      //   filteredTime = timeArrDuplication.filter((x) => x._id > currentHour);
       // }
-      // if (currentHour === "12") currentHour = "24";
-      if (currentHour === "00") currentHour = 24 + ":00";
-      // else currentHour = currentHour + 12;
-      const minutes = date.getMinutes();
-      let filteredTime;
 
-      if (minutes === "0" || minutes === "00")
-        filteredTime = timeArrDuplication.filter((x) => x._id >= currentHour);
-      else {
-        filteredTime = timeArrDuplication.filter((x) => x._id > currentHour);
-      }
+      // for (let i = 0; i < filteredTime.length; i++) {
+      //   filteredTime[i]._id = filteredTime[i]._id + ":00";
+      // }
 
-      for (let i = 0; i < filteredTime.length; i++) {
-        filteredTime[i]._id = filteredTime[i]._id + ":00";
-      }
-
-      this.setState({ timeArr: filteredTime });
+      // this.setState({ timeArr: filteredTime });
     } else {
       for (let i = 0; i < timeArrDuplication.length; i++) {
         timeArrDuplication[i] = timeArrDuplication[i] + ":00";
