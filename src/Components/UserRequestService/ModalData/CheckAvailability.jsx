@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import config from "../../Api/config.json";
+import moment from "moment";
+import jwtDecode from "jwt-decode";
+import axios from "axios";
 
 const CheckAvailability = ({
   availabilityData,
@@ -143,6 +147,7 @@ const CheckAvailability = ({
         slotTimeFrom,
         slotTimeTo
       );
+
       if (slotBookedOfStaffMember) {
         //Slot is booked
         //We send false here
@@ -165,7 +170,7 @@ const CheckAvailability = ({
         }
         slotBooked = true;
       }
-      // }
+
       if (!slotBooked) {
         //Slot is not booked
         //We send true here

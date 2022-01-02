@@ -1,7 +1,7 @@
 import React from "react";
 import Form from "../Common/Form";
 import axios from "axios";
-import Joi from "joi-browser";
+import Joi, { ignore } from "joi-browser";
 import moment from "moment";
 import CheckAvailability from "./Modal/CheckAvailability";
 import { toast, ToastContainer } from "react-toastify";
@@ -39,16 +39,16 @@ class UserRequestService extends Form {
         name: "12 AM to 3 AM",
       },
       {
-        _id: "3:00-6:00",
+        _id: "03:00-6:00",
         name: "3 AM to 6 AM",
       },
 
       {
-        _id: "6:00-9:00",
+        _id: "06:00-9:00",
         name: "6 AM to 9 AM",
       },
       {
-        _id: "9:00-12:00",
+        _id: "09:00-12:00",
         name: "9 AM to 12 PM",
       },
       {
@@ -160,46 +160,35 @@ class UserRequestService extends Form {
     for (let j = 0; j < staff.length; j++) {
       gotSlotBooked = false;
       staffOnLeave = false;
+      let liesBetween = false;
 
       let availableFromArr = staff[j].availabilityFrom.split(":");
       let availableToArr = staff[j].availabilityTo.split(":");
 
+      let StaffAvailableForm = availableFromArr[0];
+      let StaffAvailableTo = availableToArr[0];
+
       let userSelectedTime = ServiceNeededFrom.split("-");
-      let temp = userSelectedTime[0].split(":");
-      let temp1 = userSelectedTime[1].split(":");
-      let availableFrom = temp[0];
-      let availabileTo = temp1[0];
+
       let userSelectedTime_ = userSelectedTime[0];
 
-      let userSelectedSlot_From = availableFrom.replace(/^(?:00:)?0?/, "");
-      let userSelectedSlot_To = availabileTo.replace(/^(?:00:)?0?/, "");
-      userSelectedTime_ = userSelectedTime_.replace(/^(?:00:)?0?/, "");
+      // userSelectedTime_ = userSelectedTime[0] + ":00";
+      //Logic to check userSelected Time lies between
+      //staff's duty or not
 
       //Checking if userSelected time comes in between a staff duty
       //If yes then we proceed further else check for other staff member
-      userSelectedTime_ = parseInt(userSelectedTime_.trim());
-      const StaffAvailableForm = parseInt(availableFromArr[0].trim());
-      const StaffAvailableTo = parseInt(availableToArr[0].trim());
 
-      //Logic to check userSelected Time lies between
-      //staff's duty or not
-      let liesBetween = false;
-      let check1 = false;
-      let check2 = false;
+      let format = "hh:mm";
+      let time = moment(userSelectedTime_, format),
+        beforeTime = moment(StaffAvailableForm, format),
+        afterTime = moment(StaffAvailableTo, format);
 
-      for (let count = StaffAvailableForm; count <= StaffAvailableTo; count++) {
-        if (parseInt(count) === parseInt(userSelectedSlot_From)) {
-          check1 = true;
-        }
-        if (parseInt(count) === parseInt(userSelectedSlot_To)) {
-          check2 = true;
-        }
-        if (check1 && check2) {
-          liesBetween = true;
-          break;
-        }
+      if (time.isAfter(beforeTime) && time.isBefore(afterTime)) {
+        liesBetween = true;
+      } else if (time.isSame(beforeTime) && time.isBefore(afterTime)) {
+        liesBetween = true;
       }
-
       if (liesBetween) {
         for (let i = 0; i < userRequests.length; i++) {
           if (staffOnLeave || gotSlotBooked) break;
@@ -216,12 +205,6 @@ class UserRequestService extends Form {
             //Checking If staff booked service time
             //lies between user requested time
 
-            // if (
-            //   (userSelectedTime_ >= bookedServiceFrom_ &&
-            //     userSelectedTime_ < bookedServiceTo_) ||
-            //   (userSelectedTime_ + 3 > bookedServiceFrom_ &&
-            //     userSelectedTime_ + 3 < bookedServiceTo_)
-            // ) {
             if (userRequests[i].ServiceNeededTime === ServiceNeededFrom) {
               const staffDutyOnSameDay = this.MatchUserSelected(
                 userRequests[i].Schedule
@@ -244,56 +227,39 @@ class UserRequestService extends Form {
                 staffOnLeave = true;
                 break;
               } else {
-                const leaveFromArr = staffLeaves[z].leaveFrom.split("-");
-                const leaveToArr = staffLeaves[z].leaveTo.split("-");
-                const scheduleArr = schedule.split("-");
+                let staffLeaveDateFrom = staffLeaves[z].leaveFrom.split("-");
+                let staffLeaveDateTo = staffLeaves[z].leaveTo.split("-");
+                let userSelectedDate = schedule.split("-");
 
-                let leaveFormYear = leaveFromArr[0];
-                let leaveFormMonth = leaveFromArr[1];
-                let leaveFromDay = leaveFromArr[2];
-
-                let leaveToYear = leaveToArr[0];
-                let leaveToMonth = leaveToArr[1];
-                let leaveToDay = leaveToArr[2];
-
-                let userScheduleDateYear = scheduleArr[0];
-                let userScheduleDateMonth = scheduleArr[1];
-                let userScheduleDateDay = scheduleArr[2];
-
-                leaveFormYear = leaveFormYear.replace(/^(?:00:)?0?/, "");
-                leaveFormMonth = leaveFormMonth.replace(/^(?:00:)?0?/, "");
-                leaveFromDay = leaveFromDay.replace(/^(?:00:)?0?/, "");
-
-                leaveToYear = leaveToYear.replace(/^(?:00:)?0?/, "");
-                leaveToMonth = leaveToMonth.replace(/^(?:00:)?0?/, "");
-                leaveToDay = leaveToDay.replace(/^(?:00:)?0?/, "");
-
-                userScheduleDateYear = userScheduleDateYear.replace(
-                  /^(?:00:)?0?/,
-                  ""
-                );
-                userScheduleDateMonth = userScheduleDateMonth.replace(
-                  /^(?:00:)?0?/,
-                  ""
-                );
-                userScheduleDateDay = userScheduleDateDay.replace(
-                  /^(?:00:)?0?/,
-                  ""
-                );
-
+                let staffLeaveDateFrom_ =
+                  staffLeaveDateFrom[0] +
+                  "/" +
+                  staffLeaveDateFrom[1] +
+                  "/" +
+                  staffLeaveDateFrom[2];
+                let staffLeaveDateTo_ =
+                  staffLeaveDateTo[0] +
+                  "/" +
+                  staffLeaveDateTo[1] +
+                  "/" +
+                  staffLeaveDateTo[2];
+                let userSelectedDate_ =
+                  userSelectedDate[0] +
+                  "/" +
+                  userSelectedDate[1] +
+                  "/" +
+                  userSelectedDate[2];
+                const compareDate = moment(userSelectedDate_, "YYYY/MM/DD");
+                const startDate = moment(staffLeaveDateFrom_, "YYYY/MM/DD");
+                const endDate = moment(staffLeaveDateTo_, "YYYY/MM/DD");
+                const isBetween = compareDate.isBetween(startDate, endDate);
                 if (
-                  userScheduleDateYear >= leaveFormYear &&
-                  userScheduleDateYear <= leaveToYear
+                  isBetween ||
+                  compareDate.isSame(userSelectedDate_) ||
+                  compareDate.isSame(staffLeaveDateTo_)
                 ) {
-                  const checkBetweenMonths =
-                    leaveFormMonth - userScheduleDateMonth;
-                  const checkBetweenMonth2 =
-                    leaveToMonth - userScheduleDateMonth;
-
-                  if (checkBetweenMonths > 0 && checkBetweenMonth2 > 0) {
-                    staffOnLeave = true;
-                    break;
-                  }
+                  staffOnLeave = true;
+                  break;
                 }
               }
             }

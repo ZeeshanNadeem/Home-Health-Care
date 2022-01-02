@@ -17,8 +17,13 @@ export default function CheckAvailabilityPopover({
   };
 
   const [userRequests, setUserRequests] = React.useState([]);
+  const [leaves, setLeaves] = React.useState([]);
   React.useEffect(async () => {
     const { data } = await axios.get(config.apiEndPoint + "/userRequests");
+    const { data: staffLeaves } = await axios.get(
+      config.apiEndPoint + "/staffLeave"
+    );
+    setLeaves(staffLeaves);
     setUserRequests(data);
   }, []);
 
@@ -76,6 +81,7 @@ export default function CheckAvailabilityPopover({
           <CheckAvailability
             availabilityData={availabilityData}
             userScheduledDate={userScheduledDate}
+            staffLeaves={leaves}
             userRequests={userRequests}
           />
         </Popover>
@@ -94,6 +100,7 @@ export default function CheckAvailabilityPopover({
           <CheckAvailability
             availabilityData={availabilityData}
             userScheduledDate={userScheduledDate}
+            staffLeaves={leaves}
             userRequests={userRequests}
           />
         </Popover>

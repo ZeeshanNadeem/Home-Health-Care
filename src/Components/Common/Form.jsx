@@ -62,77 +62,62 @@ class Form extends React.Component {
       config.apiEndPoint + "/staffLeave"
     );
     const { schedule } = this.state.doctorForm;
-    let filteredStaff = [];
+    let filteredStaff = staff;
+
     for (let i = 0; i < staff.length; i++) {
+      console.log(i);
+
       let staffOnLeave = false;
       for (let j = 0; j < staffLeaves.length; j++) {
         if (staff[i]._id === staffLeaves[j].staff._id) {
           if (staffLeaves[j].leaveFrom === schedule) {
             staffOnLeave = true;
-            // if (filteredStaff.length > 0) {
-            staff = staff.filter((s) => s._id !== staffLeaves[j].staff._id);
-            // } else {
-            //   staff = staff.filter((s) => s._id !== staffLeaves[j].staff._id);
-            // }
 
-            break;
-          } else {
-            const leaveFromArr = staffLeaves[j].leaveFrom.split("-");
-            const leaveToArr = staffLeaves[j].leaveTo.split("-");
-            const scheduleArr = schedule.split("-");
-
-            let leaveFormYear = leaveFromArr[0];
-            let leaveFormMonth = leaveFromArr[1];
-            let leaveFromDay = leaveFromArr[2];
-
-            let leaveToYear = leaveToArr[0];
-            let leaveToMonth = leaveToArr[1];
-            let leaveToDay = leaveToArr[2];
-
-            let userScheduleDateYear = scheduleArr[0];
-            let userScheduleDateMonth = scheduleArr[1];
-            let userScheduleDateDay = scheduleArr[2];
-
-            leaveFormYear = leaveFormYear.replace(/^(?:)?0?/, "");
-            leaveFormMonth = leaveFormMonth.replace(/^(?:)?0?/, "");
-            leaveFromDay = leaveFromDay.replace(/^(?:)?0?/, "");
-
-            leaveToYear = leaveToYear.replace(/^(?:)?0?/, "");
-            leaveToMonth = leaveToMonth.replace(/^(?:)?0?/, "");
-            leaveToDay = leaveToDay.replace(/^(?:)?0?/, "");
-
-            userScheduleDateYear = userScheduleDateYear.replace(/^(?:)?0?/, "");
-            userScheduleDateMonth = userScheduleDateMonth.replace(
-              /^(?:)?0?/,
-              ""
+            filteredStaff = filteredStaff.filter(
+              (s) => s._id !== staffLeaves[j].staff._id
             );
-            userScheduleDateDay = userScheduleDateDay.replace(/^(?:)?0?/, "");
+          } else {
+            let staffLeaveDateFrom = staffLeaves[j].leaveFrom.split("-");
+            let staffLeaveDateTo = staffLeaves[j].leaveTo.split("-");
+            let userSelectedDate = schedule.split("-");
 
+            let staffLeaveDateFrom_ =
+              staffLeaveDateFrom[0] +
+              "/" +
+              staffLeaveDateFrom[1] +
+              "/" +
+              staffLeaveDateFrom[2];
+            let staffLeaveDateTo_ =
+              staffLeaveDateTo[0] +
+              "/" +
+              staffLeaveDateTo[1] +
+              "/" +
+              staffLeaveDateTo[2];
+            let userSelectedDate_ =
+              userSelectedDate[0] +
+              "/" +
+              userSelectedDate[1] +
+              "/" +
+              userSelectedDate[2];
+            const compareDate = moment(userSelectedDate_, "YYYY/MM/DD");
+            const startDate = moment(staffLeaveDateFrom_, "YYYY/MM/DD");
+            const endDate = moment(staffLeaveDateTo_, "YYYY/MM/DD");
+            const isBetween = compareDate.isBetween(startDate, endDate);
             if (
-              userScheduleDateYear >= leaveFormYear &&
-              userScheduleDateYear <= leaveToYear
+              isBetween ||
+              compareDate.isSame(startDate) ||
+              compareDate.isSame(endDate)
             ) {
-              const checkBetweenMonths = leaveFormMonth - userScheduleDateMonth;
-              const checkBetweenMonth2 = leaveToMonth - userScheduleDateMonth;
-
-              if (checkBetweenMonths > 0 && checkBetweenMonth2 > 0) {
-                staffOnLeave = true;
-                // if (filteredStaff.length > 0) {
-                staff = staff.filter((s) => s._id !== staffLeaves[j].staff._id);
-                // } else {
-                //   filteredStaff = staff.filter(
-                //     (s) => s._id !== staffLeaves[j].staff._id
-                //   );
-                // }
-
-                break;
-              }
+              staffOnLeave = true;
+              filteredStaff = filteredStaff.filter(
+                (s) => s._id !== staffLeaves[j].staff._id
+              );
             }
           }
         }
       }
     }
-    return staff;
+    return filteredStaff;
   };
 
   //Deleting those staff members who are currently on bookedSlots Leave.
@@ -250,7 +235,7 @@ class Form extends React.Component {
         name: "9 AM to 12 PM",
       },
       {
-        _id: "012:00-15:00",
+        _id: "12:00-15:00",
         name: "12 PM to 3 PM",
       },
       {
@@ -281,13 +266,12 @@ class Form extends React.Component {
           afterTime = moment(slotTo, format);
 
         if (
-          currentHour_.isBetween(beforeTime, afterTime) ||
-          currentHour_.isBefore(beforeTime, afterTime)
+          // currentHour_.isBetween(beforeTime, afterTime) ||
+          currentHour_.isBefore(beforeTime, afterTime) ||
+          currentHour_.isSame(beforeTime)
         ) {
         } else {
-          if (currentHour_.isSame(beforeTime)) {
-            console.log("SAME");
-          } else delete timeArr[i];
+          delete timeArr[i];
         }
       }
 
@@ -303,7 +287,7 @@ class Form extends React.Component {
       // }
 
       this.setState({ timeArr });
-    }
+    } else this.setState({ timeArr });
   };
   handleChange = ({ currentTarget: input }) => {
     const errorMessage = this.validateProperty(input);
