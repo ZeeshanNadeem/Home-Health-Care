@@ -35,7 +35,7 @@ class UserRequestService extends Form {
     cites: ["Islamabad", "Rawalpindi"],
     timeArr: [
       {
-        _id: "24:00-3:00",
+        _id: "00:00-3:00",
         name: "12 AM to 3 AM",
       },
       {
@@ -64,7 +64,7 @@ class UserRequestService extends Form {
         name: "6 PM to 9 PM",
       },
       {
-        _id: "21:00-24:00",
+        _id: "21:00-00:00",
         name: "9 PM to 12 AM",
       },
     ],
@@ -140,6 +140,7 @@ class UserRequestService extends Form {
     const { organization, service } = this.state.doctorForm;
     const m = moment(this.state.doctorForm.schedule);
     const dayNo = m.day();
+    if (dayNo === "0") dayNo = 7;
     const { data: staff } = await axios.get(
       config.staff +
         `/?day=${dayNo}&service=${service}&organization=${organization}`
@@ -169,8 +170,11 @@ class UserRequestService extends Form {
       let StaffAvailableTo = availableToArr[0];
 
       let userSelectedTime = ServiceNeededFrom.split("-");
+      let temp1 = userSelectedTime[0].split(":");
+      let temp2 = userSelectedTime[1].split(":");
 
-      let userSelectedTime_ = userSelectedTime[0];
+      let userSelectedTime_Form = temp1[0];
+      let userSelectedTime_To = temp2[0];
 
       // userSelectedTime_ = userSelectedTime[0] + ":00";
       //Logic to check userSelected Time lies between
@@ -179,16 +183,33 @@ class UserRequestService extends Form {
       //Checking if userSelected time comes in between a staff duty
       //If yes then we proceed further else check for other staff member
 
-      let format = "hh:mm";
-      let time = moment(userSelectedTime_, format),
-        beforeTime = moment(StaffAvailableForm, format),
-        afterTime = moment(StaffAvailableTo, format);
+      // let format = "hh:mm";
+      // let time = moment(userSelectedTime_, format),
+      //   beforeTime = moment(StaffAvailableForm, format),
+      //   afterTime = moment(StaffAvailableTo, format);
 
-      if (time.isAfter(beforeTime) && time.isBefore(afterTime)) {
-        liesBetween = true;
-      } else if (time.isSame(beforeTime) && time.isBefore(afterTime)) {
+      // if (time.isAfter(beforeTime) && time.isBefore(afterTime)) {
+      //   liesBetween = true;
+      // } else if (time.isSame(beforeTime) && time.isBefore(afterTime)) {
+      //   liesBetween = true;
+      // }
+
+      let format = "hh";
+      let user_From = moment(userSelectedTime_Form, format),
+        staff_From = moment(StaffAvailableForm, format),
+        staff_To = moment(StaffAvailableTo, format),
+        user_To = moment(userSelectedTime_To, format);
+
+      if (
+        (user_From.isBetween(staff_From, staff_To) &&
+          user_To.isBetween(staff_From, staff_To)) ||
+        (user_From.isAfter(staff_From) && user_To.isSame(staff_To)) ||
+        (user_From.isSame(staff_From) && user_To.isSame(staff_To)) ||
+        (user_From.isSame(staff_From) && user_To.isBefore(staff_To))
+      ) {
         liesBetween = true;
       }
+
       if (liesBetween) {
         for (let i = 0; i < userRequests.length; i++) {
           if (staffOnLeave || gotSlotBooked) break;

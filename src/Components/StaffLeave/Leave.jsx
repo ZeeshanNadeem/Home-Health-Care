@@ -382,7 +382,7 @@ class Leave extends Form {
       // Assigning that staff a duty
       if (!gotSlotBooked && !staffOnLeave && liesBetween) {
         serviceDemander.staffMemberID = staffGot[j]._id;
-
+        console.log("Service Demander::", serviceDemander);
         try {
           await axios.post(
             "http://localhost:3000/api/userRequests?assignDuty=abc",
