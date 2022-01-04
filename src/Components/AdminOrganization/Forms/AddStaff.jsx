@@ -6,6 +6,7 @@ import Alert from "@material-ui/lab/Alert";
 import { toast, ToastContainer } from "react-toastify";
 import jwtDecode from "jwt-decode";
 import config from "../../Api/config.json";
+import { breadcrumbsClasses } from "@mui/material";
 class NurseForm extends Form {
   state = {
     doctorForm: {
@@ -15,10 +16,10 @@ class NurseForm extends Form {
       password: "",
       serviceID: "",
       qualification: "",
-      availabilityFrom: "",
-      availabilityTo: "",
-      availabileDayFrom: "",
-      availabileDayTo: "",
+      // availabilityFrom: "",
+      // availabilityTo: "",
+      // availabileDayFrom: "",
+      // availabileDayTo: "",
       email: "",
       password: "",
       // email: "",
@@ -84,6 +85,62 @@ class NurseForm extends Form {
     ],
     isEditModel: "",
     services: [],
+    daysAvailable: [
+      {
+        name: "MON",
+        value: false,
+      },
+      {
+        name: "TUE",
+        value: false,
+      },
+      {
+        name: "WED",
+        value: false,
+      },
+      {
+        name: "THRU",
+        value: false,
+      },
+      { name: "FRI", value: false },
+      { name: "SAT", value: false },
+      { name: "SUN", value: false },
+    ],
+    slotTime: [
+      {
+        name: "12 AM to 3 AM",
+        value: false,
+      },
+      {
+        name: "3 AM to 6 AM",
+        value: false,
+      },
+
+      {
+        value: false,
+        name: "6 AM to 9 AM",
+      },
+      {
+        value: false,
+        name: "9 AM to 12 PM",
+      },
+      {
+        value: false,
+        name: "12 PM to 3 PM",
+      },
+      {
+        value: false,
+        name: "3 PM to 6 PM",
+      },
+      {
+        value: false,
+        name: "6 PM to 9 PM",
+      },
+      {
+        value: false,
+        name: "9 PM to 12 AM",
+      },
+    ],
   };
 
   schema = {
@@ -97,10 +154,10 @@ class NurseForm extends Form {
       : Joi.string().min(5).max(255).required().label("Password"),
     serviceID: Joi.string().required().label("Staff Type"),
     qualification: Joi.string().required().label("Qualification"),
-    availabilityFrom: Joi.string().required().label("Availability From"),
-    availabilityTo: Joi.string().required().label("Availability To"),
-    availabileDayFrom: Joi.string().required().label("Available Day"),
-    availabileDayTo: Joi.string().required().label("Available Day"),
+    // availabilityFrom: Joi.string().required().label("Availability From"),
+    // availabilityTo: Joi.string().required().label("Availability To"),
+    // availabileDayFrom: Joi.string().required().label("Available Day"),
+    // availabileDayTo: Joi.string().required().label("Available Day"),
     // email: Joi.string().required().label("Email"),
     phone: Joi.number().required().label("Phone No"),
   };
@@ -125,10 +182,8 @@ class NurseForm extends Form {
       serviceID: doctorForm.serviceID,
       Organization: user.Organization,
       qualificationID: doctorForm.qualification,
-      availabilityFrom: doctorForm.availabilityFrom,
-      availabilityTo: doctorForm.availabilityTo,
-      availabileDayFrom: doctorForm.availabileDayFrom,
-      availabileDayTo: doctorForm.availabileDayTo,
+      availableTime: this.state.slotTime,
+      availableDays: this.state.daysAvailable,
       Rating: userObj.staffMember.Rating,
       RatingAvgCount: userObj.staffMember.RatingAvgCount,
       // email: doctorForm.email,
@@ -184,10 +239,13 @@ class NurseForm extends Form {
       Organization: user.Organization,
       qualificationID: doctorForm.qualification,
       phone: doctorForm.phone,
-      availabilityFrom: doctorForm.availabilityFrom,
-      availabilityTo: doctorForm.availabilityTo,
-      availabileDayFrom: doctorForm.availabileDayFrom,
-      availabileDayTo: doctorForm.availabileDayTo,
+
+      availableTime: this.state.slotTime,
+      availableDays: this.state.daysAvailable,
+      // availabilityFrom: doctorForm.availabilityFrom,
+      // availabilityTo: doctorForm.availabilityTo,
+      // availabileDayFrom: doctorForm.availabileDayFrom,
+      // availabileDayTo: doctorForm.availabileDayTo,
       Rating: 0,
       RatingAvgCount: 0,
 
@@ -293,14 +351,19 @@ class NurseForm extends Form {
 
       doctorForm.serviceID = staffMemberData.staffSpeciality._id;
       doctorForm.qualification = staffMemberData.qualification._id;
-      doctorForm.availabilityFrom = staffMemberData.availabilityFrom;
-      doctorForm.availabilityTo = staffMemberData.availabilityTo;
-      doctorForm.availabileDayFrom = staffMemberData.availabileDayFrom;
-      doctorForm.availabileDayTo = staffMemberData.availabileDayTo;
+
+      // doctorForm.availabilityFrom = staffMemberData.availabilityFrom;
+      // doctorForm.availabilityTo = staffMemberData.availabilityTo;
+      // doctorForm.availabileDayFrom = staffMemberData.availabileDayFrom;
+      // doctorForm.availabileDayTo = staffMemberData.availabileDayTo;
       doctorForm.phone = staffMemberData.phone;
       // doctorForm.email = staffMemberData.email;
 
-      this.setState({ doctorForm });
+      this.setState({
+        doctorForm,
+        slotTime: staffMemberData.availableTime,
+        daysAvailable: staffMemberData.availableDays,
+      });
     }
     this.setState({ qualification, services: services.results });
   }
@@ -409,51 +472,81 @@ class NurseForm extends Form {
               </article>
             </article>
 
-            <article className="addStaff-Fields-grouping">
+            <article className="time-slots">
               <article className="one-group-first-item addStaff-group-alignment">
                 <article className="label-addStaff">
-                  {this.renderLabel("Available From", "availabilityFrom")}
+                  {this.renderLabel("Available Slots", "availabilityFrom")}
                 </article>
-                <article className="addStaff-special-fields">
-                  {this.renderDropDown(
-                    "time",
-                    this.state.timeArr,
-                    "availabilityFrom",
-                    "availabilityFrom",
-                    "Please Select Time"
-                  )}
-                  {/* {this.renderInput(
-                    "time",
-                    "availabilityFrom",
-                    "availabilityFrom",
-                    "availabilityFrom"
-                  )} */}
-                </article>
-              </article>
-
-              <article className="one-group-second-item addStaff-group-alignment">
-                <article className="label-addStaff">
-                  {this.renderLabel("Available To", "availabilityTo")}
-                </article>
-                <article className="addStaff-special-fields">
-                  {/* {this.renderInput(
-                    "time",
-                    "availabilityTo",
-                    "availabilityTo",
-                    "availabilityTo"
-                  )} */}
-                  {this.renderDropDown(
-                    "time",
-                    this.state.timeArr,
-                    "availabilityTo",
-                    "availabilityTo",
-                    "Please Select Time"
+                <article className="time-slots">
+                  {this.state.slotTime.map((day) =>
+                    day.name === "12 PM to 3 PM" ||
+                    day.name === "3 PM to 6 PM" ||
+                    day.name === "6 PM to 9 PM" ||
+                    day.name === "9 PM to 12 AM" ? (
+                      <article></article>
+                    ) : (
+                      <article>
+                        <article className="time-slots-Chk-Box">
+                          {this.renderCheckBoxForSlots(
+                            day.name,
+                            day.name,
+                            day.value,
+                            day.name
+                          )}
+                        </article>
+                      </article>
+                    )
                   )}
                 </article>
               </article>
             </article>
 
-            <article className="addStaff-Fields-grouping">
+            <article className="time-slots">
+              <article className="one-group-first-item addStaff-group-alignment">
+                <article className="time-slots">
+                  {this.state.slotTime.map((day) =>
+                    day.name === "12 AM to 3 AM" ||
+                    day.name === "3 AM to 6 AM" ||
+                    day.name === "6 AM to 9 AM" ||
+                    day.name === "9 AM to 12 PM" ? (
+                      <article></article>
+                    ) : (
+                      <article>
+                        <article className="time-slots-Chk-Box">
+                          {this.renderCheckBoxForSlots(
+                            day.name,
+                            day.name,
+                            day.value,
+                            day.name
+                          )}
+                        </article>
+                      </article>
+                    )
+                  )}
+                </article>
+              </article>
+            </article>
+            <article className="time-slots">
+              <article className="one-group-first-item addStaff-group-alignment">
+                <article className="label-addStaff">
+                  {this.renderLabel("AVAILABLE DAYS", "availabilityFrom")}
+                </article>
+                <article className="time-slots">
+                  {this.state.daysAvailable.map((day) => (
+                    <article className="time-slots-Chk-Box">
+                      {this.renderCheckBoxForDays(
+                        day.name,
+                        day.name,
+                        day.value,
+                        day.name
+                      )}
+                    </article>
+                  ))}
+                </article>
+              </article>
+            </article>
+
+            {/* <article className="addStaff-Fields-grouping">
               <article className="addStaff-input addStaff-group-alignment one-group-first-item">
                 <article className="label-addStaff">
                   {this.renderLabel(
@@ -486,7 +579,7 @@ class NurseForm extends Form {
                   )}
                 </article>
               </article>
-            </article>
+            </article> */}
 
             {/* <article>{this.renderLabel("Email", "email")}</article>
             <article>

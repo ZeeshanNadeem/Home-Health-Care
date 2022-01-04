@@ -212,10 +212,10 @@ const StaffPanel = ({ setProgress }) => {
                 {/* <th scope="col">DOB</th> */}
                 <th scope="col">Designation</th>
                 <th scope="col">Qualification</th>
-                <th scope="col">AvailableFrom</th>
+                {/* <th scope="col">AvailableFrom</th>
                 <th scope="col">AvailableTo</th>
                 <th scope="col">From Day</th>
-                <th scope="col">To Day</th>
+                <th scope="col">To Day</th> */}
                 <th scope="col">Phone No</th>
                 <th scope="col"></th>
                 <th scope="col"></th>
@@ -229,10 +229,10 @@ const StaffPanel = ({ setProgress }) => {
                   <td>{data.staffSpeciality.name}</td>
 
                   <td>{data.qualification.name}</td>
-                  <td>{data.availabilityFrom}</td>
+                  {/* <td>{data.availabilityFrom}</td>
                   <td>{data.availabilityTo}</td>
                   <td>{checkDay(data.availabileDayFrom)}</td>
-                  <td>{checkDay(data.availabileDayTo)}</td>
+                  <td>{checkDay(data.availabileDayTo)}</td> */}
                   {/* <td>{data.email}</td> */}
                   <td>{data.phone}</td>
                   <td>

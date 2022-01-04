@@ -68,6 +68,7 @@ class UserRequestService extends Form {
         name: "9 PM to 12 AM",
       },
     ],
+    availableSlots: [],
   };
   async componentDidMount() {
     const jwt = localStorage.getItem("token");

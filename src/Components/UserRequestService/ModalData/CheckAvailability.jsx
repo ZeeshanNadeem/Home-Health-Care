@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+
 import config from "../../Api/config.json";
 import moment from "moment";
 import jwtDecode from "jwt-decode";
 import axios from "axios";
+import { Global } from "@emotion/react";
 
 const CheckAvailability = ({
   availabilityData,
@@ -22,7 +24,7 @@ const CheckAvailability = ({
     "9PM to 12AM",
   ]);
 
-  const [track, setTrack] = useState([]);
+  let [track, setTrack] = useState([]);
 
   //Checking booked slots of a staff
   //checking if a staff has got slots booked or not
@@ -67,7 +69,7 @@ const CheckAvailability = ({
     // a paticular time slot.No need to check other staff members
     // on that time slot.That slotTime  is being pushed in an array.
     // Skipping
-    if (slotTime === "12AM to 3AM") {
+    if (slotTime === "9AM to 12PM") {
       console.log("aaa");
     }
     let checkSlot = track.some(
@@ -75,6 +77,12 @@ const CheckAvailability = ({
     );
     if (checkSlot) return;
 
+    let provideServiceAtSlot = false;
+
+    if (staffMember.availableTime.includes({ name: slotTime })) {
+      provideServiceAtSlot = true;
+    }
+    return;
     let tempSlotTime = slotTime;
     let slotTimeFrom = "";
     let slotTimeTo = "";
@@ -278,6 +286,11 @@ const CheckAvailability = ({
     }
   };
 
+  const filteredUnavailableSlots = () => {
+    track = track.filter((slot) => slot.BookedSlot === false);
+    console.log("Track::", track);
+    global.track = track;
+  };
   return (
     <article>
       {availabilityData.length > 0 ? (
@@ -302,6 +315,8 @@ const CheckAvailability = ({
                 )}
               </arcticle>
             ))}
+            {filteredUnavailableSlots()}
+
             {track.map((data) => (
               <tr key={data.timeSlot}>
                 <td className="availability-table-th">

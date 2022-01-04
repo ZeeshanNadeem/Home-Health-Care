@@ -33,6 +33,7 @@ import LoadingBar from "react-top-loading-bar";
 const App = () => {
   const isLoggedIn = localStorage.getItem("token");
   const [progress, setProgress] = useState(0);
+
   return (
     <article>
       <LoadingBar
