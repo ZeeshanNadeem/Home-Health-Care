@@ -170,46 +170,6 @@ class Form extends React.Component {
     return staff;
   };
 
-  //Checking booked slots of a staff
-  //checking if a staff has got slots booked or not
-  getBookedSlots = (staff, slotTimeFrom, slotTimeTo) => {
-    const { schedule } = this.state.doctorForm;
-    let GotSlotBooked = false;
-    for (let i = 0; i < this.userRequests.length; i++) {
-      //61d2487764ecd57afa992f66
-      //61d2487764ecd57afa992f66
-      if (
-        this.userRequests[i].staffMemberAssigned._id === staff._id &&
-        this.userRequests[i].Schedule === schedule
-      ) {
-        let serviceBookedFrom =
-          this.userRequests[i].ServiceNeededTime.split("-");
-        let temp1 = serviceBookedFrom[0];
-        let temp2 = serviceBookedFrom[1];
-        let serviceBookedFrom_ = temp1.split(":");
-        let serviceBookedTo_ = temp2.split(":");
-
-        let format = "hh";
-        let serviceBookedFrom_staff = moment(serviceBookedFrom_, format),
-          slot_From = moment(slotTimeFrom, format),
-          slot_To = moment(slotTimeTo, format),
-          serviceBookedTo_staff = moment(serviceBookedTo_, format);
-        // serviceBookedFrom_[0] = serviceBookedFrom_[0].replace(/^0+/, "");
-        // serviceBookedTo_[0] = serviceBookedTo_[0].replace(/^0+/, "");
-
-        if (
-          serviceBookedFrom_staff.isSame(slot_From) &&
-          serviceBookedTo_staff.isSame(slot_To)
-          // parseInt(serviceBookedFrom_[0]) === parseInt(slotTimeFrom) &&
-          // parseInt(serviceBookedTo_[0]) === parseInt(slotTimeTo)
-        ) {
-          return true;
-        } else GotSlotBooked = false;
-      }
-    }
-    return GotSlotBooked;
-  };
-
   CheckAvailableStaff = () => {
     //Once there is a paticular staff member available at
     // a paticular time slot.No need to check other staff members
@@ -442,13 +402,169 @@ class Form extends React.Component {
     }
   };
 
-  //This functions filter time slots whenever the staff available is
+  //Checking booked slots of a staff
+  //checking if a staff has got slots booked or not
+  getBookedSlots = async (staff, slotTime) => {
+    const { data: userRequests } = await axios.get(config.userRequests);
+    let GotSlotBooked = false;
+    for (let i = 0; i < userRequests.length; i++) {
+      if (
+        userRequests[i].staffMemberAssigned._id === staff._id &&
+        userRequests[i].Schedule === this.state.doctorForm.schedule
+      ) {
+        let staffContainsSlot = userRequests.some(
+          (req) => req.ServiceNeededTime === slotTime
+        );
+        if (staffContainsSlot) {
+          return true;
+        } else GotSlotBooked = false;
+      }
+    }
+    return GotSlotBooked;
+  };
+
+  FilterNotAvailableSlots = async (schedule) => {
+    //Once there is a paticular staff member available at
+    // a paticular time slot.No need to check other staff members
+    // on that time slot.That slotTime  is being pushed in an array.
+    // Skipping
+
+    let track = [];
+
+    let slotTime = [
+      "12AM to 3AM",
+      "3AM to 6AM",
+      "6AM to 9AM",
+      "9AM to 12PM",
+      "12PM to 3PM",
+      "3PM to 6PM",
+      "6PM to 9PM",
+      "9PM to 12AM",
+    ];
+    const { organization, service } = this.state.doctorForm;
+    const doctorForm = { ...this.state.doctorForm };
+    const m = moment(schedule);
+    let dayNo = m.day();
+    if (dayNo === 0) dayNo = "SUN";
+    else if (dayNo === 1) dayNo = "MON";
+    else if (dayNo === 2) dayNo = "TUE";
+    else if (dayNo === 3) dayNo = "WED";
+    else if (dayNo === 4) dayNo = "THRU";
+    else if (dayNo === 5) dayNo = "FRI";
+    else if (dayNo === 6) dayNo = "SAT";
+    const { data: availabilityData } = await axios.get(
+      config.staff +
+        `/?day=${dayNo}&service=${service}&organization=${organization}`
+    );
+
+    const { availableSlots } = this.state;
+    for (let i = 0; i < availabilityData.length; i++) {
+      for (let j = 0; j < slotTime.length; j++) {
+        let checkSlot = track.some(
+          (x) => x.timeSlot === slotTime[j] && x.BookedSlot === false
+        );
+        if (checkSlot) return;
+
+        let staffContainsSlot = availabilityData[i].availableTime.some(
+          (staff) => staff.time === slotTime[j] && staff.value === true
+        );
+        let slotBooked = false;
+        if (staffContainsSlot) {
+          //   //Checking staff member's duty booked
+          //   //On a slot or not.Slots are predefined
+          //   //Staff members are sent to this function one by one
+
+          const slotBookedOfStaffMember = this.getBookedSlots(
+            availabilityData[i],
+            slotTime[j]
+          );
+
+          if (slotBookedOfStaffMember) {
+            //Slot is booked
+            //We send false here
+            //So on that basis cross could be represented
+
+            //Checking if this timeSlot exists and tick is there
+            let check = track.some(
+              (x) => x.timeSlot === slotTime[j] && x.BookedSlot === false
+            );
+
+            //Checking if timeSlots exists and slot is booked means cross
+            let check1 = track.some(
+              (x) => x.timeSlot === slotTime[j] && x.BookedSlot === true
+            );
+            if (!check && !check1) {
+              track.push({
+                timeSlot: slotTime[j],
+                BookedSlot: true,
+              });
+            }
+            slotBooked = true;
+          }
+
+          if (!slotBooked) {
+            //Slot is not booked
+            //We send true here
+            //So on that basis tick could be represented
+            //If any staff member is avaialable at a paticular slot
+            //we just show tick as available there and push that time slot
+            //in an array.Next time we don't need a check on that slot
+
+            let check = track.some(
+              (x) => x.timeSlot === slotTime[j] && x.BookedSlot === false
+            );
+
+            let check1 = track.some(
+              (x) => x.timeSlot === slotTime[j] && x.BookedSlot === true
+            );
+            if (!check && !check1) {
+              track.push({
+                timeSlot: slotTime[j],
+                BookedSlot: false,
+              });
+            }
+            if (check1) {
+              if (track.length > 0) {
+                for (let t = 0; t < track.length; t++) {
+                  if (
+                    track[t].timeSlot === slotTime[j] &&
+                    track[t].BookedSlot === true
+                  ) {
+                    track[t].timeSlot = slotTime[j];
+                    track[t].BookedSlot = false;
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          //Slot doesn't lie between staff member timing
+          //We send false here
+          //So on that basis cross could be represented
+
+          let check = track.some(
+            (x) => x.timeSlot === slotTime[j] && x.BookedSlot === false
+          );
+
+          let check1 = track.some(
+            (x) => x.timeSlot === slotTime[j] && x.BookedSlot === true
+          );
+          if (!check && !check1) {
+            track.push({
+              timeSlot: slotTime[j],
+              BookedSlot: true,
+            });
+          }
+        }
+      }
+    }
+
+    this.setState({ availableSlots: track });
+  };
+
+  //This functions filter time slots whenever the staffAvailable is
   //determined.we show only that time slots in time dropdown on
   //which staff is available.
-  filterSlotsAvailable = () => {
-    this.CheckAvailableStaff();
-    console.log("availableSlots!!!::", this.state.availabilityData);
-  };
 
   //Showing available staff on a paticular date
   //Filling availableData array
@@ -484,7 +600,6 @@ class Form extends React.Component {
       // filteredStaff_ = await this.StaffBookedSlots(filteredStaff);
       if (filteredStaff) this.setState({ availabilityData: filteredStaff });
       else this.setState({ availabilityData: data });
-      this.filterSlotsAvailable();
     }
   };
 
@@ -594,7 +709,7 @@ class Form extends React.Component {
     this.setState({ doctorForm, errors });
     const { service, organization } = doctorForm;
     if (input.name === "schedule") {
-      this.filterSlotsAvailable();
+      this.FilterNotAvailableSlots(input.value);
       this.filterTime(input.value);
     }
     if (input.name === "organization") {

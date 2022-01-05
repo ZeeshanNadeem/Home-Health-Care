@@ -108,35 +108,43 @@ class NurseForm extends Form {
     ],
     slotTime: [
       {
+        time: "12AM to 3AM",
         name: "12 AM to 3 AM",
         value: false,
       },
       {
+        time: "3AM to 6AM",
         name: "3 AM to 6 AM",
         value: false,
       },
 
       {
+        time: "6AM to 9AM",
         value: false,
         name: "6 AM to 9 AM",
       },
       {
+        time: "9AM to 12PM",
         value: false,
         name: "9 AM to 12 PM",
       },
       {
+        time: "12PM to 3PM",
         value: false,
         name: "12 PM to 3 PM",
       },
       {
+        time: "3PM to 6PM",
         value: false,
         name: "3 PM to 6 PM",
       },
       {
+        time: "6PM to 9PM",
         value: false,
         name: "6 PM to 9 PM",
       },
       {
+        time: "9PM to 12AM",
         value: false,
         name: "9 PM to 12 AM",
       },

@@ -33,38 +33,73 @@ class UserRequestService extends Form {
     errors: [],
     staffLeaves: [],
     cites: ["Islamabad", "Rawalpindi"],
-    timeArr: [
+    // timeArr: [
+    //   {
+    //     _id: "12AM to 3AM",
+    //     name: "12 AM to 3 AM",
+    //   },
+    //   {
+    //     _id: "3AM to 6AM",
+    //     name: "3 AM to 6 AM",
+    //   },
+
+    //   {
+    //     _id: "6AM to 9AM",
+    //     name: "6 AM to 9 AM",
+    //   },
+    //   {
+    //     _id: "9AM to 12PM",
+    //     name: "9 AM to 12 PM",
+    //   },
+    //   {
+    //     _id: "12PM to 3PM",
+    //     name: "12 PM to 3 PM",
+    //   },
+    //   {
+    //     _id: "3PM to 6PM",
+    //     name: "3 PM to 6 PM",
+    //   },
+    //   {
+    //     _id: "6PM to 9PM",
+    //     name: "6 PM to 9 PM",
+    //   },
+    //   {
+    //     _id: "9PM to 12AM",
+    //     name: "9 PM to 12 AM",
+    //   },
+    // ],
+    requestTime: [
       {
-        _id: "00:00-3:00",
+        _id: "12AM to 3AM",
         name: "12 AM to 3 AM",
       },
       {
-        _id: "03:00-6:00",
+        _id: "3AM to 6AM",
         name: "3 AM to 6 AM",
       },
 
       {
-        _id: "06:00-9:00",
+        _id: "6AM to 9AM",
         name: "6 AM to 9 AM",
       },
       {
-        _id: "09:00-12:00",
+        _id: "9AM to 12PM",
         name: "9 AM to 12 PM",
       },
       {
-        _id: "12:00-15:00",
+        _id: "12PM to 3PM",
         name: "12 PM to 3 PM",
       },
       {
-        _id: "15:00-18:00",
+        _id: "3PM to 6PM",
         name: "3 PM to 6 PM",
       },
       {
-        _id: "18:00-21:00",
+        _id: "6PM to 9PM",
         name: "6 PM to 9 PM",
       },
       {
-        _id: "21:00-00:00",
+        _id: "9PM to 12AM",
         name: "9 PM to 12 AM",
       },
     ],
@@ -140,8 +175,14 @@ class UserRequestService extends Form {
     const { ServiceNeededFrom } = this.state.doctorForm;
     const { organization, service } = this.state.doctorForm;
     const m = moment(this.state.doctorForm.schedule);
-    const dayNo = m.day();
-    if (dayNo === "0") dayNo = 7;
+    let dayNo = m.day();
+    if (dayNo === 0) dayNo = "SUN";
+    else if (dayNo === 1) dayNo = "MON";
+    else if (dayNo === 2) dayNo = "TUE";
+    else if (dayNo === 3) dayNo = "WED";
+    else if (dayNo === 4) dayNo = "THRU";
+    else if (dayNo === 5) dayNo = "FRI";
+    else if (dayNo === 6) dayNo = "SAT";
     const { data: staff } = await axios.get(
       config.staff +
         `/?day=${dayNo}&service=${service}&organization=${organization}`
@@ -164,66 +205,14 @@ class UserRequestService extends Form {
       staffOnLeave = false;
       let liesBetween = false;
 
-      let availableFromArr = staff[j].availabilityFrom.split(":");
-      let availableToArr = staff[j].availabilityTo.split(":");
+      let staffContainsSlot = staff[j].availableTime.some(
+        (staff) => staff.time === ServiceNeededFrom && staff.value === true
+      );
 
-      let StaffAvailableForm = availableFromArr[0];
-      let StaffAvailableTo = availableToArr[0];
-
-      let userSelectedTime = ServiceNeededFrom.split("-");
-      let temp1 = userSelectedTime[0].split(":");
-      let temp2 = userSelectedTime[1].split(":");
-
-      let userSelectedTime_Form = temp1[0];
-      let userSelectedTime_To = temp2[0];
-
-      // userSelectedTime_ = userSelectedTime[0] + ":00";
-      //Logic to check userSelected Time lies between
-      //staff's duty or not
-
-      //Checking if userSelected time comes in between a staff duty
-      //If yes then we proceed further else check for other staff member
-
-      // let format = "hh:mm";
-      // let time = moment(userSelectedTime_, format),
-      //   beforeTime = moment(StaffAvailableForm, format),
-      //   afterTime = moment(StaffAvailableTo, format);
-
-      // if (time.isAfter(beforeTime) && time.isBefore(afterTime)) {
-      //   liesBetween = true;
-      // } else if (time.isSame(beforeTime) && time.isBefore(afterTime)) {
-      //   liesBetween = true;
-      // }
-
-      let format = "hh";
-      let user_From = moment(userSelectedTime_Form, format),
-        staff_From = moment(StaffAvailableForm, format),
-        staff_To = moment(StaffAvailableTo, format),
-        user_To = moment(userSelectedTime_To, format);
-
-      if (
-        (user_From.isBetween(staff_From, staff_To) &&
-          user_To.isBetween(staff_From, staff_To)) ||
-        (user_From.isAfter(staff_From) && user_To.isSame(staff_To)) ||
-        (user_From.isSame(staff_From) && user_To.isSame(staff_To)) ||
-        (user_From.isSame(staff_From) && user_To.isBefore(staff_To))
-      ) {
-        liesBetween = true;
-      }
-
-      if (liesBetween) {
+      if (staffContainsSlot) {
         for (let i = 0; i < userRequests.length; i++) {
           if (staffOnLeave || gotSlotBooked) break;
           if (staff[j]._id === userRequests[i].staffMemberAssigned._id) {
-            bookedServiceFrom = userRequests[i].ServiceNeededTime.split("-");
-
-            let temp = bookedServiceFrom[0].split(":");
-            let temp1 = bookedServiceFrom[1].split(":");
-            bookedServiceTo_ = temp[0];
-            bookedServiceFrom_ = temp1[0];
-
-            bookedServiceFrom_ = bookedServiceFrom_.replace(/^(?:00:)?0?/, "");
-
             //Checking If staff booked service time
             //lies between user requested time
 
@@ -288,7 +277,7 @@ class UserRequestService extends Form {
           }
         }
       }
-      if (!gotSlotBooked && !staffOnLeave && liesBetween) {
+      if (!gotSlotBooked && !staffOnLeave && staffContainsSlot) {
         tempArray.push(staff[j]);
       }
 
@@ -340,28 +329,6 @@ class UserRequestService extends Form {
 
           return;
         }
-
-        // const userRequest = {};
-        // userRequest.fullName = doctorForm.fullname;
-        // userRequest.userID = this.state.user._id;
-        // userRequest.staffMemberID = staff[j]._id;
-        // userRequest.OrganizationID = doctorForm.organization;
-        // userRequest.ServiceNeededFrom = doctorForm.ServiceNeededFrom;
-
-        // userRequest.ServiceID = doctorForm.service;
-        // userRequest.Schedule = doctorForm.schedule;
-        // // userRequest.Recursive = doctorForm.recursive;
-        // userRequest.Address = doctorForm.address;
-        // userRequest.PhoneNo = doctorForm.phoneno;
-
-        // try {
-        //   await axios.post(config.userRequest, userRequest);
-        //   toast.success("Meeting Scheduled");
-        // } catch (ex) {
-        //   toast.error(ex.response.data);
-        // }
-
-        // return;
       }
     }
     //Assigning duty on the basis of rating
@@ -544,7 +511,7 @@ class UserRequestService extends Form {
                     <article>
                       {this.renderDropDown(
                         "time",
-                        this.state.timeArr,
+                        this.state.requestTime,
                         "ServiceNeededFrom",
                         "ServiceNeededFrom",
                         "Please Select Visiting Time"
