@@ -63,3 +63,22 @@
 .time-slots-Chk-Box {
   margin-left: 2rem;
 }
+
+.signup-org-admin {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.org {
+  margin: 0;
+}
+
+.org-btn {
+  margin-top: -1rem;
+}
+
+main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
+  margin-bottom: 4rem;
+}

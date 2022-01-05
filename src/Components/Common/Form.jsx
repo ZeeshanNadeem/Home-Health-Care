@@ -170,6 +170,7 @@ class Form extends React.Component {
     return staff;
   };
 
+  //Checks whats slots of a staff member are available
   CheckAvailableStaff = () => {
     //Once there is a paticular staff member available at
     // a paticular time slot.No need to check other staff members
@@ -423,12 +424,10 @@ class Form extends React.Component {
     return GotSlotBooked;
   };
 
+  //This functions filter time slots whenever the staffAvailable is
+  //determined.we show only that time slots in time dropdown on
+  //which staff is available.Unavailable slot get filtered
   FilterNotAvailableSlots = async (schedule) => {
-    //Once there is a paticular staff member available at
-    // a paticular time slot.No need to check other staff members
-    // on that time slot.That slotTime  is being pushed in an array.
-    // Skipping
-
     let track = [];
 
     let slotTime = [
@@ -441,6 +440,7 @@ class Form extends React.Component {
       "6PM to 9PM",
       "9PM to 12AM",
     ];
+
     const { organization, service } = this.state.doctorForm;
     const doctorForm = { ...this.state.doctorForm };
     const m = moment(schedule);
@@ -474,7 +474,7 @@ class Form extends React.Component {
           //   //On a slot or not.Slots are predefined
           //   //Staff members are sent to this function one by one
 
-          const slotBookedOfStaffMember = this.getBookedSlots(
+          const slotBookedOfStaffMember = await this.getBookedSlots(
             availabilityData[i],
             slotTime[j]
           );
@@ -559,15 +559,57 @@ class Form extends React.Component {
       }
     }
 
-    this.setState({ availableSlots: track });
+    if (track.length > 0) {
+      const timeSlots = track.filter((time) => time.BookedSlot === false);
+      let requestTime = [
+        {
+          _id: "12AM to 3AM",
+          name: "12 AM to 3 AM",
+        },
+        {
+          _id: "3AM to 6AM",
+          name: "3 AM to 6 AM",
+        },
+
+        {
+          _id: "6AM to 9AM",
+          name: "6 AM to 9 AM",
+        },
+        {
+          _id: "9AM to 12PM",
+          name: "9 AM to 12 PM",
+        },
+        {
+          _id: "12PM to 3PM",
+          name: "12 PM to 3 PM",
+        },
+        {
+          _id: "3PM to 6PM",
+          name: "3 PM to 6 PM",
+        },
+        {
+          _id: "6PM to 9PM",
+          name: "6 PM to 9 PM",
+        },
+        {
+          _id: "9PM to 12AM",
+          name: "9 PM to 12 AM",
+        },
+      ];
+      let filterReqTime = [];
+      for (let i = 0; i < timeSlots.length; i++) {
+        for (let j = 0; j < requestTime.length; j++) {
+          if (timeSlots[i].timeSlot === requestTime[j]._id)
+            filterReqTime.push(requestTime[j]);
+        }
+      }
+      global.availableSlots = filterReqTime;
+      this.setState({ requestTime: filterReqTime });
+    }
   };
 
-  //This functions filter time slots whenever the staffAvailable is
-  //determined.we show only that time slots in time dropdown on
-  //which staff is available.
-
-  //Showing available staff on a paticular date
-  //Filling availableData array
+  //Sets avaialable Staff based on organization and service asked.
+  //At schedule a service page
   scheduleTime = async (date, doctorForm) => {
     const { service, organization } = this.state.doctorForm;
     if (service && organization) {
@@ -590,10 +632,7 @@ class Form extends React.Component {
         config.staff +
           `?day=${dayNo}&service=${serviceGot}&organization=${orgGot}`
       );
-      console.log(
-        config.staff +
-          `?day=${dayNo}&service=${serviceGot}&organization=${orgGot}`
-      );
+
       // let filteredStaff_ = [];
       const filteredStaff = await this.StaffLeaves(data);
 
@@ -614,6 +653,8 @@ class Form extends React.Component {
     this.setState({ Conditionalservices: data.results });
   };
 
+  //If user selects todays date this function filters time slot that
+  //have gone past today
   filterTime = (schedule) => {
     let date = new Date();
     let month = date.getMonth() + 1;
@@ -624,46 +665,11 @@ class Form extends React.Component {
     let year = date.getUTCFullYear();
     let TodayDate = year + "-" + month + "-" + day;
 
-    let timeArr = [
-      {
-        _id: "00:00-3:00",
-        name: "12 AM to 3 AM",
-      },
-      {
-        _id: "03:00-6:00",
-        name: "3 AM to 6 AM",
-      },
-
-      {
-        _id: "06:00-09:00",
-        name: "6 AM to 9 AM",
-      },
-      {
-        _id: "09:00-12:00",
-        name: "9 AM to 12 PM",
-      },
-      {
-        _id: "12:00-15:00",
-        name: "12 PM to 3 PM",
-      },
-      {
-        _id: "15:00-18:00",
-        name: "3 PM to 6 PM",
-      },
-      {
-        _id: "18:00-21:00",
-        name: "6 PM to 9 PM",
-      },
-      {
-        _id: "21:00-00:00",
-        name: "9 PM to 12 AM",
-      },
-    ];
-
+    const requestTime = [...this.state.requestTime];
     if (TodayDate === schedule) {
-      for (let i = 0; i < timeArr.length; i++) {
+      for (let i = 0; i < requestTime.length; i++) {
         let currentHour = date.getHours();
-        let temp1 = timeArr[i]._id.split("-");
+        let temp1 = requestTime[i]._id.split("-");
         let slotFrom = temp1[0];
         let slotTo = temp1[1];
         let format = "hh:mm";
@@ -679,7 +685,7 @@ class Form extends React.Component {
           currentHour_.isSame(beforeTime)
         ) {
         } else {
-          delete timeArr[i];
+          delete requestTime[i];
         }
       }
 
@@ -694,9 +700,10 @@ class Form extends React.Component {
       //   console.log("is not between");
       // }
 
-      this.setState({ timeArr });
-    } else this.setState({ timeArr });
+      this.setState({ requestTime });
+    } else this.setState({ requestTime });
   };
+
   handleChange = ({ currentTarget: input }) => {
     const errorMessage = this.validateProperty(input);
     const errors = { ...this.state.errors };
@@ -708,7 +715,7 @@ class Form extends React.Component {
 
     this.setState({ doctorForm, errors });
     const { service, organization } = doctorForm;
-    if (input.name === "schedule") {
+    if (input.name === "schedule" && service && organization) {
       this.FilterNotAvailableSlots(input.value);
       this.filterTime(input.value);
     }

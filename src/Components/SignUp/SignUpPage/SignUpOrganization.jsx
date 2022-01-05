@@ -65,8 +65,8 @@ class SignUpAsOrganization extends Form {
         <NavBar />
         <ToastContainer />
         <form onSubmit={this.handleSubmit}>
-          <article className="signup-page">
-            <main className="card-signup signup-style-org animate__animated animate__fadeInLeft">
+          <article className="signup-page signup-org-admin">
+            <main className="org card-signup signup-style-org animate__animated animate__fadeInLeft">
               <header>
                 <h1 className="sign-up-header-text animate__animated animate__zoomIn">
                   Sign Up
@@ -118,6 +118,15 @@ class SignUpAsOrganization extends Form {
                   "Which Organization Do You Belong To?"
                 )}
               </article>
+              {this.state.doctorForm.OrganizationID ===
+                "61d5bc5c69b35ef18754dc9a" && (
+                <article style={{ marginTop: "1rem" }}>
+                  <article className="signup-label">
+                    {this.renderLabel("Upload Your Resume", "Resume")}
+                  </article>
+                  <input type="file" accept=".pdf,.docx"></input>
+                </article>
+              )}
               {/* <article className="ChkBox-signup">
                 {this.renderCheckBox(
                   "checkbox",
@@ -127,7 +136,7 @@ class SignUpAsOrganization extends Form {
                 )}
               </article> */}
 
-              <article className="signup-page-btn">
+              <article className="org-btn signup-page-btn">
                 {this.renderBtn("Sign Up")}
               </article>
               {/* <a href="#" className="google btn">

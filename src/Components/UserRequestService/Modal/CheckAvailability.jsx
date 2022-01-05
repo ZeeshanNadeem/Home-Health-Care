@@ -3,12 +3,16 @@ import Popover from "@mui/material/Popover";
 
 import CheckAvailability from "../ModalData/CheckAvailability";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheckCircle,
+  faTimesCircle,
+} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import config from "../../Api/config.json";
 export default function CheckAvailabilityPopover({
   availabilityData,
   userScheduledDate,
+  requestTimeLength,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -25,6 +29,8 @@ export default function CheckAvailabilityPopover({
     );
     setLeaves(staffLeaves);
     setUserRequests(data);
+    console.log("CHECK AVAIALABILITY MODEL !!!");
+    console.log("requestTimeLength::", requestTimeLength);
   }, []);
 
   const handleClose = () => {
@@ -45,10 +51,15 @@ export default function CheckAvailabilityPopover({
       {tabMode ? (
         <span onClick={handleClick} className="check-availability">
           Check-Today's-Availability
-          {availabilityData.length > 0 && (
+          {requestTimeLength > 0 ? (
             <FontAwesomeIcon
               icon={faCheckCircle}
               style={{ color: "#4E9F3D" }}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faTimesCircle}
+              style={{ color: "#FF1700" }}
             />
           )}
         </span>
@@ -59,10 +70,15 @@ export default function CheckAvailabilityPopover({
           className="check-availability"
         >
           Check-Today's-Availability
-          {availabilityData.length > 0 && (
+          {requestTimeLength > 0 ? (
             <FontAwesomeIcon
               icon={faCheckCircle}
               style={{ color: "#4E9F3D" }}
+            />
+          ) : (
+            <FontAwesomeIcon
+              icon={faTimesCircle}
+              style={{ color: "#FF1700" }}
             />
           )}
         </span>
@@ -83,6 +99,7 @@ export default function CheckAvailabilityPopover({
             userScheduledDate={userScheduledDate}
             staffLeaves={leaves}
             userRequests={userRequests}
+            requestTimeLength={requestTimeLength}
           />
         </Popover>
       ) : (
@@ -102,6 +119,7 @@ export default function CheckAvailabilityPopover({
             userScheduledDate={userScheduledDate}
             staffLeaves={leaves}
             userRequests={userRequests}
+            requestTimeLength={requestTimeLength}
           />
         </Popover>
       )}

@@ -191,10 +191,7 @@ class UserRequestService extends Form {
     // const { data: staff } = await axios.get(config.staff);
 
     const { staffLeaves } = this.state;
-    let bookedServiceFrom_ = null;
-    let bookedServiceFrom = null;
-    let bookedServiceTo_ = null;
-    let bookedServiceTo = null;
+
     let gotSlotBooked = false;
     let staffOnLeave = false;
 
@@ -469,6 +466,13 @@ class UserRequestService extends Form {
                       <CheckAvailability
                         availabilityData={availabilityData}
                         userScheduledDate={schedule}
+                        requestTimeLength={
+                          this.state.doctorForm.service &&
+                          this.state.doctorForm.organization &&
+                          this.state.doctorForm.schedule
+                            ? this.state.requestTime.length
+                            : 0
+                        }
                       />
                     </div>
                   </article>

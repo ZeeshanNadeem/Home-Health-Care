@@ -2,16 +2,11 @@ import React, { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 
-import config from "../../Api/config.json";
-import moment from "moment";
-import jwtDecode from "jwt-decode";
-import axios from "axios";
-import { Global } from "@emotion/react";
-
 const CheckAvailability = ({
   availabilityData,
   userScheduledDate,
   userRequests,
+  requestTimeLength,
 }) => {
   const [availableTiming, setAvailableTime] = useState([
     "12AM to 3AM",
@@ -159,12 +154,10 @@ const CheckAvailability = ({
 
   const filteredUnavailableSlots = () => {
     track = track.filter((slot) => slot.BookedSlot === false);
-    console.log("Track::", track);
-    global.track = track;
   };
   return (
     <article>
-      {availabilityData.length > 0 ? (
+      {requestTimeLength > 0 ? (
         <table className="table availability-table">
           <thead>
             <tr>
@@ -200,7 +193,7 @@ const CheckAvailability = ({
                   ) : (
                     <FontAwesomeIcon
                       icon={faTimes}
-                      style={{ color: "#FF1700", marginLeft: "1rem" }}
+                      style={{ color: "#CD1818", marginLeft: "1rem" }}
                     />
                   )}
                 </td>
