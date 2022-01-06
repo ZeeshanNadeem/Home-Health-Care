@@ -8,12 +8,18 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { Document, Page, pdfjs } from "react-pdf";
+
 const OrganizationAdminRequests = ({ setProgress }) => {
   const [pendingAdmins, setPendingAdmins] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSelected, setPageSelected] = useState(1);
   const [searchedAdmin, setsearchedAdmin] = useState("");
   const [pageSize] = useState(9);
+
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+  pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
   useEffect(() => {
     setProgress(0);
@@ -30,6 +36,7 @@ const OrganizationAdminRequests = ({ setProgress }) => {
     const { data } = await axios.get(
       config.apiEndPoint + `/user?getOrganizationAdmins=abc`
     );
+    console.log("Pending admins::", data);
 
     setPendingAdmins(data);
   };
@@ -140,6 +147,11 @@ const OrganizationAdminRequests = ({ setProgress }) => {
       setTotalPages(totalPages);
     }
   };
+
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+    setPageNumber(1);
+  }
   return (
     <article className="ServicePanel-wrapper">
       <article className="searchBar-wrapper">
@@ -166,8 +178,10 @@ const OrganizationAdminRequests = ({ setProgress }) => {
                   <th scope="col">Name</th>
                   <th scope="col">Email</th>
                   <th scope="col">Request Status</th>
+
                   <th scope="col"></th>
                   <th scope="col"></th>
+                  <th scope="col">Resume</th>
                 </tr>
               </thead>
               <tbody>
@@ -204,6 +218,14 @@ const OrganizationAdminRequests = ({ setProgress }) => {
                           Decline
                         </Button>
                       </Link>
+                    </td>
+                    <td>
+                      <Document
+                        file="somefile.pdf"
+                        onLoadSuccess={onDocumentLoadSuccess}
+                      >
+                        <Page pageNumber={pageNumber} />
+                      </Document>
                     </td>
                   </tr>
                 ))}

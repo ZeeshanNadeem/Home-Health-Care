@@ -19,6 +19,7 @@ class SignUpAsOrganization extends Form {
       OrganizationID: "",
     },
     errors: {},
+    selectedFile: null,
     organizations: [],
   };
 
@@ -36,14 +37,40 @@ class SignUpAsOrganization extends Form {
     this.setState({ organizations: data.results });
   }
 
+  // setFile = (e) => {
+  //   this.setState({ selectedFile: e.target.files[0] });
+  // };
+
+  onChange = (e) => {
+    // setFile(e.target.files[0]);
+    this.setState({ selectedFile: e.target.files[0] });
+    // setFilename(e.target.files[0].name);
+  };
+
   handleSubmit = async (e) => {
     e.preventDefault();
+    // const fd = new FormData();
+    // fd.append("CV", this.state.selectedFile, this.state.name);
+
+    const formData = new FormData();
+    formData.append("CV", this.state.selectedFile);
+    formData.append("fullName", this.state.doctorForm.fullName);
+    formData.append("dateOfBirth", this.state.doctorForm.dateOfBirth);
+    formData.append("email", this.state.doctorForm.email);
+    formData.append("password", this.state.doctorForm.password);
+    formData.append(
+      "isOrganizationAdmin",
+      this.state.doctorForm.isOrganizationAdmin
+    );
+    formData.append("OrganizationID", this.state.doctorForm.OrganizationID);
 
     const errors = this.validate();
     this.setState({ errors: errors || {} });
     if (!errors) {
       try {
-        const response = await signingUp(this.state.doctorForm);
+        this.state.doctorForm = formData;
+        // const response = await signingUp(this.state.doctorForm);
+        const response = await signingUp(formData);
         localStorage.setItem("token", response.headers["x-auth-token"]);
         window.location = "/Home";
       } catch (ex) {
@@ -64,7 +91,7 @@ class SignUpAsOrganization extends Form {
       <React.Fragment>
         <NavBar />
         <ToastContainer />
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} enctype="multipart/form-data">
           <article className="signup-page signup-org-admin">
             <main className="org card-signup signup-style-org animate__animated animate__fadeInLeft">
               <header>
@@ -124,7 +151,11 @@ class SignUpAsOrganization extends Form {
                   <article className="signup-label">
                     {this.renderLabel("Upload Your Resume", "Resume")}
                   </article>
-                  <input type="file" accept=".pdf,.docx"></input>
+                  <input
+                    type="file"
+                    accept=".pdf,.docx"
+                    onChange={this.onChange}
+                  ></input>
                 </article>
               )}
               {/* <article className="ChkBox-signup">
