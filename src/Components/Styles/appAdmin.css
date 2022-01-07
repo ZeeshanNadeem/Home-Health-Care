@@ -196,12 +196,15 @@ main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
 }
 
 @media screen and (min-width: 800px) {
+  .price-txt {
+    width: 34rem !important;
+  }
   .txt-upload-label {
     margin-left: 1rem !important;
   }
   .btn-orgSignUp {
-    margin-top: 0.3rem !important;
-    padding-bottom: 2.5rem;
+    /* margin-top: 0.3rem !important; */
+    padding-bottom: 2rem;
   }
   .signup-org-group {
     display: flex;
@@ -229,5 +232,18 @@ main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
   }
   .servies-org {
     margin-left: 0;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .available-slots {
+    max-width: 50rem !important;
+    width: 47rem !important;
+    /* height: 21.5rem; */
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+  .avaialble-days-pg {
+    height: 100vh;
   }
 }

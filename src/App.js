@@ -30,6 +30,7 @@ import ConfirmMeeting from "./Components/UserRequestService/ConfirmMeeting";
 import React, { useState } from "react";
 import LoadingBar from "react-top-loading-bar";
 import PageNotFound from "./Components/NotFound/PageNotFound";
+import AvailableDays from "./Components/SignUp/SignUpPage/AvailableDays";
 
 const App = () => {
   const isLoggedIn = localStorage.getItem("token");
@@ -173,6 +174,12 @@ const App = () => {
         path="/NotFound"
         render={(props) => (
           <PageNotFound setProgress={setProgress} {...props} />
+        )}
+      />
+      <Route
+        path="/signUp/details"
+        render={(props) => (
+          <AvailableDays setProgress={setProgress} {...props} />
         )}
       />
     </article>

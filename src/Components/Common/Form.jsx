@@ -646,8 +646,12 @@ class Form extends React.Component {
   //Populating the current organization's services in the next dropdown that
   // is service
   populateServices = async (inputValue) => {
-    const { data } = await axios.get(
+    let { data } = await axios.get(
       `http://localhost:3000/api/services?organization=${inputValue}`
+    );
+
+    data.results = data.results.filter(
+      (req) => req.user.isOrganizationAdmin === "pending"
     );
 
     this.setState({ Conditionalservices: data.results });
