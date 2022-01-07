@@ -16,7 +16,7 @@ import Pagination from "@mui/material/Pagination";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import jwtDecode from "jwt-decode";
 
-const EditService = ({ setProgress }) => {
+const EditService = (props) => {
   const [services, setServices] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSelected, setPageSelected] = useState(1);
@@ -39,7 +39,7 @@ const EditService = ({ setProgress }) => {
   //Or Without any searched Value.
   const PopulateTable = async () => {
     let page = "";
-    setProgress(10);
+    props.setProgress(10);
     //When Searched Value Exists.
     if (searchedService) {
       const jwt = localStorage.getItem("token");
@@ -47,7 +47,7 @@ const EditService = ({ setProgress }) => {
       const { data } = await axios.get(
         `http://localhost:3000/api/services?organization=${user.Organization._id}`
       );
-      setProgress(30);
+      props.setProgress(30);
       const searchedResults = data.results.filter((d) =>
         d.serviceName.toUpperCase().startsWith(searchedService.toUpperCase())
       );
@@ -60,12 +60,12 @@ const EditService = ({ setProgress }) => {
         page = Math.ceil(searchedResults.length / pageSize);
       }
       setTotalPages(page);
-      setProgress(70);
+      props.setProgress(70);
       setServices(searchedResults);
       if (searchedResults.length === 0 && searchedService) {
         toast.error("No Results Found!");
       }
-      setProgress(100);
+      props.setProgress(100);
       return;
     }
     const jwt = localStorage.getItem("token");
@@ -76,7 +76,7 @@ const EditService = ({ setProgress }) => {
     );
 
     const totalDocuments = await getTotalDocuments();
-    setProgress(70);
+    props.setProgress(70);
     if (data.results.length > 0) {
       if (searchedService) {
         page = Math.ceil(totalDocuments.results.length / pageSize);
@@ -87,11 +87,22 @@ const EditService = ({ setProgress }) => {
 
       setServices(data.results);
     }
-    setProgress(100);
+    props.setProgress(100);
   };
 
   useEffect(async () => {
-    PopulateTable();
+    const jwt = localStorage.getItem("token");
+    if (!jwt) props.history.push("/NotFound");
+
+    if (jwt) {
+      const user = jwtDecode(jwt);
+      if (
+        user.isOrganizationAdmin === "false" ||
+        user.isOrganizationAdmin === "pending"
+      )
+        props.history.push("/NotFound");
+      if (user.isOrganizationAdmin === "Approved Admin") PopulateTable();
+    }
   }, [pageSelected, searchedService]);
 
   const deleteService = async (id) => {

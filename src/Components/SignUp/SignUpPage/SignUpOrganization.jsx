@@ -21,6 +21,8 @@ class SignUpAsOrganization extends Form {
     errors: {},
     selectedFile: null,
     organizations: [],
+    services: ["Nursing", "Physiotherapy", "Baby Vacination"],
+    qualification: ["BSN", "DPT", "MPT", "BSC", "MSN", "DNP"],
   };
 
   schema = {
@@ -92,20 +94,38 @@ class SignUpAsOrganization extends Form {
         <NavBar />
         <ToastContainer />
         <form onSubmit={this.handleSubmit} enctype="multipart/form-data">
-          <article className="signup-page signup-org-admin">
-            <main className="org card-signup signup-style-org animate__animated animate__fadeInLeft">
+          <article className="signup-page signup-org-admin ">
+            <main className="org-signup org card-signup signup-style-org animate__animated animate__fadeInLeft">
               <header>
-                <h1 className="sign-up-header-text animate__animated animate__zoomIn">
+                <h1
+                  className="label-signup-org sign-up-header-text animate__animated animate__zoomIn"
+                  style={{ margin: "0" }}
+                >
                   Sign Up
                 </h1>
               </header>
-              <article className="signup-label">
-                {this.renderLabel("FULL NAME", "fname")}
+              <article className="signup-org-group">
+                <article>
+                  <article className="signup-label" style={{ margin: "0" }}>
+                    {this.renderLabel("FULL NAME", "fname")}
+                  </article>
+                  <article className="txtField-signup-org">
+                    {this.renderInput("text", "fullName", "fullName")}
+                  </article>
+                </article>
+                <article className="second-item">
+                  <article className="signup-label" style={{ margin: "0" }}>
+                    {this.renderLabel("Email", "email")}
+                  </article>
+                  <article className="txtField-signup-org">
+                    {this.renderInput("text", "email", "email")}
+                  </article>
+                </article>
               </article>
-              <article>
-                {this.renderInput("text", "fullName", "fullName")}
-              </article>
-              <article className="signup-dob signup-label">
+              {/* <article
+                className="signup-dob signup-label"
+                style={{ margin: "0" }}
+              >
                 {this.renderLabel("Date of Birth", "dob")}
               </article>
               <article>
@@ -117,41 +137,93 @@ class SignUpAsOrganization extends Form {
                   "",
                   dobSignUpMaxDate
                 )}
-              </article>
-              <article className="signup-label">
-                {this.renderLabel("Email", "email")}
-              </article>
-              <article>{this.renderInput("text", "email", "email")}</article>
-              <article className="signup-label">
-                {this.renderLabel("Password", "password")}
-              </article>
-              <article>
-                {this.renderInput("password", "password", "password")}
-              </article>
-              {/* <article className="signup-label">
-                  {this.renderLabel("Confirm Password", "email")}
-                </article>
-                <article>{this.renderInput("text", "email", "email")}</article> */}
+              </article> */}
 
-              <article className="signup-label">
-                {this.renderLabel("Organization", "organization")}
-              </article>
-              <article>
-                {this.renderDropDown(
-                  "service For",
-                  this.state.organizations,
-                  "OrganizationID",
-                  "OrganizationID",
-                  "Which Organization Do You Belong To?"
-                )}
+              <article
+                style={{ marginTop: "0.5rem" }}
+                className="signup-org-group"
+              >
+                <article>
+                  <article className="signup-label" style={{ margin: "0" }}>
+                    {this.renderLabel("Password", "password")}
+                  </article>
+                  <article className="txtField-signup-org">
+                    {this.renderInput("password", "password", "password")}
+                  </article>
+                </article>
+                {/* <article className="signup-label">
+                    {this.renderLabel("Confirm Password", "email")}
+                  </article>
+                  <article>{this.renderInput("text", "email", "email")}</article> */}
+                <article className="second-item dropdown-second-item">
+                  <article className="signup-label" style={{ margin: "0" }}>
+                    {this.renderLabel("Organization", "organization")}
+                  </article>
+                  <article className="txtField-signup-org">
+                    {this.renderDropDown(
+                      "service For",
+                      this.state.organizations,
+                      "OrganizationID",
+                      "OrganizationID",
+                      "Which Organization Do You Belong To?"
+                    )}
+                  </article>
+                </article>
               </article>
               {this.state.doctorForm.OrganizationID ===
                 "61d5bc5c69b35ef18754dc9a" && (
-                <article style={{ marginTop: "1rem" }}>
-                  <article className="signup-label">
+                <article
+                  style={{ marginTop: "0.5rem" }}
+                  className="signup-org-group servies-org"
+                >
+                  <article>
+                    <article style={{ margin: "0" }}>
+                      {this.renderLabel("Service", "service")}
+                    </article>
+                    <article>
+                      {this.renderDropDown(
+                        "",
+                        this.state.services,
+                        "serviceOrg_",
+                        "serviceOrg_",
+                        "Please Select a Service"
+                      )}
+                    </article>
+                  </article>
+                  <article>
+                    <article
+                      className="second-item"
+                      style={{ marginTop: "1rem" }}
+                    ></article>
+                  </article>
+                  <article>
+                    <article className="signup-label" style={{ margin: "0" }}>
+                      {this.renderLabel("Qualification", "Qualification")}
+                    </article>
+                    <article className="txtField-signup-org">
+                      {this.renderDropDown(
+                        "service For",
+                        this.state.qualification,
+                        "OrganizationID",
+                        "OrganizationID",
+                        "Your Qualification?"
+                      )}
+                    </article>
+                  </article>
+                </article>
+              )}
+
+              {this.state.doctorForm.OrganizationID ===
+                "61d5bc5c69b35ef18754dc9a" && (
+                <article>
+                  <article
+                    className="txt-upload-label signup-label"
+                    style={{ margin: "0" }}
+                  >
                     {this.renderLabel("Upload Your Resume", "Resume")}
                   </article>
                   <input
+                    className="txt-upload"
                     type="file"
                     accept=".pdf,.docx"
                     onChange={this.onChange}
@@ -167,7 +239,7 @@ class SignUpAsOrganization extends Form {
                 )}
               </article> */}
 
-              <article className="org-btn signup-page-btn">
+              <article className="btn-orgSignUp org-btn signup-page-btn">
                 {this.renderBtn("Sign Up")}
               </article>
               {/* <a href="#" className="google btn">

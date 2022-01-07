@@ -6,8 +6,9 @@ import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import { faUserMd } from "@fortawesome/free-solid-svg-icons";
 
 import { Link } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 import "animate.css";
-const AppAdmin = ({ setProgress }) => {
+const AppAdmin = (props) => {
   const [showDocDetials, setDocDetails] = useState("");
   const [menuBarZindex, setMenuBarZindex] = useState("");
   const DoctorDetailsHandler = (name) => {
@@ -17,11 +18,18 @@ const AppAdmin = ({ setProgress }) => {
     }
   };
   React.useEffect(() => {
-    setProgress(0);
-    setProgress(10);
-    setProgress(20);
-    setProgress(40);
-    setProgress(100);
+    const jwt = localStorage.getItem("token");
+    if (!jwt) props.history.push("/NotFound");
+    if (jwt) {
+      const user = jwtDecode(jwt);
+      if (user.isAppAdmin === "false" || !user.isAppAdmin)
+        props.history.push("/NotFound");
+      props.setProgress(0);
+      props.setProgress(10);
+      props.setProgress(20);
+      props.setProgress(40);
+      props.setProgress(100);
+    }
   }, []);
   return (
     <article className="admin-wrapper app-admin-wrapper">

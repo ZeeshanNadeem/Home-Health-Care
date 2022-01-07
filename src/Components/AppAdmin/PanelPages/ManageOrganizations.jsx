@@ -9,22 +9,30 @@ import { ToastContainer, toast } from "react-toastify";
 import EditModalOrg from "../Modals/EditOrganizationModle";
 import config from "../../Api/config.json";
 import axios from "axios";
+import jwtDecode from "jwt-decode";
 
-const ManageOrganizations = ({ setProgress }) => {
+const ManageOrganizations = (props) => {
   let [organizations, setOrganizations] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSelected, setPageSelected] = useState(1);
   const [searchedService, setSearchedService] = useState("");
   const [pageSize] = useState(9);
   useEffect(() => {
-    fetchOrganizations();
+    const jwt = localStorage.getItem("token");
+    if (!jwt) props.history.push("/NotFound");
+    if (jwt) {
+      const user = jwtDecode(jwt);
+      if (user.isAppAdmin === "false" || !user.isAppAdmin)
+        props.history.push("/NotFound");
+      if (user.isAppAdmin === true) fetchOrganizations();
+    }
   }, [pageSelected, searchedService]);
 
   //Get Searched Organization Results.
   //To Be Displayed in a Table
   //Or Without any searched Value.
   const fetchOrganizations = async () => {
-    setProgress(0);
+    props.setProgress(0);
     let page = "";
 
     //When Searched Value Exists.
@@ -32,34 +40,34 @@ const ManageOrganizations = ({ setProgress }) => {
       const { data } = await axios.get(
         `http://localhost:3000/api/organizations`
       );
-      setProgress(30);
+      props.setProgress(30);
       const searchedResults = data.results.filter((d) =>
         d.name.toUpperCase().startsWith(searchedService.toUpperCase())
       );
 
       const totalDocuments = await getTotalDocuments();
-      setProgress(40);
+      props.setProgress(40);
       if (searchedService) {
         page = Math.ceil(searchedResults.length / pageSize);
       } else {
         page = Math.ceil(searchedResults.length / pageSize);
       }
       setTotalPages(page);
-      setProgress(60);
+      props.setProgress(60);
       setOrganizations(searchedResults);
       if (searchedResults.length === 0 && searchedService) {
         toast.error("No Results Found!");
       }
-      setProgress(80);
-      setProgress(100);
+      props.setProgress(80);
+      props.setProgress(100);
       return;
     }
-    setProgress(10);
+    props.setProgress(10);
     const { data: organizations } = await axios.get(
       config.apiEndPoint +
         `/organizations?page=${pageSelected}&limit=${pageSize}`
     );
-    setProgress(30);
+    props.setProgress(30);
     const totalDocuments = await getTotalDocuments();
     if (organizations.results.length > 0) {
       if (!searchedService) {
@@ -67,18 +75,18 @@ const ManageOrganizations = ({ setProgress }) => {
       } else {
         page = Math.ceil(totalDocuments.results.length / pageSize);
       }
-      setProgress(40);
+      props.setProgress(40);
       setTotalPages(page);
-      setProgress(60);
-      setProgress(80);
-      setProgress(100);
+      props.setProgress(60);
+      props.setProgress(80);
+      props.setProgress(100);
       setOrganizations(organizations.results);
     } else {
-      setProgress(40);
+      props.setProgress(40);
       setTotalPages(totalPages);
-      setProgress(60);
-      setProgress(80);
-      setProgress(100);
+      props.setProgress(60);
+      props.setProgress(80);
+      props.setProgress(100);
     }
   };
 

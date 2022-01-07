@@ -891,7 +891,7 @@ class Form extends React.Component {
         >
           <option value="">{dropDownLabel}</option>
           {optionsArray.map((option) => (
-            <option value={option._id} key={option._id}>
+            <option value={option._id || option} key={option._id}>
               {option.serviceName || option.name || option}
             </option>
           ))}

@@ -9,8 +9,12 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { Document, Page, pdfjs } from "react-pdf";
+import jwtDecode from "jwt-decode";
+import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import { faFile } from "@fortawesome/free-solid-svg-icons";
+import { faFileWord } from "@fortawesome/free-solid-svg-icons";
 
-const OrganizationAdminRequests = ({ setProgress }) => {
+const OrganizationAdminRequests = (props) => {
   const [pendingAdmins, setPendingAdmins] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSelected, setPageSelected] = useState(1);
@@ -22,14 +26,21 @@ const OrganizationAdminRequests = ({ setProgress }) => {
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
   useEffect(() => {
-    setProgress(0);
-    setProgress(10);
-    setProgress(20);
+    const jwt = localStorage.getItem("token");
+    if (!jwt) props.history.push("/NotFound");
+    if (jwt) {
+      const user = jwtDecode(jwt);
+      if (user.isAppAdmin === "false" || !user.isAppAdmin)
+        props.history.push("/NotFound");
+      props.setProgress(0);
+      props.setProgress(10);
+      props.setProgress(20);
 
-    getPendingOrganizationAdmins();
-    setProgress(40);
-    fetchOrganizations();
-    setProgress(100);
+      getPendingOrganizationAdmins();
+      props.setProgress(40);
+      if (user.isAppAdmin) fetchOrganizations();
+      props.setProgress(100);
+    }
   }, [pageSelected, searchedAdmin]);
 
   const getPendingOrganizationAdmins = async () => {
@@ -178,10 +189,19 @@ const OrganizationAdminRequests = ({ setProgress }) => {
                   <th scope="col">Name</th>
                   <th scope="col">Email</th>
                   <th scope="col">Request Status</th>
-
+                  <th scope="col">
+                    Resume
+                    <FontAwesomeIcon
+                      icon={faFilePdf}
+                      style={{ marginLeft: "0.5rem" }}
+                    />
+                    <FontAwesomeIcon
+                      icon={faFileWord}
+                      style={{ marginLeft: "0.5rem" }}
+                    />
+                  </th>
                   <th scope="col"></th>
                   <th scope="col"></th>
-                  <th scope="col">Resume</th>
                 </tr>
               </thead>
               <tbody>
@@ -190,6 +210,22 @@ const OrganizationAdminRequests = ({ setProgress }) => {
                     <td>{admin.fullName}</td>
                     <td>{admin.email}</td>
                     <td>{admin.isOrganizationAdmin}</td>
+                    <td>
+                      {admin.ResumeName ? (
+                        <article>
+                          <a
+                            href={config.server + admin.ResumePath}
+                            download="resume"
+                            target="_blank"
+                          >
+                            {admin.ResumeName}
+                          </a>
+                        </article>
+                      ) : (
+                        "NONE"
+                      )}
+                    </td>
+
                     <td>
                       <Link to={`/app/admin/requests/${admin._id}`}>
                         <Button
@@ -218,14 +254,6 @@ const OrganizationAdminRequests = ({ setProgress }) => {
                           Decline
                         </Button>
                       </Link>
-                    </td>
-                    <td>
-                      <Document
-                        file="somefile.pdf"
-                        onLoadSuccess={onDocumentLoadSuccess}
-                      >
-                        <Page pageNumber={pageNumber} />
-                      </Document>
                     </td>
                   </tr>
                 ))}

@@ -24,7 +24,7 @@ import StaffEditModle from "./Modles/StaffEditModle";
 import AddStaffModle from "./Modles/AddStaffModle";
 import jwtDecode from "jwt-decode";
 
-const StaffPanel = ({ setProgress }) => {
+const StaffPanel = (props) => {
   const [staff, setStaff] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [searchedStaff, setSearchedStaff] = useState("");
@@ -47,7 +47,8 @@ const StaffPanel = ({ setProgress }) => {
     let page = "";
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
-    setProgress(10);
+
+    props.setProgress(10);
     if (searchedStaff) {
       //If user had searched a staff member
 
@@ -58,9 +59,9 @@ const StaffPanel = ({ setProgress }) => {
       const searchedResults = data.results.filter((d) =>
         d.fullName.toUpperCase().startsWith(searchedStaff.toUpperCase())
       );
-      setProgress(30);
+      props.setProgress(30);
       const totalDocuments = await getTotalDocuments();
-      setProgress(70);
+      props.setProgress(70);
       if (searchedStaff) {
         page = Math.ceil(searchedResults.length / pageSize);
       } else {
@@ -73,7 +74,7 @@ const StaffPanel = ({ setProgress }) => {
       if (searchedResults.length === 0 && searchedStaff) {
         toast.error("No Results Found!");
       }
-      setProgress(100);
+      props.setProgress(100);
       return;
     }
     //If user hasn't searched a staff member
@@ -81,9 +82,9 @@ const StaffPanel = ({ setProgress }) => {
     const { data } = await axios.get(
       `http://localhost:3000/api/staff?page=${pageSelected}&limit=${pageSize}&searchedString=${searchedStaff}&organizationID=${user.Organization._id}`
     );
-    setProgress(30);
+    props.setProgress(30);
     const totalDocuments = await getTotalDocuments();
-    setProgress(70);
+    props.setProgress(70);
     if (data.results.length > 0) {
       if (searchedStaff) {
         page = Math.ceil(totalDocuments.results.length / pageSize);
@@ -94,10 +95,20 @@ const StaffPanel = ({ setProgress }) => {
 
       setStaff(data.results);
     }
-    setProgress(100);
+    props.setProgress(100);
   };
   useEffect(async () => {
-    PopulateTable();
+    const jwt = localStorage.getItem("token");
+    if (!jwt) props.history.push("/NotFound");
+    if (jwt) {
+      const user = jwtDecode(jwt);
+      if (
+        user.isOrganizationAdmin === "false" ||
+        user.isOrganizationAdmin === "pending"
+      )
+        props.history.push("/NotFound");
+      if (user.isOrganizationAdmin === "Approved Admin") PopulateTable();
+    }
   }, [pageSelected, searchedStaff]);
 
   const RefreshStaffMembers = async () => {

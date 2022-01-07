@@ -13,6 +13,7 @@ import { toast, ToastContainer } from "react-toastify";
 // import Paginating from "./Common/Paginating";
 import Pagination from "@mui/material/Pagination";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import jwtDecode from "jwt-decode";
 
 const AdminStaff = ({ setProgress }) => {
   const [services, setServices] = useState([]);
@@ -20,6 +21,13 @@ const AdminStaff = ({ setProgress }) => {
   const [pageSelected, setPageSelected] = useState(1);
   const [searchedService, setSearchedService] = useState("");
   useEffect(async () => {
+    const jwt = localStorage.getItem("token");
+    const user = jwtDecode(jwt);
+    if (
+      user.isOrganizationAdmin === "false" ||
+      user.isOrganizationAdmin === "pending"
+    )
+      props.history.push("/NotFound");
     async function fetchData() {
       setProgress(10);
       const { data } = await axios.get(

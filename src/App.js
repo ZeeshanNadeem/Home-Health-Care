@@ -29,6 +29,7 @@ import Ratting from "./Components/Ratting/UI/Ratting";
 import ConfirmMeeting from "./Components/UserRequestService/ConfirmMeeting";
 import React, { useState } from "react";
 import LoadingBar from "react-top-loading-bar";
+import PageNotFound from "./Components/NotFound/PageNotFound";
 
 const App = () => {
   const isLoggedIn = localStorage.getItem("token");
@@ -48,6 +49,7 @@ const App = () => {
           path="/admin"
           render={(props) => <Admin setProgress={setProgress} {...props} />}
         />
+
         <Route
           path="/admin/Nurse"
           render={(props) => (
@@ -165,6 +167,12 @@ const App = () => {
         path="/Confirm/Meeting"
         render={(props) => (
           <ConfirmMeeting setProgress={setProgress} {...props} />
+        )}
+      />
+      <Route
+        path="/NotFound"
+        render={(props) => (
+          <PageNotFound setProgress={setProgress} {...props} />
         )}
       />
     </article>

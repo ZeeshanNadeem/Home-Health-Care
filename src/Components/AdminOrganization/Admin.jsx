@@ -5,10 +5,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { faUserMd } from "@fortawesome/free-solid-svg-icons";
+import jwtDecode from "jwt-decode";
 
 import { Link } from "react-router-dom";
 import "animate.css";
-const Admin = ({ setProgress }) => {
+const Admin = (props) => {
   const [showDocDetials, setDocDetails] = useState("");
   const [menuBarZindex, setMenuBarZindex] = useState("");
   const DoctorDetailsHandler = (name) => {
@@ -18,11 +19,21 @@ const Admin = ({ setProgress }) => {
     }
   };
   useEffect(() => {
-    setProgress(0);
-    setProgress(10);
-    setProgress(20);
-    setProgress(40);
-    setProgress(100);
+    const jwt = localStorage.getItem("token");
+    if (!jwt) props.history.push("/NotFound");
+    if (jwt) {
+      const user = jwtDecode(jwt);
+      if (
+        user.isOrganizationAdmin === "false" ||
+        user.isOrganizationAdmin === "pending"
+      )
+        props.history.push("/NotFound");
+      props.setProgress(0);
+      props.setProgress(10);
+      props.setProgress(20);
+      props.setProgress(40);
+      props.setProgress(100);
+    }
   }, []);
 
   return (

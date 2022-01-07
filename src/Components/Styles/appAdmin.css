@@ -82,3 +82,152 @@
 main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
   margin-bottom: 4rem;
 }
+
+.label-signup-org {
+  margin-top: 2rem !important;
+}
+
+/* SIGNUP AS AN ORGANIZATIONAL ADMIN */
+@media screen and (min-width: 300px) {
+  .signup-org-group {
+    display: flex;
+    justify-content: center;
+    overflow-y: auto;
+  }
+  .txt-upload-label {
+    margin-top: 1rem !important;
+    margin-left: 3rem;
+  }
+  .txt-upload {
+    margin-left: 3rem;
+  }
+
+  select#serviceOrg_ {
+    width: 6.6rem;
+    /* margin-right: 0.7rem; */
+  }
+
+  .servies-org {
+    margin-left: 2rem;
+  }
+  .txtField-signup-org {
+    width: 6.6rem;
+  }
+  .dropdown-second-item {
+    margin-left: 0.5rem;
+  }
+  .org-signup {
+    width: 22rem;
+    margin-left: 4rem;
+    margin-right: 4rem;
+  }
+  .second-item {
+    margin-left: 1rem;
+  }
+}
+
+@media screen and (min-width: 450px) {
+  .label-signup-org {
+    margin-top: 0 !important;
+    margin-bottom: 1rem !important;
+  }
+  .signup-org-group {
+    display: flex;
+    justify-content: center;
+    overflow-y: auto;
+  }
+  .txt-upload-label {
+    margin-top: 1rem !important;
+    margin-left: 3rem;
+  }
+  .txt-upload {
+    margin-left: 3rem;
+  }
+
+  select#serviceOrg_ {
+    margin: 0;
+    width: 10rem;
+
+    /* margin-right: 0.7rem; */
+  }
+  .servies-org {
+    margin-left: 2rem;
+  }
+  .txtField-signup-org {
+    width: 10rem;
+  }
+  .dropdown-second-item {
+    margin-left: 0.5rem;
+  }
+  .org-signup {
+    width: 27rem;
+    margin-left: 4rem;
+    margin-right: 4rem;
+  }
+  .second-item {
+    margin-left: 1rem;
+  }
+}
+@media screen and (min-width: 600px) {
+  .signup-org-group {
+    display: flex;
+    justify-content: center;
+    overflow-y: auto;
+  }
+  .org-signup {
+    width: 40rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+  .txtField-signup-org {
+    width: 14rem;
+  }
+  select#serviceOrg_ {
+    margin: 0;
+    width: 14rem;
+  }
+  .txt-upload-label {
+    margin-left: 1rem;
+  }
+  .servies-org {
+    margin-left: 0;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .txt-upload-label {
+    margin-left: 1rem !important;
+  }
+  .btn-orgSignUp {
+    margin-top: 0.3rem !important;
+    padding-bottom: 2.5rem;
+  }
+  .signup-org-group {
+    display: flex;
+    justify-content: center;
+    overflow-y: auto;
+  }
+  .org-signup {
+    max-width: 50rem !important;
+    width: 40rem !important;
+    /* height: 21.5rem; */
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+  .txtField-signup-org {
+    width: 16.5rem;
+  }
+  select#serviceOrg_ {
+    margin: 0;
+    width: 16.5rem;
+    /* width: 26rem; */
+  }
+  .txt-upload-label {
+    margin-left: 1rem;
+  }
+  .servies-org {
+    margin-left: 0;
+  }
+}
