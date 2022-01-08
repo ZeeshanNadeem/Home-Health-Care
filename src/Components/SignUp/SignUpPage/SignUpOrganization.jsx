@@ -20,7 +20,6 @@ class SignUpAsOrganization extends Form {
       OrganizationID: "",
       serviceOrg_: "",
       qualification: "",
-      price: "",
     },
     errors: {},
     selectedFile: null,
@@ -141,7 +140,7 @@ class SignUpAsOrganization extends Form {
     const formData = new FormData();
     formData.append("CV", this.state.selectedFile);
     formData.append("fullName", this.state.doctorForm.fullName);
-    // formData.append("dateOfBirth", this.state.doctorForm.dateOfBirth);
+
     formData.append("email", this.state.doctorForm.email);
     formData.append("password", this.state.doctorForm.password);
     formData.append(
@@ -150,29 +149,33 @@ class SignUpAsOrganization extends Form {
     );
     formData.append("OrganizationID", this.state.doctorForm.OrganizationID);
 
+    global.selectedFile = this.state.selectedFile;
+
     const errors = this.validate();
     this.setState({ errors: errors || {} });
     if (!errors) {
       try {
         // this.state.doctorForm = formData;
         // const response = await signingUp(this.state.doctorForm);
-        global.formData = formData;
-        // const response = await signingUp(formData);
-        // localStorage.setItem("token", response.headers["x-auth-token"]);
-
-        const { price, serviceOrg_, qualification, OrganizationID } =
-          this.state.doctorForm;
-        if (price && serviceOrg_ && qualification) {
-          const obj = {};
-          obj.serviceName = serviceOrg_;
-          obj.serviceOrgranization = OrganizationID;
-          obj.servicePrice = price;
-          // obj.userID = response.data._id;
-          // await axios.post(config.apiEndPoint + "/services", obj);
-          global.serviceObj = obj;
-          global.staffDetails = this.state.doctorForm;
-          this.props.history.push("/signUp/details");
-        }
+        // global.data = this.state.doctorForm;
+        const response = await signingUp(formData);
+        localStorage.setItem("token", response.headers["x-auth-token"]);
+        global.signUpID = response.data._id;
+        this.props.history.push("/signUp/details");
+        // window.location = "/Home";
+        // const { serviceOrg_, qualification, OrganizationID } =
+        //   this.state.doctorForm;
+        // if (serviceOrg_ && qualification) {
+        //   const obj = {};
+        //   obj.serviceName = serviceOrg_;
+        //   obj.serviceOrgranization = OrganizationID;
+        //   // obj.servicePrice = price;
+        //   // obj.userID = response.data._id;
+        //   // await axios.post(config.apiEndPoint + "/services", obj);
+        //   global.serviceObj = obj;
+        //   global.staffDetails = this.state.doctorForm;
+        //   this.props.history.push("/signUp/details");
+        // }
         // if (!price && !serviceOrg_ && !qualification) window.location = "/Home";
       } catch (ex) {
         if (ex.response && ex.response.status === 400) {
@@ -313,15 +316,6 @@ class SignUpAsOrganization extends Form {
               {this.state.doctorForm.OrganizationID ===
                 "61d5bc5c69b35ef18754dc9a" && (
                 <article>
-                  <article>
-                    <article className="signup-label" style={{ margin: "0" }}>
-                      {this.renderLabel("Price", "price")}
-                    </article>
-                    <article className="price-txt txtField-signup-org">
-                      {this.renderInput("number", "price", "price")}
-                    </article>
-                  </article>
-
                   <article
                     className="txt-upload-label signup-label"
                     style={{ margin: "0" }}

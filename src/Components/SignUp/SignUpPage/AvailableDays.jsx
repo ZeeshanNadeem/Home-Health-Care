@@ -3,9 +3,15 @@ import Form from "../../Common/Form";
 import { Link } from "react-router-dom";
 import signingUp from "../SigningUp/SignUp";
 import config from "../../Api/config.json";
+import Joi from "joi-browser";
+import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 class AvailableDays extends Form {
   state = {
+    doctorForm: {
+      price: "",
+      phone: "",
+    },
     daysAvailable: [
       {
         name: "MON",
@@ -71,40 +77,55 @@ class AvailableDays extends Form {
       },
     ],
   };
-  componentDidMount() {}
-  handleSubmit = async () => {
-    const addStaffMember = {
-      fullName: global.staffDetails.fullName,
+  schema = {
+    price: Joi.string().required(),
 
-      email: global.staffDetails.email,
-      password: global.staffDetails.password,
-      serviceID: global.staffDetails.serviceID,
-      Organization: global.staffDetails.Organization,
-      qualificationID: global.staffDetails.qualification,
-      phone: global.staffDetails.phone,
-      availableTime: this.state.slotTime,
-      availableDays: this.state.daysAvailable,
-      Rating: 0,
-      RatingAvgCount: 0,
-      approvel: "pending",
-    };
+    phone: Joi.string().required(),
+  };
+  componentDidMount() {
+    console.log("DOCTOR FORM!!!!", global.data);
+  }
+  handleSubmit = async () => {
     try {
-      const response = await signingUp(global.formData);
-      localStorage.setItem("token", response.headers["x-auth-token"]);
-      await axios.post(config.apiEndPoint + "/services", global.serviceObj);
+      const addStaffMember = {
+        fullName: global.staffDetails.fullName,
+
+        email: global.staffDetails.email,
+        password: global.staffDetails.password,
+        serviceID: service.results._id,
+        Organization: global.staffDetails.OrganizationID,
+        qualificationID: global.staffDetails.qualification,
+        phone: this.state.doctorForm.phone,
+        availableTime: this.state.slotTime,
+        availableDays: this.state.daysAvailable,
+        Rating: 0,
+        RatingAvgCount: 0,
+        approvel: "pending",
+      };
 
       const { data: staffAdded } = await axios.post(
         "http://localhost:3000/api/staff",
         addStaffMember
       );
+
+      const { data: service } = await axios.post(
+        config.apiEndPoint + "/services",
+        {
+          serviceName: global.serviceObj.serviceName,
+          serviceOrganization: global.serviceObj.serviceOrganization,
+          servicePrice: this.state.doctorForm.price,
+          userID: global.signUpID,
+        }
+      );
       window.location = "/Home";
     } catch (ex) {
-      console.log(ex.response.data);
+      toast.error(ex.response.data);
     }
   };
   render() {
     return (
       <div>
+        <ToastContainer />
         <form onSubmit={this.handleSubmit} enctype="multipart/form-data">
           <article className="avaialble-days-pg signup-page signup-org-admin ">
             <main className="available-slots available-days org-signup org card-signup signup-style-org animate__animated animate__fadeInLeft">
@@ -113,10 +134,35 @@ class AvailableDays extends Form {
                   className="label-signup-org sign-up-header-text animate__animated animate__zoomIn"
                   style={{ margin: "0" }}
                 >
-                  SLOTS AND DAYS
+                  YOUR AVAILABILITY
                 </h1>
               </header>
 
+              <article className="signup-org-group">
+                <article>
+                  <article
+                    className="signup-label price-label"
+                    style={{ margin: "0" }}
+                  >
+                    {this.renderLabel("Price", "price")}
+                  </article>
+                  <article className="price-txt txtField-signup-org">
+                    {this.renderInput("number", "price", "price")}
+                  </article>
+                </article>
+
+                <article className="second-item">
+                  <article
+                    className="signup-label price-label"
+                    style={{ margin: "0" }}
+                  >
+                    {this.renderLabel("Phone No", "phone")}
+                  </article>
+                  <article className="price-txt txtField-signup-org">
+                    {this.renderInput("number", "phone", "phone")}
+                  </article>
+                </article>
+              </article>
               <article className="time-slots">
                 <article className="one-group-first-item addStaff-group-alignment">
                   <article className="label-addStaff">
