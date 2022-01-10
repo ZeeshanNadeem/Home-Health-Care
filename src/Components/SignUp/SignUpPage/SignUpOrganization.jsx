@@ -9,6 +9,8 @@ import { ToastContainer } from "react-toastify";
 import axios from "axios";
 import config from "../../Api/config.json";
 import { Link } from "react-router-dom";
+import * as yup from "yup";
+import { useForm } from "antd/lib/form/Form";
 class SignUpAsOrganization extends Form {
   state = {
     doctorForm: {
@@ -16,10 +18,13 @@ class SignUpAsOrganization extends Form {
       // dateOfBirth: "",
       email: "",
       password: "",
+      // price: "",
+      // phone: "",
       isOrganizationAdmin: true,
       OrganizationID: "",
       serviceOrg_: "",
       qualification: "",
+      // selectedFile: null,
     },
     errors: {},
     selectedFile: null,
@@ -99,6 +104,13 @@ class SignUpAsOrganization extends Form {
     password: Joi.string().min(5).max(255).required(),
     isOrganizationAdmin: Joi.boolean().required(),
     OrganizationID: Joi.string().required(),
+    selectedFile:
+      this.state.OrganizationID === "61d5bc5c69b35ef18754dc9a"
+        ? Joi.string().required().label("Resume")
+        : Joi.string(),
+    // price: Joi.string().required(),
+
+    // phone: Joi.string().required(),
     //61d5bc5c69b35ef18754dc9a
     serviceOrg_:
       this.state.OrganizationID === "61d5bc5c69b35ef18754dc9a"
@@ -114,6 +126,15 @@ class SignUpAsOrganization extends Form {
         : Joi.string(),
   };
 
+  schemaFile = yup.object().shape({
+    selectedFile: yup
+      .mixed()
+      .required("Resume needed")
+      .test("fileSize", "This file is too large", (value) => {
+        return value && value[0].size <= 9000000;
+      }),
+  });
+
   async componentDidMount() {
     const { data } = await axios.get(config.apiEndPoint + "/organizations");
     const { data: qualification } = await axios.get(
@@ -126,42 +147,49 @@ class SignUpAsOrganization extends Form {
   //   this.setState({ selectedFile: e.target.files[0] });
   // };
 
-  onChange = (e) => {
-    // setFile(e.target.files[0]);
-    this.setState({ selectedFile: e.target.files[0] });
-    // setFilename(e.target.files[0].name);
-  };
+  // onChange = (e) => {
+  //   // setFile(e.target.files[0]);
+  //   this.setState({ selectedFile: e.target.files[0] });
+  //   // setFilename(e.target.files[0].name);
+  // };
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    // const fd = new FormData();
-    // fd.append("CV", this.state.selectedFile, this.state.name);
+
+    global.staffDetails = this.state.doctorForm;
 
     const formData = new FormData();
     formData.append("CV", this.state.selectedFile);
     formData.append("fullName", this.state.doctorForm.fullName);
-
     formData.append("email", this.state.doctorForm.email);
     formData.append("password", this.state.doctorForm.password);
     formData.append(
       "isOrganizationAdmin",
       this.state.doctorForm.isOrganizationAdmin
     );
-    formData.append("OrganizationID", this.state.doctorForm.OrganizationID);
+    formData.append("OrganizationID", this.state.OrganizationID);
 
-    global.selectedFile = this.state.selectedFile;
+    global.selectedFile = this.state.doctorForm.selectedFile;
 
     const errors = this.validate();
     this.setState({ errors: errors || {} });
+
     if (!errors) {
       try {
+        // global.formData = formData;
+        // global.staffDetails = this.state.doctorForm;
         // this.state.doctorForm = formData;
         // const response = await signingUp(this.state.doctorForm);
         // global.data = this.state.doctorForm;
+
         const response = await signingUp(formData);
         localStorage.setItem("token", response.headers["x-auth-token"]);
-        global.signUpID = response.data._id;
+
+        global.userID = response.data._id;
+        global.formData = formData;
+        global.staffDetails = this.state.doctorForm;
         this.props.history.push("/signUp/details");
+
         // window.location = "/Home";
         // const { serviceOrg_, qualification, OrganizationID } =
         //   this.state.doctorForm;
@@ -182,7 +210,7 @@ class SignUpAsOrganization extends Form {
           const error = { ...this.state.errors };
 
           error.email = ex.response.data;
-          toast.error(ex.response.data);
+
           this.setState({ errors: error });
         }
       }
@@ -265,7 +293,7 @@ class SignUpAsOrganization extends Form {
                       this.state.organizations,
                       "OrganizationID",
                       "OrganizationID",
-                      "Which Organization Do You Belong To?"
+                      "Select Your Organization"
                     )}
                   </article>
                 </article>
@@ -324,10 +352,18 @@ class SignUpAsOrganization extends Form {
                   </article>
                   <input
                     className="txt-upload"
+                    name="selectedFile"
                     type="file"
                     accept=".pdf,.docx"
                     onChange={this.onChange}
                   ></input>
+
+                  {/* {this.renderFile(
+                    "file",
+                    "selectedFile",
+                    "selectedFile",
+                    ".pdf,.docx"
+                  )} */}
                 </article>
               )}
               {/* <article className="ChkBox-signup">

@@ -644,14 +644,14 @@ class Form extends React.Component {
 
   //When user selects an organization on a drop down on userRequest Page
   //Populating the current organization's services in the next dropdown that
-  // is service
+  // is named service
   populateServices = async (inputValue) => {
     let { data } = await axios.get(
       `http://localhost:3000/api/services?organization=${inputValue}`
     );
 
     data.results = data.results.filter(
-      (req) => req.user.isOrganizationAdmin === "pending"
+      (req) => req.user.isOrganizationAdmin === "Approved Independent Member"
     );
 
     this.setState({ Conditionalservices: data.results });
@@ -765,6 +765,32 @@ class Form extends React.Component {
     );
   };
 
+  onChangeFile = (e) => {
+    // setFile(e.target.files[0]);
+    const doctorForm = { ...this.state.doctorForm };
+    doctorForm.selectedFile = e.target.files[0];
+    this.setState({ doctorForm });
+    // setFilename(e.target.files[0].name);
+  };
+
+  renderFile = (type, id, name, acceptFileType) => {
+    const { doctorForm, errors } = this.state;
+
+    return (
+      <article>
+        <input
+          name={name}
+          value={doctorForm[name]}
+          className="txt-upload"
+          type={type}
+          accept={acceptFileType}
+          id={id}
+          onChange={this.onChangeFile}
+        />
+        {errors && errors[name] && <p className="error">{errors[name]}</p>}
+      </article>
+    );
+  };
   renderLabel = (labelName, ForHtml) => {
     return <label htmlfor={ForHtml}>{labelName}</label>;
   };

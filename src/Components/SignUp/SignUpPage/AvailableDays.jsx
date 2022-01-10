@@ -11,6 +11,8 @@ class AvailableDays extends Form {
     doctorForm: {
       price: "",
       phone: "",
+      // email: "",
+      // password: "",
     },
     daysAvailable: [
       {
@@ -76,50 +78,70 @@ class AvailableDays extends Form {
         name: "9 PM to 12 AM",
       },
     ],
+    errors: {},
   };
   schema = {
+    // email: Joi.string().min(5).max(255).required().email(),
+    // password: Joi.string().min(5).max(255).required(),
     price: Joi.string().required(),
-
     phone: Joi.string().required(),
   };
-  componentDidMount() {
-    console.log("DOCTOR FORM!!!!", global.data);
-  }
-  handleSubmit = async () => {
-    try {
-      const addStaffMember = {
-        fullName: global.staffDetails.fullName,
 
-        email: global.staffDetails.email,
-        password: global.staffDetails.password,
-        serviceID: service.results._id,
-        Organization: global.staffDetails.OrganizationID,
-        qualificationID: global.staffDetails.qualification,
-        phone: this.state.doctorForm.phone,
-        availableTime: this.state.slotTime,
-        availableDays: this.state.daysAvailable,
-        Rating: 0,
-        RatingAvgCount: 0,
-        approvel: "pending",
-      };
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    const errors = this.validate();
+    this.setState({ errors: errors || {} });
+    if (!errors) {
+      try {
+        // const response = await signingUp(global.formData);
+        // localStorage.setItem("token", response.headers["x-auth-token"]);
 
-      const { data: staffAdded } = await axios.post(
-        "http://localhost:3000/api/staff",
-        addStaffMember
-      );
+        let serviceOrg = global.staffDetails.serviceOrg_;
+        let OrgID = global.staffDetails.OrganizationID;
+        let price = this.state.doctorForm.price;
+        let user = global.userID;
+        // let user = response.data._id;
 
-      const { data: service } = await axios.post(
-        config.apiEndPoint + "/services",
-        {
-          serviceName: global.serviceObj.serviceName,
-          serviceOrganization: global.serviceObj.serviceOrganization,
-          servicePrice: this.state.doctorForm.price,
-          userID: global.signUpID,
-        }
-      );
-      window.location = "/Home";
-    } catch (ex) {
-      toast.error(ex.response.data);
+        let serviceObj = {
+          serviceName: serviceOrg,
+          serviceOrgranization: OrgID,
+          servicePrice: price,
+          userID: user,
+        };
+        const { data: service } = await axios.post(
+          config.apiEndPoint + "/services",
+          serviceObj
+        );
+        const addStaffMember = {
+          fullName: global.staffDetails.fullName,
+          email: global.staffDetails.email,
+          password: global.staffDetails.password,
+
+          serviceID: service._id,
+
+          Organization: service.serviceOrgranization,
+          qualificationID: global.staffDetails.qualification,
+          phone: this.state.doctorForm.phone,
+          availableTime: this.state.slotTime,
+          availableDays: this.state.daysAvailable,
+          Rating: 0,
+          RatingAvgCount: 0,
+        };
+
+        const { data: staffAdded } = await axios.post(
+          `http://localhost:3000/api/staff?dontCheck=true`,
+          addStaffMember
+        );
+
+        await axios.patch(config.apiEndPoint + "/user?EditUser=true", {
+          staffMemberObj: staffAdded,
+          // staffMemberID: response.data._id
+          staffMemberID: global.userID,
+        });
+        window.location = "/Home";
+      } catch (ex) {
+        toast.error(ex.response.data);
+      }
     }
   };
   render() {
@@ -176,7 +198,7 @@ class AvailableDays extends Form {
                       day.name === "9 PM to 12 AM" ? (
                         <article></article>
                       ) : (
-                        <article>
+                        <article key={day.name}>
                           <article className="time-slots-Chk-Box">
                             {this.renderCheckBoxForSlots(
                               day.name,
@@ -238,7 +260,7 @@ class AvailableDays extends Form {
               </article>
 
               <article className="btn-orgSignUp org-btn signup-page-btn">
-                {this.renderBtn("Sign Up")}
+                {this.renderBtn("OK")}
               </article>
               {/* <a href="#" className="google btn">
                   <i className="fa fa-google fa-fw"></i> SignUp with Google

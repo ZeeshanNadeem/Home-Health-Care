@@ -13,17 +13,17 @@ import jwtDecode from "jwt-decode";
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { faFile } from "@fortawesome/free-solid-svg-icons";
 import { faFileWord } from "@fortawesome/free-solid-svg-icons";
+import StaffDetails from "./StaffDetails";
 
 const OrganizationAdminRequests = (props) => {
   const [pendingAdmins, setPendingAdmins] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSelected, setPageSelected] = useState(1);
   const [searchedAdmin, setsearchedAdmin] = useState("");
-  const [pageSize] = useState(9);
+  const [pageSize] = useState(8);
 
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
-  pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
   useEffect(() => {
     const jwt = localStorage.getItem("token");
@@ -47,20 +47,39 @@ const OrganizationAdminRequests = (props) => {
     const { data } = await axios.get(
       config.apiEndPoint + `/user?getOrganizationAdmins=abc`
     );
-    console.log("Pending admins::", data);
 
     setPendingAdmins(data);
   };
+
+  const refereshPage = async () => {
+    const { data: admins } = await axios.get(
+      config.apiEndPoint + `/user?page=${pageSelected}&limit=${pageSize}`
+    );
+    setPendingAdmins(admins.results);
+  };
   const ApproveAdminRequests = async (admin) => {
     try {
-      await axios.put(config.apiEndPoint + "/user" + "/" + admin._id, {
-        isOrganizationAdmin: "Approved Admin",
-      });
-      toast.success("Request For being Organization Admin Approved!");
+      if (admin.ResumePath) {
+        await axios.put(config.apiEndPoint + "/user" + "/" + admin._id, {
+          isOrganizationAdmin: "Independent Member Approved",
+        });
+        const { data: service } = await axios.get(
+          config.apiEndPoint +
+            `/services?findServiceByUser=yes&userID=${admin._id}`
+        );
+
+        await axios.patch(config.apiEndPoint + "/services", {
+          serviceID: service[0]._id,
+        });
+      } else {
+        await axios.put(config.apiEndPoint + "/user" + "/" + admin._id, {
+          isOrganizationAdmin: "Approved Admin",
+        });
+      }
     } catch (ex) {
       toast.error(ex.response.data);
     }
-    await getPendingOrganizationAdmins();
+    await refereshPage();
   };
 
   const DeclineAdminRequests = async (admin) => {
@@ -70,7 +89,7 @@ const OrganizationAdminRequests = (props) => {
     } catch (ex) {
       toast.error(ex.response.data);
     }
-    await getPendingOrganizationAdmins();
+    await refereshPage();
   };
   const checkPages = () => {
     if (totalPages > 1) return true;
@@ -202,6 +221,7 @@ const OrganizationAdminRequests = (props) => {
                   </th>
                   <th scope="col"></th>
                   <th scope="col"></th>
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
@@ -209,7 +229,9 @@ const OrganizationAdminRequests = (props) => {
                   <tr>
                     <td>{admin.fullName}</td>
                     <td>{admin.email}</td>
-                    <td>{admin.isOrganizationAdmin}</td>
+                    <td style={{ color: "#FF1700" }}>
+                      <strong>{admin.isOrganizationAdmin}</strong>
+                    </td>
                     <td>
                       {admin.ResumeName ? (
                         <article>
@@ -255,6 +277,11 @@ const OrganizationAdminRequests = (props) => {
                         </Button>
                       </Link>
                     </td>
+                    {admin.ResumePath && (
+                      <td>
+                        <StaffDetails staffMemberDetails={admin} />
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
