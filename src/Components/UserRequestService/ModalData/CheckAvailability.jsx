@@ -173,11 +173,11 @@ const CheckAvailability = ({
 
           <tbody>
             {availableTiming.map((data) => (
-              <arcticle key={data}>
+              <article key={data}>
                 {availabilityData.map((staff) =>
                   CheckAvailableStaff(staff, data, userRequests)
                 )}
-              </arcticle>
+              </article>
             ))}
             {filteredUnavailableSlots()}
 

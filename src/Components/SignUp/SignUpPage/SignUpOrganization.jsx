@@ -95,6 +95,7 @@ class SignUpAsOrganization extends Form {
         name: "9 PM to 12 AM",
       },
     ],
+    fileUpload: true,
   };
 
   schema = {
@@ -104,36 +105,20 @@ class SignUpAsOrganization extends Form {
     password: Joi.string().min(5).max(255).required(),
     isOrganizationAdmin: Joi.boolean().required(),
     OrganizationID: Joi.string().required(),
-    selectedFile:
-      this.state.OrganizationID === "61d5bc5c69b35ef18754dc9a"
-        ? Joi.string().required().label("Resume")
-        : Joi.string(),
+
     // price: Joi.string().required(),
 
     // phone: Joi.string().required(),
     //61d5bc5c69b35ef18754dc9a
     serviceOrg_:
-      this.state.OrganizationID === "61d5bc5c69b35ef18754dc9a"
-        ? Joi.string().required()
-        : Joi.string(),
+      this.state.doctorForm.OrganizationID === "61d5bc5c69b35ef18754dc9a"
+        ? Joi.string().required().label("Service")
+        : Joi.string().optional().label("Service"),
     qualification:
-      this.state.OrganizationID === "61d5bc5c69b35ef18754dc9a"
-        ? Joi.string().required()
-        : Joi.string(),
-    price:
-      this.state.OrganizationID === "61d5bc5c69b35ef18754dc9a"
-        ? Joi.string().required()
-        : Joi.string(),
+      this.state.doctorForm.OrganizationID === "61d5bc5c69b35ef18754dc9a"
+        ? Joi.string().required().label("Qualification")
+        : Joi.string().optional().label("Qualification"),
   };
-
-  schemaFile = yup.object().shape({
-    selectedFile: yup
-      .mixed()
-      .required("Resume needed")
-      .test("fileSize", "This file is too large", (value) => {
-        return value && value[0].size <= 9000000;
-      }),
-  });
 
   async componentDidMount() {
     const { data } = await axios.get(config.apiEndPoint + "/organizations");
@@ -147,34 +132,42 @@ class SignUpAsOrganization extends Form {
   //   this.setState({ selectedFile: e.target.files[0] });
   // };
 
-  // onChange = (e) => {
-  //   // setFile(e.target.files[0]);
-  //   this.setState({ selectedFile: e.target.files[0] });
-  //   // setFilename(e.target.files[0].name);
-  // };
+  onChange = (e) => {
+    // setFile(e.target.files[0]);
+    this.setState({ selectedFile: e.target.files[0], fileUpload: true });
+    // setFilename(e.target.files[0].name);
+  };
+
+  GenerateFileNotUploadError = () => {
+    if (!this.state.selectedFile) this.setState({ fileUpload: false });
+  };
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    const isIndependentPerson =
+      this.state.doctorForm.OrganizationID === "61d5bc5c69b35ef18754dc9a"
+        ? true
+        : false;
 
     global.staffDetails = this.state.doctorForm;
 
-    const formData = new FormData();
-    formData.append("CV", this.state.selectedFile);
-    formData.append("fullName", this.state.doctorForm.fullName);
-    formData.append("email", this.state.doctorForm.email);
-    formData.append("password", this.state.doctorForm.password);
-    formData.append(
-      "isOrganizationAdmin",
-      this.state.doctorForm.isOrganizationAdmin
-    );
-    formData.append("OrganizationID", this.state.OrganizationID);
-
-    global.selectedFile = this.state.doctorForm.selectedFile;
-
-    const errors = this.validate();
+    let errors = this.validate();
+    if (!isIndependentPerson) {
+      delete errors["qualification"];
+      delete errors["serviceOrg_"];
+      if (
+        !errors.fullName &&
+        !errors.email &&
+        !errors.password &&
+        !errors.OrganizationID
+      ) {
+        errors = null;
+      }
+    }
+    this.GenerateFileNotUploadError();
     this.setState({ errors: errors || {} });
 
-    if (!errors) {
+    if (!errors && this.state.selectedFile) {
       try {
         // global.formData = formData;
         // global.staffDetails = this.state.doctorForm;
@@ -182,13 +175,50 @@ class SignUpAsOrganization extends Form {
         // const response = await signingUp(this.state.doctorForm);
         // global.data = this.state.doctorForm;
 
-        const response = await signingUp(formData);
-        localStorage.setItem("token", response.headers["x-auth-token"]);
+        if (isIndependentPerson) {
+          const formData = new FormData();
 
-        global.userID = response.data._id;
-        global.formData = formData;
-        global.staffDetails = this.state.doctorForm;
-        this.props.history.push("/signUp/details");
+          formData.append("CV", this.state.selectedFile);
+
+          formData.append("fullName", this.state.doctorForm.fullName);
+          formData.append("email", this.state.doctorForm.email);
+          formData.append("password", this.state.doctorForm.password);
+          formData.append(
+            "isOrganizationAdmin",
+            this.state.doctorForm.isOrganizationAdmin
+          );
+          formData.append(
+            "OrganizationID",
+            this.state.doctorForm.OrganizationID
+          );
+          global.selectedFile = this.state.doctorForm.selectedFile;
+          const response = await signingUp(formData);
+          localStorage.setItem("token", response.headers["x-auth-token"]);
+          global.userID = response.data._id;
+          global.formData = formData;
+          global.staffDetails = this.state.doctorForm;
+          this.props.history.push("/signUp/details");
+        } else {
+          const {
+            fullName,
+            email,
+            password,
+            isOrganizationAdmin,
+            OrganizationID,
+          } = this.state.doctorForm;
+          const obj = {
+            fullName: fullName,
+            email: email,
+            password: password,
+            isOrganizationAdmin: isOrganizationAdmin,
+
+            OrganizationID: OrganizationID,
+          };
+
+          const response = await signingUp(obj);
+          localStorage.setItem("token", response.headers["x-auth-token"]);
+          window.location = "/Home";
+        }
 
         // window.location = "/Home";
         // const { serviceOrg_, qualification, OrganizationID } =
@@ -357,6 +387,9 @@ class SignUpAsOrganization extends Form {
                     accept=".pdf,.docx"
                     onChange={this.onChange}
                   ></input>
+                  {!this.state.fileUpload && (
+                    <p class="error">Please Upload Your Resume</p>
+                  )}
 
                   {/* {this.renderFile(
                     "file",

@@ -261,3 +261,13 @@ main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
   border-radius: 20px;
   font-size: 0.8rem;
 }
+
+.info {
+  background-color: #e7f3fe;
+  border-left: 6px solid #2196f3;
+}
+
+.warning {
+  background-color: #ffffcc;
+  border-left: 6px solid #ffeb3b;
+}

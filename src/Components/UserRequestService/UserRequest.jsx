@@ -119,6 +119,17 @@ class UserRequestService extends Form {
     const { data: staffLeaves } = await axios.get(
       config.apiEndPoint + "/staffLeave"
     );
+    let isNotUndefined = false;
+    for (let i = 0; i < this.state.requestTime; i++) {
+      if (this.state.requestTime[i]._id & this.state.requestTime[i]._id) {
+        isNotUndefined = true;
+        break;
+      }
+    }
+    if (!isNotUndefined) {
+      this.setState({ requestTime: [] });
+    }
+
     this.setState({
       organization: organization.results,
       userRequests,
@@ -518,7 +529,7 @@ class UserRequestService extends Form {
                         this.state.requestTime,
                         "ServiceNeededFrom",
                         "ServiceNeededFrom",
-                        "Please Select Visiting Time"
+                        "Please Select Time Slot"
                       )}
                     </article>
                   </article>

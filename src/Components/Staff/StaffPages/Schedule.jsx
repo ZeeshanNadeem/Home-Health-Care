@@ -33,7 +33,7 @@ const Schedule = () => {
     } catch (ex) {}
   }, []);
 
-  return (
+  return staffDetails.length > 0 ? (
     <table className="table-schedule">
       <img
         className="nav-logo animate__heartBeat"
@@ -63,6 +63,37 @@ const Schedule = () => {
         </tr>
       ))}
     </table>
+  ) : (
+    <h5
+      style={{
+        marginLeft: "3rem",
+        marginTop: "1rem",
+        color: "#333",
+        maxWidth: "75ch",
+        color: "",
+      }}
+    >
+      <span
+        style={{ color: "#396EB0", fontWeight: "bold", letterSpacing: "0.2px" }}
+      >
+        You haven't been assigned a duty yet
+      </span>
+      <div className="info" style={{ marginTop: "0.8rem" }}>
+        <p>
+          <strong>Independent </strong>
+          If you're working Independently (no organization association) then
+          either your request for working hasn't been approved or you aren't
+          assigned a duty yet
+        </p>
+      </div>
+      <div className="info">
+        <p>
+          <strong>Association </strong>
+          If you're assoicated with an organization then you aren't assigned a
+          duty yet
+        </p>
+      </div>
+    </h5>
   );
 };
 

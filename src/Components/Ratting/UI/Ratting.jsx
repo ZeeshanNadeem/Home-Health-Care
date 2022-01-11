@@ -64,12 +64,24 @@ const Ratting = (props) => {
     if (day < 10) day = "0" + day;
     const todaysDate = year + "-" + month + "-" + day;
     const serviceNeededTo = row.ServiceNeededTime;
-    let serviceNeededTo_ = serviceNeededTo.split("-");
-    let temp1 = serviceNeededTo_[1].split(":");
-    let serviceNeededToHourUser = temp1[0];
+    let serviceNeededTo_ = serviceNeededTo.split("to");
+    serviceNeededTo_[1] = serviceNeededTo_[1].trim();
+
+    let serviceNeededToCompute = "";
+    if (serviceNeededTo_[1].includes("PM")) {
+      let temp1 = serviceNeededTo_[1].split("PM");
+      if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
+      serviceNeededToCompute = temp1[0];
+    } else {
+      let temp1 = serviceNeededTo_[1].split("AM");
+
+      if (temp1[0] !== "12") temp1[0] = "0";
+      serviceNeededToCompute = temp1[0];
+    }
+
     const UserSelectedDate = row.Schedule;
     if (UserSelectedDate === todaysDate) {
-      if (time >= serviceNeededToHourUser) {
+      if (time >= serviceNeededToCompute) {
         return (
           <article>
             <div class="progress">
@@ -130,14 +142,28 @@ const Ratting = (props) => {
     if (month < 10) month = "0" + month;
     if (day < 10) day = "0" + day;
     const todaysDate = year + "-" + month + "-" + day;
-    const serviceNeededTo = row.ServiceNeededTime;
-    let serviceNeededTo_ = serviceNeededTo.split("-");
-    let temp1 = serviceNeededTo_[0].split(":");
-    let temp2 = serviceNeededTo_[1].split(":");
-    let serviceNeededToHourUser = temp2[0];
+    let serviceNeededTo_ = row.ServiceNeededTime.split("to");
+    serviceNeededTo_[1] = serviceNeededTo_[1].trim();
+
+    let serviceNeededToCompute = "";
+    if (serviceNeededTo_[1].includes("PM")) {
+      let temp1 = serviceNeededTo_[1].split("PM");
+      if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
+      serviceNeededToCompute = temp1[0];
+    } else {
+      let temp1 = serviceNeededTo_[1].split("AM");
+
+      if (temp1[0] !== "12") temp1[0] = "0";
+      serviceNeededToCompute = temp1[0];
+    }
+    // const serviceNeededTo = row.ServiceNeededTime;
+    // let serviceNeededTo_ = serviceNeededTo.split("-");
+    // let temp1 = serviceNeededTo_[0].split(":");
+    // let temp2 = serviceNeededTo_[1].split(":");
+    // let serviceNeededToHourUser = temp2[0];
     const UserSelectedDate = row.Schedule;
     if (UserSelectedDate === todaysDate) {
-      if (time >= serviceNeededToHourUser) {
+      if (time >= serviceNeededToCompute) {
         return true;
       } else return false;
     }

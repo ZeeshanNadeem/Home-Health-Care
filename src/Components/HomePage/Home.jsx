@@ -18,10 +18,18 @@ const Home = ({ setProgress }) => {
       setUser(userGot);
     }
 
-    if (userGot.isOrganizationAdmin === "pending") {
-      toast.info("App Admin will respond to your request shortly");
+    console.log("userGOT::", userGot);
+    if (
+      userGot.isOrganizationAdmin === "pending" &&
+      userGot.Organization._id === "61d5bc5c69b35ef18754dc9a"
+    ) {
+      toast.info("We will review your request shortly");
+      toast.info("Then you will get duties booked only");
+    } else if (userGot.isOrganizationAdmin === "pending") {
+      toast.info("We will respond to your request shortly");
       toast.info("Then you can manage your organization");
     }
+
     document.title = "Home Health Care";
   }, []);
   return (

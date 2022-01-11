@@ -79,6 +79,8 @@ class AvailableDays extends Form {
       },
     ],
     errors: {},
+    hasSelectedSlot: true,
+    hasSelectedDay: true,
   };
   schema = {
     // email: Joi.string().min(5).max(255).required().email(),
@@ -89,9 +91,16 @@ class AvailableDays extends Form {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    let hasSelectedSlot = this.state.slotTime.some((day) => day.value === true);
+    let hasSelectedDay = this.state.daysAvailable.some(
+      (day) => day.value === true
+    );
+    if (!hasSelectedSlot && !hasSelectedDay)
+      this.setState({ hasSelectedSlot: false, hasSelectedDay: false });
+
     const errors = this.validate();
     this.setState({ errors: errors || {} });
-    if (!errors) {
+    if (!errors && hasSelectedSlot && hasSelectedDay) {
       try {
         // const response = await signingUp(global.formData);
         // localStorage.setItem("token", response.headers["x-auth-token"]);
@@ -145,6 +154,7 @@ class AvailableDays extends Form {
     }
   };
   render() {
+    const { hasSelectedSlot, hasSelectedDay } = this.state;
     return (
       <div>
         <ToastContainer />
@@ -159,7 +169,6 @@ class AvailableDays extends Form {
                   YOUR AVAILABILITY
                 </h1>
               </header>
-
               <article className="signup-org-group">
                 <article>
                   <article
@@ -213,7 +222,6 @@ class AvailableDays extends Form {
                   </article>
                 </article>
               </article>
-
               <article className="time-slots">
                 <article className="one-group-first-item addStaff-group-alignment">
                   <article className="time-slots">
@@ -239,6 +247,11 @@ class AvailableDays extends Form {
                   </article>
                 </article>
               </article>
+              {!hasSelectedSlot && (
+                <p class="error" style={{ marginLeft: "1.4rem" }}>
+                  Please Select Available Slots
+                </p>
+              )}
               <article className="time-slots">
                 <article className="one-group-first-item addStaff-group-alignment">
                   <article className="label-addStaff">
@@ -258,7 +271,11 @@ class AvailableDays extends Form {
                   </article>
                 </article>
               </article>
-
+              {!hasSelectedDay && (
+                <p class="error" style={{ marginLeft: "1.4rem" }}>
+                  Please Select Available Days
+                </p>
+              )}
               <article className="btn-orgSignUp org-btn signup-page-btn">
                 {this.renderBtn("OK")}
               </article>

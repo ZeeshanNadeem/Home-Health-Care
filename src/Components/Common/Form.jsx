@@ -424,9 +424,94 @@ class Form extends React.Component {
     return GotSlotBooked;
   };
 
-  //This functions filter time slots whenever the staffAvailable is
+  //when service,organization,date has been
+  //selected if user has selected today's
+  //date we filter time that has gone past
+  filterTimeGonePastToday = (schedule, requestTime) => {
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    if (month < 10) month = "0" + month;
+
+    let day = date.getDate();
+    if (day < 10) day = "0" + day;
+    let year = date.getUTCFullYear();
+    let TodayDate = year + "-" + month + "-" + day;
+
+    // let requestTime = [...this.state.requestTime];
+
+    if (TodayDate === schedule) {
+      for (let i = 0; i < requestTime.length; i++) {
+        let currentHour = date.getHours();
+        // let temp1 = requestTime[i]._id.split("-");
+        // let slotFrom = temp1[0];
+        // let slotTo = temp1[1];
+        let format = "hh:mm";
+        if (currentHour < 10) currentHour = "0" + currentHour;
+        currentHour = currentHour + ":00";
+
+        let slots = requestTime[i]._id.split("to");
+        slots[0] = slots[0].trim();
+        slots[1] = slots[1].trim();
+
+        let slotFromConverted = "";
+        if (slots[0].includes("PM")) {
+          let temp1 = slots[0].split("PM");
+          if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
+          slotFromConverted = temp1[0];
+        } else {
+          let temp1 = slots[0].split("AM");
+
+          if (temp1[0] !== "12") temp1[0] = "00";
+          slotFromConverted = temp1[0];
+        }
+
+        let slotToConverted = "";
+        if (slots[0].includes("PM")) {
+          let temp1 = slots[1].split("PM");
+          if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
+          slotToConverted = temp1[0];
+        } else {
+          let temp1 = slots[1].split("AM");
+
+          if (temp1[0] !== "12") temp1[0] = "00";
+          slotToConverted = temp1[0];
+        }
+
+        slotFromConverted += ":00";
+        slotToConverted += ":00";
+        let currentHour_ = moment(currentHour, format),
+          beforeTime = moment(slotFromConverted, format),
+          afterTime = moment(slotToConverted, format);
+
+        if (
+          // currentHour_.isBetween(beforeTime, afterTime) ||
+          currentHour_.isBefore(beforeTime, afterTime) ||
+          currentHour_.isSame(beforeTime)
+        ) {
+        } else {
+          delete requestTime[i];
+        }
+      }
+
+      // let format = "hh:mm";
+      // let time = moment("02:00", format),
+      //   beforeTime = moment("00:00", format),
+      //   afterTime = moment("03:00", format);
+
+      // if (time.isBetween(beforeTime, afterTime)) {
+      //   console.log("is between");
+      // } else {
+      //   console.log("is not between");
+      // }
+
+      this.setState({ requestTime });
+    }
+    // else this.setState({ requestTime });
+  };
+
+  //This function filters time slots whenever the staffAvailable is
   //determined.we show only that time slots in time dropdown on
-  //which staff is available.Unavailable slot get filtered
+  //which staff is available.Unavailable slot get filtered (booked slots)
   FilterNotAvailableSlots = async (schedule) => {
     let track = [];
 
@@ -604,7 +689,12 @@ class Form extends React.Component {
         }
       }
       global.availableSlots = filterReqTime;
+
+      // for (let i = 0; i < filterReqTime; i++) {}
+
       this.setState({ requestTime: filterReqTime });
+
+      this.filterTimeGonePastToday(schedule, filterReqTime);
     }
   };
 
@@ -650,15 +740,17 @@ class Form extends React.Component {
       `http://localhost:3000/api/services?organization=${inputValue}`
     );
 
-    data.results = data.results.filter(
-      (req) => req.user.isOrganizationAdmin === "Approved Independent Member"
-    );
+    if (this.state.doctorForm.organization === "61d5bc5c69b35ef18754dc9a") {
+      data.results = data.results.filter(
+        (req) => req.user.isOrganizationAdmin === "Approved Independent Member"
+      );
+    }
 
     this.setState({ Conditionalservices: data.results });
   };
 
-  //If user selects todays date this function filters time slot that
-  //have gone past today
+  //This function puts all the available time slots in
+  //check availability in userRequest Page
   filterTime = (schedule) => {
     let date = new Date();
     let month = date.getMonth() + 1;
@@ -669,19 +761,51 @@ class Form extends React.Component {
     let year = date.getUTCFullYear();
     let TodayDate = year + "-" + month + "-" + day;
 
-    const requestTime = [...this.state.requestTime];
+    let requestTime = [...this.state.requestTime];
+
     if (TodayDate === schedule) {
       for (let i = 0; i < requestTime.length; i++) {
         let currentHour = date.getHours();
-        let temp1 = requestTime[i]._id.split("-");
-        let slotFrom = temp1[0];
-        let slotTo = temp1[1];
+        // let temp1 = requestTime[i]._id.split("-");
+        // let slotFrom = temp1[0];
+        // let slotTo = temp1[1];
         let format = "hh:mm";
         if (currentHour < 10) currentHour = "0" + currentHour;
         currentHour = currentHour + ":00";
+
+        let slots = requestTime[i]._id.split("to");
+        slots[0] = slots[0].trim();
+        slots[1] = slots[1].trim();
+
+        let slotFromConverted = "";
+        if (slots[0].includes("PM")) {
+          let temp1 = slots[0].split("PM");
+          if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
+          slotFromConverted = temp1[0];
+        } else {
+          let temp1 = slots[0].split("AM");
+
+          if (temp1[0] !== "12") temp1[0] = "00";
+          slotFromConverted = temp1[0];
+        }
+
+        let slotToConverted = "";
+        if (slots[0].includes("PM")) {
+          let temp1 = slots[1].split("PM");
+          if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
+          slotFromConverted = temp1[0];
+        } else {
+          let temp1 = slots[1].split("AM");
+
+          if (temp1[0] !== "12") temp1[0] = "00";
+          slotToConverted = temp1[0];
+        }
+
+        slotFromConverted += ":00";
+        slotToConverted += ":00";
         let currentHour_ = moment(currentHour, format),
-          beforeTime = moment(slotFrom, format),
-          afterTime = moment(slotTo, format);
+          beforeTime = moment(slotFromConverted, format),
+          afterTime = moment(slotToConverted, format);
 
         if (
           // currentHour_.isBetween(beforeTime, afterTime) ||
@@ -722,6 +846,7 @@ class Form extends React.Component {
     if (input.name === "schedule" && service && organization) {
       this.FilterNotAvailableSlots(input.value);
       this.filterTime(input.value);
+      console.log("availability:", this.state.availabilityData);
     }
     if (input.name === "organization") {
       this.populateServices(input.value);
@@ -819,7 +944,12 @@ class Form extends React.Component {
     const index = days.findIndex((day) => day.name === e.currentTarget.name);
     days[index].value = e.target.checked;
 
-    this.setState({ days });
+    let hasSelectedDay = this.state.daysAvailable.some(
+      (day) => day.value === true
+    );
+    if (hasSelectedDay) this.setState({ days, hasSelectedDay: true });
+    else if (!hasSelectedDay) this.setState({ days, hasSelectedDay: false });
+    else this.setState({ days });
   };
 
   onChangeCheckBoxForSlots = (e) => {
@@ -828,7 +958,11 @@ class Form extends React.Component {
     const index = slots.findIndex((slot) => slot.name === e.currentTarget.name);
     slots[index].value = e.target.checked;
 
-    this.setState({ slots });
+    let hasSelectedSlot = this.state.slotTime.some((day) => day.value === true);
+
+    if (hasSelectedSlot) this.setState({ slots, hasSelectedSlot: true });
+    else if (!hasSelectedSlot) this.setState({ slots, hasSelectedSlot: false });
+    else this.setState({ slots });
   };
 
   renderCheckBoxForSlots = (id, name, value, msg) => {
@@ -907,25 +1041,40 @@ class Form extends React.Component {
   };
 
   renderDropDown = (label, optionsArray, id, name, dropDownLabel = "") => {
-    const { doctorForm, errors, Conditionalservices } = this.state;
+    const { doctorForm, errors } = this.state;
 
     return (
       <article>
-        <select
-          value={doctorForm[name]}
-          name={name}
-          id={id}
-          className="form-select dropdown"
-          aria-label="Default select example"
-          onChange={this.handleChange}
-        >
-          <option value="">{dropDownLabel}</option>
-          {optionsArray.map((option) => (
-            <option value={option._id || option} key={option._id}>
-              {option.serviceName || option.name || option}
-            </option>
-          ))}
-        </select>
+        {optionsArray.length > 0 ? (
+          <select
+            value={doctorForm[name]}
+            name={name}
+            id={id}
+            className="form-select dropdown"
+            aria-label="Default select example"
+            onChange={this.handleChange}
+          >
+            <option value="">{dropDownLabel}</option>
+
+            {optionsArray.length > 0 &&
+              optionsArray.map((option) => (
+                <option value={option._id || option} key={option._id}>
+                  {option.serviceName || option.name || option}
+                </option>
+              ))}
+          </select>
+        ) : (
+          <select
+            value={doctorForm[name]}
+            name={name}
+            id={id}
+            className="form-select dropdown"
+            aria-label="Default select example"
+            onChange={this.handleChange}
+          >
+            <option value="">No Slot Available</option>
+          </select>
+        )}
         {errors && errors[name] && <p className="error">{errors[name]}</p>}
       </article>
     );
