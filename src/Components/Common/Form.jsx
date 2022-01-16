@@ -6,7 +6,6 @@ import axios from "axios";
 import moment from "moment";
 import config from "../Api/config.json";
 import "../UserRequestService/ModalData/CheckAvailability";
-import { Global } from "@emotion/react";
 
 class Form extends React.Component {
   state = {
@@ -63,12 +62,11 @@ class Form extends React.Component {
     const { data: staffLeaves } = await axios.get(
       config.apiEndPoint + "/staffLeave"
     );
+
     const { schedule } = this.state.doctorForm;
     let filteredStaff = staff;
 
     for (let i = 0; i < staff.length; i++) {
-      console.log(i);
-
       let staffOnLeave = false;
       for (let j = 0; j < staffLeaves.length; j++) {
         if (staff[i]._id === staffLeaves[j].staff._id) {
@@ -439,6 +437,7 @@ class Form extends React.Component {
 
     // let requestTime = [...this.state.requestTime];
 
+    let slotsToFilter = [];
     if (TodayDate === schedule) {
       for (let i = 0; i < requestTime.length; i++) {
         let currentHour = date.getHours();
@@ -461,7 +460,7 @@ class Form extends React.Component {
         } else {
           let temp1 = slots[0].split("AM");
 
-          if (temp1[0] !== "12") temp1[0] = "00";
+          if (temp1[0] === "12") temp1[0] = "00";
           slotFromConverted = temp1[0];
         }
 
@@ -473,7 +472,7 @@ class Form extends React.Component {
         } else {
           let temp1 = slots[1].split("AM");
 
-          if (temp1[0] !== "12") temp1[0] = "00";
+          if (temp1[0] === "12") temp1[0] = "00";
           slotToConverted = temp1[0];
         }
 
@@ -489,10 +488,16 @@ class Form extends React.Component {
           currentHour_.isSame(beforeTime)
         ) {
         } else {
-          delete requestTime[i];
+          slotsToFilter.push(requestTime[i]);
+          // requestTime = requestTime.filter((x) => x !== requestTime[i]);
         }
       }
 
+      if (slotsToFilter.length > 0) {
+        for (let j = 0; j < slotsToFilter.length; j++) {
+          requestTime = requestTime.filter((x) => x !== slotsToFilter[j]);
+        }
+      }
       // let format = "hh:mm";
       // let time = moment("02:00", format),
       //   beforeTime = moment("00:00", format),
@@ -505,8 +510,90 @@ class Form extends React.Component {
       // }
 
       this.setState({ requestTime });
+    } else this.setState({ requestTime });
+    console.log("request Time:", requestTime);
+  };
+
+  //when service,organization,date has been
+  //selected if user has selected today's
+  //date we filter time that has gone past
+  filterTimeGonePastTodayAvailability = (schedule, requestTime) => {
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    if (month < 10) month = "0" + month;
+
+    let day = date.getDate();
+    if (day < 10) day = "0" + day;
+    let year = date.getUTCFullYear();
+    let TodayDate = year + "-" + month + "-" + day;
+
+    // let requestTime = [...this.state.requestTime];
+
+    let slotsToFilter = [];
+    if (TodayDate === schedule) {
+      for (let i = 0; i < requestTime.length; i++) {
+        let currentHour = date.getHours();
+        // let temp1 = requestTime[i]._id.split("-");
+        // let slotFrom = temp1[0];
+        // let slotTo = temp1[1];
+        let format = "hh:mm";
+        if (currentHour < 10) currentHour = "0" + currentHour;
+        currentHour = currentHour + ":00";
+
+        let slots = requestTime[i]._id.split("to");
+        slots[0] = slots[0].trim();
+        slots[1] = slots[1].trim();
+
+        let slotFromConverted = "";
+        if (slots[0].includes("PM")) {
+          let temp1 = slots[0].split("PM");
+          if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
+          slotFromConverted = temp1[0];
+        } else {
+          let temp1 = slots[0].split("AM");
+
+          if (temp1[0] === "12") temp1[0] = "00";
+          slotFromConverted = temp1[0];
+        }
+
+        let slotToConverted = "";
+        if (slots[0].includes("PM")) {
+          let temp1 = slots[1].split("PM");
+          if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
+          slotToConverted = temp1[0];
+        } else {
+          let temp1 = slots[1].split("AM");
+
+          if (temp1[0] === "12") temp1[0] = "00";
+          slotToConverted = temp1[0];
+        }
+
+        slotFromConverted += ":00";
+        slotToConverted += ":00";
+        let currentHour_ = moment(currentHour, format),
+          beforeTime = moment(slotFromConverted, format),
+          afterTime = moment(slotToConverted, format);
+
+        if (
+          // currentHour_.isBetween(beforeTime, afterTime) ||
+          currentHour_.isBefore(beforeTime, afterTime) ||
+          currentHour_.isSame(beforeTime)
+        ) {
+        } else {
+          slotsToFilter.push(requestTime[i]);
+          // requestTime = requestTime.filter((x) => x !== requestTime[i]);
+        }
+      }
+
+      if (slotsToFilter.length > 0) {
+        for (let j = 0; j < slotsToFilter.length; j++) {
+          requestTime = requestTime.filter((x) => x !== slotsToFilter[j]);
+        }
+      }
+
+      return requestTime;
     }
-    // else this.setState({ requestTime });
+    return requestTime;
   };
 
   //This function filters time slots whenever the staffAvailable is
@@ -537,10 +624,12 @@ class Form extends React.Component {
     else if (dayNo === 4) dayNo = "THRU";
     else if (dayNo === 5) dayNo = "FRI";
     else if (dayNo === 6) dayNo = "SAT";
-    const { data: availabilityData } = await axios.get(
+    let { data: availabilityData } = await axios.get(
       config.staff +
         `/?day=${dayNo}&service=${service}&organization=${organization}`
     );
+
+    availabilityData = await this.StaffLeaves(availabilityData);
 
     const { availableSlots } = this.state;
     for (let i = 0; i < availabilityData.length; i++) {
@@ -548,7 +637,7 @@ class Form extends React.Component {
         let checkSlot = track.some(
           (x) => x.timeSlot === slotTime[j] && x.BookedSlot === false
         );
-        if (checkSlot) return;
+        if (checkSlot) continue;
 
         let staffContainsSlot = availabilityData[i].availableTime.some(
           (staff) => staff.time === slotTime[j] && staff.value === true
@@ -692,17 +781,20 @@ class Form extends React.Component {
 
       // for (let i = 0; i < filterReqTime; i++) {}
 
-      this.setState({ requestTime: filterReqTime });
-
+      console.log("calling time gone past with ...", filterReqTime);
+      // this.setState({ requestTime: filterReqTime });
       this.filterTimeGonePastToday(schedule, filterReqTime);
+
+      // this.setState({ requestTime: filterReqTime });
     }
   };
 
-  //Sets avaialable Staff based on organization and service asked.
+  //Sets avaialable Staff in check availability popover
+  // based on organization and service asked.
   //At schedule a service page
   scheduleTime = async (date, doctorForm) => {
-    const { service, organization } = this.state.doctorForm;
-    if (service && organization) {
+    // const { service, organization } = this.state.doctorForm;
+    if (doctorForm.service && doctorForm.organization) {
       const m = moment(doctorForm.schedule);
       const day = m.format("dddd");
 
@@ -726,9 +818,14 @@ class Form extends React.Component {
       // let filteredStaff_ = [];
       const filteredStaff = await this.StaffLeaves(data);
 
+      // const filteredStaff_ = await this.filterTimeGonePastToday(filteredStaff);
       // filteredStaff_ = await this.StaffBookedSlots(filteredStaff);
-      if (filteredStaff) this.setState({ availabilityData: filteredStaff });
-      else this.setState({ availabilityData: data });
+
+      this.setState({ availabilityData: filteredStaff });
+
+      // if (filteredStaff.length > 0)
+      //   this.setState({ availabilityData: filteredStaff });
+      // else this.setState({ availabilityData: data });
     }
   };
 
@@ -744,13 +841,21 @@ class Form extends React.Component {
       data.results = data.results.filter(
         (req) => req.user.isOrganizationAdmin === "Approved Independent Member"
       );
-    }
-
-    this.setState({ Conditionalservices: data.results });
+      let temp = [];
+      for (let i = 0; i < data.results.length; i++) {
+        temp.push({
+          _id: data.results[i].IndependentService._id,
+          serviceName: data.results[i].serviceName,
+          servicePrice: data.results[i].servicePrice,
+          serviceOrgranization: data.results[i].serviceOrgranization,
+        });
+      }
+      this.setState({ Conditionalservices: temp });
+    } else this.setState({ Conditionalservices: data.results });
   };
 
-  //This function puts all the available time slots in
-  //check availability in userRequest Page
+  //This function puts all the available time in
+  //time slot dropdown in userRequest Page
   filterTime = (schedule) => {
     let date = new Date();
     let month = date.getMonth() + 1;
@@ -837,16 +942,52 @@ class Form extends React.Component {
     const errors = { ...this.state.errors };
     if (errorMessage) errors[input.name] = errorMessage;
     else delete errors[input.name];
+    let requestTime = [
+      {
+        _id: "12AM to 3AM",
+        name: "12 AM to 3 AM",
+      },
+      {
+        _id: "3AM to 6AM",
+        name: "3 AM to 6 AM",
+      },
+
+      {
+        _id: "6AM to 9AM",
+        name: "6 AM to 9 AM",
+      },
+      {
+        _id: "9AM to 12PM",
+        name: "9 AM to 12 PM",
+      },
+      {
+        _id: "12PM to 3PM",
+        name: "12 PM to 3 PM",
+      },
+      {
+        _id: "3PM to 6PM",
+        name: "3 PM to 6 PM",
+      },
+      {
+        _id: "6PM to 9PM",
+        name: "6 PM to 9 PM",
+      },
+      {
+        _id: "9PM to 12AM",
+        name: "9 PM to 12 AM",
+      },
+    ];
 
     const doctorForm = { ...this.state.doctorForm };
     doctorForm[input.name] = input.value;
 
+    console.log(requestTime);
     this.setState({ doctorForm, errors });
+
     const { service, organization } = doctorForm;
     if (input.name === "schedule" && service && organization) {
       this.FilterNotAvailableSlots(input.value);
       this.filterTime(input.value);
-      console.log("availability:", this.state.availabilityData);
     }
     if (input.name === "organization") {
       this.populateServices(input.value);
@@ -860,6 +1001,7 @@ class Form extends React.Component {
     doctorForm[e.currentTarget.name] = e.target.checked;
     this.setState({ doctorForm });
   };
+
   renderInput = (
     type,
     id,
@@ -916,9 +1058,11 @@ class Form extends React.Component {
       </article>
     );
   };
+
   renderLabel = (labelName, ForHtml) => {
     return <label htmlfor={ForHtml}>{labelName}</label>;
   };
+
   renderCheckBox = (id, name, value, msg) => {
     const { doctorForm } = this.state;
     return (
@@ -984,6 +1128,7 @@ class Form extends React.Component {
       </article>
     );
   };
+
   renderCheckBoxForDays = (id, name, value, msg) => {
     const { doctorForm } = this.state;
     return (
@@ -1042,6 +1187,7 @@ class Form extends React.Component {
 
   renderDropDown = (label, optionsArray, id, name, dropDownLabel = "") => {
     const { doctorForm, errors } = this.state;
+    console.log("render drop down::", optionsArray);
 
     return (
       <article>

@@ -31,6 +31,7 @@ import React, { useState } from "react";
 import LoadingBar from "react-top-loading-bar";
 import PageNotFound from "./Components/NotFound/PageNotFound";
 import AvailableDays from "./Components/SignUp/SignUpPage/AvailableDays";
+import AboutUs from "./Components/AboutUS/AboutUs";
 
 const App = () => {
   const isLoggedIn = localStorage.getItem("token");
@@ -181,6 +182,10 @@ const App = () => {
         render={(props) => (
           <AvailableDays setProgress={setProgress} {...props} />
         )}
+      />
+      <Route
+        path="/About/Us"
+        render={(props) => <AboutUs setProgress={setProgress} {...props} />}
       />
     </article>
   );

@@ -55,6 +55,7 @@ class ConfirmMeeting extends Form {
       staffMemberAssigned: confirmMeeting[0].staffMemberAssigned,
       user: confirmMeeting[0].user,
     };
+
     try {
       await axios.post(
         config.apiEndPoint + "/userRequests?postObj=abc",
@@ -74,6 +75,7 @@ class ConfirmMeeting extends Form {
     }
   };
   render() {
+    console.log("confirm Meeting::", this.state.confirmMeeting);
     return (
       <article>
         <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
@@ -140,7 +142,8 @@ class ConfirmMeeting extends Form {
                     </span>
                     &nbsp; &nbsp; &nbsp;
                     <span className="style-meeting-detials-6">
-                      {data.Service.servicePrice}
+                      {data.Service.servicePrice ||
+                        data.staffMemberAssigned.staffSpeciality.servicePrice}
                     </span>
                   </p>
                   <p>

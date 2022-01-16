@@ -83,13 +83,13 @@ const Footer = ({ setProgress }) => {
                   <p>About Us</p>
                   <p>Get your home vists shecduled.</p>
 
-                  <a
+                  {/* <a
                     className="btn"
                     href="https://bit.ly/3m9avif"
                     target="_blank"
                   >
                     Sign Up
-                  </a>
+                  </a> */}
                 </div>
               </div>
 

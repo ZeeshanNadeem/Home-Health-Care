@@ -283,7 +283,9 @@ class NurseForm extends Form {
 
       await axios.post(config.apiEndPoint + "/user", userObj);
     } catch (ex) {
-      toast.error(ex.response.data);
+      const error = { ...this.state.errors };
+      error.email = ex.response.data;
+      this.setState({ errors: error });
       return;
     }
     toast.success("Staff member Added!");

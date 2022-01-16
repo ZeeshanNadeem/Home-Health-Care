@@ -89,6 +89,17 @@ class AvailableDays extends Form {
     phone: Joi.string().required(),
   };
 
+  async componentDidMount() {
+    console.log(global.serviceSelectedID);
+    const { data } = await axios.get(
+      `http://localhost:3000/api/independentServices?serviceID=${global.serviceSelectedID}`
+    );
+    console.log("service::", data);
+    let doctorForm = { ...this.state.doctorForm };
+    doctorForm.price = data[0].servicePrice;
+    this.setState({ doctorForm });
+  }
+
   handleSubmit = async (e) => {
     e.preventDefault();
     let hasSelectedSlot = this.state.slotTime.some((day) => day.value === true);
@@ -111,43 +122,88 @@ class AvailableDays extends Form {
         let user = global.userID;
         // let user = response.data._id;
 
-        let serviceObj = {
-          serviceName: serviceOrg,
-          serviceOrgranization: OrgID,
-          servicePrice: price,
-          userID: user,
-        };
-        const { data: service } = await axios.post(
-          config.apiEndPoint + "/services",
-          serviceObj
-        );
-        const addStaffMember = {
-          fullName: global.staffDetails.fullName,
-          email: global.staffDetails.email,
-          password: global.staffDetails.password,
-
-          serviceID: service._id,
-
-          Organization: service.serviceOrgranization,
-          qualificationID: global.staffDetails.qualification,
-          phone: this.state.doctorForm.phone,
-          availableTime: this.state.slotTime,
-          availableDays: this.state.daysAvailable,
-          Rating: 0,
-          RatingAvgCount: 0,
-        };
-
-        const { data: staffAdded } = await axios.post(
-          `http://localhost:3000/api/staff?dontCheck=true`,
-          addStaffMember
+        const { data: service } = await axios.get(
+          `http://localhost:3000/api/services?IndependentServiceID=${global.serviceSelectedID}`
         );
 
-        await axios.patch(config.apiEndPoint + "/user?EditUser=true", {
-          staffMemberObj: staffAdded,
-          // staffMemberID: response.data._id
-          staffMemberID: global.userID,
-        });
-        window.location = "/Home";
+        if (service.length > 0) {
+          let serviceObj = {
+            serviceID: service[0].IndependentService._id,
+            serviceOrgranization:
+              service[0].IndependentService.serviceOrganization,
+            servicePrice: service[0].servicePrice,
+            userID: user,
+          };
+          // const { data: service } = await axios.post(
+          //   config.apiEndPoint + "/services",
+          //   serviceObj
+          // );
+          const addStaffMember = {
+            fullName: global.staffDetails.fullName,
+            email: global.staffDetails.email,
+            password: global.staffDetails.password,
+
+            serviceID: serviceObj.serviceID,
+
+            Organization: serviceObj.serviceOrgranization,
+            qualificationID: global.staffDetails.qualification,
+            phone: this.state.doctorForm.phone,
+            availableTime: this.state.slotTime,
+            availableDays: this.state.daysAvailable,
+            Rating: 0,
+            RatingAvgCount: 0,
+          };
+
+          const { data: staffAdded } = await axios.post(
+            `http://localhost:3000/api/staff?dontCheck=true&signUpOrg=true`,
+            addStaffMember
+          );
+
+          await axios.patch(config.apiEndPoint + "/user?EditUser=true", {
+            staffMemberObj: staffAdded,
+            // staffMemberID: response.data._id
+            staffMemberID: global.userID,
+          });
+          window.location = "/Home";
+        } else {
+          let serviceObj = {
+            serviceID: serviceOrg,
+            serviceOrgranization: OrgID,
+            servicePrice: price,
+            userID: user,
+          };
+          const { data: service } = await axios.post(
+            config.apiEndPoint + "/services",
+            serviceObj
+          );
+          const addStaffMember = {
+            fullName: global.staffDetails.fullName,
+            email: global.staffDetails.email,
+            password: global.staffDetails.password,
+
+            serviceID: serviceObj.serviceID,
+
+            Organization: service.serviceOrgranization,
+            qualificationID: global.staffDetails.qualification,
+            phone: this.state.doctorForm.phone,
+            availableTime: this.state.slotTime,
+            availableDays: this.state.daysAvailable,
+            Rating: 0,
+            RatingAvgCount: 0,
+          };
+
+          const { data: staffAdded } = await axios.post(
+            `http://localhost:3000/api/staff?dontCheck=true&signUpOrg=true`,
+            addStaffMember
+          );
+
+          await axios.patch(config.apiEndPoint + "/user?EditUser=true", {
+            staffMemberObj: staffAdded,
+            // staffMemberID: response.data._id
+            staffMemberID: global.userID,
+          });
+          window.location = "/Home";
+        }
       } catch (ex) {
         toast.error(ex.response.data);
       }
@@ -178,7 +234,15 @@ class AvailableDays extends Form {
                     {this.renderLabel("Price", "price")}
                   </article>
                   <article className="price-txt txtField-signup-org">
-                    {this.renderInput("number", "price", "price")}
+                    {this.renderInput(
+                      "number",
+                      "price",
+                      "price",
+                      "",
+                      "",
+                      "",
+                      "readonly"
+                    )}
                   </article>
                 </article>
 

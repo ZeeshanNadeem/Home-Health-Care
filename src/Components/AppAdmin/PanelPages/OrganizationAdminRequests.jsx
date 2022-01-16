@@ -57,6 +57,7 @@ const OrganizationAdminRequests = (props) => {
     );
     setPendingAdmins(admins.results);
   };
+
   const ApproveAdminRequests = async (admin) => {
     try {
       if (admin.ResumePath) {

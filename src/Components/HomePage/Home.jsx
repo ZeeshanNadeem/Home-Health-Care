@@ -43,10 +43,13 @@ const Home = ({ setProgress }) => {
 
       <Carasol setProgress={setProgress} />
 
-      {setProgress(40)}
+      {setProgress(30)}
       <ServicesCards setProgress={setProgress} />
-      {setProgress(80)}
+      {setProgress(40)}
 
+      {setProgress(50)}
+      {setProgress(60)}
+      {setProgress(70)}
       <Footer setProgress={setProgress} />
       {setProgress(100)}
     </div>

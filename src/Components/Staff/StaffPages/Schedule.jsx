@@ -57,9 +57,7 @@ const Schedule = () => {
           <td className="td-schedule">{staff.PhoneNo}</td>
           <td className="td-schedule">{staff.Address} </td>
           <td className="td-schedule">{staff.Schedule}</td>
-          <td className="td-schedule">
-            {staff.ServiceNeededFrom} to {staff.ServiceNeededTo}
-          </td>
+          <td className="td-schedule">{staff.ServiceNeededTime}</td>
         </tr>
       ))}
     </table>

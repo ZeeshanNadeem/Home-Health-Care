@@ -65,8 +65,12 @@ class NavBar extends Component {
           {/* <li className="nav-li">Registered Organizations</li> */}
           <IndexDropdown />
 
-          <li className="nav-li">About Us</li>
-
+          <Link
+            to="/About/Us"
+            style={{ marginLeft: "2rem", marginRight: "1rem" }}
+          >
+            <li className="nav-li">About Us</li>
+          </Link>
           <Link to="contact">
             <li className="nav-li">Contact Us</li>
           </Link>

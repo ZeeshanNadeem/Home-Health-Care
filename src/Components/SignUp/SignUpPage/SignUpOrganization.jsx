@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import axios from "axios";
 import config from "../../Api/config.json";
 import { Link } from "react-router-dom";
-import * as yup from "yup";
+
 import { useForm } from "antd/lib/form/Form";
 class SignUpAsOrganization extends Form {
   state = {
@@ -29,7 +29,7 @@ class SignUpAsOrganization extends Form {
     errors: {},
     selectedFile: null,
     organizations: [],
-    services: ["Nursing", "Physiotherapy", "Baby Vacination"],
+    IndependentServices: [],
     qualification: [],
     daysAvailable: [
       {
@@ -125,7 +125,15 @@ class SignUpAsOrganization extends Form {
     const { data: qualification } = await axios.get(
       config.apiEndPoint + "/qualification"
     );
-    this.setState({ organizations: data.results, qualification });
+    const { data: services } = await axios.get(
+      config.apiEndPoint + "/independentServices"
+    );
+
+    this.setState({
+      organizations: data.results,
+      qualification,
+      IndependentServices: services,
+    });
   }
 
   // setFile = (e) => {
@@ -179,7 +187,6 @@ class SignUpAsOrganization extends Form {
           const formData = new FormData();
 
           formData.append("CV", this.state.selectedFile);
-
           formData.append("fullName", this.state.doctorForm.fullName);
           formData.append("email", this.state.doctorForm.email);
           formData.append("password", this.state.doctorForm.password);
@@ -197,6 +204,7 @@ class SignUpAsOrganization extends Form {
           global.userID = response.data._id;
           global.formData = formData;
           global.staffDetails = this.state.doctorForm;
+          global.serviceSelectedID = this.state.doctorForm.serviceOrg_;
           this.props.history.push("/signUp/details");
         } else {
           const {
@@ -341,7 +349,7 @@ class SignUpAsOrganization extends Form {
                     <article>
                       {this.renderDropDown(
                         "",
-                        this.state.services,
+                        this.state.IndependentServices,
                         "serviceOrg_",
                         "serviceOrg_",
                         "Please Select a Service"

@@ -28,39 +28,12 @@ class Leave extends Form {
   };
 
   MatchUserSelected = (BookedStaffDate1) => {
-    // let BookedStaffDate_ = BookedStaffDate.split("-");
-    // let BookedStaffDateYear = BookedStaffDate_[0];
-    // let BookedStaffDateMonth = BookedStaffDate_[1];
-    // let BookedStaffDateDay = BookedStaffDate_[2];
-
     let BookedStaffDate = BookedStaffDate1.split("-");
     let BookedStaffDate_ =
       BookedStaffDate[0] + "/" + BookedStaffDate[1] + "/" + BookedStaffDate[2];
 
-    // BookedStaffDateYear = BookedStaffDateYear.replace(/^(?:00:)?0?/, "");
-    // BookedStaffDateMonth = BookedStaffDateMonth.replace(/^(?:00:)?0?/, "");
-    // BookedStaffDateDay = BookedStaffDateDay.replace(/^(?:00:)?0?/, "");
-
-    // let leave_from_ = this.state.doctorForm.leave_from.split("-");
-    // let leave_from_year = leave_from_[0];
-    // let leave_from_month = leave_from_[1];
-    // let leave_from_day = leave_from_[2];
-
-    // leave_from_year = leave_from_year.replace(/^(?:00:)?0?/, "");
-    // leave_from_month = leave_from_month.replace(/^(?:00:)?0?/, "");
-    // leave_from_day = leave_from_day.replace(/^(?:00:)?0?/, "");
-
     let leave_from = this.state.doctorForm.leave_from.split("-");
     let leave_from_ = leave_from[0] + "/" + leave_from[1] + "/" + leave_from[2];
-
-    // let leave_to_ = this.state.doctorForm.leave_to.split("-");
-    // let leave_to_year = leave_to_[0];
-    // let leave_to_month = leave_to_[1];
-    // let leave_to_day = leave_to_[2];
-
-    // leave_to_year = leave_to_year.replace(/^(?:00:)?0?/, "");
-    // leave_to_month = leave_to_month.replace(/^(?:00:)?0?/, "");
-    // leave_to_day = leave_to_day.replace(/^(?:00:)?0?/, "");
 
     let leave_to = this.state.doctorForm.leave_to.split("-");
     let leave_to_ = leave_to[0] + "/" + leave_to[1] + "/" + leave_to[2];
@@ -78,185 +51,176 @@ class Leave extends Form {
     } else {
       return false;
     }
-    // if (
-    //   BookedStaffDateYear >= leave_from_year &&
-    //   BookedStaffDateYear <= leave_to_year
-    // ) {
-    //   if (
-    //     BookedStaffDateMonth >= leave_from_month &&
-    //     BookedStaffDateMonth <= leave_to_month
-    //   ) {
-    //     if (
-    //       BookedStaffDateDay >= leave_from_day &&
-    //       BookedStaffDateDay <= leave_to_day
-    //     ) {
-    //       return true;
-    //     }
-    //   }
-    // } else {
-    //   return false;
-    // }
   };
 
   //This function reschedules duty of the staff member
   //who took leaves and assigns it to another staff member
   //with same organization and same designation (e.g nurse)
-  AssignAutomatedStaffDuty = async (serviceDemander) => {
+  AssignAutomatedStaffDuty = async (serviceDemander, count) => {
     const { Schedule, Service, Organization } = serviceDemander;
     const { data: userRequests } = await axios.get(
       config.apiEndPoint + `/userRequests`
     );
     const { ServiceNeededTime } = serviceDemander;
-    const d = new Date();
-    let day = d.getDay();
+    // const d = new Date();
+    // let day = d.getDay();
 
-    if (day === "0") day = 7;
+    const m = moment(Schedule);
+    let dayNo = m.format("dddd");
+
+    // if (day === "0") day = 7;
     // const { data: staff } = await axios.get(config.staff);
+
+    if (dayNo === "Sunday") dayNo = "SUN";
+    else if (dayNo === "Monday") dayNo = "MON";
+    else if (dayNo === "Tuesday") dayNo = "TUE";
+    else if (dayNo === "Wednesday") dayNo = "WED";
+    else if (dayNo === "Thrusday") dayNo = "THRU";
+    else if (dayNo === "Friday") dayNo = "FRI";
+    else if (dayNo === "Saturday") dayNo = "SAT";
 
     const { data: staffGot } = await axios.get(
       config.staff +
-        `/?day=${day}&service=${Service._id}&organization=${Organization._id}`
+        `/?day=${dayNo}&service=${Service._id}&organization=${Organization._id}`
     );
-    console.log(
-      config.staff +
-        `/?day=${day}&service=${Service._id}&organization=${Organization._id}`
-    );
+
     const { data: staffLeaves } = await axios.get(
       config.apiEndPoint + "/staffLeave"
     );
-    let bookedServiceFrom_ = null;
-    let bookedServiceFrom = null;
-    let bookedServiceTo_ = null;
-    let bookedServiceTo = null;
     let gotSlotBooked = false;
     let staffOnLeave = false;
     let liesBetween = false;
-
+    let countReschedule = 0;
+    let loopEnds = false;
     for (let j = 0; j < staffGot.length; j++) {
+      if (j === staffGot[j].length - 1) loopEnds = true;
+      let availableTime = staffGot[j].availableTime.filter(
+        (s) => s.time === ServiceNeededTime && s.value === true
+      );
       gotSlotBooked = false;
       staffOnLeave = false;
       let liesBetween = false;
 
-      let availableFromArr = staffGot[j].availabilityFrom.split(":");
-      let availableToArr = staffGot[j].availabilityTo.split(":");
+      if (availableTime.length > 0) liesBetween = true;
+      else continue;
+      let availabilityFrom = null;
+      let availabilityTo = null;
+      let availableFromArr = availableTime[0].time.split("to");
+      availableFromArr[0].trim();
+      availableFromArr[1].trim();
 
-      let StaffAvailableForm = availableFromArr[0];
-      let StaffAvailableTo = availableToArr[0];
-
-      let userSelectedTime = ServiceNeededTime.split("-");
-
-      let userSelectedTimeFrom_ = userSelectedTime[0];
-      let userSelectedTimeTo_ = userSelectedTime[1];
-
-      // userSelectedTime_ = userSelectedTime[0] + ":00";
-      //Logic to check userSelected Time lies between
-      //staff's duty or not
-
-      //Checking if userSelected time comes in between a staff duty
-      //If yes then we proceed further else check for other staff member
-
-      let format = "hh:mm";
-      let timeFrom = moment(userSelectedTimeFrom_, format),
-        beforeTime = moment(StaffAvailableForm, format),
-        afterTime = moment(StaffAvailableTo, format),
-        timeTo = moment(userSelectedTimeTo_, format);
-
-      if (
-        (timeFrom.isBetween(beforeTime, afterTime) &&
-          timeTo.isBetween(beforeTime, afterTime)) ||
-        (timeFrom.isAfter(beforeTime) && timeTo.isSame(afterTime)) ||
-        (timeFrom.isSame(beforeTime) && timeTo.isSame(afterTime)) ||
-        (timeFrom.isSame(beforeTime) && timeTo.isBefore(afterTime))
-      ) {
-        liesBetween = true;
+      if (availableFromArr[0].includes("AM")) {
+        let arr = availableFromArr[0].split("AM");
+        if (arr[0] === "12") {
+          availabilityFrom = "00";
+        } else availabilityFrom = arr[0];
+      } else if (availableFromArr[0].includes("PM")) {
+        let arr = availableFromArr[0].split("PM");
+        if (arr[0] !== "12") {
+          availabilityFrom = parseInt(arr[0]) + 12;
+        }
       }
 
-      // gotSlotBooked = false;
-      // staffOnLeave = false;
-      // liesBetween = false;
-      // let availableFromArr = staffGot[j].availabilityFrom.split(":");
-      // let availableToArr = staffGot[j].availabilityTo.split(":");
+      if (availableFromArr[1].includes("AM")) {
+        let arr = availableFromArr[1].split("AM");
+        if (arr[0] === "12") {
+          availabilityTo = "00";
+        } else availabilityFrom = arr[0];
+      } else if (availableFromArr[1].includes("PM")) {
+        let arr = availableFromArr[1].split("PM");
+        if (arr[0] !== "12") {
+          availabilityTo = parseInt(arr[0]) + 12;
+        }
+      }
 
-      // let userSelectedTime = ServiceNeededFrom.split(":");
-      // let availableFrom = availableFromArr[0];
-      // let availabileTo = availableToArr[0];
-      // let userSelectedTime_ = userSelectedTime[0];
+      // // let availableToArr = staffGot[j].availabilityTo.split(":");
 
-      // if (
-      //   userSelectedTime_ === "01" ||
-      //   userSelectedTime_ === "02" ||
-      //   userSelectedTime_ === "03" ||
-      //   userSelectedTime_ === "04" ||
-      //   userSelectedTime_ === "05" ||
-      //   userSelectedTime_ === "06" ||
-      //   userSelectedTime_ === "07" ||
-      //   userSelectedTime_ === "08" ||
-      //   userSelectedTime_ === "09"
-      // ) {
-      //   userSelectedTime_ = userSelectedTime_.replace(/^(?:00:)?0?/, "");
+      // // let StaffAvailableForm = availableFromArr[0];
+      // // let StaffAvailableTo = availableToArr[0];
+
+      let userSelectedTime = ServiceNeededTime.split("to");
+      userSelectedTime[0].trim();
+      userSelectedTime[1].trim();
+      let userSelectedTimeFrom = null;
+      let userSelectedTimeTo = null;
+
+      if (userSelectedTime[0].includes("AM")) {
+        let arr = userSelectedTime[0].split("AM");
+        if (arr[0] === "12") {
+          userSelectedTimeFrom = "00";
+        } else userSelectedTimeFrom = arr[0];
+      } else if (userSelectedTime[0].includes("PM")) {
+        let arr = userSelectedTime[0].split("PM");
+        if (arr[0] !== "12") {
+          userSelectedTimeFrom = parseInt(arr[0]) + 12;
+        }
+      }
+
+      if (userSelectedTime[1].includes("AM")) {
+        let arr = userSelectedTime[1].split("AM");
+        if (arr[0] === "12") {
+          userSelectedTimeTo = "00";
+        } else userSelectedTimeTo = arr[0];
+      } else if (userSelectedTime[1].includes("PM")) {
+        let arr = userSelectedTime[1].split("PM");
+        if (arr[0] !== "12") {
+          userSelectedTimeTo = parseInt(arr[0]) + 12;
+        }
+      }
+
+      //Checking if staff Selected time comes in between a staff duty
+      //If yes then we proceed further else check for other staff member
+
+      // let format = "hh";
+      // let timeFrom = moment(userSelectedTimeFrom, format),
+      //   beforeTime = moment(availabilityFrom, format),
+      //   afterTime = moment(availabilityTo, format),
+      //   timeTo = moment(userSelectedTimeTo, format);
+
+      // if (timeFrom.isSame(beforeTime) && timeTo.isSame(afterTime)) {
+      //   liesBetween = true;
       // }
-      // if (
-      //   availableFrom === "01" ||
-      //   availableFrom === "02" ||
-      //   availableFrom === "03" ||
-      //   availableFrom === "04" ||
-      //   availableFrom === "05" ||
-      //   availableFrom === "06" ||
-      //   availableFrom === "07" ||
-      //   availableFrom === "08" ||
-      //   availableFrom === "09"
-      // ) {
-      //   availableFrom = availableFrom.replace(/^(?:00:)?0?/, "");
-      // }
-
-      // if (
-      //   availabileTo === "01" ||
-      //   availabileTo === "02" ||
-      //   availabileTo === "03" ||
-      //   availabileTo === "04" ||
-      //   availabileTo === "05" ||
-      //   availabileTo === "06" ||
-      //   availabileTo === "07" ||
-      //   availabileTo === "08" ||
-      //   availabileTo === "09"
-      // ) {
-      //   availabileTo = availabileTo.replace(/^(?:00:)?0?/, "");
-      // }
-      // //Checking if userSelected time comes in between a staff duty
-      // //If yes then we proceed further else check for other staff member
-      // userSelectedTime_ = parseInt(userSelectedTime_.trim());
-      // const StaffAvailableForm = parseInt(availableFrom.trim());
-      // const StaffAvailableTo = parseInt(availabileTo.trim());
-
-      // //Logic to check userSelected Time lies between
-      // //staff's duty or not
-      // for (let s = StaffAvailableForm; s <= StaffAvailableTo; s++) {
-      //   if (s === userSelectedTime_) {
-      //     liesBetween = true;
-      //     break;
-      //   }
-      // }
-
-      let userSelectedTime1 = ServiceNeededTime.split("-");
-      let temp1 = userSelectedTime1[0];
-      let temp2 = availableToArr[0];
-      let userSelectedTimeFrom1_ = temp1[0];
-      let userSelectedTimeTo1_ = temp2[0];
 
       if (liesBetween) {
         for (let i = 0; i < userRequests.length; i++) {
           if (staffOnLeave || gotSlotBooked) break;
           if (staffGot[j]._id === userRequests[i].staffMemberAssigned._id) {
-            bookedServiceFrom = userRequests[i].ServiceNeededFrom.split(":");
-            bookedServiceTo = userRequests[i].ServiceNeededTo.split(":");
-            bookedServiceTo_ = bookedServiceTo[0];
-            bookedServiceFrom_ = bookedServiceFrom[0];
+            let arrayTime = userRequests[i].ServiceNeededTime.split("to");
+            arrayTime[0] = arrayTime[0].trim();
+            arrayTime[1] = arrayTime[1].trim();
 
-            let format = "hh:mm:ss";
-            let timeFrom_ = moment(userSelectedTimeFrom1_, format),
-              beforeTime_ = moment(bookedServiceFrom_, format),
-              afterTime_ = moment(bookedServiceTo_, format),
-              timeTo_ = moment(userSelectedTimeTo1_, format);
+            let bookedServiceFrom = null;
+            let bookedServiceTo = null;
+
+            if (arrayTime[0].includes("AM")) {
+              let arr = arrayTime[0].split("AM");
+              if (arr[0] === "12") {
+                bookedServiceFrom = "00";
+              } else bookedServiceFrom = arr[0];
+            } else if (arrayTime[0].includes("PM")) {
+              let arr = arrayTime[0].split("PM");
+              if (arr[0] !== "12") {
+                bookedServiceFrom = parseInt(arr[0]) + 12;
+              }
+            }
+
+            if (arrayTime[1].includes("AM")) {
+              let arr = arrayTime[1].split("AM");
+              if (arr[0] === "12") {
+                bookedServiceTo = "00";
+              } else bookedServiceTo = arr[0];
+            } else if (arrayTime[1].includes("PM")) {
+              let arr = arrayTime[1].split("PM");
+              if (arr[0] !== "12") {
+                availabilityTo = parseInt(arr[0]) + 12;
+              }
+            }
+
+            let format = "hh";
+            let timeFrom_ = moment(userSelectedTimeFrom, format),
+              beforeTime_ = moment(bookedServiceFrom, format),
+              afterTime_ = moment(bookedServiceTo, format),
+              timeTo_ = moment(userSelectedTimeTo, format);
 
             //Checking If staff booked service time
             //lies between user requested time
@@ -264,11 +228,8 @@ class Leave extends Form {
             //its the day in between where user demands service
             //If yes then its slot is booked
             if (
-              (timeFrom_.isBetween(beforeTime_, afterTime_) &&
-                timeTo_.isBetween(beforeTime_, afterTime_)) ||
-              (timeFrom_.isAfter(beforeTime_) && timeTo.isSame(afterTime_)) ||
-              (timeFrom_.isSame(beforeTime_) && timeTo.isSame(afterTime_)) ||
-              (timeFrom_.isSame(beforeTime_) && timeTo.isBefore(afterTime_))
+              timeFrom_.isSame(beforeTime_) &&
+              timeTo_.isSame(afterTime_)
 
               // userSelectedTime_ >= bookedServiceFrom_ &&
               // userSelectedTime_ <= bookedServiceTo_
@@ -294,61 +255,10 @@ class Leave extends Form {
                 staffOnLeave = true;
                 break;
               } else {
-                // const leaveFromArr = staffLeaves[z].leaveFrom.split("-");
-                // const leaveToArr = staffLeaves[z].leaveTo.split("-");
-                // const scheduleArr = Schedule.split("-");
-
                 let leaveFromArr = staffLeaves[z].leaveFrom.split("-");
                 let leaveToArr = staffLeaves[z].leaveTo.split("-");
                 let scheduleArr = Schedule.split("-");
 
-                // let leaveFormYear = leaveFromArr[0];
-                // let leaveFormMonth = leaveFromArr[1];
-                // let leaveFromDay = leaveFromArr[2];
-
-                // let leaveToYear = leaveToArr[0];
-                // let leaveToMonth = leaveToArr[1];
-                // let leaveToDay = leaveToArr[2];
-
-                // let userScheduleDateYear = scheduleArr[0];
-                // let userScheduleDateMonth = scheduleArr[1];
-                // let userScheduleDateDay = scheduleArr[2];
-
-                // leaveFormYear = leaveFormYear.replace(/^(?:00:)?0?/, "");
-                // leaveFormMonth = leaveFormMonth.replace(/^(?:00:)?0?/, "");
-                // leaveFromDay = leaveFromDay.replace(/^(?:00:)?0?/, "");
-
-                // leaveToYear = leaveToYear.replace(/^(?:00:)?0?/, "");
-                // leaveToMonth = leaveToMonth.replace(/^(?:00:)?0?/, "");
-                // leaveToDay = leaveToDay.replace(/^(?:00:)?0?/, "");
-
-                // userScheduleDateYear = userScheduleDateYear.replace(
-                //   /^(?:00:)?0?/,
-                //   ""
-                // );
-                // userScheduleDateMonth = userScheduleDateMonth.replace(
-                //   /^(?:00:)?0?/,
-                //   ""
-                // );
-                // userScheduleDateDay = userScheduleDateDay.replace(
-                //   /^(?:00:)?0?/,
-                //   ""
-                // );
-
-                // if (
-                //   userScheduleDateYear >= leaveFormYear &&
-                //   userScheduleDateYear <= leaveToYear
-                // ) {
-                //   const checkBetweenMonths =
-                //     leaveFormMonth - userScheduleDateMonth;
-                //   const checkBetweenMonth2 =
-                //     leaveToMonth - userScheduleDateMonth;
-
-                //   if (checkBetweenMonths > 0 && checkBetweenMonth2 > 0) {
-                //     staffOnLeave = true;
-                //     break;
-                //   }
-                // }
                 let leaveFrom_ =
                   leaveFromArr[0] +
                   "/" +
@@ -367,8 +277,8 @@ class Leave extends Form {
                 const isBetween = compareDate.isBetween(startDate, endDate);
                 if (
                   isBetween ||
-                  compareDate.isSame(leaveFrom_) ||
-                  compareDate.isSame(leaveTo_)
+                  compareDate.isSame(startDate) ||
+                  compareDate.isSame(endDate)
                 ) {
                   staffOnLeave = true;
                   break;
@@ -382,22 +292,39 @@ class Leave extends Form {
       // Assigning that staff a duty
       if (!gotSlotBooked && !staffOnLeave && liesBetween) {
         serviceDemander.staffMemberID = staffGot[j]._id;
-        console.log("Service Demander::", serviceDemander);
+
         try {
+          count++;
           await axios.post(
             "http://localhost:3000/api/userRequests?assignDuty=abc",
             serviceDemander
           );
-          toast.success("Leave Scheduled!");
-          toast.success("Substitute Staff Member has been assigned");
+
+          // toast.success(
+          //   "Leave Scheduled! Substitute Staff Member has been Assigned Your duty"
+          // );
+          // toast.success(
+          //   "Check your schedule to know what duties have been substituted"
+          // );
         } catch (ex) {
           toast.error(ex.response.data);
         }
-
+        if (loopEnds) {
+          if (count !== 0) {
+            toast.success(
+              "Leave Scheduled! Substitute Staff Member has been Assigned Your duty"
+            );
+            toast.success(
+              "Check your schedule to know what duties have been substituted"
+            );
+          }
+        }
         // break;
-        return;
+        return count;
+        // continue;
       }
     }
+    //Can't take leave no substitute staff member available
     if (gotSlotBooked || !liesBetween || staffOnLeave) {
       const jwt = localStorage.getItem("token");
       const user = jwtDecode(jwt);
@@ -418,8 +345,28 @@ class Leave extends Form {
         toast.error(ex.response.data);
       }
 
-      toast.error("You can't take a leave on this date");
-      toast.error("No Staff Member Availabile To Assign Your Shift!");
+      // toast.error("Sorry No Staff Member Availabile To Assign Your Shift!");
+      // toast.error(
+      //   "Check your schedule to know what duties have been substituted"
+      // );
+    }
+
+    if (loopEnds) {
+      if (count !== 0) {
+        toast.success(
+          "Leave Scheduled! Substitute Staff Member has been Assigned Your duty"
+        );
+        toast.success(
+          "Check your schedule to know what duties have been substituted"
+        );
+      }
+      if (count === 0) {
+        toast.error("Sorry You can't take leave");
+        toast.error("No Staff Member Availabile To Assign Your Shift!");
+        //  toast.error(
+        //    "Check your schedule to know what duties have been substituted"
+        //  );
+      }
     }
   };
 
@@ -460,7 +407,7 @@ class Leave extends Form {
     // leave_to_year = leave_to_year.replace(/^(?:00:)?0?/, "");
     // leave_to_month = leave_to_month.replace(/^(?:00:)?0?/, "");
     // leave_to_day = leave_to_day.replace(/^(?:00:)?0?/, "");
-
+    let rescheduleCount = 0;
     for (let i = 0; i < userRequestStaff.length; i++) {
       let userRequestDate = userRequestStaff[i].Schedule.split("-");
       let userRequestDate_ =
@@ -518,7 +465,10 @@ class Leave extends Form {
         await axios.delete(
           config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
         );
-        this.AssignAutomatedStaffDuty(customer);
+        rescheduleCount = this.AssignAutomatedStaffDuty(
+          customer,
+          rescheduleCount
+        );
       }
 
       // if (scheduleYear >= leave_form_year && scheduleYear <= leave_to_year) {
@@ -581,17 +531,26 @@ class Leave extends Form {
       //   }
       // }
     }
+    if (rescheduleCount !== 0) {
+      toast.success("Leave Scheduled!!");
+      toast.success(
+        "Check your schedule to know what duties have been substituted"
+      );
+    } else {
+      toast.error("Sorry!! You can't take leave");
+      toast.error("No Substitute Staff Member Available to Assign Your Shift");
+    }
   };
 
   AssignSubstituteStaff = async (leave_from, leave_to) => {
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
+    //checking if this person who took leave has
+    //duties assigned too
     const { data } = await axios.get(
       config.apiEndPoint + `/userRequests?staffMemberId=${user.staffMember._id}`
     );
-    console.log(
-      config.apiEndPoint + `/userRequests?staffMemberId=${user.staffMember._id}`
-    );
+
     if (data.length === 0) toast.success("You have been granted leave ! ");
     else this.ReScheduleDuty(data, leave_from, leave_to);
   };

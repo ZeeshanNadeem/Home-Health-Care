@@ -29,12 +29,13 @@ footer#footer {
 /* Main Footer */
 footer .main-footer {
   padding: 20px 0;
-  background: rgb(25, 33, 51);
+  background: rgba(17, 24, 38, 1);
+  /* background: rgb(25, 33, 51);
   background: linear-gradient(
     90deg,
     rgba(25, 33, 51, 1) 47%,
     rgba(17, 24, 38, 1) 77%
-  );
+  ); */
   /* background: #252525; */
 }
 footer ul {
@@ -210,7 +211,8 @@ ul.social-footer2 li a {
   text-align: center;
 }
 .btn {
-  background-color: #ff8d1e;
+  /* background-color: #ff8d1e; */
+  background-color: #1c6dd0;
   color: #fff;
 }
 .btn:hover,

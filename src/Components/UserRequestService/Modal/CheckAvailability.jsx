@@ -13,6 +13,8 @@ export default function CheckAvailabilityPopover({
   availabilityData,
   userScheduledDate,
   requestTimeLength,
+  filterTimeGonePastToday,
+  staffDateSelected,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -100,6 +102,8 @@ export default function CheckAvailabilityPopover({
             staffLeaves={leaves}
             userRequests={userRequests}
             requestTimeLength={requestTimeLength}
+            filterTimeGonePastToday={filterTimeGonePastToday}
+            staffDateSelected={staffDateSelected}
           />
         </Popover>
       ) : (
@@ -117,9 +121,11 @@ export default function CheckAvailabilityPopover({
           <CheckAvailability
             availabilityData={availabilityData}
             userScheduledDate={userScheduledDate}
+            filterTimeGonePastToday={filterTimeGonePastToday}
             staffLeaves={leaves}
             userRequests={userRequests}
             requestTimeLength={requestTimeLength}
+            staffDateSelected={staffDateSelected}
           />
         </Popover>
       )}

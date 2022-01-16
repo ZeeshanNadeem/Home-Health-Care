@@ -7,6 +7,8 @@ const CheckAvailability = ({
   userScheduledDate,
   userRequests,
   requestTimeLength,
+  filterTimeGonePastToday,
+  staffDateSelected,
 }) => {
   const [availableTiming, setAvailableTime] = useState([
     "12AM to 3AM",
@@ -152,7 +154,66 @@ const CheckAvailability = ({
     }
   };
 
+  const filterSlotsGonePast_ = () => {
+    console.log("track::", track);
+    console.log("filteredUnavailableSlots::", staffDateSelected);
+
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    if (month < 10) month = "0" + month;
+
+    let day = date.getDate();
+    if (day < 10) day = "0" + day;
+    let year = date.getUTCFullYear();
+    let TodayDate = year + "-" + month + "-" + day;
+
+    if (TodayDate === staffDateSelected) {
+      for (let i = 0; i < track.length; i++) {
+        let currentHour = date.getHours();
+
+        let format = "hh:mm";
+        if (currentHour < 10) currentHour = "0" + currentHour;
+        currentHour = currentHour + ":00";
+
+        let slots = requestTime[i]._id.split("to");
+        slots[0] = slots[0].trim();
+        slots[1] = slots[1].trim();
+
+        let slotFromConverted = "";
+        if (slots[0].includes("PM")) {
+          let temp1 = slots[0].split("PM");
+          if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
+          slotFromConverted = temp1[0];
+        } else {
+          let temp1 = slots[0].split("AM");
+
+          if (temp1[0] === "12") temp1[0] = "00";
+          slotFromConverted = temp1[0];
+        }
+
+        let slotToConverted = "";
+        if (slots[0].includes("PM")) {
+          let temp1 = slots[1].split("PM");
+          if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
+          slotToConverted = temp1[0];
+        } else {
+          let temp1 = slots[1].split("AM");
+
+          if (temp1[0] === "12") temp1[0] = "00";
+          slotToConverted = temp1[0];
+        }
+
+        slotFromConverted += ":00";
+        slotToConverted += ":00";
+        let currentHour_ = moment(currentHour, format),
+          beforeTime = moment(slotFromConverted, format),
+          afterTime = moment(slotToConverted, format);
+      }
+    }
+  };
+
   const filteredUnavailableSlots = () => {
+    filterSlotsGonePast_();
     track = track.filter((slot) => slot.BookedSlot === false);
   };
   return (

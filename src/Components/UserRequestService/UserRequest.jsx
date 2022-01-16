@@ -364,7 +364,7 @@ class UserRequestService extends Form {
       userRequest.PhoneNo = doctorForm.phoneno;
       userRequest.city = doctorForm.city;
       userRequest.email = doctorForm.email;
-
+      console.log(userRequest);
       try {
         await axios.post(config.apiEndPoint + "/confirmService", userRequest);
 
@@ -477,6 +477,10 @@ class UserRequestService extends Form {
                       <CheckAvailability
                         availabilityData={availabilityData}
                         userScheduledDate={schedule}
+                        staffDateSelected={this.state.doctorForm.schedule}
+                        filterTimeGonePastToday={
+                          this.filterTimeGonePastTodayAvailability
+                        }
                         requestTimeLength={
                           this.state.doctorForm.service &&
                           this.state.doctorForm.organization &&
