@@ -54,7 +54,7 @@ const Schedule = () => {
       {staffDetails.map((staff) => (
         <tr>
           <td className="td-schedule">{staff.fullName}</td>
-          <td className="td-schedule">{staff.PhoneNo}</td>
+          <td className="td-schedule">0{staff.PhoneNo}</td>
           <td className="td-schedule">{staff.Address} </td>
           <td className="td-schedule">{staff.Schedule}</td>
           <td className="td-schedule">{staff.ServiceNeededTime}</td>

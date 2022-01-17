@@ -160,7 +160,7 @@ class ConfirmMeeting extends Form {
                       Phone No &nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span className="style-meeting-detials-8">
-                      {data.PhoneNo}
+                      0{data.PhoneNo}
                     </span>
                   </p>
                 </article>

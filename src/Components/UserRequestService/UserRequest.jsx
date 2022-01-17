@@ -274,8 +274,8 @@ class UserRequestService extends Form {
                 const isBetween = compareDate.isBetween(startDate, endDate);
                 if (
                   isBetween ||
-                  compareDate.isSame(userSelectedDate_) ||
-                  compareDate.isSame(staffLeaveDateTo_)
+                  compareDate.isSame(startDate) ||
+                  compareDate.isSame(endDate)
                 ) {
                   staffOnLeave = true;
                   break;
@@ -504,10 +504,10 @@ class UserRequestService extends Form {
                   <article>{this.renderLabel("Phone No", "phoneno")}</article>
                   <article>
                     {this.renderInput(
-                      "number",
+                      "tel",
                       "phoneno",
                       "phoneno",
-                      "Phone No"
+                      "Example 03448123901"
                     )}
                   </article>
                 </article>

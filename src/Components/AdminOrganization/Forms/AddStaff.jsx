@@ -477,7 +477,12 @@ class NurseForm extends Form {
                   {this.renderLabel("Phone No", "phoneno")}
                 </article>
                 <article className="input-addStaff">
-                  {this.renderInput("number", "phoneno", "phone", "Phone No")}
+                  {this.renderInput(
+                    "tel",
+                    "phoneno",
+                    "phone",
+                    "Example 03448123901"
+                  )}
                 </article>
               </article>
             </article>

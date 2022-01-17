@@ -103,70 +103,6 @@ class Leave extends Form {
 
       if (availableTime.length > 0) liesBetween = true;
       else continue;
-      let availabilityFrom = null;
-      let availabilityTo = null;
-      let availableFromArr = availableTime[0].time.split("to");
-      availableFromArr[0].trim();
-      availableFromArr[1].trim();
-
-      if (availableFromArr[0].includes("AM")) {
-        let arr = availableFromArr[0].split("AM");
-        if (arr[0] === "12") {
-          availabilityFrom = "00";
-        } else availabilityFrom = arr[0];
-      } else if (availableFromArr[0].includes("PM")) {
-        let arr = availableFromArr[0].split("PM");
-        if (arr[0] !== "12") {
-          availabilityFrom = parseInt(arr[0]) + 12;
-        }
-      }
-
-      if (availableFromArr[1].includes("AM")) {
-        let arr = availableFromArr[1].split("AM");
-        if (arr[0] === "12") {
-          availabilityTo = "00";
-        } else availabilityFrom = arr[0];
-      } else if (availableFromArr[1].includes("PM")) {
-        let arr = availableFromArr[1].split("PM");
-        if (arr[0] !== "12") {
-          availabilityTo = parseInt(arr[0]) + 12;
-        }
-      }
-
-      // // let availableToArr = staffGot[j].availabilityTo.split(":");
-
-      // // let StaffAvailableForm = availableFromArr[0];
-      // // let StaffAvailableTo = availableToArr[0];
-
-      let userSelectedTime = ServiceNeededTime.split("to");
-      userSelectedTime[0].trim();
-      userSelectedTime[1].trim();
-      let userSelectedTimeFrom = null;
-      let userSelectedTimeTo = null;
-
-      if (userSelectedTime[0].includes("AM")) {
-        let arr = userSelectedTime[0].split("AM");
-        if (arr[0] === "12") {
-          userSelectedTimeFrom = "00";
-        } else userSelectedTimeFrom = arr[0];
-      } else if (userSelectedTime[0].includes("PM")) {
-        let arr = userSelectedTime[0].split("PM");
-        if (arr[0] !== "12") {
-          userSelectedTimeFrom = parseInt(arr[0]) + 12;
-        }
-      }
-
-      if (userSelectedTime[1].includes("AM")) {
-        let arr = userSelectedTime[1].split("AM");
-        if (arr[0] === "12") {
-          userSelectedTimeTo = "00";
-        } else userSelectedTimeTo = arr[0];
-      } else if (userSelectedTime[1].includes("PM")) {
-        let arr = userSelectedTime[1].split("PM");
-        if (arr[0] !== "12") {
-          userSelectedTimeTo = parseInt(arr[0]) + 12;
-        }
-      }
 
       //Checking if staff Selected time comes in between a staff duty
       //If yes then we proceed further else check for other staff member
@@ -182,8 +118,114 @@ class Leave extends Form {
       // }
 
       if (liesBetween) {
+        let availabilityFrom = null;
+        let availabilityTo = null;
+        let availableFromArr = availableTime[0].time.split("to");
+        availableFromArr[0].trim();
+        availableFromArr[1].trim();
+
+        if (availableFromArr[0].includes("AM")) {
+          let arr = availableFromArr[0].split("AM");
+          if (arr[0] === "12") {
+            availabilityFrom = "00";
+          } else availabilityFrom = arr[0];
+          if (availabilityFrom < 10 && availabilityFrom !== "00") {
+            availabilityFrom = "0" + availabilityFrom;
+          }
+        } else if (availableFromArr[0].includes("PM")) {
+          let arr = availableFromArr[0].split("PM");
+          if (arr[0] !== "12") {
+            availabilityFrom = parseInt(arr[0]) + 12;
+          } else availabilityFrom = arr[0];
+
+          if (availabilityFrom < 10) {
+            availabilityFrom = "0" + availabilityFrom;
+          }
+        }
+
+        if (availableFromArr[1].includes("AM")) {
+          let arr = availableFromArr[1].split("AM");
+          if (arr[0] === "12") {
+            availabilityTo = "00";
+          } else availabilityTo = arr[0];
+
+          if (availabilityTo < 10 && availabilityTo !== "00") {
+            availabilityTo = "0" + availabilityTo;
+          }
+        } else if (availableFromArr[1].includes("PM")) {
+          let arr = availableFromArr[1].split("PM");
+          if (arr[0] !== "12") {
+            availabilityTo = parseInt(arr[0]) + 12;
+          } else availabilityTo = arr[0];
+          if (availabilityTo < 10) {
+            availabilityTo = "0" + availabilityTo;
+          }
+        }
+
+        // // let availableToArr = staffGot[j].availabilityTo.split(":");
+
+        // // let StaffAvailableForm = availableFromArr[0];
+        // // let StaffAvailableTo = availableToArr[0];
+
+        let userSelectedTime = ServiceNeededTime.split("to");
+
+        userSelectedTime[0].trim();
+        userSelectedTime[1].trim();
+        let userSelectedTimeFrom = null;
+        let userSelectedTimeTo = null;
+
+        if (userSelectedTime[0].includes("AM")) {
+          let arr = userSelectedTime[0].split("AM");
+          arr[0] = arr[0].trim();
+          arr[1] = arr[1].trim();
+          if (arr[0] === "12") {
+            userSelectedTimeFrom = "00";
+          } else {
+            userSelectedTimeFrom = arr[0];
+          }
+          if (userSelectedTimeFrom < 10 && userSelectedTimeFrom !== "00")
+            userSelectedTimeFrom = "0" + userSelectedTimeFrom;
+        } else if (userSelectedTime[0].includes("PM")) {
+          let arr = userSelectedTime[0].split("PM");
+          arr[0] = arr[0].trim();
+          arr[1] = arr[1].trim();
+          if (arr[0] !== "12") {
+            userSelectedTimeFrom = parseInt(arr[0]) + 12;
+          } else {
+            userSelectedTimeFrom = arr[0];
+          }
+          if (userSelectedTimeFrom < 10)
+            userSelectedTimeFrom = "0" + userSelectedTimeFrom;
+        }
+
+        if (userSelectedTime[1].includes("AM")) {
+          let arr = userSelectedTime[1].split("AM");
+          arr[0] = arr[0].trim();
+          arr[1] = arr[1].trim();
+          if (arr[0] === "12") {
+            userSelectedTimeTo = "00";
+          } else {
+            userSelectedTimeTo = arr[0];
+          }
+          if (userSelectedTimeTo < 10 && userSelectedTimeTo !== "00")
+            userSelectedTimeTo = "0" + userSelectedTimeTo;
+        } else if (userSelectedTime[1].includes("PM")) {
+          let arr = userSelectedTime[1].split("PM");
+          arr[0] = arr[0].trim();
+          arr[1] = arr[1].trim();
+
+          if (arr[0] !== "12") {
+            userSelectedTimeTo = parseInt(arr[0]) + 12;
+          } else {
+            userSelectedTimeTo = arr[0];
+          }
+          if (userSelectedTimeTo < 10)
+            userSelectedTimeTo = "0" + userSelectedTimeTo;
+        }
+
         for (let i = 0; i < userRequests.length; i++) {
           if (staffOnLeave || gotSlotBooked) break;
+
           if (staffGot[j]._id === userRequests[i].staffMemberAssigned._id) {
             let arrayTime = userRequests[i].ServiceNeededTime.split("to");
             arrayTime[0] = arrayTime[0].trim();
@@ -194,25 +236,48 @@ class Leave extends Form {
 
             if (arrayTime[0].includes("AM")) {
               let arr = arrayTime[0].split("AM");
+              arr[0] = arr[0].trim();
+              arr[1] = arr[1].trim();
               if (arr[0] === "12") {
                 bookedServiceFrom = "00";
-              } else bookedServiceFrom = arr[0];
+              } else {
+                bookedServiceFrom = arr[0];
+              }
+              if (bookedServiceFrom < 10 && bookedServiceFrom !== "00") {
+                bookedServiceFrom = "0" + bookedServiceFrom;
+              }
             } else if (arrayTime[0].includes("PM")) {
               let arr = arrayTime[0].split("PM");
+              arr[0] = arr[0].trim();
+              arr[1] = arr[1].trim();
               if (arr[0] !== "12") {
                 bookedServiceFrom = parseInt(arr[0]) + 12;
+              } else {
+                bookedServiceFrom = arr[0];
+              }
+              if (bookedServiceFrom < 10) {
+                bookedServiceFrom = "0" + bookedServiceFrom;
               }
             }
 
             if (arrayTime[1].includes("AM")) {
               let arr = arrayTime[1].split("AM");
+              arr[0] = arr[0].trim();
+              arr[1] = arr[1].trim();
               if (arr[0] === "12") {
                 bookedServiceTo = "00";
               } else bookedServiceTo = arr[0];
+
+              if (bookedServiceTo < 10 && bookedServiceTo !== "00") {
+                bookedServiceTo = "0" + bookedServiceTo;
+              }
             } else if (arrayTime[1].includes("PM")) {
               let arr = arrayTime[1].split("PM");
               if (arr[0] !== "12") {
-                availabilityTo = parseInt(arr[0]) + 12;
+                bookedServiceTo = parseInt(arr[0]) + 12;
+              } else bookedServiceTo = arr[0];
+              if (bookedServiceTo < 10) {
+                bookedServiceTo = "0" + bookedServiceTo;
               }
             }
 
@@ -350,24 +415,6 @@ class Leave extends Form {
       //   "Check your schedule to know what duties have been substituted"
       // );
     }
-
-    if (loopEnds) {
-      if (count !== 0) {
-        toast.success(
-          "Leave Scheduled! Substitute Staff Member has been Assigned Your duty"
-        );
-        toast.success(
-          "Check your schedule to know what duties have been substituted"
-        );
-      }
-      if (count === 0) {
-        toast.error("Sorry You can't take leave");
-        toast.error("No Staff Member Availabile To Assign Your Shift!");
-        //  toast.error(
-        //    "Check your schedule to know what duties have been substituted"
-        //  );
-      }
-    }
   };
 
   //This function checks if the required staff member
@@ -390,23 +437,6 @@ class Leave extends Form {
       "/" +
       staffLeaveDateTo[2];
 
-    // let leave_from_ = leave_from.split("-");
-    // let leave_form_year = leave_from_[0];
-    // let leave_from_month = leave_from_[1];
-    // let leave_from_day = leave_from_[2];
-
-    // leave_form_year = leave_form_year.replace(/^(?:00:)?0?/, "");
-    // leave_from_month = leave_from_month.replace(/^(?:00:)?0?/, "");
-    // leave_from_day = leave_from_day.replace(/^(?:00:)?0?/, "");
-
-    // let leave_to_ = leave_to.split("-");
-    // let leave_to_year = leave_to_[0];
-    // let leave_to_month = leave_to_[1];
-    // let leave_to_day = leave_to_[2];
-
-    // leave_to_year = leave_to_year.replace(/^(?:00:)?0?/, "");
-    // leave_to_month = leave_to_month.replace(/^(?:00:)?0?/, "");
-    // leave_to_day = leave_to_day.replace(/^(?:00:)?0?/, "");
     let rescheduleCount = 0;
     for (let i = 0; i < userRequestStaff.length; i++) {
       let userRequestDate = userRequestStaff[i].Schedule.split("-");
@@ -416,15 +446,6 @@ class Leave extends Form {
         userRequestDate[1] +
         "/" +
         userRequestDate[2];
-
-      // let schedule = userRequestStaff[i].Schedule.split("-");
-      // let scheduleYear = schedule[0];
-      // let scheduleMonth = schedule[1];
-      // let scheduleDay = schedule[2];
-
-      // scheduleYear = scheduleYear.replace(/^(?:00:)?0?/, "");
-      // scheduleMonth = scheduleMonth.replace(/^(?:00:)?0?/, "");
-      // scheduleDay = scheduleDay.replace(/^(?:00:)?0?/, "");
 
       const {
         fullName,
@@ -465,73 +486,13 @@ class Leave extends Form {
         await axios.delete(
           config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
         );
-        rescheduleCount = this.AssignAutomatedStaffDuty(
+        rescheduleCount = await this.AssignAutomatedStaffDuty(
           customer,
           rescheduleCount
         );
       }
-
-      // if (scheduleYear >= leave_form_year && scheduleYear <= leave_to_year) {
-      //   if (leave_to_year > scheduleYear && leave_from_month <= scheduleMonth) {
-      //     //leaves comes between duty
-
-      //     if (
-      //       leave_from_month === scheduleMonth &&
-      //       scheduleDay >= leave_from_day
-      //     ) {
-      //       await axios.delete(
-      //         config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
-      //       );
-      //       this.AssignAutomatedStaffDuty(customer);
-      //     } else {
-      //       await axios.delete(
-      //         config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
-      //       );
-      //       this.AssignAutomatedStaffDuty(customer);
-      //     }
-      //   } else if (
-      //     parseInt(scheduleMonth) >= parseInt(leave_from_month) &&
-      //     parseInt(scheduleMonth) <= parseInt(leave_to_month)
-      //   ) {
-      //     if (
-      //       leave_to_month === scheduleMonth &&
-      //       scheduleDay >= leave_from_day &&
-      //       scheduleDay <= leave_to_day
-      //     ) {
-      //       await axios.delete(
-      //         config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
-      //       );
-      //       this.AssignAutomatedStaffDuty(customer);
-      //     } else if (leave_to_month !== scheduleMonth) {
-      //       await axios.delete(
-      //         config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
-      //       );
-      //       this.AssignAutomatedStaffDuty(customer);
-      //     }
-      //   } else if (
-      //     scheduleYear === leave_form_year &&
-      //     scheduleYear === leave_to_year &&
-      //     scheduleMonth === leave_from_month &&
-      //     scheduleMonth === leave_to_month
-      //   ) {
-      //     if (scheduleDay >= leave_from_day && scheduleDay <= leave_to_day) {
-      //       await axios.delete(
-      //         config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
-      //       );
-      //       this.AssignAutomatedStaffDuty(customer);
-      //     }
-      //   } else if (
-      //     leave_from_month < scheduleMonth &&
-      //     scheduleMonth < leave_to_month
-      //   ) {
-      //     await axios.delete(
-      //       config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
-      //     );
-      //     this.AssignAutomatedStaffDuty(customer);
-      //   }
-      // }
     }
-    if (rescheduleCount !== 0) {
+    if (rescheduleCount && rescheduleCount > 0) {
       toast.success("Leave Scheduled!!");
       toast.success(
         "Check your schedule to know what duties have been substituted"
@@ -551,8 +512,8 @@ class Leave extends Form {
       config.apiEndPoint + `/userRequests?staffMemberId=${user.staffMember._id}`
     );
 
-    if (data.length === 0) toast.success("You have been granted leave ! ");
-    else this.ReScheduleDuty(data, leave_from, leave_to);
+    if (data.length === 0) toast.success("You've been granted leave ! ");
+    else await this.ReScheduleDuty(data, leave_from, leave_to);
   };
 
   handleSubmit = async (e) => {
@@ -574,7 +535,7 @@ class Leave extends Form {
 
         // toast.success("Leave Scheduled!");
         this.setState({ leaveGot });
-        this.AssignSubstituteStaff(leaveGot.leaveFrom, leaveGot.leaveTo);
+        await this.AssignSubstituteStaff(leaveGot.leaveFrom, leaveGot.leaveTo);
       } catch (ex) {
         toast.error(ex.response.data);
       }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert } from "@mui/material";
+import { Alert, breadcrumbsClasses } from "@mui/material";
 import getDay from "date-fns/getDay";
 import Joi from "joi-browser";
 import axios from "axios";
@@ -411,12 +411,20 @@ class Form extends React.Component {
         userRequests[i].staffMemberAssigned._id === staff._id &&
         userRequests[i].Schedule === this.state.doctorForm.schedule
       ) {
-        let staffContainsSlot = userRequests.some(
-          (req) => req.ServiceNeededTime === slotTime
-        );
-        if (staffContainsSlot) {
-          return true;
-        } else GotSlotBooked = false;
+        if (userRequests[i].ServiceNeededTime === slotTime) {
+          GotSlotBooked = true;
+          break;
+        }
+
+        // let staffContainsSlot = userRequests.some(
+        //   (req) =>
+        //     req.ServiceNeededTime === slotTime &&
+        //     req._id === staff._id &&
+        //     req.Schedule === this.state.doctorForm.schedule
+        // );
+        // if (GotSlotBooked) {
+        //   return true;
+        // };
       }
     }
     return GotSlotBooked;
@@ -533,6 +541,8 @@ class Form extends React.Component {
     if (TodayDate === schedule) {
       for (let i = 0; i < requestTime.length; i++) {
         let currentHour = date.getHours();
+        let currentMintues = date.getMinutes();
+        if (currentMintues < 10) currentMintues = "0" + currentMintues;
         // let temp1 = requestTime[i]._id.split("-");
         // let slotFrom = temp1[0];
         // let slotTo = temp1[1];
@@ -568,8 +578,8 @@ class Form extends React.Component {
           slotToConverted = temp1[0];
         }
 
-        slotFromConverted += ":00";
-        slotToConverted += ":00";
+        slotFromConverted += currentMintues;
+        slotToConverted += currentMintues;
         let currentHour_ = moment(currentHour, format),
           beforeTime = moment(slotFromConverted, format),
           afterTime = moment(slotToConverted, format);
@@ -631,7 +641,7 @@ class Form extends React.Component {
 
     availabilityData = await this.StaffLeaves(availabilityData);
 
-    const { availableSlots } = this.state;
+    // const { availableSlots } = this.state;
     for (let i = 0; i < availabilityData.length; i++) {
       for (let j = 0; j < slotTime.length; j++) {
         let checkSlot = track.some(
@@ -706,6 +716,7 @@ class Form extends React.Component {
                   ) {
                     track[t].timeSlot = slotTime[j];
                     track[t].BookedSlot = false;
+                    break;
                   }
                 }
               }
@@ -978,6 +989,13 @@ class Form extends React.Component {
       },
     ];
 
+    if (input.name === "phoneno" || input.name === "phone") {
+      let phoneNo = input.value;
+      if (phoneNo[0] !== "0" || phoneNo[1] !== "3" || phoneNo.length !== 11) {
+        errors[input.name] = "Please Enter A Valid Phone No";
+      }
+    }
+
     const doctorForm = { ...this.state.doctorForm };
     doctorForm[input.name] = input.value;
 
@@ -1012,7 +1030,6 @@ class Form extends React.Component {
     readonly = ""
   ) => {
     const { doctorForm, errors } = this.state;
-
     return (
       <article>
         <input
@@ -1218,7 +1235,9 @@ class Form extends React.Component {
             aria-label="Default select example"
             onChange={this.handleChange}
           >
-            <option value="">No Slot Available</option>
+            {name === "ServiceNeededFrom" && (
+              <option value="">No Slot Available</option>
+            )}
           </select>
         )}
         {errors && errors[name] && <p className="error">{errors[name]}</p>}

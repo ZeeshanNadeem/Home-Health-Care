@@ -15,6 +15,7 @@ import axios from "axios";
 import Rating from "@mui/material/Rating";
 import Button from "@mui/material/Button";
 import RattingModal from "./RattingModal/RattingModal";
+import moment from "moment";
 
 import { withStyles } from "@material-ui/core/styles";
 
@@ -58,7 +59,8 @@ const Ratting = (props) => {
     const d = new Date();
     let day = d.getDate();
     let month = d.getMonth() + 1;
-    const time = d.getHours();
+    let time = d.getHours();
+    if (time < 10) time = "0" + time;
     const year = d.getFullYear();
     if (month < 10) month = "0" + month;
     if (day < 10) day = "0" + day;
@@ -72,16 +74,29 @@ const Ratting = (props) => {
       let temp1 = serviceNeededTo_[1].split("PM");
       if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
       serviceNeededToCompute = temp1[0];
+      if (serviceNeededToCompute < 10)
+        serviceNeededToCompute = "0" + serviceNeededToCompute;
     } else {
       let temp1 = serviceNeededTo_[1].split("AM");
 
-      if (temp1[0] !== "12") temp1[0] = "0";
-      serviceNeededToCompute = temp1[0];
-    }
+      if (temp1[0] === "12") temp1[0] = "00";
 
-    const UserSelectedDate = row.Schedule;
+      serviceNeededToCompute = temp1[0];
+      if (serviceNeededToCompute < 10 && temp1[0] !== "00")
+        serviceNeededToCompute = "0" + serviceNeededToCompute;
+    }
+    let format = "hh";
+    let currentHour = moment(time, format),
+      slotTo = moment(serviceNeededToCompute, format);
+
+    let UserSelectedDate = row.Schedule;
+    if (serviceNeededToCompute === "00") {
+      let dateArr = UserSelectedDate.split("-");
+      let day = parseInt(dateArr[2]) + 1;
+      UserSelectedDate = dateArr[0] + "-" + dateArr[1] + "-" + day;
+    }
     if (UserSelectedDate === todaysDate) {
-      if (time >= serviceNeededToCompute) {
+      if (currentHour.isAfter(slotTo) || currentHour.isSame(slotTo)) {
         return (
           <article>
             <div class="progress">
@@ -137,12 +152,14 @@ const Ratting = (props) => {
     const d = new Date();
     let day = d.getDate();
     let month = d.getMonth() + 1;
-    const time = d.getHours();
+    let time = d.getHours();
+    if (time < 10) time = "0" + time;
     const year = d.getFullYear();
     if (month < 10) month = "0" + month;
     if (day < 10) day = "0" + day;
     const todaysDate = year + "-" + month + "-" + day;
-    let serviceNeededTo_ = row.ServiceNeededTime.split("to");
+    const serviceNeededTo = row.ServiceNeededTime;
+    let serviceNeededTo_ = serviceNeededTo.split("to");
     serviceNeededTo_[1] = serviceNeededTo_[1].trim();
 
     let serviceNeededToCompute = "";
@@ -150,20 +167,35 @@ const Ratting = (props) => {
       let temp1 = serviceNeededTo_[1].split("PM");
       if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
       serviceNeededToCompute = temp1[0];
+      if (serviceNeededToCompute < 10)
+        serviceNeededToCompute = "0" + serviceNeededToCompute;
     } else {
       let temp1 = serviceNeededTo_[1].split("AM");
 
-      if (temp1[0] !== "12") temp1[0] = "0";
+      if (temp1[0] === "12") temp1[0] = "00";
+
       serviceNeededToCompute = temp1[0];
+      if (serviceNeededToCompute < 10 && temp1[0] !== "00")
+        serviceNeededToCompute = "0" + serviceNeededToCompute;
     }
     // const serviceNeededTo = row.ServiceNeededTime;
     // let serviceNeededTo_ = serviceNeededTo.split("-");
     // let temp1 = serviceNeededTo_[0].split(":");
     // let temp2 = serviceNeededTo_[1].split(":");
     // let serviceNeededToHourUser = temp2[0];
-    const UserSelectedDate = row.Schedule;
+
+    let format = "hh";
+    let currentHour = moment(time, format),
+      slotTo = moment(serviceNeededToCompute, format);
+
+    let UserSelectedDate = row.Schedule;
+    if (serviceNeededToCompute === "00") {
+      let dateArr = UserSelectedDate.split("-");
+      let day = parseInt(dateArr[2]) + 1;
+      UserSelectedDate = dateArr[0] + "-" + dateArr[1] + "-" + day;
+    }
     if (UserSelectedDate === todaysDate) {
-      if (time >= serviceNeededToCompute) {
+      if (currentHour.isAfter(slotTo) || currentHour.isSame(slotTo)) {
         return true;
       } else return false;
     }

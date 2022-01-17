@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 const CheckAvailability = ({
   availabilityData,
@@ -32,12 +33,17 @@ const CheckAvailability = ({
         userRequests[i].staffMemberAssigned._id === staff._id &&
         userRequests[i].Schedule === userScheduledDate
       ) {
-        let staffContainsSlot = userRequests.some(
-          (req) => req.ServiceNeededTime === slotTime
-        );
-        if (staffContainsSlot) {
-          return true;
-        } else GotSlotBooked = false;
+        if (userRequests[i].ServiceNeededTime === slotTime) {
+          GotSlotBooked = true;
+          break;
+        }
+
+        // let staffContainsSlot = userRequests.some(
+        //   (req) => req.ServiceNeededTime === slotTime
+        // );
+        // if (staffContainsSlot) {
+        //   return true;
+        // } else GotSlotBooked = false;
       }
     }
     return GotSlotBooked;
@@ -48,9 +54,7 @@ const CheckAvailability = ({
     // a paticular time slot.No need to check other staff members
     // on that time slot.That slotTime  is being pushed in an array.
     // Skipping
-    if (slotTime === "9AM to 12PM") {
-      console.log("aaa");
-    }
+
     let checkSlot = track.some(
       (x) => x.timeSlot === slotTime && x.BookedSlot === false
     );
@@ -149,15 +153,12 @@ const CheckAvailability = ({
       return false;
     }
 
-    if (slotTime === "9PM to 12AM") {
-      setTrack(track);
-    }
+    // if (slotTime === "9PM to 12AM") {
+    //   setTrack(track);
+    // }
   };
 
   const filterSlotsGonePast_ = () => {
-    console.log("track::", track);
-    console.log("filteredUnavailableSlots::", staffDateSelected);
-
     let date = new Date();
     let month = date.getMonth() + 1;
     if (month < 10) month = "0" + month;
@@ -166,16 +167,18 @@ const CheckAvailability = ({
     if (day < 10) day = "0" + day;
     let year = date.getUTCFullYear();
     let TodayDate = year + "-" + month + "-" + day;
-
+    let tempArr = track;
     if (TodayDate === staffDateSelected) {
       for (let i = 0; i < track.length; i++) {
         let currentHour = date.getHours();
+        let currentMintues = date.getMinutes();
+        if (currentMintues < 10) currentMintues = "0" + currentMintues;
 
         let format = "hh:mm";
         if (currentHour < 10) currentHour = "0" + currentHour;
         currentHour = currentHour + ":00";
 
-        let slots = requestTime[i]._id.split("to");
+        let slots = track[i].timeSlot.split("to");
         slots[0] = slots[0].trim();
         slots[1] = slots[1].trim();
 
@@ -184,11 +187,15 @@ const CheckAvailability = ({
           let temp1 = slots[0].split("PM");
           if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
           slotFromConverted = temp1[0];
+          if (slotFromConverted < 10)
+            slotFromConverted = "0" + slotFromConverted;
         } else {
           let temp1 = slots[0].split("AM");
 
           if (temp1[0] === "12") temp1[0] = "00";
           slotFromConverted = temp1[0];
+          if (slotFromConverted < 10 && slotFromConverted !== "00")
+            slotFromConverted = "0" + slotFromConverted;
         }
 
         let slotToConverted = "";
@@ -196,25 +203,33 @@ const CheckAvailability = ({
           let temp1 = slots[1].split("PM");
           if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
           slotToConverted = temp1[0];
+          if (slotToConverted < 10) slotToConverted = "0" + slotToConverted;
         } else {
           let temp1 = slots[1].split("AM");
 
           if (temp1[0] === "12") temp1[0] = "00";
           slotToConverted = temp1[0];
+          if (slotToConverted < 10 && slotToConverted !== "00")
+            slotToConverted = "0" + slotToConverted;
         }
 
-        slotFromConverted += ":00";
-        slotToConverted += ":00";
+        slotFromConverted += currentMintues;
+        slotToConverted += currentMintues;
         let currentHour_ = moment(currentHour, format),
-          beforeTime = moment(slotFromConverted, format),
-          afterTime = moment(slotToConverted, format);
+          beforeTime = moment(slotFromConverted, format);
+
+        if (currentHour_.isAfter(beforeTime)) {
+          tempArr = tempArr.filter((slot) => slot !== track[i]);
+        }
       }
+      return tempArr;
     }
+    return tempArr;
   };
 
   const filteredUnavailableSlots = () => {
-    filterSlotsGonePast_();
-    track = track.filter((slot) => slot.BookedSlot === false);
+    let slots = filterSlotsGonePast_();
+    track = slots.filter((slot) => slot.BookedSlot === false);
   };
   return (
     <article>
