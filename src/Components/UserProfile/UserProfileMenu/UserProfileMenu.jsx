@@ -6,14 +6,14 @@ import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
 const UserProfileMenu = () => {
-  let [user, setUser] = React.useState([]);
+  const [user, setUser] = React.useState([]);
   let [isUser, setIsUser] = React.useState(false);
   useEffect(() => {
     const jwt = localStorage.getItem("token");
-    let userGot = "";
+
     if (jwt) {
-      user = jwtDecode(jwt);
-      // setUser(userGot);
+      let user = jwtDecode(jwt);
+      setUser(user);
       console.log("user:::", user);
       isUser =
         !user.isAppAdmin &&
@@ -41,6 +41,86 @@ const UserProfileMenu = () => {
             </Link>
           </span>
           <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+        </span>
+      )}
+      {user.isOrganizationAdmin === "Approved Admin" && (
+        <span>
+          <span className="user-account-popover">
+            <article className="logout-wrapper-icon my-home-visits-icon">
+              <FontAwesomeIcon
+                icon={faHouseUser}
+                style={{ marginTop: "0.2rem" }}
+              />
+            </article>
+            <Link
+              to="/admin"
+              className="user-account-menu-item sheduled-visits"
+            >
+              <span style={{ marginLeft: "0.7rem" }}>Admin</span>
+            </Link>
+          </span>
+          <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+        </span>
+      )}
+
+      {user.isAppAdmin && (
+        <span>
+          <span>
+            <span className="user-account-popover">
+              <article className="logout-wrapper-icon my-home-visits-icon">
+                <FontAwesomeIcon
+                  icon={faHouseUser}
+                  style={{ marginTop: "0.2rem" }}
+                />
+              </article>
+              <Link
+                to="/app/admin"
+                className="user-account-menu-item sheduled-visits"
+              >
+                <span style={{ marginLeft: "0rem" }}>App Admin</span>
+              </Link>
+            </span>
+            <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+          </span>
+        </span>
+      )}
+
+      {user.staffMember && (
+        <span>
+          <span>
+            <span className="user-account-popover">
+              <article className="logout-wrapper-icon my-home-visits-icon">
+                <FontAwesomeIcon
+                  icon={faHouseUser}
+                  style={{ marginTop: "0.2rem" }}
+                />
+              </article>
+              <Link
+                to="/staff/leave"
+                className="user-account-menu-item sheduled-visits"
+              >
+                <span style={{ marginLeft: "0rem" }}>Apply For Leave</span>
+              </Link>
+            </span>
+            <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+          </span>
+          <span>
+            <span className="user-account-popover">
+              <article className="logout-wrapper-icon my-home-visits-icon">
+                <FontAwesomeIcon
+                  icon={faHouseUser}
+                  style={{ marginTop: "0.2rem" }}
+                />
+              </article>
+              <Link
+                to="/staff/schedule"
+                className="user-account-menu-item sheduled-visits"
+              >
+                <span style={{ marginLeft: "0.7rem" }}>My Duties</span>
+              </Link>
+            </span>
+            <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+          </span>
         </span>
       )}
 

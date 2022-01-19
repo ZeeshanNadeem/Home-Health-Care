@@ -22,6 +22,7 @@ import Pagination from "@mui/material/Pagination";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import StaffEditModle from "./Modles/StaffEditModle";
 import AddStaffModle from "./Modles/AddStaffModle";
+import StaffInfo from "./Modles/StaffInfo";
 import jwtDecode from "jwt-decode";
 
 const StaffPanel = (props) => {
@@ -29,6 +30,7 @@ const StaffPanel = (props) => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchedStaff, setSearchedStaff] = useState("");
   const [pageSelected, setPageSelected] = useState(1);
+  let [entireStaff, setEntireStaff] = useState([]);
 
   const [pageSize] = useState(9);
   const getTotalDocuments = async () => {
@@ -100,6 +102,7 @@ const StaffPanel = (props) => {
   useEffect(async () => {
     const jwt = localStorage.getItem("token");
     if (!jwt) props.history.push("/NotFound");
+
     if (jwt) {
       const user = jwtDecode(jwt);
       if (
@@ -109,6 +112,10 @@ const StaffPanel = (props) => {
         props.history.push("/NotFound");
       if (user.isOrganizationAdmin === "Approved Admin") PopulateTable();
     }
+    const { data } = await axios.get(
+      config.apiEndPoint + "/user?GetStaff=true"
+    );
+    setEntireStaff(data);
   }, [pageSelected, searchedStaff]);
 
   const RefreshStaffMembers = async () => {
@@ -117,6 +124,10 @@ const StaffPanel = (props) => {
     const { data: staff } = await axios.get(
       `http://localhost:3000/api/staff?page=${totalPages}&limit=${pageSize}&organizationID=${user.Organization._id}`
     );
+    const { data } = await axios.get(
+      config.apiEndPoint + "/user?GetStaff=true"
+    );
+    setEntireStaff(data);
     if (staff.results.length === 9) window.location = "/admin/Nurse";
 
     setStaff(staff.results);
@@ -191,6 +202,8 @@ const StaffPanel = (props) => {
     else if (availabileDay === 6) return "Saturday";
     else return "Sunday";
   };
+
+  let screenWidth = window.innerWidth;
   return (
     <article className="ServicePanel-wrapper ">
       {(staff.length > 0 || searchedStaff) && (
@@ -220,14 +233,8 @@ const StaffPanel = (props) => {
             <thead className="table-th assign-duty-th">
               <tr>
                 <th scope="col">Full Name</th>
-                {/* <th scope="col">DOB</th> */}
-                <th scope="col">Designation</th>
-                <th scope="col">Qualification</th>
-                {/* <th scope="col">AvailableFrom</th>
-                <th scope="col">AvailableTo</th>
-                <th scope="col">From Day</th>
-                <th scope="col">To Day</th> */}
-                <th scope="col">Phone No</th>
+
+                <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col"></th>
               </tr>
@@ -236,16 +243,7 @@ const StaffPanel = (props) => {
               {staff.map((data) => (
                 <tr key={data._id}>
                   <td>{data.fullName}</td>
-                  {/* <td>{data.dateOfBirth}</td> */}
-                  <td>{data.staffSpeciality.name}</td>
 
-                  <td>{data.qualification.name}</td>
-                  {/* <td>{data.availabilityFrom}</td>
-                  <td>{data.availabilityTo}</td>
-                  <td>{checkDay(data.availabileDayFrom)}</td>
-                  <td>{checkDay(data.availabileDayTo)}</td> */}
-                  {/* <td>{data.email}</td> */}
-                  <td>{data.phone}</td>
                   <td>
                     <Button
                       variant="contained"
@@ -265,6 +263,9 @@ const StaffPanel = (props) => {
                       staffMemberData={data}
                       RefreshStaffMembers={RefreshStaffMembers}
                     />
+                  </td>
+                  <td>
+                    <StaffInfo staffMember={data} staff={entireStaff} />
                   </td>
                 </tr>
               ))}

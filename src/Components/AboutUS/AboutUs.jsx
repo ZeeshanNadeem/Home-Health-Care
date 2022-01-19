@@ -44,7 +44,7 @@ const AboutUs = ({ setProgress }) => {
               caregivers. The company specializes in delivering wellness
               programs and services to seniors and persons with disability in
               the comfort of their homes. It also caters to people of any age
-              who need medical assistance at home; as well as individual, group
+              who need medical assistance at home as well as individual, group
               or company vaccinations, among others. Grounded on the skills of
               an extensive network of health professionals, HHC envisions itself
               as the premier provider of home-based health and wellness
@@ -151,7 +151,7 @@ const AboutUs = ({ setProgress }) => {
                   Bless!"
                 </div>
                 <div style={{ marginTop: "0.4rem" }}>
-                  <strong>Hassan Ikram</strong>
+                  <strong>Usman</strong>
                 </div>
                 <p style={{ fontSize: "0.777rem" }}>
                   Home Health Services Client
@@ -200,7 +200,7 @@ const AboutUs = ({ setProgress }) => {
                   peace knowing she is happy where she is for the moment.
                 </div>
                 <div style={{ marginTop: "0.4rem" }}>
-                  <strong>Mohsin Siddique</strong>
+                  <strong>Mohsin Azam</strong>
                 </div>
                 <p style={{ fontSize: "0.777rem" }}>
                   Home Health Services Client

@@ -156,7 +156,16 @@ class NurseForm extends Form {
     // dateOfBirth: Joi.string().required().label("Date of Birth"),
     email: this.state.isEditModel
       ? Joi.string()
-      : Joi.string().min(5).max(255).required().email().label("Email"),
+          .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+          .min(5)
+          .max(255)
+          .required()
+      : Joi.string()
+          .min(5)
+          .max(255)
+          .required()
+          .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+          .label("Email"),
     password: this.state.isEditModel
       ? Joi.string()
       : Joi.string().min(5).max(255).required().label("Password"),
@@ -269,19 +278,28 @@ class NurseForm extends Form {
     //    availabileDayTo: doctorForm.availabileDayTo,
     //  };
     try {
-      const { data: staffAdded } = await axios.post(
-        "http://localhost:3000/api/staff",
-        addStaffMember
-      );
-
-      RefreshStaffMembers();
       const userObj = {};
       userObj.fullName = addStaffMember.fullName;
       userObj.email = addStaffMember.email;
       userObj.password = addStaffMember.password;
-      userObj.staffMemberID = staffAdded._id;
+      //  userObj.staffMemberID = staffAdded._id;
 
-      await axios.post(config.apiEndPoint + "/user", userObj);
+      const { data: user } = await axios.post(
+        config.apiEndPoint + "/user",
+        userObj
+      );
+
+      const { data: staffAdded } = await axios.post(
+        "http://localhost:3000/api/staff?dontCheck=true",
+        addStaffMember
+      );
+
+      await axios.patch(config.apiEndPoint + "/user?EditUser=true", {
+        staffMemberID: user._id,
+        staffMemberObj: staffAdded,
+      });
+
+      RefreshStaffMembers();
     } catch (ex) {
       const error = { ...this.state.errors };
       error.email = ex.response.data;
@@ -295,10 +313,10 @@ class NurseForm extends Form {
     e.preventDefault();
     const { isEditModel } = this.props;
     let errors = {};
-    if (!isEditModel) {
-      errors = this.validate();
-      this.setState({ errors: errors || {} });
-    }
+    // if (!isEditModel) {
+    errors = this.validate();
+    this.setState({ errors: errors || {} });
+    // }
 
     const { staffMemberData } = this.props;
     if (staffMemberData) {
@@ -310,8 +328,6 @@ class NurseForm extends Form {
       this.addAStaffMember();
       return;
     }
-
-    toast.error("Something went wrong..");
   };
 
   getUniqueArray = (array) => {

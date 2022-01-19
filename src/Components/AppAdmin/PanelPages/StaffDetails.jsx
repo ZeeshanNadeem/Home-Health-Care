@@ -139,7 +139,7 @@ export default function StaffDetails({ staffMemberDetails }) {
             </article>
             <article style={{ paddingTop: "0.5rem" }}>
               <strong>
-                Price
+                Service Price
                 <FontAwesomeIcon
                   style={{ color: "", marginLeft: "0.5rem" }}
                   icon={faTag}

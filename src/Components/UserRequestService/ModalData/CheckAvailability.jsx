@@ -176,7 +176,7 @@ const CheckAvailability = ({
 
         let format = "hh:mm";
         if (currentHour < 10) currentHour = "0" + currentHour;
-        currentHour = currentHour + ":00";
+        currentHour = currentHour + ":" + currentMintues;
 
         let slots = track[i].timeSlot.split("to");
         slots[0] = slots[0].trim();
@@ -213,8 +213,8 @@ const CheckAvailability = ({
             slotToConverted = "0" + slotToConverted;
         }
 
-        slotFromConverted += currentMintues;
-        slotToConverted += currentMintues;
+        slotFromConverted += ":00";
+        slotToConverted += ":00";
         let currentHour_ = moment(currentHour, format),
           beforeTime = moment(slotFromConverted, format);
 

@@ -452,9 +452,11 @@ class Form extends React.Component {
         // let temp1 = requestTime[i]._id.split("-");
         // let slotFrom = temp1[0];
         // let slotTo = temp1[1];
+        let currentMintues = date.getMinutes();
+        if (currentMintues < 10) currentMintues = "0" + currentMintues;
         let format = "hh:mm";
         if (currentHour < 10) currentHour = "0" + currentHour;
-        currentHour = currentHour + ":00";
+        currentHour = currentHour + ":" + currentMintues;
 
         let slots = requestTime[i]._id.split("to");
         slots[0] = slots[0].trim();
@@ -609,7 +611,7 @@ class Form extends React.Component {
   //This function filters time slots whenever the staffAvailable is
   //determined.we show only that time slots in time dropdown on
   //which staff is available.Unavailable slot get filtered (booked slots)
-  FilterNotAvailableSlots = async (schedule) => {
+  FilterNotAvailableSlots = async (schedule, serviceSelected) => {
     let track = [];
 
     let slotTime = [
@@ -623,7 +625,8 @@ class Form extends React.Component {
       "9PM to 12AM",
     ];
 
-    const { organization, service } = this.state.doctorForm;
+    let { organization, service } = this.state.doctorForm;
+    if (!service) service = serviceSelected;
     const doctorForm = { ...this.state.doctorForm };
     const m = moment(schedule);
     let dayNo = m.day();
@@ -1002,10 +1005,13 @@ class Form extends React.Component {
     console.log(requestTime);
     this.setState({ doctorForm, errors });
 
-    const { service, organization } = doctorForm;
-    if (input.name === "schedule" && service && organization) {
-      this.FilterNotAvailableSlots(input.value);
-      this.filterTime(input.value);
+    const { service, organization, schedule } = doctorForm;
+    if (
+      (input.name === "schedule" && service && organization) ||
+      (schedule && service && organization)
+    ) {
+      this.FilterNotAvailableSlots(schedule, service);
+      this.filterTime(schedule);
     }
     if (input.name === "organization") {
       this.populateServices(input.value);

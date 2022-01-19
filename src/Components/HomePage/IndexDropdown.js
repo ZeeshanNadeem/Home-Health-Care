@@ -25,6 +25,7 @@ const IndexDropdown = () => {
     try {
       const jwt = localStorage.getItem("token");
       const user = jwtDecode(jwt);
+
       setUser(user);
     } catch (ex) {}
   }, []);
@@ -60,7 +61,7 @@ const IndexDropdown = () => {
       >
         <article>
           <article>
-            {user.isOrganizationAdmin === "Approved Admin" && (
+            {/* {user.isOrganizationAdmin === "Approved Admin" && (
               <span>
                 <span
                   className={
@@ -78,7 +79,7 @@ const IndexDropdown = () => {
                 </Link>
                 <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100" />
               </span>
-            )}
+            )} */}
             {/* /*{" "}
               <Link
                 to="/admin/settings"
@@ -99,7 +100,7 @@ const IndexDropdown = () => {
                 Maps
               </Link>{" "} */}
 
-            {user.staffMember && (
+            {/* {user.staffMember && (
               <span>
                 <span
                   className={
@@ -123,7 +124,7 @@ const IndexDropdown = () => {
 
                 <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
               </span>
-            )}
+            )} */}
           </article>
         </article>
 
@@ -148,7 +149,7 @@ const IndexDropdown = () => {
         >
           Apply for Leave
         </Link> */}
-
+        {/* 
         {user.isAppAdmin && (
           <span>
             <span
@@ -166,20 +167,45 @@ const IndexDropdown = () => {
             </Link>
             <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
           </span>
-        )}
+        )} */}
         <span
           className={
             "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
           }
         >
-          Registered Organizations
+          Services
         </span>
 
         <Link
-          to="/profile"
+          to="/user/Request"
           className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
         >
-          Organizations
+          Home Vists
+        </Link>
+
+        <Link
+          to="/user/Request"
+          className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+        >
+          Nursing
+        </Link>
+        <Link
+          to="/user/Request"
+          className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+        >
+          Physiotherapy
+        </Link>
+        <Link
+          to="/user/Request"
+          className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+        >
+          Infusion therapy
+        </Link>
+        <Link
+          to="/user/Request"
+          className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+        >
+          Vaccination Services
         </Link>
       </div>
     </>

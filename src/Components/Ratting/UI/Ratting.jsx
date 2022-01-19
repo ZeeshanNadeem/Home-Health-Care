@@ -60,6 +60,8 @@ const Ratting = (props) => {
     let day = d.getDate();
     let month = d.getMonth() + 1;
     let time = d.getHours();
+    let currentMintues = d.getMinutes();
+    if (currentMintues < 10) currentMintues = "0" + currentMintues;
     if (time < 10) time = "0" + time;
     const year = d.getFullYear();
     if (month < 10) month = "0" + month;
@@ -85,7 +87,9 @@ const Ratting = (props) => {
       if (serviceNeededToCompute < 10 && temp1[0] !== "00")
         serviceNeededToCompute = "0" + serviceNeededToCompute;
     }
-    let format = "hh";
+    let format = "hh:mm";
+    serviceNeededToCompute = serviceNeededToCompute + ":00";
+    time = time + ":" + currentMintues;
     let currentHour = moment(time, format),
       slotTo = moment(serviceNeededToCompute, format);
 
@@ -130,6 +134,24 @@ const Ratting = (props) => {
           </div>
         );
       }
+    } else if (moment(todaysDate).isAfter(UserSelectedDate)) {
+      return (
+        <article>
+          <div class="progress">
+            <div
+              class="progress-bar progress-bar-striped bg-success"
+              role="progressbar"
+              style={{ width: "100%" }}
+              aria-valuenow="100"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+              completed
+            </div>
+          </div>
+          {/* <RattingModal row={row} updateRating={RattingRefactor} /> */}
+        </article>
+      );
     } else {
       return (
         <div className="progress">
@@ -153,6 +175,8 @@ const Ratting = (props) => {
     let day = d.getDate();
     let month = d.getMonth() + 1;
     let time = d.getHours();
+    let currentMintues = d.getMinutes();
+    if (currentMintues < 10) currentMintues = "0" + currentMintues;
     if (time < 10) time = "0" + time;
     const year = d.getFullYear();
     if (month < 10) month = "0" + month;
@@ -184,7 +208,10 @@ const Ratting = (props) => {
     // let temp2 = serviceNeededTo_[1].split(":");
     // let serviceNeededToHourUser = temp2[0];
 
-    let format = "hh";
+    let format = "hh:mm";
+    serviceNeededToCompute = serviceNeededToCompute + ":00";
+    time = time + ":" + currentMintues;
+
     let currentHour = moment(time, format),
       slotTo = moment(serviceNeededToCompute, format);
 
@@ -198,6 +225,8 @@ const Ratting = (props) => {
       if (currentHour.isAfter(slotTo) || currentHour.isSame(slotTo)) {
         return true;
       } else return false;
+    } else if (moment(todaysDate).isAfter(UserSelectedDate)) {
+      return true;
     }
   };
   const RattingRefactor = async (id) => {

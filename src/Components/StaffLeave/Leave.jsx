@@ -75,7 +75,7 @@ class Leave extends Form {
     else if (dayNo === "Monday") dayNo = "MON";
     else if (dayNo === "Tuesday") dayNo = "TUE";
     else if (dayNo === "Wednesday") dayNo = "WED";
-    else if (dayNo === "Thrusday") dayNo = "THRU";
+    else if (dayNo === "Thursday") dayNo = "THRU";
     else if (dayNo === "Friday") dayNo = "FRI";
     else if (dayNo === "Saturday") dayNo = "SAT";
 
@@ -402,13 +402,13 @@ class Leave extends Form {
       } catch (ex) {
         toast.error(ex.response.data);
       }
-      try {
-        await axios.get(
-          `http://localhost:3000/api/StaffLeave?delete=ab&id=${this.state.leaveGot._id}`
-        );
-      } catch (ex) {
-        toast.error(ex.response.data);
-      }
+      // try {
+      //   await axios.get(
+      //     `http://localhost:3000/api/StaffLeave?delete=ab&id=${this.state.leaveGot._id}`
+      //   );
+      // } catch (ex) {
+      //   toast.error(ex.response.data);
+      // }
 
       // toast.error("Sorry No Staff Member Availabile To Assign Your Shift!");
       // toast.error(
@@ -438,6 +438,7 @@ class Leave extends Form {
       staffLeaveDateTo[2];
 
     let rescheduleCount = 0;
+    let DutyBetweenLeave = false;
     for (let i = 0; i < userRequestStaff.length; i++) {
       let userRequestDate = userRequestStaff[i].Schedule.split("-");
       let userRequestDate_ =
@@ -483,6 +484,7 @@ class Leave extends Form {
         compareDate.isSame(staffLeaveDateFrom_) ||
         compareDate.isSame(staffLeaveDateTo_)
       ) {
+        DutyBetweenLeave = true;
         await axios.delete(
           config.apiEndPoint + "/userRequests/" + userRequestStaff[i]._id
         );
@@ -497,7 +499,8 @@ class Leave extends Form {
       toast.success(
         "Check your schedule to know what duties have been substituted"
       );
-    } else {
+    } else if (!DutyBetweenLeave) toast.success("You've been granted leave");
+    else {
       toast.error("Sorry!! You can't take leave");
       toast.error("No Substitute Staff Member Available to Assign Your Shift");
     }

@@ -64,6 +64,7 @@ const OrganizationAdminRequests = (props) => {
         await axios.put(config.apiEndPoint + "/user" + "/" + admin._id, {
           isOrganizationAdmin: "Independent Member Approved",
         });
+        console.log("admin._id:", admin._id);
         const { data: service } = await axios.get(
           config.apiEndPoint +
             `/services?findServiceByUser=yes&userID=${admin._id}`
