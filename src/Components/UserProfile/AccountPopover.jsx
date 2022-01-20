@@ -1,11 +1,7 @@
 import * as React from "react";
 import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
 import { Avatar } from "@material-ui/core";
 import UserProfileMenu from "./UserProfileMenu/UserProfileMenu";
-
-import Button from "@mui/material/Button";
-import jwtDecode from "jwt-decode";
 
 export default function AccountPopOver({ user }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -33,7 +29,7 @@ export default function AccountPopOver({ user }) {
   const id = open ? "simple-popover" : undefined;
 
   return (
-    <div>
+    <span>
       {user ? UserNameNav() : ""}
 
       <Popover
@@ -48,6 +44,6 @@ export default function AccountPopOver({ user }) {
       >
         <UserProfileMenu />
       </Popover>
-    </div>
+    </span>
   );
 }

@@ -14,7 +14,7 @@ const UserProfileMenu = () => {
     if (jwt) {
       let user = jwtDecode(jwt);
       setUser(user);
-      console.log("user:::", user);
+
       isUser =
         !user.isAppAdmin &&
         !user.staffMember &&

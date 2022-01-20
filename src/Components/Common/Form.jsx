@@ -856,6 +856,7 @@ class Form extends React.Component {
         (req) => req.user.isOrganizationAdmin === "Approved Independent Member"
       );
       let temp = [];
+      let temp1 = [];
       for (let i = 0; i < data.results.length; i++) {
         temp.push({
           _id: data.results[i].IndependentService._id,
@@ -864,7 +865,14 @@ class Form extends React.Component {
           serviceOrgranization: data.results[i].serviceOrgranization,
         });
       }
-      this.setState({ Conditionalservices: temp });
+      temp1.push(temp[0]);
+      for (let i = 0; i < temp.length; i++) {
+        for (let j = 0; j < temp1.length; j++) {
+          if (temp1[j].serviceName !== temp[i].serviceName) temp1.push(temp[j]);
+        }
+      }
+
+      this.setState({ Conditionalservices: temp1 });
     } else this.setState({ Conditionalservices: data.results });
   };
 
@@ -991,6 +999,16 @@ class Form extends React.Component {
         name: "9 PM to 12 AM",
       },
     ];
+    if (input.name === "service") {
+      const service = this.state.Conditionalservices.filter(
+        (s) => s._id === input.value
+      );
+      console.log("service::", service);
+
+      if (service[0].serviceName.trim().toUpperCase() === "BABY VACCINATION") {
+        this.setState({ vaccinationSelected: true });
+      }
+    }
 
     if (input.name === "phoneno" || input.name === "phone") {
       let phoneNo = input.value;
@@ -1102,6 +1120,25 @@ class Form extends React.Component {
           {msg}
         </label>
       </article>
+    );
+  };
+
+  renderCheckBox2 = (id, name, value, msg) => {
+    const { doctorForm } = this.state;
+    return (
+      <span>
+        <input
+          type="checkbox"
+          // checked="Only Once"
+          id={id}
+          name={name}
+          // value={doctorForm[name]}
+          onChange={this.handleChangeForCheckBox}
+        />
+        <label className="chkBox-Msg" forHtml={id}>
+          {msg}
+        </label>
+      </span>
     );
   };
 

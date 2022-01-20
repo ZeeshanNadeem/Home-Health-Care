@@ -7,8 +7,9 @@ import IndexDropdown from "./IndexDropdown";
 import { Avatar, Typography } from "@material-ui/core";
 import { deepOrange, deepPurple, blue } from "@mui/material/colors";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { faBell, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import AccountPopOver from "../UserProfile/AccountPopover";
+import Notification from "./NotificationPopOver/Notification";
 
 class NavBar extends Component {
   state = {
@@ -77,9 +78,19 @@ class NavBar extends Component {
 
           {/* {user ? this.UserNameNav() : ""} */}
           {user && (
-            <li>
-              <AccountPopOver user={user} />
-            </li>
+            <React.Fragment>
+              <li className="wrapper-notifications">
+                <span style={{ display: "flex" }}>
+                  <span>
+                    <AccountPopOver user={user} />
+                  </span>
+
+                  <span style={{ marginTop: "0.51rem" }}>
+                    <Notification />
+                  </span>
+                </span>
+              </li>
+            </React.Fragment>
           )}
 
           {!user ? (
@@ -88,11 +99,13 @@ class NavBar extends Component {
                 <li className="nav-li">Login</li>
               </Link>
             ) : (
-              <button className="nav-btn login">
-                <Link className="login-li" to="/">
-                  <li>Login And Get Started</li>
-                </Link>
-              </button>
+              <article>
+                <button className="nav-btn login">
+                  <Link className="login-li" to="/">
+                    <li>Login And Get Started</li>
+                  </Link>
+                </button>
+              </article>
             )
           ) : (
             <li className="nav-li">
@@ -115,11 +128,17 @@ class NavBar extends Component {
                 <li className="nav-li">Sign Up</li>
               </Link>
             ) : (
-              <button className="nav-btn signup signup-btn">
-                <Link to="/Signup">
-                  <li className="signup-li">Sign Up</li>
-                </Link>
-              </button>
+              <article>
+                {/* <article className="notification">
+                  <FontAwesomeIcon icon={faBell} />
+                  aa
+                </article> */}
+                <button className="nav-btn signup signup-btn">
+                  <Link to="/Signup">
+                    <li className="signup-li">Sign Up</li>
+                  </Link>
+                </button>
+              </article>
             )
           ) : (
             ""

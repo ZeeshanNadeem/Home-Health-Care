@@ -332,3 +332,20 @@ main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
     margin-top: 1rem;
   }
 }
+
+.vaccination-plan {
+  margin-left: 0.5rem;
+
+  border: 1px solid gray;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.notification {
+  background-color: #d5d5d5;
+  padding: 0.8rem 1rem;
+  border-radius: 22px;
+  /* margin-top: 2rem; */
+  /* margin-bottom: 0.2rem; */
+  /* margin-left: 1rem; */
+}

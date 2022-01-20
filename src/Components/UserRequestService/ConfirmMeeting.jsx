@@ -21,17 +21,19 @@ class ConfirmMeeting extends Form {
     const { data: meetingDetials } = await axios.get(
       config.apiEndPoint + "/confirmService"
     );
-    if (meetingDetials.length > 1) {
-      for (let i = 0; i < meetingDetials.length - 1; i++) {
-        await axios.delete(
-          config.apiEndPoint + "/confirmService/" + meetingDetials[i]._id
-        );
-      }
-    }
-    const { data } = await axios.get(config.apiEndPoint + "/confirmService");
-    if (data.length === 0) this.props.history.replace("/");
+    // if (meetingDetials.length > 1) {
+    //   for (let i = 0; i < meetingDetials.length - 1; i++) {
+    //     await axios.delete(
+    //       config.apiEndPoint + "/confirmService/" + meetingDetials[i]._id
+    //     );
+    //   }
+    // }
+    // const { data } = await axios.get(config.apiEndPoint + "/confirmService");
+    // if (data.length === 0) this.props.history.replace("/");
+    let temp = [];
+    temp.push(meetingDetials[0]);
     this.props.setProgress(70);
-    this.setState({ confirmMeeting: data });
+    this.setState({ confirmMeeting: temp });
     this.props.setProgress(100);
   }
   handleSubmit = async (e) => {
@@ -40,39 +42,43 @@ class ConfirmMeeting extends Form {
     this.setState({ counter });
     if (counter >= 2) return;
     const { confirmMeeting } = this.state;
-    const confirmedService = {
-      fullName: confirmMeeting[0].fullName,
-      Address: confirmMeeting[0].Address,
-      City: confirmMeeting[0].City,
-      Email: confirmMeeting[0].Email,
-      Organization: confirmMeeting[0].Organization,
-      PhoneNo: confirmMeeting[0].PhoneNo,
-      Schedule: confirmMeeting[0].Schedule,
-      Service: confirmMeeting[0].Service,
-      ServiceNeededTime: confirmMeeting[0].ServiceNeededTime,
-      // ServiceNeededTo: confirmMeeting[0].ServiceNeededTo,
-      rated: confirmMeeting[0].rated,
-      staffMemberAssigned: confirmMeeting[0].staffMemberAssigned,
-      user: confirmMeeting[0].user,
-    };
+    const { data } = await axios.get(config.apiEndPoint + "/confirmService");
 
-    try {
-      await axios.post(
-        config.apiEndPoint + "/userRequests?postObj=abc",
-        confirmedService
-      );
+    for (let i = 0; i < data.length; i++) {
+      const confirmedService = {
+        fullName: data[i].fullName,
+        Address: data[i].Address,
+        City: data[i].City,
+        Email: data[i].Email,
+        Organization: data[i].Organization,
+        vaccination: data[i].VaccinationPlan,
+        PhoneNo: data[i].PhoneNo,
+        Schedule: data[i].Schedule,
+        Service: data[i].Service,
+        ServiceNeededTime: data[i].ServiceNeededTime,
+        // ServiceNeededTo: data[i].ServiceNeededTo,
+        rated: data[i].rated,
+        staffMemberAssigned: data[i].staffMemberAssigned,
+        user: data[i].user,
+      };
 
-      await axios.delete(
-        config.apiEndPoint + "/confirmService/" + confirmMeeting[0]._id
-      );
+      try {
+        await axios.post(
+          config.apiEndPoint + "/userRequests?postObj=abc",
+          confirmedService
+        );
 
-      toast.success("Meeting Scheduled");
-      setTimeout(() => {
-        this.props.history.replace("/user/request");
-      }, 4100);
-    } catch (ex) {
-      toast.error(ex.response.data);
+        await axios.delete(
+          config.apiEndPoint + "/confirmService/" + data[i]._id
+        );
+      } catch (ex) {
+        toast.error(ex.response.data);
+      }
     }
+    toast.success("Meeting Scheduled");
+    setTimeout(() => {
+      this.props.history.replace("/user/request");
+    }, 4100);
   };
   render() {
     console.log("confirm Meeting::", this.state.confirmMeeting);

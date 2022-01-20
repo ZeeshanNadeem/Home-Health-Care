@@ -5,8 +5,10 @@ import {
   withGoogleMap,
   GoogleMap,
   Marker,
+  google,
 } from "react-google-maps";
 
+import { Circle } from "react-google-maps";
 class ContactUs extends React.Component {
   state = {
     address: "",
@@ -29,10 +31,24 @@ class ContactUs extends React.Component {
     const MapWithAMarker = withScriptjs(
       withGoogleMap((props) => (
         <GoogleMap
-          defaultZoom={8}
-          defaultCenter={{ lat: -34.397, lng: 150.644 }}
+          defaultZoom={10.2}
+          defaultCenter={{ lat: 33.738045, lng: 73.084488 }}
+          onGoogleApiLoaded={({ map, maps }) =>
+            new google.maps.Circle({
+              strokeColor: "#FF0000",
+              strokeOpacity: 0.8,
+              strokeWeight: 2,
+              fillColor: "#FF0000",
+              fillOpacity: 0.3,
+              map,
+              center: { lat: 33.738045, lng: 73.084488 },
+              radius: 1000,
+            })
+          }
         >
-          <Marker position={{ lat: -34.397, lng: 150.644 }} />
+          {/* <Marker position={{ lat: 33.738045, lng: 73.084488 }} /> */}
+          <Circle center={{ lat: 33.738045, lng: 73.084488 }} radius={4000} />
+          <Circle center={{ lat: 33.626057, lng: 73.071442 }} radius={7000} />
         </GoogleMap>
       ))
     );

@@ -7,6 +7,13 @@ import CheckAvailability from "./Modal/CheckAvailability";
 import { toast, ToastContainer } from "react-toastify";
 import jwtDecode from "jwt-decode";
 import config from "../Api/config.json";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import VaccinationPlan from "./Modal/VaccinationPlan";
+import {
+  faCalendar,
+  faCalendarAlt,
+  faCalendarCheck,
+} from "@fortawesome/free-solid-svg-icons";
 
 class UserRequestService extends Form {
   state = {
@@ -22,6 +29,7 @@ class UserRequestService extends Form {
       ServiceNeededFrom: "",
       email: "",
       city: "",
+      vaccination: false,
       // ServiceNeededTo: "",
       // address: "",
     },
@@ -158,6 +166,7 @@ class UserRequestService extends Form {
     fullname: Joi.string().required().label("Full Name"),
     service: Joi.string().required().label("Service"),
     organization: Joi.string().required().label("Service Organization"),
+    vaccination: Joi.boolean(),
     schedule: Joi.string().required().label("Date"),
     address: Joi.string().required().label("Address"),
     phoneno: Joi.number().required().label("Phone No"),
@@ -313,6 +322,7 @@ class UserRequestService extends Form {
           userRequest.userID = this.state.user._id;
           userRequest.staffMemberID = tempArray[maxIndex]._id;
           userRequest.OrganizationID = doctorForm.organization;
+          userRequest.vaccination = doctorForm.vaccination;
           userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
 
           userRequest.ServiceID = doctorForm.service;
@@ -349,32 +359,123 @@ class UserRequestService extends Form {
           } else maxIndex = k;
         }
       }
+
       if (!maxIndex) maxIndex = 0;
-      const userRequest = {};
-      userRequest.fullName = doctorForm.fullname;
-      userRequest.userID = this.state.user._id;
-      userRequest.staffMemberID = tempArray[maxIndex]._id;
-      userRequest.OrganizationID = doctorForm.organization;
-      userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
+      if (doctorForm.vaccination) {
+        const date = new Date();
+        const FullDate1 = new Date(new Date().setDate(date.getDate() + 42));
+        const FullDate2 = new Date(new Date().setDate(date.getDate() + 70));
+        const FullDate3 = new Date(new Date().setDate(date.getDate() + 90));
+        const FullDate4 = new Date(new Date().setDate(date.getDate() + 273));
 
-      userRequest.ServiceID = doctorForm.service;
-      userRequest.Schedule = doctorForm.schedule;
-      // userRequest.Recursive = doctorForm.recursive;
-      userRequest.Address = doctorForm.address;
-      userRequest.PhoneNo = doctorForm.phoneno;
-      userRequest.city = doctorForm.city;
-      userRequest.email = doctorForm.email;
-      console.log(userRequest);
-      try {
-        await axios.post(config.apiEndPoint + "/confirmService", userRequest);
+        const day_ = FullDate1.getDate();
+        const month_ = FullDate1.getMonth() + 1;
+        const year_ = FullDate1.getFullYear();
+        let fristDoseDate = day_ + "-" + month_ + "-" + year_;
 
-        // toast.success("Meeting Scheduled");
-      } catch (ex) {
-        toast.error(ex.response.data);
+        const day1_ = FullDate2.getDate();
+        const month1_ = FullDate2.getMonth() + 1;
+        const year1_ = FullDate2.getFullYear();
+        let secondDoseDate = day1_ + "-" + month1_ + "-" + year1_;
+
+        const day2_ = FullDate3.getDate();
+        const month2_ = FullDate3.getMonth() + 1;
+        const year2_ = FullDate3.getFullYear();
+        let thirdDoseDate = day2_ + "-" + month2_ + "-" + year2_;
+
+        const day3_ = FullDate4.getDate();
+        const month3_ = FullDate4.getMonth() + 1;
+        const year3_ = FullDate4.getFullYear();
+
+        let fourthDoseDate = day3_ + "-" + month3_ + "-" + year3_;
+
+        let doseDateArray = [
+          fristDoseDate,
+          secondDoseDate,
+          thirdDoseDate,
+          fourthDoseDate,
+        ];
+
+        const userRequest = {};
+        userRequest.fullName = doctorForm.fullname;
+        userRequest.userID = this.state.user._id;
+        userRequest.staffMemberID = tempArray[maxIndex]._id;
+        userRequest.OrganizationID = doctorForm.organization;
+        userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
+        userRequest.vaccination = doctorForm.vaccination;
+        userRequest.ServiceID = doctorForm.service;
+        userRequest.Schedule = doctorForm.schedule;
+        // userRequest.Recursive = doctorForm.recursive;
+        userRequest.Address = doctorForm.address;
+        userRequest.PhoneNo = doctorForm.phoneno;
+        userRequest.city = doctorForm.city;
+        userRequest.email = doctorForm.email;
+        console.log(userRequest);
+        try {
+          await axios.post(config.apiEndPoint + "/confirmService", userRequest);
+
+          // toast.success("Meeting Scheduled");
+        } catch (ex) {
+          toast.error(ex.response.data);
+        }
+
+        for (let i = 0; i < doseDateArray.length; i++) {
+          const userRequest = {};
+          userRequest.fullName = doctorForm.fullname;
+          userRequest.userID = this.state.user._id;
+          userRequest.staffMemberID = tempArray[maxIndex]._id;
+          userRequest.OrganizationID = doctorForm.organization;
+          userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
+          userRequest.vaccination = doctorForm.vaccination;
+          userRequest.ServiceID = doctorForm.service;
+          userRequest.Schedule = doseDateArray[i];
+          // userRequest.Recursive = doctorForm.recursive;
+          userRequest.Address = doctorForm.address;
+          userRequest.PhoneNo = doctorForm.phoneno;
+          userRequest.city = doctorForm.city;
+          userRequest.email = doctorForm.email;
+          console.log(userRequest);
+          try {
+            await axios.post(
+              config.apiEndPoint + "/confirmService",
+              userRequest
+            );
+
+            // toast.success("Meeting Scheduled");
+          } catch (ex) {
+            toast.error(ex.response.data);
+          }
+        }
+        this.props.history.push("/Confirm/Meeting");
+
+        return;
+      } else {
+        const userRequest = {};
+        userRequest.fullName = doctorForm.fullname;
+        userRequest.userID = this.state.user._id;
+        userRequest.staffMemberID = tempArray[maxIndex]._id;
+        userRequest.OrganizationID = doctorForm.organization;
+        userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
+        userRequest.vaccination = doctorForm.vaccination;
+        userRequest.ServiceID = doctorForm.service;
+        userRequest.Schedule = doctorForm.schedule;
+        // userRequest.Recursive = doctorForm.recursive;
+        userRequest.Address = doctorForm.address;
+        userRequest.PhoneNo = doctorForm.phoneno;
+        userRequest.city = doctorForm.city;
+        userRequest.email = doctorForm.email;
+        console.log(userRequest);
+        try {
+          await axios.post(config.apiEndPoint + "/confirmService", userRequest);
+
+          // toast.success("Meeting Scheduled");
+        } catch (ex) {
+          toast.error(ex.response.data);
+        }
+        this.props.history.push("/Confirm/Meeting");
+
+        return;
       }
-      this.props.history.push("/Confirm/Meeting");
-
-      return;
     } else if (tempArray.length === 0) {
       toast.error("No Availability For the Specified Time!");
       toast.error("Please Check Availability and then Schedule!");
@@ -455,6 +556,27 @@ class UserRequestService extends Form {
                       "Please Select a Service"
                     )}
                   </article>
+                  {this.state.vaccinationSelected && <VaccinationPlan />}
+                  <span style={{ marginLeft: "1rem" }}>
+                    {this.state.vaccinationSelected &&
+                      this.renderCheckBox2(
+                        "vaccination,",
+                        "vaccination",
+                        "",
+                        "Avail Plan"
+                      )}
+                  </span>
+                  {/* 
+                 
+                  {this.state.vaccinationSelected && (
+                    <span className="vaccination-plan">
+                      Vaccination Plan
+                      <FontAwesomeIcon
+                        icon={faCalendarAlt}
+                        style={{ marginLeft: "0.5rem" }}
+                      />
+                    </span>
+                  )} */}
                 </article>
                 <article
                   className={`user-request-input-wrapper ${this.state.errorClass}`}

@@ -23,7 +23,7 @@ import ManageOrganizations from "./Components/AppAdmin/PanelPages/ManageOrganiza
 
 import Schedule from "./Components/Staff/StaffPages/Schedule";
 import OrganizationAdminRequests from "./Components/AppAdmin/PanelPages/OrganizationAdminRequests";
-import ContactUs from "./Components/Maps/ContactUs";
+import ContactPage from "./Components/Maps/ContactPage";
 import SignUpAsOrganization from "./Components/SignUp/SignUpPage/SignUpOrganization";
 import Ratting from "./Components/Ratting/UI/Ratting";
 import ConfirmMeeting from "./Components/UserRequestService/ConfirmMeeting";
@@ -152,7 +152,7 @@ const App = () => {
       <Route
         exact
         path="/contact"
-        render={(props) => <ContactUs setProgress={setProgress} {...props} />}
+        render={(props) => <ContactPage setProgress={setProgress} {...props} />}
       />
       <Route
         exact

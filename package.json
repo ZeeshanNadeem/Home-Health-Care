@@ -23,6 +23,7 @@
     "@mui/styled-engine-sc": "^5.0.0",
     "@mui/styles": "^5.0.2",
     "@pdftron/webviewer": "^8.2.0",
+    "@react-google-maps/api": "^2.7.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
