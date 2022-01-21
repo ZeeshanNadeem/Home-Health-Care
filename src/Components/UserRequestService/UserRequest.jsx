@@ -368,26 +368,37 @@ class UserRequestService extends Form {
         const FullDate3 = new Date(new Date().setDate(date.getDate() + 90));
         const FullDate4 = new Date(new Date().setDate(date.getDate() + 273));
 
-        const day_ = FullDate1.getDate();
-        const month_ = FullDate1.getMonth() + 1;
+        let day_ = FullDate1.getDate();
+        let month_ = FullDate1.getMonth() + 1;
         const year_ = FullDate1.getFullYear();
-        let fristDoseDate = day_ + "-" + month_ + "-" + year_;
+        if (month_ < 10) month_ = "0" + month_;
+        if (day_ < 10) day_ = "0" + day_;
 
-        const day1_ = FullDate2.getDate();
-        const month1_ = FullDate2.getMonth() + 1;
+        let fristDoseDate = year_ + "-" + month_ + "-" + day_;
+
+        let day1_ = FullDate2.getDate();
+        let month1_ = FullDate2.getMonth() + 1;
         const year1_ = FullDate2.getFullYear();
-        let secondDoseDate = day1_ + "-" + month1_ + "-" + year1_;
+        if (month1_ < 10) month1_ = "0" + month1_;
+        if (day1_ < 10) day1_ = "0" + day1_;
 
-        const day2_ = FullDate3.getDate();
-        const month2_ = FullDate3.getMonth() + 1;
+        let secondDoseDate = year1_ + "-" + month1_ + "-" + day1_;
+
+        let day2_ = FullDate3.getDate();
+        let month2_ = FullDate3.getMonth() + 1;
         const year2_ = FullDate3.getFullYear();
-        let thirdDoseDate = day2_ + "-" + month2_ + "-" + year2_;
+        if (month2_ < 10) month2_ = "0" + month2_;
+        if (day2_ < 10) day2_ = "0" + day2_;
 
-        const day3_ = FullDate4.getDate();
-        const month3_ = FullDate4.getMonth() + 1;
+        let thirdDoseDate = year2_ + "-" + month2_ + "-" + day2_;
+
+        let day3_ = FullDate4.getDate();
+        let month3_ = FullDate4.getMonth() + 1;
         const year3_ = FullDate4.getFullYear();
+        if (month3_ < 10) month3_ = "0" + month3_;
+        if (day3_ < 10) day3_ = "0" + day3_;
 
-        let fourthDoseDate = day3_ + "-" + month3_ + "-" + year3_;
+        let fourthDoseDate = year3_ + "-" + month3_ + "-" + day3_;
 
         let doseDateArray = [
           fristDoseDate,
