@@ -55,7 +55,8 @@ class ContactUs extends React.Component {
 
     return (
       <MapWithAMarker
-        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAbgJTLaFLWsWWvzafIXpJU62NXdQKY1Q&v=3.exp&libraries=geometry,drawing,places"
+        // googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAAbgJTLaFLWsWWvzafIXpJU62NXdQKY1Q&v=3.exp&libraries=geometry,drawing,places"
+        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLhbN9qEV-vcGzi3ZZt1yf9amkTR4PdC0&v=3.exp&libraries=geometry,drawing,places"
         loadingElement={<div style={{ height: `100%` }} />}
         containerElement={<div style={{ height: `400px` }} />}
         mapElement={<div style={{ height: `100%` }} />}

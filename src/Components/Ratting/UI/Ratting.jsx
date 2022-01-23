@@ -94,7 +94,7 @@ const Ratting = (props) => {
       slotTo = moment(serviceNeededToCompute, format);
 
     let UserSelectedDate = row.Schedule;
-    if (serviceNeededToCompute === "00") {
+    if (serviceNeededToCompute === "00:00") {
       let dateArr = UserSelectedDate.split("-");
       let day = parseInt(dateArr[2]) + 1;
       UserSelectedDate = dateArr[0] + "-" + dateArr[1] + "-" + day;
@@ -216,7 +216,7 @@ const Ratting = (props) => {
       slotTo = moment(serviceNeededToCompute, format);
 
     let UserSelectedDate = row.Schedule;
-    if (serviceNeededToCompute === "00") {
+    if (serviceNeededToCompute === "00:00") {
       let dateArr = UserSelectedDate.split("-");
       let day = parseInt(dateArr[2]) + 1;
       UserSelectedDate = dateArr[0] + "-" + dateArr[1] + "-" + day;
@@ -229,6 +229,7 @@ const Ratting = (props) => {
       return true;
     }
   };
+
   const RattingRefactor = async (id) => {
     let user = "";
     const jwt = localStorage.getItem("token");

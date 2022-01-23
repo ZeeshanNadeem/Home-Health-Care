@@ -172,7 +172,8 @@ class SignUpAsOrganization extends Form {
         errors = null;
       }
     }
-    this.GenerateFileNotUploadError();
+    if (isIndependentPerson) this.GenerateFileNotUploadError();
+
     this.setState({ errors: errors || {} });
 
     if (!errors && this.state.selectedFile) {
@@ -206,28 +207,7 @@ class SignUpAsOrganization extends Form {
           global.staffDetails = this.state.doctorForm;
           global.serviceSelectedID = this.state.doctorForm.serviceOrg_;
           this.props.history.push("/signUp/details");
-        } else {
-          const {
-            fullName,
-            email,
-            password,
-            isOrganizationAdmin,
-            OrganizationID,
-          } = this.state.doctorForm;
-          const obj = {
-            fullName: fullName,
-            email: email,
-            password: password,
-            isOrganizationAdmin: isOrganizationAdmin,
-
-            OrganizationID: OrganizationID,
-          };
-
-          const response = await signingUp(obj);
-          localStorage.setItem("token", response.headers["x-auth-token"]);
-          window.location = "/Home";
         }
-
         // window.location = "/Home";
         // const { serviceOrg_, qualification, OrganizationID } =
         //   this.state.doctorForm;
@@ -252,6 +232,23 @@ class SignUpAsOrganization extends Form {
           this.setState({ errors: error });
         }
       }
+    } else if (!isIndependentPerson) {
+      const { fullName, email, password, isOrganizationAdmin, OrganizationID } =
+        this.state.doctorForm;
+      const obj = {
+        fullName: fullName,
+        email: email,
+        password: password,
+        isOrganizationAdmin: isOrganizationAdmin,
+
+        OrganizationID: OrganizationID,
+      };
+
+      try {
+        const response = await signingUp(obj);
+        localStorage.setItem("token", response.headers["x-auth-token"]);
+        window.location = "/Home";
+      } catch (error) {}
     }
   };
   render() {

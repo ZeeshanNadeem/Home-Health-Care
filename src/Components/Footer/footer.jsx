@@ -109,10 +109,10 @@ const Footer = ({ setProgress }) => {
                     </Link>
                   </p>
 
-                  <Link href="#" className="fa fa-facebook"></Link>
-                  <Link href="#" className="fa fa-twitter"></Link>
-                  <Link href="#" className="fa fa-google"></Link>
-                  <Link href="#" className="fa fa-linkedin"></Link>
+                  <span href="" className="fa fa-facebook"></span>
+                  <span href="" className="fa fa-twitter"></span>
+                  <span href="" className="fa fa-google"></span>
+                  <span href="" className="fa fa-linkedin"></span>
                 </div>
               </div>
             </div>

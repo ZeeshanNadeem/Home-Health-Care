@@ -64,7 +64,7 @@ export default function BasicPopover() {
               icon={faCheck}
               style={{ marginRight: "0.5rem", color: "green" }}
             />
-            2nd dose on 6th week
+            2nd dose in 6th week
           </span>
           <br></br>
           <span>
@@ -72,7 +72,7 @@ export default function BasicPopover() {
               icon={faCheck}
               style={{ marginRight: "0.5rem", color: "green" }}
             />
-            3rd dose on 10th week
+            3rd dose in 10th week
           </span>
           <br></br>
           <span>
@@ -80,7 +80,7 @@ export default function BasicPopover() {
               icon={faCheck}
               style={{ marginRight: "0.5rem", color: "green" }}
             />
-            4th dose on 14th week
+            4th dose in 14th week
           </span>
           <br></br>
           <span>
@@ -92,7 +92,7 @@ export default function BasicPopover() {
           </span>
           <div
             style={{
-              maxWidth: "20ch",
+              maxWidth: "23ch",
 
               marginTop: "0.5rem",
             }}
@@ -102,9 +102,7 @@ export default function BasicPopover() {
                 icon={faInfoCircle}
                 style={{ marginRight: "0.5rem" }}
               />
-              <strong>
-                You will be notified 2 days prior to next vaccination date
-              </strong>
+              <strong>You will be notified on each vaccination date.</strong>
             </small>
           </div>
         </Typography>

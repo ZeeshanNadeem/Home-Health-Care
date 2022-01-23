@@ -47,7 +47,7 @@ const OrganizationAdminRequests = (props) => {
     const { data } = await axios.get(
       config.apiEndPoint + `/user?getOrganizationAdmins=abc`
     );
-
+    console.log("Pending Admins::", data);
     setPendingAdmins(data);
   };
 
@@ -202,12 +202,15 @@ const OrganizationAdminRequests = (props) => {
         {pendingAdmins.length > 0 && (
           <article className="table-responsive table-Services">
             <table className="table">
-              <caption>Requests for being an Organization Admin</caption>
+              <caption>
+                Requests for being an Organization Admin Or working as an
+                independent employee
+              </caption>
               <thead className="table-th assign-duty-th">
                 <tr>
                   <th scope="col">Name</th>
                   <th scope="col">Email</th>
-                  <th scope="col">Request Status</th>
+                  <th scope="col">Request For</th>
                   <th scope="col">
                     Resume
                     <FontAwesomeIcon
@@ -229,9 +232,16 @@ const OrganizationAdminRequests = (props) => {
                   <tr>
                     <td>{admin.fullName}</td>
                     <td>{admin.email}</td>
-                    <td style={{ color: "#FF1700" }}>
-                      <strong>{admin.isOrganizationAdmin}</strong>
-                    </td>
+                    {admin.ResumePath ? (
+                      <td>
+                        <strong>Independent Work</strong>
+                      </td>
+                    ) : (
+                      <td>
+                        <strong>{admin.Organization.name}</strong>
+                      </td>
+                    )}
+
                     <td>
                       {admin.ResumeName ? (
                         <article>

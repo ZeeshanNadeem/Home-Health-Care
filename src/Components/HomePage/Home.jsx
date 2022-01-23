@@ -18,7 +18,6 @@ const Home = ({ setProgress }) => {
       setUser(userGot);
     }
 
-    console.log("userGOT::", userGot);
     if (
       userGot.isOrganizationAdmin === "pending" &&
       userGot.Organization._id === "61d5bc5c69b35ef18754dc9a"

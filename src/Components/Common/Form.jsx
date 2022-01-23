@@ -188,9 +188,6 @@ class Form extends React.Component {
     const { availabilityData: staffMember } = this.state.doctorForm;
     for (let i = 0; i < staffMember; i++) {
       for (let j = 0; j < slotTime; j++) {
-        if (slotTime === "12AM to 3AM") {
-          console.log("aaa");
-        }
         let checkSlot = availableSlots.some(
           (x) => x.timeSlot === slotTime && x.BookedSlot === false
         );
@@ -920,7 +917,7 @@ class Form extends React.Component {
         if (slots[0].includes("PM")) {
           let temp1 = slots[1].split("PM");
           if (temp1[0] !== "12") temp1[0] = parseInt(temp1[0]) + 12;
-          slotFromConverted = temp1[0];
+          slotToConverted = temp1[0];
         } else {
           let temp1 = slots[1].split("AM");
 
@@ -1003,11 +1000,10 @@ class Form extends React.Component {
       const service = this.state.Conditionalservices.filter(
         (s) => s._id === input.value
       );
-      console.log("service::", service);
 
       if (service[0].serviceName.trim().toUpperCase() === "BABY VACCINATION") {
         this.setState({ vaccinationSelected: true });
-      }
+      } else this.setState({ vaccinationSelected: false });
     }
 
     if (input.name === "phoneno" || input.name === "phone") {
@@ -1024,10 +1020,7 @@ class Form extends React.Component {
     this.setState({ doctorForm, errors });
 
     const { service, organization, schedule } = doctorForm;
-    if (
-      (input.name === "schedule" && service && organization) ||
-      (schedule && service && organization)
-    ) {
+    if (input.name === "schedule" && service && organization) {
       this.FilterNotAvailableSlots(schedule, service);
       this.filterTime(schedule);
     }

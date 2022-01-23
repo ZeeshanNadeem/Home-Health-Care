@@ -141,14 +141,14 @@ export default function BasicModal({ staffMember, staff }) {
             <strong>Email</strong>
             &nbsp;&nbsp;
             <span style={{ color: "#1C6DD0" }}>
-              {user.length > 0 && <strong>{user[0].email}</strong>}
+              {user.length > 0 && <strong>{user[0] && user[0].email}</strong>}
             </span>
           </article>
           <article style={{ paddingTop: "0rem" }}>
             <strong>Password</strong>
             &nbsp;&nbsp;
             <span style={{ color: "#1C6DD0" }}>
-              <strong>{user[0].temp}</strong>
+              <strong>{user[0] && user[0].temp}</strong>
             </span>
           </article>
           <div>
