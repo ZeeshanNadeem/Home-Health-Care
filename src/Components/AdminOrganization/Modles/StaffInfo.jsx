@@ -1,16 +1,10 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import axios from "axios";
-import config from "../../Api/config.json";
-import jwtDecode from "jwt-decode";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "@mui/material/Modal";
 
 import {
   faCalendarAlt,
-  faCalendarWeek,
   faCheck,
   faClock,
   faPhone,
@@ -58,7 +52,7 @@ export default function BasicModal({ staffMember, staff }) {
       (day) => day.value === true
     );
   }
-  console.log("USERS", staff);
+
   return (
     <div>
       {/* <Button onClick={handleOpen}>Open modal</Button> */}
@@ -175,7 +169,7 @@ export default function BasicModal({ staffMember, staff }) {
               </strong>
             </article>
             {weekDaysAvailable.map((day) => (
-              <strong key={day.time}>
+              <strong key={day.name}>
                 <span style={{ color: "#1C6DD0" }}> &nbsp;{day.name}</span>
                 <FontAwesomeIcon
                   style={{ color: "#1C7947", marginLeft: "0.5rem" }}

@@ -90,11 +90,10 @@ class AvailableDays extends Form {
   };
 
   async componentDidMount() {
-    console.log(global.serviceSelectedID);
     const { data } = await axios.get(
       `http://localhost:3000/api/independentServices?serviceID=${global.serviceSelectedID}`
     );
-    console.log("service::", data);
+
     let doctorForm = { ...this.state.doctorForm };
     doctorForm.price = data[0].servicePrice;
     this.setState({ doctorForm });
@@ -272,7 +271,7 @@ class AvailableDays extends Form {
                       day.name === "3 PM to 6 PM" ||
                       day.name === "6 PM to 9 PM" ||
                       day.name === "9 PM to 12 AM" ? (
-                        <article></article>
+                        <article key={day.name}></article>
                       ) : (
                         <article key={day.name}>
                           <article className="time-slots-Chk-Box">
@@ -297,9 +296,9 @@ class AvailableDays extends Form {
                       day.name === "3 AM to 6 AM" ||
                       day.name === "6 AM to 9 AM" ||
                       day.name === "9 AM to 12 PM" ? (
-                        <article></article>
+                        <article key={day.name}></article>
                       ) : (
-                        <article>
+                        <article key={day.name}>
                           <article className="time-slots-Chk-Box">
                             {this.renderCheckBoxForSlots(
                               day.name,
@@ -326,7 +325,7 @@ class AvailableDays extends Form {
                   </article>
                   <article className="time-slots">
                     {this.state.daysAvailable.map((day) => (
-                      <article className="time-slots-Chk-Box">
+                      <article className="time-slots-Chk-Box" key={day.name}>
                         {this.renderCheckBoxForDays(
                           day.name,
                           day.name,

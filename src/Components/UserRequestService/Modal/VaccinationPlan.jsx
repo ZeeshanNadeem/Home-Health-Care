@@ -100,7 +100,7 @@ export default function BasicPopover() {
             <small>
               <FontAwesomeIcon
                 icon={faInfoCircle}
-                style={{ marginRight: "0.5rem" }}
+                style={{ marginRight: "0.5rem", color: "#1572A1" }}
               />
               <strong>You will be notified on each vaccination date.</strong>
             </small>

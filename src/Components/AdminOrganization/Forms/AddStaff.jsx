@@ -3,10 +3,10 @@ import axios from "axios";
 import Form from "../../Common/Form";
 import Joi from "joi-browser";
 import Alert from "@material-ui/lab/Alert";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import jwtDecode from "jwt-decode";
 import config from "../../Api/config.json";
-import { breadcrumbsClasses } from "@mui/material";
+
 class NurseForm extends Form {
   state = {
     doctorForm: {
@@ -20,8 +20,7 @@ class NurseForm extends Form {
       // availabilityTo: "",
       // availabileDayFrom: "",
       // availabileDayTo: "",
-      email: "",
-      password: "",
+
       // email: "",
       phone: "",
     },
@@ -221,7 +220,7 @@ class NurseForm extends Form {
     };
     try {
       await axios.put(
-        "http://localhost:3000/api/staff" + "/" + staffMemberData._id,
+        "http://localhost:3000/api/staff/" + staffMemberData._id,
         updateStaff
       );
 
@@ -311,7 +310,7 @@ class NurseForm extends Form {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const { isEditModel } = this.props;
+
     let errors = {};
     // if (!isEditModel) {
     errors = this.validate();
@@ -394,8 +393,7 @@ class NurseForm extends Form {
     this.setState({ qualification, services: services.results });
   }
   render() {
-    const { qualification, successMessage, services, servicesStaff } =
-      this.state;
+    const { qualification, successMessage, services } = this.state;
     const { isEditModel } = this.props;
     return (
       <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
@@ -514,9 +512,9 @@ class NurseForm extends Form {
                     day.name === "3 PM to 6 PM" ||
                     day.name === "6 PM to 9 PM" ||
                     day.name === "9 PM to 12 AM" ? (
-                      <article></article>
+                      <article key={day.name}></article>
                     ) : (
-                      <article>
+                      <article key={day.name}>
                         <article className="time-slots-Chk-Box">
                           {this.renderCheckBoxForSlots(
                             day.name,
@@ -540,9 +538,9 @@ class NurseForm extends Form {
                     day.name === "3 AM to 6 AM" ||
                     day.name === "6 AM to 9 AM" ||
                     day.name === "9 AM to 12 PM" ? (
-                      <article></article>
+                      <article key={day.name}></article>
                     ) : (
-                      <article>
+                      <article key={day.name}>
                         <article className="time-slots-Chk-Box">
                           {this.renderCheckBoxForSlots(
                             day.name,
@@ -564,7 +562,7 @@ class NurseForm extends Form {
                 </article>
                 <article className="time-slots">
                   {this.state.daysAvailable.map((day) => (
-                    <article className="time-slots-Chk-Box">
+                    <article className="time-slots-Chk-Box" key={day.name}>
                       {this.renderCheckBoxForDays(
                         day.name,
                         day.name,

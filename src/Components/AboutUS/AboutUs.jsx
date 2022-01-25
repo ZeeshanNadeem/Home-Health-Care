@@ -27,6 +27,7 @@ const AboutUs = ({ setProgress }) => {
         <article className="about-us-wrapper">
           <img
             src={usImgsm}
+            alt="nurse"
             className="imgAboutUs"
             style={{
               marginTop: "3rem",
@@ -53,13 +54,14 @@ const AboutUs = ({ setProgress }) => {
           </div>
         </article>
       </article>
+
       <h1 style={{ textAlign: "center", marginTop: "3rem" }}>Testimonials</h1>
       <article className="aboutCardsWrapper">
         <article className="about-us-cards">
-          <div class="card testimonals" style={{ width: "18rem" }}>
+          <div className="card testimonals" style={{ width: "18rem" }}>
             <div className="card-body">
               {/* <h5 class="card-title">Card title</h5> */}
-              <p className="card-text testimonals-text">
+              <div className="card-text testimonals-text">
                 <div style={{ marginLeft: "4.5rem" }}>
                   <FontAwesomeIcon icon={faStar} style={{ color: "#FFC600" }} />
                   <FontAwesomeIcon icon={faStar} style={{ color: "#FFC600" }} />
@@ -79,13 +81,13 @@ const AboutUs = ({ setProgress }) => {
                 <p style={{ fontSize: "0.777rem" }}>
                   Home Health Services Client
                 </p>
-              </p>
+              </div>
             </div>
           </div>
-          <div class="card testimonals" style={{ width: "18rem" }}>
+          <div className="card testimonals" style={{ width: "18rem" }}>
             <div className="card-body">
               {/* <h5 class="card-title">Card title</h5> */}
-              <p className="card-text testimonals-text">
+              <div className="card-text testimonals-text">
                 <div style={{ marginLeft: "4.5rem" }}>
                   <FontAwesomeIcon icon={faStar} style={{ color: "#FFC600" }} />
                   <FontAwesomeIcon icon={faStar} style={{ color: "#FFC600" }} />
@@ -103,13 +105,13 @@ const AboutUs = ({ setProgress }) => {
                 <p style={{ fontSize: "0.777rem" }}>
                   Home Health Services Client
                 </p>
-              </p>
+              </div>
             </div>
           </div>
-          <div class="card testimonals" style={{ width: "18rem" }}>
+          <div className="card testimonals" style={{ width: "18rem" }}>
             <div className="card-body">
               {/* <h5 class="card-title">Card title</h5> */}
-              <p className="card-text testimonals-text">
+              <div className="card-text testimonals-text">
                 <div style={{ marginLeft: "4.5rem" }}>
                   <FontAwesomeIcon icon={faStar} style={{ color: "#FFC600" }} />
                   <FontAwesomeIcon icon={faStar} style={{ color: "#FFC600" }} />
@@ -128,15 +130,16 @@ const AboutUs = ({ setProgress }) => {
                 <p style={{ fontSize: "0.777rem" }}>
                   Home Health Services Client
                 </p>
-              </p>
+              </div>
             </div>
           </div>
         </article>
+
         <article className="about-us-cards">
-          <div class="card testimonals" style={{ width: "18rem" }}>
+          <div className="card testimonals" style={{ width: "18rem" }}>
             <div className="card-body">
               {/* <h5 class="card-title">Card title</h5> */}
-              <p className="card-text testimonals-text">
+              <div className="card-text testimonals-text">
                 <div style={{ marginLeft: "4.5rem" }}>
                   <FontAwesomeIcon icon={faStar} style={{ color: "#FFC600" }} />
                   <FontAwesomeIcon icon={faStar} style={{ color: "#FFC600" }} />
@@ -156,13 +159,14 @@ const AboutUs = ({ setProgress }) => {
                 <p style={{ fontSize: "0.777rem" }}>
                   Home Health Services Client
                 </p>
-              </p>
+              </div>
             </div>
           </div>
-          <div class="card testimonals" style={{ width: "18rem" }}>
+
+          <div className="card testimonals" style={{ width: "18rem" }}>
             <div className="card-body">
               {/* <h5 class="card-title">Card title</h5> */}
-              <p className="card-text testimonals-text">
+              <div className="card-text testimonals-text">
                 <div style={{ marginLeft: "4.5rem" }}>
                   <FontAwesomeIcon icon={faStar} style={{ color: "#FFC600" }} />
                   <FontAwesomeIcon icon={faStar} style={{ color: "#FFC600" }} />
@@ -181,13 +185,14 @@ const AboutUs = ({ setProgress }) => {
                 <p style={{ fontSize: "0.777rem" }}>
                   Home Health Services Client
                 </p>
-              </p>
+              </div>
             </div>
           </div>
-          <div class="card testimonals" style={{ width: "18rem" }}>
+
+          <div className="card testimonals" style={{ width: "18rem" }}>
             <div className="card-body">
               {/* <h5 class="card-title">Card title</h5> */}
-              <p className="card-text testimonals-text">
+              <div className="card-text testimonals-text">
                 <div style={{ marginLeft: "4.5rem" }}>
                   <FontAwesomeIcon icon={faStar} style={{ color: "#FFC600" }} />
                   <FontAwesomeIcon icon={faStar} style={{ color: "#FFC600" }} />
@@ -205,7 +210,7 @@ const AboutUs = ({ setProgress }) => {
                 <p style={{ fontSize: "0.777rem" }}>
                   Home Health Services Client
                 </p>
-              </p>
+              </div>
             </div>
           </div>
         </article>

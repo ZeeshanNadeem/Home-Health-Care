@@ -4,10 +4,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import IndexDropdown from "./IndexDropdown";
-import { Avatar, Typography } from "@material-ui/core";
-import { deepOrange, deepPurple, blue } from "@mui/material/colors";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { Avatar } from "@material-ui/core";
 import AccountPopOver from "../UserProfile/AccountPopover";
 import Notification from "./NotificationPopOver/Notification";
 
@@ -19,8 +16,10 @@ class NavBar extends Component {
   componentDidMount() {
     try {
       const jwt = localStorage.getItem("token");
-      const user = jwtDecode(jwt);
-      this.setState({ user });
+      if (jwt) {
+        const user = jwtDecode(jwt);
+        this.setState({ user });
+      }
     } catch (ex) {}
   }
 
@@ -57,7 +56,6 @@ class NavBar extends Component {
           onClick={this.handleMenu}
           alt="menu"
         ></img>
-
         <ul className="nav-items">
           <Link to="/Home">
             <li className="nav-li">Home</li>
@@ -72,7 +70,7 @@ class NavBar extends Component {
           >
             <li className="nav-li">About Us</li>
           </Link>
-          <Link to="contact">
+          <Link to="/contact">
             <li className="nav-li">Contact Us</li>
           </Link>
 

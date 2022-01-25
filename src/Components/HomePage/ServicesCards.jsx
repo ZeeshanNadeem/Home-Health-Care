@@ -1,8 +1,6 @@
 import React from "react";
-import Card_ from "./Card";
-import vaccination4 from "../../Images/vaccination4.jpg";
-import doc1 from "../../Images/aides2.jpg";
-import urine from "../../Images/urine9.jpg";
+import Card from "./Card";
+
 const ServicesCards = ({ setProgress }) => {
   return (
     <React.Fragment>
@@ -16,49 +14,49 @@ const ServicesCards = ({ setProgress }) => {
         </p>
       </article>
       <article className="service-cards">
-        <Card_
+        <Card
           cardTitle=""
           cardText=""
           btnName=""
           cardTitle="Home Visits"
           imgSrc="https://homehealthcare.com.ph/assets/default/img/house.svg"
         />
-        <Card_
+        <Card
           cardTitle=""
           cardText=""
           btnName=""
           cardTitle="Nursing Care"
           imgSrc="https://homehealthcare.com.ph/assets/default/img/online.svg"
         />
-        <Card_
+        <Card
           cardTitle=""
           cardText=""
           btnName=""
           cardTitle="Physiotherapy Care"
           imgSrc="https://homehealthcare.com.ph/assets/default/img/online.svg"
         />
-        {/* <Card_
+        {/* <Card
           cardTitle=""
           cardText=""
           btnName=""
           cardTitle="Vaccination Care"
           imgSrc={vaccination4}
         />
-        <Card_
+        <Card
           cardTitle=""
           cardText=""
           btnName=""
           cardTitle="Home Health Aides"
           imgSrc={doc1}
         />
-        <Card_
+        <Card
           cardTitle=""
           cardText=""
           btnName=""
           cardTitle="Sampling Care"
           imgSrc={urine}
         /> */}
-        {setProgress(80)}
+        {/* {setProgress(80)} */}
       </article>
     </React.Fragment>
   );

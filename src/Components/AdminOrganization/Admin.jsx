@@ -1,23 +1,11 @@
-import React, { useEffect, useState } from "react";
-// import DoctorForm from "../DoctorForm";
-
+import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { faUserMd } from "@fortawesome/free-solid-svg-icons";
 import jwtDecode from "jwt-decode";
-
 import { Link } from "react-router-dom";
 import "animate.css";
 const Admin = (props) => {
-  const [showDocDetials, setDocDetails] = useState("");
-  const [menuBarZindex, setMenuBarZindex] = useState("");
-  const DoctorDetailsHandler = (name) => {
-    setDocDetails(name);
-    if (name === "EditService") {
-      setMenuBarZindex("MenuBarZIndex");
-    }
-  };
   useEffect(() => {
     const jwt = localStorage.getItem("token");
     if (!jwt) props.history.push("/NotFound");
@@ -40,7 +28,7 @@ const Admin = (props) => {
     <article className="admin-wrapper">
       <span className="admin-top">
         <span className={`admin-container`}>
-          <article className={`menuBar-container ${menuBarZindex}`}>
+          <article className={`menuBar-container`}>
             <ul className="menu-items">
               <h2 className="menu-title animate__heartBeat">Admin</h2>
 

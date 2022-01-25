@@ -7,15 +7,14 @@ import Footer from "../Footer/footer";
 import { useEffect } from "react";
 import jwtDecode from "jwt-decode";
 import { toast, ToastContainer } from "react-toastify";
+import ServiceCardDet from "./ServiceCardDet";
 
 const Home = ({ setProgress }) => {
-  const [user, setUser] = React.useState([]);
   useEffect(() => {
     const jwt = localStorage.getItem("token");
     let userGot = "";
     if (jwt) {
       userGot = jwtDecode(jwt);
-      setUser(userGot);
     }
 
     if (
@@ -33,24 +32,26 @@ const Home = ({ setProgress }) => {
   }, []);
   return (
     <div>
-      {setProgress(0)}
+      {/* {setProgress(0)} */}
 
       <NavBar setProgress={setProgress} />
-      {setProgress(10)}
+      {/* {setProgress(10)} */}
       <ToastContainer />
-      {setProgress(20)}
+      {/* {setProgress(20)} */}
 
       <Carasol setProgress={setProgress} />
 
-      {setProgress(30)}
+      <ServiceCardDet />
+      {/* {setProgress(30)} */}
       <ServicesCards setProgress={setProgress} />
-      {setProgress(40)}
 
-      {setProgress(50)}
+      {/* {setProgress(40)} */}
+
+      {/* {setProgress(50)}
       {setProgress(60)}
-      {setProgress(70)}
+      {setProgress(70)} */}
       <Footer setProgress={setProgress} />
-      {setProgress(100)}
+      {/* {setProgress(100)} */}
     </div>
   );
 };

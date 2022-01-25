@@ -1,9 +1,7 @@
 import React from "react";
 import Form from "../../Common/Form";
 import Joi from "joi-browser";
-
-import { toast, ToastContainer } from "react-toastify";
-import EditService from "../EditService";
+import { toast } from "react-toastify";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 
@@ -55,7 +53,7 @@ class AddService extends Form {
       };
       try {
         await axios.put(
-          "http://localhost:3000/api/services" + "/" + serviceData._id,
+          "http://localhost:3000/api/services/" + serviceData._id,
           updateServiceObj
         );
         updateService();
@@ -76,10 +74,7 @@ class AddService extends Form {
         servicePrice: doctorForm.servicePrice,
       };
       try {
-        const { data: services } = await axios.post(
-          "http://localhost:3000/api/services",
-          service
-        );
+        await axios.post("http://localhost:3000/api/services", service);
         this.setState({ successMessage: "Service has been added" });
         toast.success("Service has been added");
 
@@ -94,7 +89,6 @@ class AddService extends Form {
   };
 
   render() {
-    const { successMessage, organizations } = this.state;
     return (
       <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
         <article className="doc-container ">

@@ -48,10 +48,7 @@ class DoctorForm extends Form {
         email: doctorForm.email,
         phone: doctorForm.phoneNo,
       };
-      const { data: doctorPosted } = await axios.post(
-        "http://localhost:3000/api/doctors",
-        doctorToPost
-      );
+      await axios.post("http://localhost:3000/api/doctors", doctorToPost);
       this.setState({ successMessage: "Doctor has been saved" });
     }
   };

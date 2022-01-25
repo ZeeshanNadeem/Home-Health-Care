@@ -204,6 +204,21 @@ a.nav-li.nav-items.services-li {
   font-family: Inter, "Times New Roman", Times, serif;
   letter-spacing: 0.8px;
 }
+
+@media screen and (min-width: 100px) and (max-width: 872px) {
+  a.nav-li.nav-items.services-li {
+    margin-left: 2rem;
+    color: #fff;
+    /* padding: 0.6rem 2rem; */
+    border-bottom: 1px solid #444;
+
+    letter-spacing: 0.5px;
+  }
+  .nav-logo {
+    height: 5rem;
+  }
+}
+
 a.nav-li.nav-items:hover {
   color: #dc4d40 !important;
 }
@@ -639,6 +654,12 @@ textarea#address {
   }
 }
 
+@media screen and (min-width: 100px) and (max-width: 600px) {
+  .login- {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
 /* .add-staff-form {
   width: 50rem;
   max-width: 50rem !important;

@@ -1,12 +1,9 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCalendarAlt,
-  faCalendarWeek,
   faCheck,
   faClock,
   faPhone,
@@ -29,8 +26,8 @@ export default function StaffDetails({ staffMemberDetails }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  let [weekDaysAvailable, setDaysAvailable] = React.useState([]);
-  let [slotsAvailable, setSlotsAvailable] = React.useState([]);
+  let [weekDaysAvailable] = React.useState([]);
+  let [slotsAvailable] = React.useState([]);
 
   if (
     staffMemberDetails.staffMember &&
@@ -86,7 +83,7 @@ export default function StaffDetails({ staffMemberDetails }) {
               </strong>
             </article>
             {weekDaysAvailable.map((day) => (
-              <strong>
+              <strong key={day.name}>
                 <span style={{ color: "#1C6DD0" }}> &nbsp;{day.name}</span>
                 <FontAwesomeIcon
                   style={{ color: "#1C7947", marginLeft: "0.5rem" }}
@@ -106,7 +103,7 @@ export default function StaffDetails({ staffMemberDetails }) {
             </article>
             <strong>
               {slotsAvailable.map((day) => (
-                <strong>
+                <strong key={day.time}>
                   <span style={{ color: "#1C6DD0" }}> &nbsp;{day.time}</span>
                   <FontAwesomeIcon
                     style={{ color: "#1C7947", marginLeft: "0.5rem" }}

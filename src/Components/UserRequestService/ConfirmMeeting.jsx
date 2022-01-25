@@ -21,6 +21,7 @@ class ConfirmMeeting extends Form {
     const { data: meetingDetials } = await axios.get(
       config.apiEndPoint + "/confirmService"
     );
+
     // if (meetingDetials.length > 1) {
     //   for (let i = 0; i < meetingDetials.length - 1; i++) {
     //     await axios.delete(

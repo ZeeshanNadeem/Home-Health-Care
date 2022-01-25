@@ -1,23 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import config from "../Api/config.json";
-import EditModal from "./Modles/MoodleForEdit";
-import { Paper } from "@material-ui/core";
-import Fab from "@mui/material/Fab";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-// import PopulateTable from "./Pagination/CreatePages";
-import getTotalDocuments from "../Pagination/CreatePages";
-
-import BasicModal from "./Modles/AddServiceModle";
-import AddService from "./Forms/AddService";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-import { TextField } from "@mui/material";
-
 import Pagination from "@mui/material/Pagination";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import StaffEditModle from "./Modles/StaffEditModle";
@@ -62,7 +49,7 @@ const StaffPanel = (props) => {
         d.fullName.toUpperCase().startsWith(searchedStaff.toUpperCase())
       );
       props.setProgress(30);
-      const totalDocuments = await getTotalDocuments();
+      await getTotalDocuments();
       props.setProgress(70);
       if (searchedStaff) {
         page = Math.ceil(searchedResults.length / pageSize);
@@ -99,23 +86,27 @@ const StaffPanel = (props) => {
     }
     props.setProgress(100);
   };
-  useEffect(async () => {
-    const jwt = localStorage.getItem("token");
-    if (!jwt) props.history.push("/NotFound");
+  useEffect(() => {
+    async function fetchData() {
+      const jwt = localStorage.getItem("token");
+      if (!jwt) props.history.push("/NotFound");
 
-    if (jwt) {
-      const user = jwtDecode(jwt);
-      if (
-        user.isOrganizationAdmin === "false" ||
-        user.isOrganizationAdmin === "pending"
-      )
-        props.history.push("/NotFound");
-      if (user.isOrganizationAdmin === "Approved Admin") PopulateTable();
+      if (jwt) {
+        const user = jwtDecode(jwt);
+        if (
+          user.isOrganizationAdmin === "false" ||
+          user.isOrganizationAdmin === "pending"
+        )
+          props.history.push("/NotFound");
+        if (user.isOrganizationAdmin === "Approved Admin")
+          await PopulateTable();
+      }
+      const { data } = await axios.get(
+        config.apiEndPoint + "/user?GetStaff=true"
+      );
+      setEntireStaff(data);
     }
-    const { data } = await axios.get(
-      config.apiEndPoint + "/user?GetStaff=true"
-    );
-    setEntireStaff(data);
+    fetchData();
   }, [pageSelected, searchedStaff]);
 
   const RefreshStaffMembers = async () => {
@@ -141,14 +132,12 @@ const StaffPanel = (props) => {
     try {
       await axios.delete("http://localhost:3000/api/staff" + "/" + id);
       // toast.success("Deleted");
-      const { data: services } = await axios.get(
-        "http://localhost:3000/api/staff"
-      );
+      await axios.get("http://localhost:3000/api/staff");
       const { data: userObjInTable } = await axios.get(
         config.apiEndPoint + `/user/${id}`
       );
       await axios.delete(
-        "http://localhost:3000/api/user" + "/" + userObjInTable._id
+        "http://localhost:3000/api/user/" + userObjInTable._id
       );
       const jwt = localStorage.getItem("token");
       const user = jwtDecode(jwt);
@@ -192,20 +181,8 @@ const StaffPanel = (props) => {
     // PopulateTable();
   };
 
-  const checkDay = (availabileDay) => {
-    if (availabileDay === 7) return "Sunday";
-    else if (availabileDay === 1) return "Monday";
-    else if (availabileDay === 2) return "Tuesday";
-    else if (availabileDay === 3) return "Wednesday";
-    else if (availabileDay === 4) return "Thrusday";
-    else if (availabileDay === 5) return "Friday";
-    else if (availabileDay === 6) return "Saturday";
-    else return "Sunday";
-  };
-
-  let screenWidth = window.innerWidth;
   return (
-    <article className="ServicePanel-wrapper ">
+    <article className="ServicePanel-wrapper">
       {(staff.length > 0 || searchedStaff) && (
         <article className="searchBar-wrapper">
           <ToastContainer />

@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import EditModal from "./Modles/MoodleForEdit";
-import { Paper } from "@material-ui/core";
-
 import BasicModal from "./Modles/AddServiceModle";
-import AddService from "./Forms/AddService";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-import { TextField } from "@mui/material";
-
 import Pagination from "@mui/material/Pagination";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import jwtDecode from "jwt-decode";
@@ -52,7 +46,7 @@ const EditService = (props) => {
         d.serviceName.toUpperCase().startsWith(searchedService.toUpperCase())
       );
 
-      const totalDocuments = await getTotalDocuments();
+      await getTotalDocuments();
 
       if (searchedService) {
         page = Math.ceil(searchedResults.length / pageSize);
@@ -90,19 +84,23 @@ const EditService = (props) => {
     props.setProgress(100);
   };
 
-  useEffect(async () => {
-    const jwt = localStorage.getItem("token");
-    if (!jwt) props.history.push("/NotFound");
+  useEffect(() => {
+    async function fetchData() {
+      const jwt = localStorage.getItem("token");
+      if (!jwt) props.history.push("/NotFound");
 
-    if (jwt) {
-      const user = jwtDecode(jwt);
-      if (
-        user.isOrganizationAdmin === "false" ||
-        user.isOrganizationAdmin === "pending"
-      )
-        props.history.push("/NotFound");
-      if (user.isOrganizationAdmin === "Approved Admin") PopulateTable();
+      if (jwt) {
+        const user = jwtDecode(jwt);
+        if (
+          user.isOrganizationAdmin === "false" ||
+          user.isOrganizationAdmin === "pending"
+        )
+          props.history.push("/NotFound");
+        if (user.isOrganizationAdmin === "Approved Admin")
+          await PopulateTable();
+      }
     }
+    fetchData();
   }, [pageSelected, searchedService]);
 
   const deleteService = async (id) => {
@@ -111,12 +109,10 @@ const EditService = (props) => {
     setServices(newServices);
 
     try {
-      await axios.delete("http://localhost:3000/api/services" + "/" + id);
+      await axios.delete("http://localhost:3000/api/services/" + id);
       // toast.success("Deleted");
 
-      const { data: services } = await axios.get(
-        "http://localhost:3000/api/services"
-      );
+      await axios.get("http://localhost:3000/api/services");
       const { data: servicesPerCurrentPage } = await axios.get(
         `http://localhost:3000/api/services?page=${pageSelected}&limit=${pageSize}&organization=${user.Organization._id}`
       );

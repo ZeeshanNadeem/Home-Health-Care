@@ -1,9 +1,8 @@
 import * as React from "react";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBell, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "@material-ui/core";
 import jwtDecode from "jwt-decode";
 import axios from "axios";
@@ -41,7 +40,11 @@ export default function BasicPopover() {
   const id = open ? "simple-popover" : undefined;
 
   const jwt = localStorage.getItem("token");
-  const user = jwtDecode(jwt);
+
+  let user = "";
+  if (jwt) {
+    user = jwtDecode(jwt);
+  }
 
   const checkTime = () => {};
   const getNotification = async () => {
@@ -341,9 +344,9 @@ export default function BasicPopover() {
     const startDate = moment(TodayCompareDate, "YYYY/MM/DD");
     const endDate = moment(smallestDate_, "YYYY/MM/DD");
 
-    // if (startDate.isSame(endDate)) {
-    setNotificationMsg(userVacPlan[smallestDate]);
-    // }
+    if (startDate.isSame(endDate)) {
+      setNotificationMsg(userVacPlan[smallestDate]);
+    }
   };
 
   return (

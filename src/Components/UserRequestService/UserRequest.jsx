@@ -1,39 +1,29 @@
 import React from "react";
 import Form from "../Common/Form";
 import axios from "axios";
-import Joi, { ignore } from "joi-browser";
+import Joi from "joi-browser";
 import moment from "moment";
 import CheckAvailability from "./Modal/CheckAvailability";
 import { toast, ToastContainer } from "react-toastify";
 import jwtDecode from "jwt-decode";
 import config from "../Api/config.json";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import VaccinationPlan from "./Modal/VaccinationPlan";
-import {
-  faCalendar,
-  faCalendarAlt,
-  faCalendarCheck,
-} from "@fortawesome/free-solid-svg-icons";
 
 class UserRequestService extends Form {
   state = {
     doctorForm: {
       fullname: "",
-      // staffMemberId: "",
       service: "",
       organization: "",
       schedule: "",
       address: "",
       phoneno: "",
-      // recursive: false,
       ServiceNeededFrom: "",
       email: "",
       city: "",
       vaccination: false,
-      // ServiceNeededTo: "",
-      // address: "",
     },
-    // services: [],
+
     organization: [],
     Conditionalservices: [],
     availabilityData: [],
@@ -41,41 +31,7 @@ class UserRequestService extends Form {
     errors: [],
     staffLeaves: [],
     cites: ["Islamabad", "Rawalpindi"],
-    // timeArr: [
-    //   {
-    //     _id: "12AM to 3AM",
-    //     name: "12 AM to 3 AM",
-    //   },
-    //   {
-    //     _id: "3AM to 6AM",
-    //     name: "3 AM to 6 AM",
-    //   },
 
-    //   {
-    //     _id: "6AM to 9AM",
-    //     name: "6 AM to 9 AM",
-    //   },
-    //   {
-    //     _id: "9AM to 12PM",
-    //     name: "9 AM to 12 PM",
-    //   },
-    //   {
-    //     _id: "12PM to 3PM",
-    //     name: "12 PM to 3 PM",
-    //   },
-    //   {
-    //     _id: "3PM to 6PM",
-    //     name: "3 PM to 6 PM",
-    //   },
-    //   {
-    //     _id: "6PM to 9PM",
-    //     name: "6 PM to 9 PM",
-    //   },
-    //   {
-    //     _id: "9PM to 12AM",
-    //     name: "9 PM to 12 AM",
-    //   },
-    // ],
     requestTime: [
       {
         _id: "12AM to 3AM",
@@ -114,6 +70,18 @@ class UserRequestService extends Form {
     availableSlots: [],
   };
   async componentDidMount() {
+    const { data: meetingDetials } = await axios.get(
+      config.apiEndPoint + "/confirmService"
+    );
+
+    if (meetingDetials.length >= 1) {
+      for (let i = 0; i < meetingDetials.length; i++) {
+        await axios.delete(
+          config.apiEndPoint + "/confirmService/" + meetingDetials[i]._id
+        );
+      }
+    }
+
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
     const isUser =
@@ -506,7 +474,7 @@ class UserRequestService extends Form {
     if (!errors) await this.AssignAutomatedStaff();
   };
   render() {
-    const { services, organization, availabilityData } = this.state;
+    const { organization, availabilityData } = this.state;
     const { schedule } = this.state.doctorForm;
 
     return (

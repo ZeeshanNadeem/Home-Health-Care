@@ -16,12 +16,14 @@ export default function AccountPopOver({ user }) {
 
   const UserNameNav = () => {
     return (
-      <li className="nav-li" onClick={handleClick}>
-        <span className="current-user">
-          <Avatar alt={user.fullName} src="." className="avatar" />
-          <p className="logged-in-user">{user.fullName}</p>
-        </span>
-      </li>
+      <ul>
+        <li className="nav-li" onClick={handleClick}>
+          <span className="current-user">
+            <Avatar alt={user.fullName} src="." className="avatar" />
+            <p className="logged-in-user">{user.fullName}</p>
+          </span>
+        </li>
+      </ul>
     );
   };
 

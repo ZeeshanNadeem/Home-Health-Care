@@ -8,10 +8,10 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-import { Document, Page, pdfjs } from "react-pdf";
+
 import jwtDecode from "jwt-decode";
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
-import { faFile } from "@fortawesome/free-solid-svg-icons";
+
 import { faFileWord } from "@fortawesome/free-solid-svg-icons";
 import StaffDetails from "./StaffDetails";
 
@@ -21,9 +21,6 @@ const OrganizationAdminRequests = (props) => {
   const [pageSelected, setPageSelected] = useState(1);
   const [searchedAdmin, setsearchedAdmin] = useState("");
   const [pageSize] = useState(8);
-
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
 
   useEffect(() => {
     const jwt = localStorage.getItem("token");
@@ -61,7 +58,7 @@ const OrganizationAdminRequests = (props) => {
   const ApproveAdminRequests = async (admin) => {
     try {
       if (admin.ResumePath) {
-        await axios.put(config.apiEndPoint + "/user" + "/" + admin._id, {
+        await axios.put(config.apiEndPoint + "/user/" + admin._id, {
           isOrganizationAdmin: "Independent Member Approved",
         });
         const { data: service } = await axios.get(
@@ -72,7 +69,7 @@ const OrganizationAdminRequests = (props) => {
           serviceID: service[0]._id,
         });
       } else {
-        await axios.put(config.apiEndPoint + "/user" + "/" + admin._id, {
+        await axios.put(config.apiEndPoint + "/user/" + admin._id, {
           isOrganizationAdmin: "Approved Admin",
         });
       }
@@ -84,7 +81,7 @@ const OrganizationAdminRequests = (props) => {
 
   const DeclineAdminRequests = async (admin) => {
     try {
-      await axios.delete(config.apiEndPoint + "/user" + "/" + admin._id);
+      await axios.delete(config.apiEndPoint + "/user/" + admin._id);
       toast.success("Request For being Organization Admin Declined");
     } catch (ex) {
       toast.error(ex.response.data);
@@ -101,10 +98,6 @@ const OrganizationAdminRequests = (props) => {
       config.apiEndPoint + `/user?getOrganizationAdmins=abc`
     );
     return totalDocuments;
-  };
-
-  const reloadOrganzations = async () => {
-    await fetchOrganizations();
   };
 
   const handleChange = async (e) => {
@@ -145,7 +138,7 @@ const OrganizationAdminRequests = (props) => {
         d.fullName.toUpperCase().startsWith(searchedAdmin.toUpperCase())
       );
 
-      const totalDocuments = await getTotalDocuments();
+      await getTotalDocuments();
 
       if (searchedAdmin) {
         page = Math.ceil(searchedResults.length / pageSize);
@@ -178,10 +171,6 @@ const OrganizationAdminRequests = (props) => {
     }
   };
 
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
-    setPageNumber(1);
-  }
   return (
     <article className="ServicePanel-wrapper">
       <article className="searchBar-wrapper">
@@ -229,7 +218,7 @@ const OrganizationAdminRequests = (props) => {
               </thead>
               <tbody>
                 {pendingAdmins.map((admin) => (
-                  <tr>
+                  <tr key={admin._id}>
                     <td>{admin.fullName}</td>
                     <td>{admin.email}</td>
                     {admin.ResumePath ? (
@@ -249,6 +238,7 @@ const OrganizationAdminRequests = (props) => {
                             href={config.server + admin.ResumePath}
                             download="resume"
                             target="_blank"
+                            rel="noreferrer"
                           >
                             {admin.ResumeName}
                           </a>

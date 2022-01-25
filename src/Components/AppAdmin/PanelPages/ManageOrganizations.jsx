@@ -45,7 +45,7 @@ const ManageOrganizations = (props) => {
         d.name.toUpperCase().startsWith(searchedService.toUpperCase())
       );
 
-      const totalDocuments = await getTotalDocuments();
+      await getTotalDocuments();
       props.setProgress(40);
       if (searchedService) {
         page = Math.ceil(searchedResults.length / pageSize);
@@ -135,7 +135,7 @@ const ManageOrganizations = (props) => {
     setOrganizations(newOrganizations);
 
     try {
-      await axios.delete("http://localhost:3000/api/organizations" + "/" + id);
+      await axios.delete("http://localhost:3000/api/organizations/" + id);
       toast.success("Deleted");
       await reloadOrganzations();
     } catch (ex) {
@@ -174,7 +174,7 @@ const ManageOrganizations = (props) => {
           </thead>
           <tbody>
             {organizations.map((org) => (
-              <tr>
+              <tr key={org._id}>
                 <td>{org.name}</td>
                 <td>
                   <Button

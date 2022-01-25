@@ -259,7 +259,7 @@ class SignUpAsOrganization extends Form {
       <React.Fragment>
         <NavBar />
         <ToastContainer />
-        <form onSubmit={this.handleSubmit} enctype="multipart/form-data">
+        <form onSubmit={this.handleSubmit}>
           <article className="signup-page signup-org-admin ">
             <main className="org-signup org card-signup signup-style-org animate__animated animate__fadeInLeft">
               <header>

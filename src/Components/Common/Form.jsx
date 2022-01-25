@@ -1,6 +1,4 @@
 import React from "react";
-import { Alert, breadcrumbsClasses } from "@mui/material";
-import getDay from "date-fns/getDay";
 import Joi from "joi-browser";
 import axios from "axios";
 import moment from "moment";
@@ -34,7 +32,7 @@ class Form extends React.Component {
   validateProperty = ({ value, name }) => {
     let dataProperty = { [name]: value };
     let subSchema = { [name]: this.schema[name] };
-    let errors = {};
+
     const { error } = Joi.validate(dataProperty, subSchema);
 
     return error ? error.details[0].message : null;
@@ -129,7 +127,6 @@ class Form extends React.Component {
       config.apiEndPoint + "/userRequests"
     );
     const { schedule } = this.state.doctorForm;
-    const { ServiceNeededFrom } = this.state.doctorForm;
 
     for (let i = 0; i < staff.length; i++) {
       for (let j = 0; j < userRequests.length; j++) {
@@ -174,7 +171,7 @@ class Form extends React.Component {
     // a paticular time slot.No need to check other staff members
     // on that time slot.That slotTime  is being pushed in an array.
     // Skipping
-    const slotTime = [
+    let slotTime = [
       "12AM to 3AM",
       "3AM to 6AM",
       "6AM to 9AM",
@@ -624,7 +621,7 @@ class Form extends React.Component {
 
     let { organization, service } = this.state.doctorForm;
     if (!service) service = serviceSelected;
-    const doctorForm = { ...this.state.doctorForm };
+
     const m = moment(schedule);
     let dayNo = m.day();
     if (dayNo === 0) dayNo = "SUN";
@@ -807,7 +804,6 @@ class Form extends React.Component {
     // const { service, organization } = this.state.doctorForm;
     if (doctorForm.service && doctorForm.organization) {
       const m = moment(doctorForm.schedule);
-      const day = m.format("dddd");
 
       const d = new Date();
       let dayNo = m.day();
@@ -1094,11 +1090,10 @@ class Form extends React.Component {
   };
 
   renderLabel = (labelName, ForHtml) => {
-    return <label htmlfor={ForHtml}>{labelName}</label>;
+    return <label htmlFor={ForHtml}>{labelName}</label>;
   };
 
   renderCheckBox = (id, name, value, msg) => {
-    const { doctorForm } = this.state;
     return (
       <article>
         <input
@@ -1109,7 +1104,7 @@ class Form extends React.Component {
           // value={doctorForm[name]}
           onChange={this.handleChangeForCheckBox}
         />
-        <label className="chkBox-Msg" forHtml={id}>
+        <label className="chkBox-Msg" htmlFor={id}>
           {msg}
         </label>
       </article>
@@ -1117,7 +1112,6 @@ class Form extends React.Component {
   };
 
   renderCheckBox2 = (id, name, value, msg) => {
-    const { doctorForm } = this.state;
     return (
       <span>
         <input
@@ -1128,7 +1122,7 @@ class Form extends React.Component {
           // value={doctorForm[name]}
           onChange={this.handleChangeForCheckBox}
         />
-        <label className="chkBox-Msg" forHtml={id}>
+        <label className="chkBox-Msg" htmlFor={id}>
           {msg}
         </label>
       </span>
@@ -1163,7 +1157,6 @@ class Form extends React.Component {
   };
 
   renderCheckBoxForSlots = (id, name, value, msg) => {
-    const { doctorForm } = this.state;
     return (
       <article>
         <input
@@ -1175,7 +1168,7 @@ class Form extends React.Component {
           checked={value}
           onChange={this.onChangeCheckBoxForSlots}
         />
-        <label className="chkBox-Msg" forHtml={id}>
+        <label className="chkBox-Msg" htmlFor={id}>
           {msg}
         </label>
       </article>
@@ -1183,7 +1176,6 @@ class Form extends React.Component {
   };
 
   renderCheckBoxForDays = (id, name, value, msg) => {
-    const { doctorForm } = this.state;
     return (
       <article>
         <input
@@ -1194,7 +1186,7 @@ class Form extends React.Component {
           checked={value}
           onChange={this.onChangeCheckBoxForDays}
         />
-        <label className="chkBox-Msg" forHtml={id}>
+        <label className="chkBox-Msg" htmlFor={id}>
           {msg}
         </label>
       </article>
@@ -1219,9 +1211,13 @@ class Form extends React.Component {
           onChange={this.handleChange}
         >
           {Conditionalservices.length > 0 ? (
-            <option value="">{label}</option>
+            <option value="" key={label}>
+              {label}
+            </option>
           ) : (
-            <option value="">Choose An Organization First</option>
+            <option value="" key="">
+              Choose An Organization First
+            </option>
           )}
           {Conditionalservices ? (
             Conditionalservices.map((option) => (
@@ -1240,7 +1236,6 @@ class Form extends React.Component {
 
   renderDropDown = (label, optionsArray, id, name, dropDownLabel = "") => {
     const { doctorForm, errors } = this.state;
-    console.log("render drop down::", optionsArray);
 
     return (
       <article>
@@ -1257,7 +1252,7 @@ class Form extends React.Component {
 
             {optionsArray.length > 0 &&
               optionsArray.map((option) => (
-                <option value={option._id || option} key={option._id}>
+                <option value={option._id || option} key={option._id || option}>
                   {option.serviceName || option.name || option}
                 </option>
               ))}

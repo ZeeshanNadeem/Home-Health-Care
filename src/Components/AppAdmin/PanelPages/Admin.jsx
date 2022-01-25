@@ -9,14 +9,6 @@ import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import "animate.css";
 const AppAdmin = (props) => {
-  const [showDocDetials, setDocDetails] = useState("");
-  const [menuBarZindex, setMenuBarZindex] = useState("");
-  const DoctorDetailsHandler = (name) => {
-    setDocDetails(name);
-    if (name === "EditService") {
-      setMenuBarZindex("MenuBarZIndex");
-    }
-  };
   React.useEffect(() => {
     const jwt = localStorage.getItem("token");
     if (!jwt) props.history.push("/NotFound");
@@ -35,7 +27,7 @@ const AppAdmin = (props) => {
     <article className="admin-wrapper app-admin-wrapper">
       <span className="admin-top">
         <span className={`admin-container`}>
-          <article className={`menuBar-container ${menuBarZindex}`}>
+          <article className={`menuBar-container`}>
             <ul className="menu-items">
               <h2 className="menu-title animate__heartBeat "> Admin</h2>
 

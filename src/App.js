@@ -1,26 +1,16 @@
-// import NavBar from "./Components/NavBar";
 import { Route } from "react-router-dom";
-
 import Login from "./Components/Login/LoginPage/Login";
-
 import SignUp from "./Components/SignUp/SignUpPage/SignUp";
-
 import Home from "./Components/HomePage/Home";
-
 import Admin from "./Components/AdminOrganization/Admin";
-
 import UserRequestService from "./Components/UserRequestService/UserRequest";
-
 import EditService from "./Components/AdminOrganization/EditService";
-
 import AdminUserRequest from "./Components/AdminOrganization/AdminUserRequest";
-
 import Leave from "./Components/StaffLeave/Leave";
 import StaffPanel from "./Components/AdminOrganization/StaffPanel";
 import Logout from "./Components/Logout/logout";
 import AppAdmin from "./Components/AppAdmin/PanelPages/Admin";
 import ManageOrganizations from "./Components/AppAdmin/PanelPages/ManageOrganizations";
-
 import Schedule from "./Components/Staff/StaffPages/Schedule";
 import OrganizationAdminRequests from "./Components/AppAdmin/PanelPages/OrganizationAdminRequests";
 import ContactPage from "./Components/Maps/ContactPage";
@@ -46,7 +36,7 @@ const App = () => {
         // onLoaderFinished={() => setProgress(0)}
       />
 
-      <article class="admin-routes">
+      <article className="admin-routes">
         <Route
           path="/admin"
           render={(props) => <Admin setProgress={setProgress} {...props} />}
@@ -72,7 +62,7 @@ const App = () => {
         />
         {/* <Route path="/admin/Staff" component={AdminStaff} /> */}
       </article>
-      <article class="admin-routes appAdmin">
+      <article className="admin-routes appAdmin">
         <Route
           path="/app/admin"
           render={(props) => <AppAdmin setProgress={setProgress} {...props} />}

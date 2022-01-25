@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import Form from "../../Common/Form";
 import config from "../../Api/config.json";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import axios from "axios";
 import Joi from "joi-browser";
 
@@ -13,7 +13,7 @@ class AddOrganization extends Form {
   };
 
   componentDidMount() {
-    const { organizationData, reloadOrganzations } = this.props;
+    const { organizationData } = this.props;
     if (organizationData) {
       const doctorForm = { ...this.state.doctorForm };
 

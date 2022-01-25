@@ -1,12 +1,10 @@
 import React from "react";
 import logo from "../../Icons/logo.svg";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Footer = ({ setProgress }) => {
   return (
     <div>
-      {setProgress(60)}
       <footer id="footer" className="footer-1">
         <div className="main-footer widgets-dark typo-light">
           <div className="container">
@@ -81,7 +79,7 @@ const Footer = ({ setProgress }) => {
                   </h5>
                   <p>Contact Us</p>
                   <p>About Us</p>
-                  <p>Get your home vists shecduled.</p>
+                  <p>Get your home vists scheduled.</p>
 
                   {/* <a
                     className="btn"
@@ -104,6 +102,7 @@ const Footer = ({ setProgress }) => {
                       className="contact-mail"
                       href="mailto:info@domain.com"
                       title="glorythemes"
+                      to="/"
                     >
                       HomeHealthCare@gmail.com
                     </Link>
@@ -128,7 +127,6 @@ const Footer = ({ setProgress }) => {
             </div>
           </div>
         </div>
-        {setProgress(100)}
       </footer>
     </div>
   );

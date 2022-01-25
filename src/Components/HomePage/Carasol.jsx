@@ -76,7 +76,7 @@ const Carasol = ({ setProgress }) => {
           alt="First slide"
         />
       </Carousel.Item>
-      {setProgress(60)}
+      {/* {setProgress(60)} */}
       {/* <Carousel.Item>
         <img
           style={{ height: "37rem" }}

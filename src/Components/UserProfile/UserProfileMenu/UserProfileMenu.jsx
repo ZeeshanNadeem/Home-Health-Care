@@ -40,7 +40,7 @@ const UserProfileMenu = () => {
               <span>Scheduled Visits</span>
             </Link>
           </span>
-          <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+          <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
         </span>
       )}
       {user.isOrganizationAdmin === "Approved Admin" && (
@@ -56,10 +56,10 @@ const UserProfileMenu = () => {
               to="/admin"
               className="user-account-menu-item sheduled-visits"
             >
-              <span style={{ marginLeft: "0.7rem" }}>Admin</span>
+              <span style={{ marginLeft: "1rem" }}>Admin</span>
             </Link>
           </span>
-          <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+          <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
         </span>
       )}
 
@@ -80,7 +80,7 @@ const UserProfileMenu = () => {
                 <span style={{ marginLeft: "0rem" }}>App Admin</span>
               </Link>
             </span>
-            <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+            <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
           </span>
         </span>
       )}
@@ -102,7 +102,7 @@ const UserProfileMenu = () => {
                 <span style={{ marginLeft: "0rem" }}>Apply For Leave</span>
               </Link>
             </span>
-            <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+            <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
           </span>
           <span>
             <span className="user-account-popover">
@@ -119,7 +119,7 @@ const UserProfileMenu = () => {
                 <span style={{ marginLeft: "0.7rem" }}>My Duties</span>
               </Link>
             </span>
-            <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+            <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
           </span>
         </span>
       )}
@@ -135,7 +135,7 @@ const UserProfileMenu = () => {
           <span>Logout</span>
         </Link>
       </span>
-      <div class="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+      <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
     </article>
   );
 };
