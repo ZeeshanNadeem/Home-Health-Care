@@ -1062,6 +1062,94 @@ class Form extends React.Component {
     );
   };
 
+  handleChangeForRadioBtn1 = (e) => {
+    let servicePlan = { ...this.state.servicePlan };
+    servicePlan = "Daily";
+    this.setState({ servicePlan });
+  };
+
+  renderRadioBtn1 = (id, name, label) => {
+    const { doctorForm } = this.state;
+    return (
+      <span>
+        <input
+          name={name}
+          value={this.state.servicePlan}
+          type="radio"
+          id={id}
+          onChange={this.handleChangeForRadioBtn1}
+        />
+        <label style={{ marginLeft: "0.2rem" }} htmlFor={id}>
+          {label}
+        </label>
+      </span>
+    );
+  };
+
+  handleChangeForRadioBtn2 = (e) => {
+    let servicePlan = { ...this.state.servicePlan };
+    servicePlan = "Weekly";
+    this.setState({ servicePlan });
+  };
+
+  renderRadioBtn2 = (id, name, label) => {
+    return (
+      <span>
+        <input
+          name={name}
+          value={this.state.servicePlan}
+          type="radio"
+          id={id}
+          onChange={this.handleChangeForRadioBtn2}
+        />
+        <label style={{ marginLeft: "0.2rem" }} htmlFor={id}>
+          {label}
+        </label>
+      </span>
+    );
+  };
+
+  handleChangeForRadioBtn3 = (e) => {
+    let servicePlan = { ...this.state.servicePlan };
+    servicePlan = "None";
+    this.setState({ servicePlan });
+  };
+
+  renderRadioBtn3 = (id, name, label, checkedStatus) => {
+    if (checkedStatus) {
+      return (
+        <span>
+          <input
+            name={name}
+            value="None"
+            type="radio"
+            id={id}
+            checked
+            onChange={this.handleChangeForRadioBtn3}
+          />
+          <label style={{ marginLeft: "0.2rem" }} htmlFor={id}>
+            {label}
+          </label>
+        </span>
+      );
+    } else {
+      return (
+        <span>
+          <input
+            name={name}
+            value="None"
+            type="radio"
+            id={id}
+            onChange={this.handleChangeForRadioBtn3}
+          />
+          <label style={{ marginLeft: "0.2rem" }} htmlFor={id}>
+            {label}
+          </label>
+        </span>
+      );
+    }
+  };
+
   onChangeFile = (e) => {
     // setFile(e.target.files[0]);
     const doctorForm = { ...this.state.doctorForm };

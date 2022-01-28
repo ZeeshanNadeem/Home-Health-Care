@@ -19,10 +19,13 @@ class UserRequestService extends Form {
       address: "",
       phoneno: "",
       ServiceNeededFrom: "",
+      noOfMeetings: "",
       email: "",
       city: "",
+
       vaccination: false,
     },
+    servicePlan: "None",
 
     organization: [],
     Conditionalservices: [],
@@ -31,7 +34,7 @@ class UserRequestService extends Form {
     errors: [],
     staffLeaves: [],
     cites: ["Islamabad", "Rawalpindi"],
-
+    meetings: [3, 4, 5, 6, 7],
     requestTime: [
       {
         _id: "12AM to 3AM",
@@ -141,6 +144,7 @@ class UserRequestService extends Form {
     ServiceNeededFrom: Joi.string().required().label("Time"),
     city: Joi.string().required().label("City"),
     email: Joi.string().required().label("Email"),
+    noOfMeetings: Joi.string().required().label("Meetings Plan"),
   };
 
   //This function takes userSelected Date
@@ -156,7 +160,223 @@ class UserRequestService extends Form {
     }
   };
 
+  assignDutyOnServicePlan = async () => {
+    const { doctorForm } = this.state;
+    const { schedule } = this.state.doctorForm;
+    const { availabilityData, userRequests } = this.state;
+    const { ServiceNeededFrom } = this.state.doctorForm;
+    const { organization, service } = this.state.doctorForm;
+    const m = moment(this.state.doctorForm.schedule);
+    let dayNo = m.day();
+    if (dayNo === 0) dayNo = "SUN";
+    else if (dayNo === 1) dayNo = "MON";
+    else if (dayNo === 2) dayNo = "TUE";
+    else if (dayNo === 3) dayNo = "WED";
+    else if (dayNo === 4) dayNo = "THRU";
+    else if (dayNo === 5) dayNo = "FRI";
+    else if (dayNo === 6) dayNo = "SAT";
+    const { data: staff } = await axios.get(
+      config.staff +
+        `/?day=${dayNo}&service=${service}&organization=${organization}`
+    );
+
+    // const { data: staff } = await axios.get(config.staff);
+
+    const { staffLeaves } = this.state;
+
+    let gotSlotBooked = false;
+    let staffOnLeave = false;
+
+    let tempArray = [];
+
+    const date = new Date();
+    const { noOfMeetings: totalMeetings } = this.state.doctorForm;
+
+    let FullDate1 = new Date(new Date().setDate(date.getDate()));
+
+    let day_ = FullDate1.getDate();
+    let month_ = FullDate1.getMonth() + 1;
+    const year_ = FullDate1.getFullYear();
+    if (month_ < 10) month_ = "0" + month_;
+    if (day_ < 10) day_ = "0" + day_;
+    let FristDayServiceDate = year_ + "-" + month_ + "-" + day_;
+
+    let noOfStaffMembersChosen = [];
+
+    for (let j = 0; j < staff.length; j++) {
+      for (let meetings = 1; meetings <= parseInt(totalMeetings); meetings++) {
+        gotSlotBooked = false;
+        staffOnLeave = false;
+        // let liesBetween = false;
+
+        let staffContainsSlot = staff[j].availableTime.some(
+          (staff) => staff.time === ServiceNeededFrom && staff.value === true
+        );
+
+        if (staffContainsSlot) {
+          for (let i = 0; i < userRequests.length; i++) {
+            if (staffOnLeave || gotSlotBooked) break;
+            if (staff[j]._id === userRequests[i].staffMemberAssigned._id) {
+              //Checking If staff booked service time
+              //lies between user requested time
+
+              if (userRequests[i].ServiceNeededTime === ServiceNeededFrom) {
+                const staffDutyOnSameDay =
+                  this.MatchUserSelected(FristDayServiceDate);
+                if (staffDutyOnSameDay) {
+                  gotSlotBooked = true;
+                  break;
+                }
+              } else {
+                continue;
+              }
+            }
+          }
+          // If that staff hasn't gotten any slot booked at user Selected Service Time
+          // Then Checking whether is on leave at user selected date for service
+          if (!gotSlotBooked) {
+            for (let z = 0; z < staffLeaves.length; z++) {
+              if (staff[j]._id === staffLeaves[z].staff._id) {
+                if (staffLeaves[z].leaveFrom === FristDayServiceDate) {
+                  staffOnLeave = true;
+                  break;
+                } else {
+                  let staffLeaveDateFrom = staffLeaves[z].leaveFrom.split("-");
+                  let staffLeaveDateTo = staffLeaves[z].leaveTo.split("-");
+                  let userSelectedDate = FristDayServiceDate.split("-");
+
+                  let staffLeaveDateFrom_ =
+                    staffLeaveDateFrom[0] +
+                    "/" +
+                    staffLeaveDateFrom[1] +
+                    "/" +
+                    staffLeaveDateFrom[2];
+                  let staffLeaveDateTo_ =
+                    staffLeaveDateTo[0] +
+                    "/" +
+                    staffLeaveDateTo[1] +
+                    "/" +
+                    staffLeaveDateTo[2];
+                  let userSelectedDate_ =
+                    userSelectedDate[0] +
+                    "/" +
+                    userSelectedDate[1] +
+                    "/" +
+                    userSelectedDate[2];
+                  const compareDate = moment(userSelectedDate_, "YYYY/MM/DD");
+                  const startDate = moment(staffLeaveDateFrom_, "YYYY/MM/DD");
+                  const endDate = moment(staffLeaveDateTo_, "YYYY/MM/DD");
+                  const isBetween = compareDate.isBetween(startDate, endDate);
+                  if (
+                    isBetween ||
+                    compareDate.isSame(startDate) ||
+                    compareDate.isSame(endDate)
+                  ) {
+                    staffOnLeave = true;
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        }
+        if (!gotSlotBooked && !staffOnLeave && staffContainsSlot) {
+          tempArray.push(staff[j]);
+
+          let temp = noOfStaffMembersChosen.filter(
+            (s) => s._id === staff[j]._id
+          );
+          if (temp.length === 0) noOfStaffMembersChosen.push(staff[j]);
+
+          let FullDate1 = new Date(new Date().setDate(date.getDate() + 1));
+
+          let day_ = FullDate1.getDate();
+          let month_ = FullDate1.getMonth() + 1;
+          const year_ = FullDate1.getFullYear();
+          if (month_ < 10) month_ = "0" + month_;
+          if (day_ < 10) day_ = "0" + day_;
+          FristDayServiceDate = year_ + "-" + month_ + "-" + day_;
+        }
+      }
+      // IF That staff is neither on leave nor got slot booked in that time
+      //Assigning that staff a duty
+      if (!gotSlotBooked && !staffOnLeave && j === staff.length - 1) {
+        //Assigning duty on the basis of rating
+        if (tempArray.length > 0) {
+          const userRequest = {};
+
+          tempArray.sort((a, b) =>
+            parseInt(a.Rating) > parseInt(b.Rating) ? -1 : 1
+          );
+
+          for (let i = 0; i < parseInt(totalMeetings); i++) {
+            let fristDayDateService = "";
+            if (this.state.servicePlan === "Daily") {
+              let FullDate1 = new Date(new Date().setDate(date.getDate() + i));
+              let day_ = FullDate1.getDate();
+              let month_ = FullDate1.getMonth() + 1;
+              const year_ = FullDate1.getFullYear();
+              if (month_ < 10) month_ = "0" + month_;
+              if (day_ < 10) day_ = "0" + day_;
+
+              fristDayDateService = year_ + "-" + month_ + "-" + day_;
+            } else if (this.state.servicePlan === "Weekly") {
+              let FullDate1 = new Date(
+                new Date().setDate(date.getDate() + 7 * i)
+              );
+              let day_ = FullDate1.getDate();
+              let month_ = FullDate1.getMonth() + 1;
+              const year_ = FullDate1.getFullYear();
+              if (month_ < 10) month_ = "0" + month_;
+              if (day_ < 10) day_ = "0" + day_;
+
+              fristDayDateService = year_ + "-" + month_ + "-" + day_;
+            }
+
+            userRequest.fullName = doctorForm.fullname;
+            userRequest.userID = this.state.user._id;
+            userRequest.staffMemberID = tempArray[i]._id;
+            userRequest.OrganizationID = doctorForm.organization;
+            userRequest.vaccination = doctorForm.vaccination;
+            userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
+
+            userRequest.ServiceID = doctorForm.service;
+            // const scheduleDate = new Date(new Date().setDate(date.getDate() + i));
+            userRequest.Schedule = fristDayDateService;
+            // userRequest.Recursive = doctorForm.recursive;
+            userRequest.Address = doctorForm.address;
+            userRequest.PhoneNo = doctorForm.phoneno;
+            userRequest.city = doctorForm.city;
+            userRequest.email = doctorForm.email;
+
+            try {
+              await axios.post(
+                config.apiEndPoint + "/confirmService",
+                userRequest
+              );
+
+              // toast.success("Meeting Scheduled");
+            } catch (ex) {
+              toast.error(ex.response.data);
+            }
+            // this.props.history.push("/Confirm/Meeting");
+            // }
+            // return;
+          }
+        }
+      }
+    }
+    if (tempArray.length > 0) {
+      this.props.history.push("/Confirm/Meeting");
+    }
+  };
+
   AssignAutomatedStaff = async () => {
+    if (this.state.doctorForm.noOfMeetings) {
+      await this.assignDutyOnServicePlan();
+
+      return;
+    }
     const { doctorForm } = this.state;
     const { schedule } = this.state.doctorForm;
     const { availabilityData, userRequests } = this.state;
@@ -467,7 +687,11 @@ class UserRequestService extends Form {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    const errors = this.validate();
+    let errors = this.validate();
+    if (this.state.servicePlan === "None") {
+      delete errors["noOfMeetings"];
+      if (Object.keys(errors).length === 0) errors = undefined;
+    }
     this.setState({ errors: errors || {} });
     const errorClass = errors ? "errorClass" : "";
     this.setState({ errorClass });
@@ -652,6 +876,42 @@ class UserRequestService extends Form {
                   </article>
                 </article>
               </article>
+
+              <article style={{ display: "flex" }}>
+                <span style={{ marginLeft: "1rem", marginTop: "0.5rem" }}>
+                  {this.renderRadioBtn1("daily", "servicePlan", "Daily")}
+                  <span style={{ marginLeft: "0.5rem" }}>
+                    {this.renderRadioBtn2("weekly", "servicePlan", "Weekly")}
+                  </span>
+                  {this.state.servicePlan === "None" ? (
+                    <span style={{ marginLeft: "0.5rem" }}>
+                      {this.renderRadioBtn3(
+                        "None",
+                        "servicePlan",
+                        "None",
+                        "true"
+                      )}
+                    </span>
+                  ) : (
+                    <span style={{ marginLeft: "0.5rem" }}>
+                      {this.renderRadioBtn3("None", "servicePlan", "None")}
+                    </span>
+                  )}
+                </span>
+
+                {this.state.servicePlan !== "None" && (
+                  <span style={{ marginLeft: "1rem" }}>
+                    {this.renderDropDown(
+                      "text",
+                      this.state.meetings,
+                      "noOfMeetings",
+                      "noOfMeetings",
+                      "No of Meetings?"
+                    )}
+                  </span>
+                )}
+              </article>
+
               <article
                 className={`user-request-input-wrapper ${this.state.errorClass} address-grid`}
               >

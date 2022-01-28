@@ -9,8 +9,9 @@ export default function SimplePaper() {
           <strong>COVID-19 </strong> HOME HEALTH CARE SERVICES{" "}
         </h2>
         <p className="fadeInUp animate__animated animate__fadeInUp">
-          Physician-directed with a Case Manager as your point of care Web-based
-          virtual monitoring
+          {/* Physician-directed with a Case Manager as your point of care Web-based
+          virtual monitoring */}
+          Vaccinations for COVID 19 and Baby Vaccinations
         </p>
       </article>
       <div style={{ display: "flex" }}>

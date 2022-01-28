@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
@@ -233,6 +233,14 @@ const CheckAvailability = ({
   };
   return (
     <article>
+      {availableTiming.map((data) => (
+        <span key={data}>
+          {availabilityData.map((staff) =>
+            CheckAvailableStaff(staff, data, userRequests)
+          )}
+        </span>
+      ))}
+      {filteredUnavailableSlots()}
       {requestTimeLength > 0 ? (
         <table className="table availability-table">
           <thead>
@@ -248,14 +256,14 @@ const CheckAvailability = ({
           </thead>
 
           <tbody>
-            {availableTiming.map((data) => (
-              <article key={data}>
+            {/* {availableTiming.map((data) => (
+              <span key={data}>
                 {availabilityData.map((staff) =>
                   CheckAvailableStaff(staff, data, userRequests)
                 )}
-              </article>
+              </span>
             ))}
-            {filteredUnavailableSlots()}
+            {filteredUnavailableSlots()} */}
 
             {track.map((data) => (
               <tr key={data.timeSlot}>

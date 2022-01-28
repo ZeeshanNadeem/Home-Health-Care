@@ -612,7 +612,7 @@ textarea#address {
   }
   .address-grid {
     display: grid;
-    grid-template: repeat(1, 11rem) / repeat(1, 44.5rem);
+    grid-template: repeat(1, 9.9rem) / repeat(1, 44.5rem);
 
     align-items: center;
     justify-content: center;

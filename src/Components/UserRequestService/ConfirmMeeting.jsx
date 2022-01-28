@@ -1,11 +1,9 @@
 import React from "react";
-import { Component } from "react";
 
 import UserRequestContext from "./Context/UserContext";
 import { toast, ToastContainer } from "react-toastify";
 import Form from "../Common/Form";
-import { useContext } from "react";
-import UserRequestService from "./UserRequest";
+
 import axios from "axios";
 import config from "../Api/config.json";
 
@@ -19,7 +17,7 @@ class ConfirmMeeting extends Form {
     this.props.setProgress(10);
     this.props.setProgress(30);
     const { data: meetingDetials } = await axios.get(
-      config.apiEndPoint + "/confirmService"
+      "http://localhost:3000/api/confirmService"
     );
 
     // if (meetingDetials.length > 1) {
@@ -78,11 +76,11 @@ class ConfirmMeeting extends Form {
     }
     toast.success("Meeting Scheduled");
     setTimeout(() => {
-      this.props.history.replace("/user/request");
+      if (window.location.href === "/Confirm/Meeting")
+        this.props.history.replace("/user/request");
     }, 4100);
   };
   render() {
-    console.log("confirm Meeting::", this.state.confirmMeeting);
     return (
       <article>
         <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
@@ -90,7 +88,7 @@ class ConfirmMeeting extends Form {
           <article className="signup-page confirm-meeting-page confirm-meeting">
             <main className="confirm-meeting-card card-signup card-style animate__animated animate__fadeInLeft">
               {this.state.confirmMeeting.map((data) => (
-                <article>
+                <article key={data._id}>
                   {/* <span
                     style={{ display: "flex", justifyContent: "space-between" }}
                   > */}
