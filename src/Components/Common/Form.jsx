@@ -1069,7 +1069,6 @@ class Form extends React.Component {
   };
 
   renderRadioBtn1 = (id, name, label) => {
-    const { doctorForm } = this.state;
     return (
       <span>
         <input
@@ -1121,7 +1120,7 @@ class Form extends React.Component {
         <span>
           <input
             name={name}
-            value="None"
+            value={this.state.servicePlan}
             type="radio"
             id={id}
             checked

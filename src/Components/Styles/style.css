@@ -58,7 +58,7 @@ label {
   letter-spacing: 1.5px;
   border: 0;
   border-radius: 3px;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
 }
 
 .signup-page {
@@ -629,7 +629,7 @@ textarea#address {
   .user-req-card,
   .style-User-Request {
     width: 49rem !important;
-    height: 43rem !important;
+    height: 44rem !important;
     margin-top: 1rem;
     margin-bottom: 2rem;
   }

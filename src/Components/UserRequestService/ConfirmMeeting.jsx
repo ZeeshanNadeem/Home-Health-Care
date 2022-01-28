@@ -2,6 +2,8 @@ import React from "react";
 
 import UserRequestContext from "./Context/UserContext";
 import { toast, ToastContainer } from "react-toastify";
+import FurtherMeetingsPopOver from "./Modal/FurtherMeetingsPopOver";
+
 import Form from "../Common/Form";
 
 import axios from "axios";
@@ -11,6 +13,7 @@ class ConfirmMeeting extends Form {
   state = {
     confirmMeeting: [],
     counter: 0,
+    totalConfirmMeetings: [],
   };
 
   async componentDidMount() {
@@ -20,19 +23,13 @@ class ConfirmMeeting extends Form {
       "http://localhost:3000/api/confirmService"
     );
 
-    // if (meetingDetials.length > 1) {
-    //   for (let i = 0; i < meetingDetials.length - 1; i++) {
-    //     await axios.delete(
-    //       config.apiEndPoint + "/confirmService/" + meetingDetials[i]._id
-    //     );
-    //   }
-    // }
-    // const { data } = await axios.get(config.apiEndPoint + "/confirmService");
-    // if (data.length === 0) this.props.history.replace("/");
     let temp = [];
     temp.push(meetingDetials[0]);
     this.props.setProgress(70);
-    this.setState({ confirmMeeting: temp });
+    this.setState({
+      confirmMeeting: temp,
+      totalConfirmMeetings: meetingDetials,
+    });
     this.props.setProgress(100);
   }
   handleSubmit = async (e) => {
@@ -75,11 +72,13 @@ class ConfirmMeeting extends Form {
       }
     }
     toast.success("Meeting Scheduled");
+    console.log("window.location.href:::", window.location.href);
     setTimeout(() => {
       if (window.location.href === "/Confirm/Meeting")
         this.props.history.replace("/user/request");
     }, 4100);
   };
+
   render() {
     return (
       <article>
@@ -110,10 +109,14 @@ class ConfirmMeeting extends Form {
                   </p>
                   <p>
                     <span className="confirm-title">
-                      Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      Date&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span className="style-meeting-detials-1">
                       {data.Schedule}
+                      &nbsp;&nbsp; &nbsp;
+                      {this.state.totalConfirmMeetings.length > 0 && (
+                        <FurtherMeetingsPopOver />
+                      )}
                     </span>
                   </p>
                   <p>

@@ -374,3 +374,9 @@ main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
   font-weight: 600;
   letter-spacing: 0.6px;
 }
+
+.further-meetings:hover {
+  background-color: #1572a1;
+  color: #000 !important;
+  border: 1px solid #000;
+}

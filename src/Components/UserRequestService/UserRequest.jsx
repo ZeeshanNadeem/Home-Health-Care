@@ -209,6 +209,21 @@ class UserRequestService extends Form {
         staffOnLeave = false;
         // let liesBetween = false;
 
+        let dayAvailable = new Date(FristDayServiceDate);
+        let d = dayAvailable.getDay();
+        if (d === 0) d = "SUN";
+        else if (d === 1) d = "MON";
+        else if (d === 2) d = "TUE";
+        else if (d === 3) d = "WED";
+        else if (d === 4) d = "THRU";
+        else if (d === 5) d = "FRI";
+        else if (d === 6) d = "SAT";
+
+        let checkDayAvailability = staff[j].availableDays.some(
+          (staff) => staff.name === d && staff.value === true
+        );
+        if (!checkDayAvailability) continue;
+
         let staffContainsSlot = staff[j].availableTime.some(
           (staff) => staff.time === ServiceNeededFrom && staff.value === true
         );
@@ -300,7 +315,7 @@ class UserRequestService extends Form {
       }
       // IF That staff is neither on leave nor got slot booked in that time
       //Assigning that staff a duty
-      if (!gotSlotBooked && !staffOnLeave && j === staff.length - 1) {
+      if (j === staff.length - 1) {
         //Assigning duty on the basis of rating
         if (tempArray.length > 0) {
           const userRequest = {};
@@ -690,7 +705,7 @@ class UserRequestService extends Form {
     let errors = this.validate();
     if (this.state.servicePlan === "None") {
       delete errors["noOfMeetings"];
-      if (Object.keys(errors).length === 0) errors = undefined;
+      if (Object.keys(errors).length === 0) errors = {};
     }
     this.setState({ errors: errors || {} });
     const errorClass = errors ? "errorClass" : "";
@@ -877,40 +892,42 @@ class UserRequestService extends Form {
                 </article>
               </article>
 
-              <article style={{ display: "flex" }}>
-                <span style={{ marginLeft: "1rem", marginTop: "0.5rem" }}>
-                  {this.renderRadioBtn1("daily", "servicePlan", "Daily")}
-                  <span style={{ marginLeft: "0.5rem" }}>
-                    {this.renderRadioBtn2("weekly", "servicePlan", "Weekly")}
-                  </span>
-                  {this.state.servicePlan === "None" ? (
+              {!this.state.vaccinationSelected && (
+                <article style={{ display: "flex" }}>
+                  <span style={{ marginLeft: "1rem", marginTop: "0.5rem" }}>
+                    {this.renderRadioBtn1("daily", "servicePlan", "Daily")}
                     <span style={{ marginLeft: "0.5rem" }}>
-                      {this.renderRadioBtn3(
-                        "None",
-                        "servicePlan",
-                        "None",
-                        "true"
-                      )}
+                      {this.renderRadioBtn2("weekly", "servicePlan", "Weekly")}
                     </span>
-                  ) : (
-                    <span style={{ marginLeft: "0.5rem" }}>
-                      {this.renderRadioBtn3("None", "servicePlan", "None")}
-                    </span>
-                  )}
-                </span>
-
-                {this.state.servicePlan !== "None" && (
-                  <span style={{ marginLeft: "1rem" }}>
-                    {this.renderDropDown(
-                      "text",
-                      this.state.meetings,
-                      "noOfMeetings",
-                      "noOfMeetings",
-                      "No of Meetings?"
+                    {this.state.servicePlan === "None" ? (
+                      <span style={{ marginLeft: "0.5rem" }}>
+                        {this.renderRadioBtn3(
+                          "None",
+                          "servicePlan",
+                          "None",
+                          "true"
+                        )}
+                      </span>
+                    ) : (
+                      <span style={{ marginLeft: "0.5rem" }}>
+                        {this.renderRadioBtn3("None", "servicePlan", "None")}
+                      </span>
                     )}
                   </span>
-                )}
-              </article>
+
+                  {this.state.servicePlan !== "None" && (
+                    <span style={{ marginLeft: "1rem" }}>
+                      {this.renderDropDown(
+                        "text",
+                        this.state.meetings,
+                        "noOfMeetings",
+                        "noOfMeetings",
+                        "No of Meetings?"
+                      )}
+                    </span>
+                  )}
+                </article>
+              )}
 
               <article
                 className={`user-request-input-wrapper ${this.state.errorClass} address-grid`}

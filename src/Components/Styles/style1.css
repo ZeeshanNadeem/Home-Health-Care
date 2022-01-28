@@ -601,6 +601,7 @@ li.nav-li {
 }
 
 .confirm-meeting-card {
+  z-index: 0;
   height: 33rem;
 }
 
