@@ -46,7 +46,6 @@ export default function BasicPopover() {
     user = jwtDecode(jwt);
   }
 
-  const checkTime = () => {};
   const getNotification = async () => {
     const { data } = await axios.get(config.apiEndPoint + `/userRequests`);
     userVacPlan = data.filter((x) => x.VaccinationPlan === true);
@@ -352,7 +351,6 @@ export default function BasicPopover() {
   return (
     <div>
       <div>
-        <div></div>
         <span className="notification" onClick={handleClick}>
           {NotificationMsg.ServiceNeededTime &&
           NotificationMsg.NotificationViewed === false ? (
