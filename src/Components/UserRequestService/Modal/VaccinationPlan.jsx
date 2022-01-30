@@ -56,7 +56,7 @@ export default function BasicPopover() {
               icon={faCheck}
               style={{ marginRight: "0.5rem", color: "green" }}
             />
-            1st dose Today
+            1st dose (Your selection)
           </span>
           <br></br>
           <span>

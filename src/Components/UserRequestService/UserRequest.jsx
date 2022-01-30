@@ -26,7 +26,7 @@ class UserRequestService extends Form {
       vaccination: false,
     },
     servicePlan: "None",
-
+    staffUnavailable: false,
     organization: [],
     Conditionalservices: [],
     availabilityData: [],
@@ -162,8 +162,7 @@ class UserRequestService extends Form {
 
   assignDutyOnServicePlan = async () => {
     const { doctorForm } = this.state;
-    const { schedule } = this.state.doctorForm;
-    const { availabilityData, userRequests } = this.state;
+    const { userRequests } = this.state;
     const { ServiceNeededFrom } = this.state.doctorForm;
     const { organization, service } = this.state.doctorForm;
     const m = moment(this.state.doctorForm.schedule);
@@ -192,7 +191,7 @@ class UserRequestService extends Form {
     const date = new Date();
     const { noOfMeetings: totalMeetings } = this.state.doctorForm;
 
-    let FullDate1 = new Date(new Date().setDate(date.getDate()));
+    let FullDate1 = new Date(this.state.doctorForm.schedule);
 
     let day_ = FullDate1.getDate();
     let month_ = FullDate1.getMonth() + 1;
@@ -201,10 +200,14 @@ class UserRequestService extends Form {
     if (day_ < 10) day_ = "0" + day_;
     let FristDayServiceDate = year_ + "-" + month_ + "-" + day_;
 
-    let noOfStaffMembersChosen = [];
+    // let noOfStaffMembersChosen = [];
 
     for (let j = 0; j < staff.length; j++) {
-      for (let meetings = 1; meetings <= parseInt(totalMeetings); meetings++) {
+      for (
+        let meetings = 1;
+        meetings <= parseInt(totalMeetings) + 1;
+        meetings++
+      ) {
         gotSlotBooked = false;
         staffOnLeave = false;
         // let liesBetween = false;
@@ -298,12 +301,16 @@ class UserRequestService extends Form {
         if (!gotSlotBooked && !staffOnLeave && staffContainsSlot) {
           tempArray.push(staff[j]);
 
-          let temp = noOfStaffMembersChosen.filter(
-            (s) => s._id === staff[j]._id
-          );
-          if (temp.length === 0) noOfStaffMembersChosen.push(staff[j]);
+          // let temp = noOfStaffMembersChosen.filter(
+          //   (s) => s._id === staff[j]._id
+          // );
+          // if (temp.length === 0) noOfStaffMembersChosen.push(staff[j]);
 
-          let FullDate1 = new Date(new Date().setDate(date.getDate() + 1));
+          let temp = new Date(FristDayServiceDate);
+          // const FullDate1 = new Date(new Date().setDate(date.getDate() + 42));
+          let FullDate1 = new Date(
+            new Date(FristDayServiceDate).setDate(temp.getDate() + 1)
+          );
 
           let day_ = FullDate1.getDate();
           let month_ = FullDate1.getMonth() + 1;
@@ -324,10 +331,22 @@ class UserRequestService extends Form {
             parseInt(a.Rating) > parseInt(b.Rating) ? -1 : 1
           );
 
-          for (let i = 0; i < parseInt(totalMeetings); i++) {
+          for (let i = 0; i < parseInt(totalMeetings) + 1; i++) {
+            if (i === tempArray.length) {
+              break;
+            }
             let fristDayDateService = "";
             if (this.state.servicePlan === "Daily") {
-              let FullDate1 = new Date(new Date().setDate(date.getDate() + i));
+              //  let FullDate1 = new Date(
+              //    new Date(FristDayServiceDate).setDate(temp.getDate() + 1)
+              //  );
+              let FullDate1 = null;
+              if (i === 0) {
+                FullDate1 = new Date(this.state.doctorForm.schedule);
+              } else {
+                let temp = new Date(this.state.doctorForm.schedule);
+                FullDate1 = new Date(new Date().setDate(temp.getDate() + i));
+              }
               let day_ = FullDate1.getDate();
               let month_ = FullDate1.getMonth() + 1;
               const year_ = FullDate1.getFullYear();
@@ -336,9 +355,15 @@ class UserRequestService extends Form {
 
               fristDayDateService = year_ + "-" + month_ + "-" + day_;
             } else if (this.state.servicePlan === "Weekly") {
-              let FullDate1 = new Date(
-                new Date().setDate(date.getDate() + 7 * i)
-              );
+              let FullDate1 = null;
+              if (i === 0) {
+                FullDate1 = new Date(this.state.doctorForm.schedule);
+              } else {
+                let temp = new Date(this.state.doctorForm.schedule);
+                FullDate1 = new Date(
+                  new Date().setDate(temp.getDate() + 7 * i)
+                );
+              }
               let day_ = FullDate1.getDate();
               let month_ = FullDate1.getMonth() + 1;
               const year_ = FullDate1.getFullYear();
@@ -382,6 +407,8 @@ class UserRequestService extends Form {
       }
     }
     if (tempArray.length > 0) {
+      global.servicePlan = this.state.servicePlan;
+      global.totalMeetings = parseInt(totalMeetings) + 1;
       this.props.history.push("/Confirm/Meeting");
     }
   };
@@ -565,11 +592,11 @@ class UserRequestService extends Form {
 
       if (!maxIndex) maxIndex = 0;
       if (doctorForm.vaccination) {
-        const date = new Date();
-        const FullDate1 = new Date(new Date().setDate(date.getDate() + 42));
-        const FullDate2 = new Date(new Date().setDate(date.getDate() + 70));
-        const FullDate3 = new Date(new Date().setDate(date.getDate() + 90));
-        const FullDate4 = new Date(new Date().setDate(date.getDate() + 273));
+        let temp = new Date(this.state.doctorForm.schedule);
+        const FullDate1 = new Date(new Date().setDate(temp.getDate() + 37));
+        const FullDate2 = new Date(new Date().setDate(temp.getDate() + 65));
+        const FullDate3 = new Date(new Date().setDate(temp.getDate() + 85));
+        const FullDate4 = new Date(new Date().setDate(temp.getDate() + 289));
 
         let day_ = FullDate1.getDate();
         let month_ = FullDate1.getMonth() + 1;
@@ -705,12 +732,13 @@ class UserRequestService extends Form {
     let errors = this.validate();
     if (this.state.servicePlan === "None") {
       delete errors["noOfMeetings"];
-      if (Object.keys(errors).length === 0) errors = {};
+      if (!errors || Object.keys(errors).length === 0) errors = {};
     }
     this.setState({ errors: errors || {} });
     const errorClass = errors ? "errorClass" : "";
     this.setState({ errorClass });
-    if (!errors) await this.AssignAutomatedStaff();
+    if (!errors || Object.keys(errors).length === 0)
+      await this.AssignAutomatedStaff();
   };
   render() {
     const { organization, availabilityData } = this.state;

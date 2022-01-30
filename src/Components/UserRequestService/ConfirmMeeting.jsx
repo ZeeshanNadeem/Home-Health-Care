@@ -72,9 +72,9 @@ class ConfirmMeeting extends Form {
       }
     }
     toast.success("Meeting Scheduled");
-    console.log("window.location.href:::", window.location.href);
+
     setTimeout(() => {
-      if (window.location.href === "/Confirm/Meeting")
+      if (window.location.href.endsWith("/Confirm/Meeting"))
         this.props.history.replace("/user/request");
     }, 4100);
   };
@@ -114,7 +114,7 @@ class ConfirmMeeting extends Form {
                     <span className="style-meeting-detials-1">
                       {data.Schedule}
                       &nbsp;&nbsp; &nbsp;
-                      {this.state.totalConfirmMeetings.length > 0 && (
+                      {this.state.totalConfirmMeetings.length > 1 && (
                         <FurtherMeetingsPopOver />
                       )}
                     </span>
@@ -177,6 +177,15 @@ class ConfirmMeeting extends Form {
               <article style={{ marginTop: "2.3rem" }}>
                 {this.renderBtn("Confirm Meeting")}
               </article>
+
+              {/* {global.servicePlan !== "None" &&
+                this.state.totalConfirmMeetings.length + 1 !==
+                  global.totalMeetings && (
+                  <small>
+                    some services might not have been scheduled due to
+                    non-availability of staff.
+                  </small>
+                )} */}
             </main>
           </article>
         </form>

@@ -55,28 +55,32 @@ export default function MouseOverPopover() {
           horizontal: "left",
         }}
       >
-        <table style={{ borderCollapse: "collapse" }}>
-          <thead>
-            <tr>
-              <th>Dates</th>
-            </tr>
-          </thead>
-          <tbody>
-            {meetings.map((data) => (
-              <tr key={data._id}>
-                <td
-                  style={{
-                    border: "1px solid #333",
-                    padding: "0.3rem 0.3rem",
-                    margin: "0 0.5rem",
-                  }}
-                >
-                  {data.Schedule}
-                </td>
+        {meetings.length === 1 ? (
+          <span>Staff Not Available</span>
+        ) : (
+          <table style={{ borderCollapse: "collapse" }}>
+            <thead>
+              <tr>
+                <th>Dates</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {meetings.map((data) => (
+                <tr key={data._id}>
+                  <td
+                    style={{
+                      border: "1px solid #333",
+                      padding: "0.3rem 0.3rem",
+                      margin: "0 0.5rem",
+                    }}
+                  >
+                    {data.Schedule}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </Popover>
     </span>
   );
