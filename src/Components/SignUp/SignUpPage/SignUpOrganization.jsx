@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import axios from "axios";
 import config from "../../Api/config.json";
 import { Link } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
 import { useForm } from "antd/lib/form/Form";
 class SignUpAsOrganization extends Form {
@@ -121,6 +122,21 @@ class SignUpAsOrganization extends Form {
   };
 
   async componentDidMount() {
+    const jwt = localStorage.getItem("token");
+    if (jwt) {
+      const user = jwtDecode(jwt);
+      const { data: currentUser } = await axios.get(
+        config.apiEndPoint + `/user?findUser_=${user._id}`
+      );
+      if (currentUser.ResumePath && !currentUser.staffMember) {
+        try {
+          await axios.delete(config.apiEndPoint + `/user/${user._id}`);
+          localStorage.removeItem("token");
+          window.location = "/SignUp/Organization";
+        } catch (ex) {}
+      }
+    }
+
     const { data } = await axios.get(config.apiEndPoint + "/organizations");
     const { data: qualification } = await axios.get(
       config.apiEndPoint + "/qualification"
@@ -206,7 +222,7 @@ class SignUpAsOrganization extends Form {
           global.formData = formData;
           global.staffDetails = this.state.doctorForm;
           global.serviceSelectedID = this.state.doctorForm.serviceOrg_;
-          this.props.history.replace("/signUp/details");
+          this.props.history.push("/signUp/details");
         }
         // window.location = "/Home";
         // const { serviceOrg_, qualification, OrganizationID } =

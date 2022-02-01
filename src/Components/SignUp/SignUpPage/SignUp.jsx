@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHospitalAlt, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import jwtDecode from "jwt-decode";
+
 class SignUp extends Form {
   state = {
     doctorForm: {
@@ -30,13 +30,6 @@ class SignUp extends Form {
     isOrganizationAdmin: Joi.boolean().required(),
   };
 
-  componentDidMount() {
-    const jwt = localStorage.getItem("token");
-    if (jwt) {
-      const user = jwtDecode(jwt);
-      if (user) this.props.history.replace("/Home");
-    }
-  }
   handleSubmit = async (e) => {
     e.preventDefault();
 

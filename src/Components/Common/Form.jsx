@@ -1012,7 +1012,6 @@ class Form extends React.Component {
     const doctorForm = { ...this.state.doctorForm };
     doctorForm[input.name] = input.value;
 
-    console.log(requestTime);
     this.setState({ doctorForm, errors });
 
     const { service, organization, schedule } = doctorForm;
@@ -1062,10 +1061,10 @@ class Form extends React.Component {
     );
   };
 
-  handleChangeForRadioBtn1 = (e) => {
-    let servicePlan = { ...this.state.servicePlan };
-    servicePlan = "Daily";
-    this.setState({ servicePlan });
+  handleChangeForRadioBtn1 = ({ currentTarget: input }) => {
+    const name = input.name;
+
+    this.setState({ [name]: "Daily" });
   };
 
   renderRadioBtn1 = (id, name, label) => {
@@ -1086,9 +1085,7 @@ class Form extends React.Component {
   };
 
   handleChangeForRadioBtn2 = (e) => {
-    let servicePlan = { ...this.state.servicePlan };
-    servicePlan = "Weekly";
-    this.setState({ servicePlan });
+    this.setState({ servicePlan: "Weekly" });
   };
 
   renderRadioBtn2 = (id, name, label) => {
@@ -1109,9 +1106,7 @@ class Form extends React.Component {
   };
 
   handleChangeForRadioBtn3 = (e) => {
-    let servicePlan = { ...this.state.servicePlan };
-    servicePlan = "None";
-    this.setState({ servicePlan });
+    this.setState({ servicePlan: "" });
   };
 
   renderRadioBtn3 = (id, name, label, checkedStatus) => {
@@ -1136,7 +1131,7 @@ class Form extends React.Component {
         <span>
           <input
             name={name}
-            value="None"
+            value={this.state.servicePlan}
             type="radio"
             id={id}
             onChange={this.handleChangeForRadioBtn3}
