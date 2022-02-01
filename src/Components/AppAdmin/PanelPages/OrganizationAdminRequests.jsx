@@ -44,7 +44,7 @@ const OrganizationAdminRequests = (props) => {
     const { data } = await axios.get(
       config.apiEndPoint + `/user?getOrganizationAdmins=abc`
     );
-    console.log("Pending Admins::", data);
+
     setPendingAdmins(data);
   };
 

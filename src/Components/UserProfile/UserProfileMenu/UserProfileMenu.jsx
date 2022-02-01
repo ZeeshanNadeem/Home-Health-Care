@@ -77,7 +77,7 @@ const UserProfileMenu = () => {
                 to="/app/admin"
                 className="user-account-menu-item sheduled-visits"
               >
-                <span style={{ marginLeft: "0rem" }}>App Admin</span>
+                <span style={{ marginLeft: "0.2rem" }}>App Admin</span>
               </Link>
             </span>
             <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>

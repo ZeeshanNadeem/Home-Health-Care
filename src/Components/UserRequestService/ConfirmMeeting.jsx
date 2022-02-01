@@ -2,6 +2,7 @@ import React from "react";
 
 import UserRequestContext from "./Context/UserContext";
 import { toast, ToastContainer } from "react-toastify";
+import { Alert } from "@mui/material";
 import FurtherMeetingsPopOver from "./Modal/FurtherMeetingsPopOver";
 
 import Form from "../Common/Form";
@@ -14,6 +15,7 @@ class ConfirmMeeting extends Form {
     confirmMeeting: [],
     counter: 0,
     totalConfirmMeetings: [],
+    totalMeetingsRequested: 0,
   };
 
   async componentDidMount() {
@@ -26,10 +28,24 @@ class ConfirmMeeting extends Form {
     let temp = [];
     temp.push(meetingDetials[0]);
     this.props.setProgress(70);
-    this.setState({
-      confirmMeeting: temp,
-      totalConfirmMeetings: meetingDetials,
-    });
+
+    if ("totalMeetingsRequested" in meetingDetials[0]) {
+      this.setState({
+        confirmMeeting: temp,
+        totalConfirmMeetings: meetingDetials,
+        totalMeetingsRequested: meetingDetials[0].totalMeetingsRequested,
+      });
+    } else {
+      this.setState({
+        confirmMeeting: temp,
+        totalConfirmMeetings: meetingDetials,
+      });
+    }
+    // console.log(
+    //   "totalConfirmMeetings...:",
+    //   meetingDetials[0].totalMeetingsRequested
+    // );
+    console.log("global.totalMeetings::", global.totalMeetings);
     this.props.setProgress(100);
   }
   handleSubmit = async (e) => {
@@ -84,6 +100,24 @@ class ConfirmMeeting extends Form {
       <article>
         <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
           <ToastContainer />
+
+          {this.state.totalMeetingsRequested !== 0 &&
+            this.state.totalConfirmMeetings.length - 1 !==
+              this.state.totalMeetingsRequested &&
+            this.state.totalConfirmMeetings.length !== 1 && (
+              <Alert severity="error">
+                Some Further Meetings might not have been scheduled due to
+                non-availability of staff.
+              </Alert>
+            )}
+
+          {this.state.totalMeetingsRequested !== 0 &&
+            this.state.totalConfirmMeetings.length === 1 && (
+              <Alert severity="error">
+                Further Meetings haven't been scheduled due to non-availability
+                of staff.
+              </Alert>
+            )}
           <article className="signup-page confirm-meeting-page confirm-meeting">
             <main className="confirm-meeting-card card-signup card-style animate__animated animate__fadeInLeft">
               {this.state.confirmMeeting.map((data) => (
@@ -173,21 +207,23 @@ class ConfirmMeeting extends Form {
                   </p>
                 </article>
               ))}
-
-              <article style={{ marginTop: "2.3rem" }}>
-                {this.renderBtn("Confirm Meeting")}
-              </article>
-
               {/* {global.servicePlan !== "None" &&
-                this.state.totalConfirmMeetings.length + 1 !==
+                this.state.totalConfirmMeetings.length - 1 !==
                   global.totalMeetings && (
                   <small>
                     some services might not have been scheduled due to
                     non-availability of staff.
                   </small>
                 )} */}
+
+              <article style={{ marginTop: "2.3rem" }}>
+                {this.renderBtn("Confirm Meeting")}
+              </article>
             </main>
           </article>
+          {/* <div className="alert alert-danger" role="alert">
+            This is a danger alert—check it out!
+          </div> */}
         </form>
       </article>
     );

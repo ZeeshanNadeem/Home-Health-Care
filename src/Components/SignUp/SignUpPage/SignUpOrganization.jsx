@@ -206,7 +206,7 @@ class SignUpAsOrganization extends Form {
           global.formData = formData;
           global.staffDetails = this.state.doctorForm;
           global.serviceSelectedID = this.state.doctorForm.serviceOrg_;
-          this.props.history.push("/signUp/details");
+          this.props.history.replace("/signUp/details");
         }
         // window.location = "/Home";
         // const { serviceOrg_, qualification, OrganizationID } =
@@ -248,7 +248,15 @@ class SignUpAsOrganization extends Form {
         const response = await signingUp(obj);
         localStorage.setItem("token", response.headers["x-auth-token"]);
         window.location = "/Home";
-      } catch (error) {}
+      } catch (ex) {
+        if (ex.response && ex.response.status === 400) {
+          const error = { ...this.state.errors };
+
+          error.email = ex.response.data;
+
+          this.setState({ errors: error });
+        }
+      }
     }
   };
   render() {

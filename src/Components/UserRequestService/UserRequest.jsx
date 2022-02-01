@@ -117,11 +117,12 @@ class UserRequestService extends Form {
     this.props.setProgress(20);
     let date = new Date();
     let month = date.getMonth() + 1;
+    var lastDayOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
     let day = date.getDate();
     if (day < 10) day = "0" + day;
     let year = date.getFullYear();
     if (month < 10) month = "0" + month;
-    let maxDate = year + "-" + month + "-" + "31";
+    let maxDate = year + "-" + month + "-" + lastDayOfMonth.getDate();
     let minDate = year + "-" + month + "-" + day;
     this.setState({ maxDate, minDate });
     try {
@@ -238,7 +239,7 @@ class UserRequestService extends Form {
 
           if (staffContainsSlot) {
             for (let i = 0; i < userRequests.length; i++) {
-              if (staffOnLeave || gotSlotBooked) break;
+              if (staffOnLeave || gotSlotBooked) continue;
               if (staff[j]._id === userRequests[i].staffMemberAssigned._id) {
                 //Checking If staff booked service time
                 //lies between user requested time
@@ -381,6 +382,8 @@ class UserRequestService extends Form {
               userRequest.PhoneNo = doctorForm.phoneno;
               userRequest.city = doctorForm.city;
               userRequest.email = doctorForm.email;
+              userRequest.totalMeetingsRequested =
+                this.state.doctorForm.noOfMeetings;
 
               try {
                 await axios.post(
@@ -587,6 +590,8 @@ class UserRequestService extends Form {
               userRequest.PhoneNo = doctorForm.phoneno;
               userRequest.city = doctorForm.city;
               userRequest.email = doctorForm.email;
+              userRequest.totalMeetingsRequested =
+                this.state.doctorForm.noOfMeetings;
 
               try {
                 await axios.post(
@@ -608,7 +613,7 @@ class UserRequestService extends Form {
     }
     if (tempArray.length > 0) {
       global.servicePlan = this.state.servicePlan;
-      global.totalMeetings = parseInt(totalMeetings) + 1;
+      global.totalMeetings = parseInt(totalMeetings);
       this.props.history.push("/Confirm/Meeting");
     }
   };
@@ -640,6 +645,16 @@ class UserRequestService extends Form {
       config.staff +
         `/?day=${dayNo}&service=${service}&organization=${organization}`
     );
+
+    // availableDays
+
+    // const staff = await Staff.find({
+    //   "staffSpeciality._id": req.query.service,
+    //   "Organization._id": req.query.organization,
+    // }).and([
+    //   { "availableDays.name": req.query.day },
+    //   { "availableDays.value": true },
+    // ]);
 
     // const { data: staff } = await axios.get(config.staff);
 
