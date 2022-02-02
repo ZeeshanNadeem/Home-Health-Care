@@ -260,11 +260,12 @@ input {
 }
 /* Nusrse-Doctor Schedule */
 .td-schedule {
-  border: 1px solid black;
+  border: 1.5px solid darkgray;
   padding: 10px;
 }
 
 .table-schedule {
+  border: 1.5px solid darkgray;
   border-collapse: collapse;
 }
 

@@ -25,7 +25,7 @@ class UserRequestService extends Form {
 
       vaccination: false,
     },
-    servicePlan: "",
+    servicePlan: "None",
     staffUnavailable: false,
     organization: [],
     Conditionalservices: [],
@@ -1144,18 +1144,23 @@ class UserRequestService extends Form {
                     <span style={{ marginLeft: "0.5rem" }}>
                       {this.renderRadioBtn2("weekly", "servicePlan", "Weekly")}
                     </span>
-                    {!this.state.servicePlan ? (
+                    {this.state.servicePlan === "None" ? (
                       <span style={{ marginLeft: "0.5rem" }}>
                         {this.renderRadioBtn3(
                           "None",
                           "servicePlan",
                           "None",
-                          "true"
+                          true
                         )}
                       </span>
                     ) : (
                       <span style={{ marginLeft: "0.5rem" }}>
-                        {this.renderRadioBtn3("None", "servicePlan", "None")}
+                        {this.renderRadioBtn3(
+                          "None",
+                          "servicePlan",
+                          "None",
+                          false
+                        )}
                       </span>
                     )}
                   </span>

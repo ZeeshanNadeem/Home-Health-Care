@@ -12,18 +12,8 @@ import { useState } from "react";
 import { useEffect } from "react";
 import config from "../../Api/config.json";
 import axios from "axios";
-import Rating from "@mui/material/Rating";
-import Button from "@mui/material/Button";
 import RattingModal from "./RattingModal/RattingModal";
 import moment from "moment";
-
-import { withStyles } from "@material-ui/core/styles";
-
-const styles = {
-  root: {
-    background: "#1976d2",
-  },
-};
 
 const Ratting = (props) => {
   const [user, setUser] = useState("");
@@ -278,7 +268,17 @@ const Ratting = (props) => {
                 <TableCell>{row.Service.servicePrice}</TableCell>
                 <TableCell>{row.ServiceNeededTime}</TableCell>
 
-                <TableCell>{row.Schedule}</TableCell>
+                <TableCell>
+                  {row.Schedule[9]}
+                  {row.Schedule[7]}
+                  {row.Schedule[5]}
+                  {row.Schedule[6]}
+                  {row.Schedule[4]}
+                  {row.Schedule[0]}
+                  {row.Schedule[1]}
+                  {row.Schedule[2]}
+                  {row.Schedule[3]}
+                </TableCell>
                 <TableCell align="left">{checkRequest(row)}</TableCell>
                 <TableCell>
                   {checkRequestStatus(row) ? (

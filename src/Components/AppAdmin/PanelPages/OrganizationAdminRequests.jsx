@@ -173,19 +173,24 @@ const OrganizationAdminRequests = (props) => {
 
   return (
     <article className="ServicePanel-wrapper">
-      <article className="searchBar-wrapper">
-        <input
-          className="search-Bar"
-          type="text"
-          placeholder="Search Service"
-          value={searchedAdmin}
-          onChange={handleChange}
-        />
-        <button className="search-btn">
-          <FontAwesomeIcon icon={faSearch} style={{ marginRight: "0.6rem" }} />
-          Search
-        </button>
-      </article>
+      {pendingAdmins.length > 0 && (
+        <article className="searchBar-wrapper">
+          <input
+            className="search-Bar"
+            type="text"
+            placeholder="Search Service"
+            value={searchedAdmin}
+            onChange={handleChange}
+          />
+          <button className="search-btn">
+            <FontAwesomeIcon
+              icon={faSearch}
+              style={{ marginRight: "0.6rem" }}
+            />
+            Search
+          </button>
+        </article>
+      )}
       <React.Fragment>
         <ToastContainer />
         {pendingAdmins.length > 0 && (

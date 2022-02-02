@@ -1061,10 +1061,8 @@ class Form extends React.Component {
     );
   };
 
-  handleChangeForRadioBtn1 = ({ currentTarget: input }) => {
-    const name = input.name;
-
-    this.setState({ [name]: "Daily" });
+  handleChangeForRadioBtn1 = () => {
+    this.setState({ servicePlan: "Daily" });
   };
 
   renderRadioBtn1 = (id, name, label) => {
@@ -1084,7 +1082,7 @@ class Form extends React.Component {
     );
   };
 
-  handleChangeForRadioBtn2 = (e) => {
+  handleChangeForRadioBtn2 = () => {
     this.setState({ servicePlan: "Weekly" });
   };
 
@@ -1105,43 +1103,42 @@ class Form extends React.Component {
     );
   };
 
-  handleChangeForRadioBtn3 = (e) => {
-    this.setState({ servicePlan: "" });
+  handleChangeForRadioBtn3 = () => {
+    this.setState({ servicePlan: "None" });
   };
 
   renderRadioBtn3 = (id, name, label, checkedStatus) => {
-    if (checkedStatus) {
-      return (
-        <span>
-          <input
-            name={name}
-            value={this.state.servicePlan}
-            type="radio"
-            id={id}
-            checked
-            onChange={this.handleChangeForRadioBtn3}
-          />
-          <label style={{ marginLeft: "0.2rem" }} htmlFor={id}>
-            {label}
-          </label>
-        </span>
-      );
-    } else {
-      return (
-        <span>
-          <input
-            name={name}
-            value={this.state.servicePlan}
-            type="radio"
-            id={id}
-            onChange={this.handleChangeForRadioBtn3}
-          />
-          <label style={{ marginLeft: "0.2rem" }} htmlFor={id}>
-            {label}
-          </label>
-        </span>
-      );
-    }
+    return (
+      <span>
+        <input
+          name={name}
+          value={this.state.servicePlan}
+          type="radio"
+          id={id}
+          onChange={this.handleChangeForRadioBtn3}
+        />
+        <label style={{ marginLeft: "0.2rem" }} htmlFor={id}>
+          {label}
+        </label>
+      </span>
+    );
+
+    // else {
+    //   return (
+    //     <span>
+    //       <input
+    //         name={name}
+    //         value={this.state.servicePlan}
+    //         type="radio"
+    //         id={id}
+    //         onChange={this.handleChangeForRadioBtn3}
+    //       />
+    //       <label style={{ marginLeft: "0.2rem" }} htmlFor={id}>
+    //         {label}
+    //       </label>
+    //     </span>
+    //   );
+    // }
   };
 
   onChangeFile = (e) => {

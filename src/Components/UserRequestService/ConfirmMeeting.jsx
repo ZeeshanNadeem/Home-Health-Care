@@ -146,7 +146,16 @@ class ConfirmMeeting extends Form {
                       Date&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span className="style-meeting-detials-1">
-                      {data.Schedule}
+                      {/* {data.Schedule[8]} */}
+                      {data.Schedule[9]}
+                      {data.Schedule[7]}
+                      {data.Schedule[5]}
+                      {data.Schedule[6]}
+                      {data.Schedule[4]}
+                      {data.Schedule[0]}
+                      {data.Schedule[1]}
+                      {data.Schedule[2]}
+                      {data.Schedule[3]}
                       &nbsp;&nbsp; &nbsp;
                       {this.state.totalConfirmMeetings.length > 1 && (
                         <FurtherMeetingsPopOver />
