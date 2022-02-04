@@ -417,7 +417,7 @@ class SignUpAsOrganization extends Form {
                     onChange={this.onChange}
                   ></input>
                   {!this.state.fileUpload && (
-                    <p class="error">Please Upload Your Resume</p>
+                    <p className="error">Please Upload Your Resume</p>
                   )}
 
                   {/* {this.renderFile(

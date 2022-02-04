@@ -216,7 +216,7 @@ class AvailableDays extends Form {
     return (
       <div>
         <ToastContainer />
-        <form onSubmit={this.handleSubmit} enctype="multipart/form-data">
+        <form onSubmit={this.handleSubmit}>
           <article className="avaialble-days-pg signup-page signup-org-admin ">
             <main className="available-slots available-days org-signup org card-signup signup-style-org animate__animated animate__fadeInLeft">
               <header>

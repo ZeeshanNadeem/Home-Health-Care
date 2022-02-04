@@ -18,7 +18,7 @@ import moment from "moment";
 const Ratting = (props) => {
   const [user, setUser] = useState("");
   const [userRequests, setUserRequests] = useState([]);
-  const { classes } = props;
+
   useEffect(() => {
     props.setProgress(0);
 
@@ -93,9 +93,9 @@ const Ratting = (props) => {
       if (currentHour.isAfter(slotTo) || currentHour.isSame(slotTo)) {
         return (
           <article>
-            <div class="progress">
+            <div className="progress">
               <div
-                class="progress-bar progress-bar-striped bg-success"
+                className="progress-bar progress-bar-striped bg-success"
                 role="progressbar"
                 style={{ width: "100%" }}
                 aria-valuenow="100"
@@ -127,9 +127,9 @@ const Ratting = (props) => {
     } else if (moment(todaysDate).isAfter(UserSelectedDate)) {
       return (
         <article>
-          <div class="progress">
+          <div className="progress">
             <div
-              class="progress-bar progress-bar-striped bg-success"
+              className="progress-bar progress-bar-striped bg-success"
               role="progressbar"
               style={{ width: "100%" }}
               aria-valuenow="100"
