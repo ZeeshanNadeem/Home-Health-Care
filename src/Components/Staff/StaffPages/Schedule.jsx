@@ -85,8 +85,8 @@ const Schedule = () => {
                 <small>{staff.Address}</small>
               </td>
               <td className="td-schedule">
-                {/* {staff.Schedule[8]} */}
                 <small>
+                  {staff.Schedule[8]}
                   {staff.Schedule[9]}
                   {staff.Schedule[7]}
                   {staff.Schedule[5]}

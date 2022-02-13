@@ -102,7 +102,7 @@ class SignUpAsOrganization extends Form {
   schema = {
     fullName: Joi.string().min(5).max(50).required(),
     // dateOfBirth: Joi.string().required(),
-    email: Joi.string().min(5).max(255).required().email(),
+    email: Joi.string().required().email(),
     password: Joi.string().min(5).max(255).required(),
     isOrganizationAdmin: Joi.boolean().required(),
     OrganizationID: Joi.string().required(),
@@ -188,6 +188,7 @@ class SignUpAsOrganization extends Form {
         errors = null;
       }
     }
+
     if (isIndependentPerson) this.GenerateFileNotUploadError();
 
     this.setState({ errors: errors || {} });
@@ -260,6 +261,7 @@ class SignUpAsOrganization extends Form {
         OrganizationID: OrganizationID,
       };
 
+      if(errors) return;
       try {
         const response = await signingUp(obj);
         localStorage.setItem("token", response.headers["x-auth-token"]);

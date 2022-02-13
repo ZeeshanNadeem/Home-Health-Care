@@ -23,9 +23,9 @@ export default function MouseOverPopover() {
   React.useEffect(async () => {
     const { data } = await axios.get(config.apiEndPoint + "/confirmService");
     delete data[0];
-    console.log("OBJJ::", data);
+
     setMeetings(data);
-    console.log("MeetingsPopOVER::", meetings);
+  
   }, []);
 
   return (
@@ -74,7 +74,16 @@ export default function MouseOverPopover() {
                       margin: "0 0.5rem",
                     }}
                   >
-                    {data.Schedule}
+                    {data.Schedule[8]}
+                    {data.Schedule[9]}
+                    {data.Schedule[7]}
+                    {data.Schedule[5]}
+                    {data.Schedule[6]}
+                    {data.Schedule[4]}
+                    {data.Schedule[0]}
+                    {data.Schedule[1]}
+                    {data.Schedule[2]}
+                    {data.Schedule[3]}
                   </td>
                 </tr>
               ))}

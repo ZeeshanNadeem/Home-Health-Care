@@ -619,7 +619,9 @@ class Form extends React.Component {
       "9PM to 12AM",
     ];
 
-    let { organization, service } = this.state.doctorForm;
+    //62090281cb9bf2316c5853f8
+    const doctorForm = { ...this.state.doctorForm };
+    let { organization, service } = doctorForm;
     if (!service) service = serviceSelected;
 
     const m = moment(schedule);
@@ -633,7 +635,7 @@ class Form extends React.Component {
     else if (dayNo === 6) dayNo = "SAT";
     let { data: availabilityData } = await axios.get(
       config.staff +
-        `/?day=${dayNo}&service=${service}&organization=${organization}`
+        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}`
     );
 
     availabilityData = await this.StaffLeaves(availabilityData);
@@ -794,7 +796,7 @@ class Form extends React.Component {
       this.filterTimeGonePastToday(schedule, filterReqTime);
 
       // this.setState({ requestTime: filterReqTime });
-    }
+    } else this.setState({ requestTime: availabilityData });
   };
 
   //Sets avaialable Staff in check availability popover
@@ -997,7 +999,10 @@ class Form extends React.Component {
         (s) => s._id === input.value
       );
 
-      if (service[0].serviceName.trim().toUpperCase() === "BABY VACCINATION") {
+      if (
+        service.length > 0 &&
+        service[0].serviceName.trim().toUpperCase() === "BABY VACCINATION"
+      ) {
         this.setState({ vaccinationSelected: true });
       } else this.setState({ vaccinationSelected: false });
     }
@@ -1008,14 +1013,18 @@ class Form extends React.Component {
         errors[input.name] = "Please Enter A Valid Phone No";
       }
     }
-
+    //62090281cb9bf2316c5853f8
     const doctorForm = { ...this.state.doctorForm };
     doctorForm[input.name] = input.value;
 
     this.setState({ doctorForm, errors });
 
     const { service, organization, schedule } = doctorForm;
-    if (input.name === "schedule" && service && organization) {
+    if (
+      (input.name === "schedule" && service && organization) ||
+      (input.name === "service" && schedule && organization) ||
+      (input.name === "organization" && service && schedule)
+    ) {
       this.FilterNotAvailableSlots(schedule, service);
       this.filterTime(schedule);
     }

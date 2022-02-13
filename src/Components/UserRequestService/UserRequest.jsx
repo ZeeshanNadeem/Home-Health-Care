@@ -144,7 +144,7 @@ class UserRequestService extends Form {
     phoneno: Joi.number().required().label("Phone No"),
     ServiceNeededFrom: Joi.string().required().label("Time"),
     city: Joi.string().required().label("City"),
-    email: Joi.string().required().label("Email"),
+    email: Joi.string().required().email().label("Email"),
     noOfMeetings: Joi.string().required().label("Meetings Plan"),
   };
 
@@ -382,8 +382,7 @@ class UserRequestService extends Form {
               userRequest.PhoneNo = doctorForm.phoneno;
               userRequest.city = doctorForm.city;
               userRequest.email = doctorForm.email;
-              userRequest.totalMeetingsRequested =
-                this.state.doctorForm.noOfMeetings;
+              userRequest.totalMeetingsRequested = 5;
 
               try {
                 await axios.post(
@@ -1082,7 +1081,7 @@ class UserRequestService extends Form {
                 <article className="email-label">
                   <article>{this.renderLabel("Email", "Email")}</article>
                   <article>
-                    {this.renderInput("email", "email", "email", "Email")}
+                    {this.renderInput("text", "email", "email", "Email")}
                   </article>
                 </article>
                 <article>

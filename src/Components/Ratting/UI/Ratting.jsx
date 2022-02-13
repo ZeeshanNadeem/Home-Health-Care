@@ -239,7 +239,7 @@ const Ratting = (props) => {
     <article>
       <ToastContainer />
       <h3 style={{ marginLeft: "2rem", marginTop: "1rem", color: "#424242" }}>
-        My Scheduled Meetings
+        My Scheduled Appointments
       </h3>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 50 }} aria-label="simple table">
@@ -269,6 +269,7 @@ const Ratting = (props) => {
                 <TableCell>{row.ServiceNeededTime}</TableCell>
 
                 <TableCell>
+                  {row.Schedule[8]}
                   {row.Schedule[9]}
                   {row.Schedule[7]}
                   {row.Schedule[5]}

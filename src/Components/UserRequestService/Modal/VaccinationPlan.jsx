@@ -90,10 +90,10 @@ export default function BasicPopover() {
             />
             Last dose at 9 months age
           </span>
-          <div
+          <span
             style={{
               maxWidth: "23ch",
-
+              display: "block",
               marginTop: "0.5rem",
             }}
           >
@@ -104,7 +104,7 @@ export default function BasicPopover() {
               />
               <strong>You will be notified on each vaccination date.</strong>
             </small>
-          </div>
+          </span>
         </Typography>
       </Popover>
     </span>

@@ -13,7 +13,7 @@ class Login extends Form {
   };
 
   schema = {
-    email: Joi.string().min(5).max(255).required().email().label("Email"),
+    email: Joi.string().required().email().label("Email"),
     password: Joi.string().min(5).max(255).required().label("Password"),
   };
 

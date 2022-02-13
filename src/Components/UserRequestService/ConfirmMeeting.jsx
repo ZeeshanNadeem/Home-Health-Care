@@ -29,7 +29,16 @@ class ConfirmMeeting extends Form {
     temp.push(meetingDetials[0]);
     this.props.setProgress(70);
 
-    if ("totalMeetingsRequested" in meetingDetials[0]) {
+    console.log(
+      "Meetings Requested no#:",
+      meetingDetials[0].totalMeetingsRequested
+    );
+    console.log("Total Meetings :", meetingDetials);
+
+    if (
+      meetingDetials.length > 0 &&
+      "totalMeetingsRequested" in meetingDetials[0]
+    ) {
       this.setState({
         confirmMeeting: temp,
         totalConfirmMeetings: meetingDetials,
@@ -102,7 +111,7 @@ class ConfirmMeeting extends Form {
           <ToastContainer />
 
           {this.state.totalMeetingsRequested !== 0 &&
-            this.state.totalConfirmMeetings.length - 1 !==
+            this.state.totalConfirmMeetings.length !==
               this.state.totalMeetingsRequested &&
             this.state.totalConfirmMeetings.length !== 1 && (
               <Alert severity="error">
@@ -146,7 +155,7 @@ class ConfirmMeeting extends Form {
                       Date&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span className="style-meeting-detials-1">
-                      {/* {data.Schedule[8]} */}
+                      {data.Schedule[8]}
                       {data.Schedule[9]}
                       {data.Schedule[7]}
                       {data.Schedule[5]}
