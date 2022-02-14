@@ -963,7 +963,7 @@ class UserRequestService extends Form {
     return (
       <div className="doc-container user-request-wrapper user-req">
         <ToastContainer />
-        <article className="wrapper-user-req">
+        <article className="wrapper-user-req user-req-new">
           <div className="card-signup doc-form style-User-Request user-req-card user-req-layout">
             <header>
               <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
