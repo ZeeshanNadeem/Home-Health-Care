@@ -1117,6 +1117,7 @@ class Form extends React.Component {
   };
 
   renderRadioBtn3 = (id, name, label, checkedStatus) => {
+    // if (!checkedStatus) {
     return (
       <span>
         <input
@@ -1125,14 +1126,14 @@ class Form extends React.Component {
           type="radio"
           id={id}
           onChange={this.handleChangeForRadioBtn3}
+          checked={checkedStatus}
         />
         <label style={{ marginLeft: "0.2rem" }} htmlFor={id}>
           {label}
         </label>
       </span>
     );
-
-    // else {
+    // } else {
     //   return (
     //     <span>
     //       <input
@@ -1140,6 +1141,7 @@ class Form extends React.Component {
     //         value={this.state.servicePlan}
     //         type="radio"
     //         id={id}
+    //         checked
     //         onChange={this.handleChangeForRadioBtn3}
     //       />
     //       <label style={{ marginLeft: "0.2rem" }} htmlFor={id}>
