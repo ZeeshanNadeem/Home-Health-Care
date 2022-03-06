@@ -25,6 +25,7 @@ class SignUpAsOrganization extends Form {
       OrganizationID: "",
       serviceOrg_: "",
       qualification: "",
+      city: "",
       // selectedFile: null,
     },
     errors: {},
@@ -97,6 +98,9 @@ class SignUpAsOrganization extends Form {
       },
     ],
     fileUpload: true,
+    city: ["Islamabad", "Rawalpindi"],
+    lat: "",
+    lng: "",
   };
 
   schema = {
@@ -106,6 +110,7 @@ class SignUpAsOrganization extends Form {
     password: Joi.string().min(5).max(255).required(),
     isOrganizationAdmin: Joi.boolean().required(),
     OrganizationID: Joi.string().required(),
+    city: Joi.string(),
 
     // price: Joi.string().required(),
 
@@ -137,6 +142,13 @@ class SignUpAsOrganization extends Form {
       }
     }
 
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({ lat: position.coords.latitude });
+      this.setState({ lng: position.coords.longitude });
+    });
+    // const d = distance(lat, saddarLat, lng, saddatlng);
+    // const t = parseInt(d);
+    // setDistance(t);
     const { data } = await axios.get(config.apiEndPoint + "/organizations");
     const { data: qualification } = await axios.get(
       config.apiEndPoint + "/qualification"
@@ -145,6 +157,7 @@ class SignUpAsOrganization extends Form {
       config.apiEndPoint + "/independentServices"
     );
 
+    console.log("Organizations::", data.results);
     this.setState({
       organizations: data.results,
       qualification,
@@ -169,7 +182,7 @@ class SignUpAsOrganization extends Form {
   handleSubmit = async (e) => {
     e.preventDefault();
     const isIndependentPerson =
-      this.state.doctorForm.OrganizationID === "61d5bc5c69b35ef18754dc9a"
+      this.state.doctorForm.OrganizationID === "6223295de22df25d9a0dd773"
         ? true
         : false;
 
@@ -216,12 +229,14 @@ class SignUpAsOrganization extends Form {
             "OrganizationID",
             this.state.doctorForm.OrganizationID
           );
+          formData.append("city", this.state.doctorForm.city);
           global.selectedFile = this.state.doctorForm.selectedFile;
           const response = await signingUp(formData);
           localStorage.setItem("token", response.headers["x-auth-token"]);
           global.userID = response.data._id;
           global.formData = formData;
           global.staffDetails = this.state.doctorForm;
+          global.city = this.state.doctorForm.city;
           global.serviceSelectedID = this.state.doctorForm.serviceOrg_;
           this.props.history.push("/signUp/details");
         }
@@ -250,18 +265,20 @@ class SignUpAsOrganization extends Form {
         }
       }
     } else if (!isIndependentPerson) {
-      const { fullName, email, password, isOrganizationAdmin, OrganizationID } =
+      const { fullName, email, password, isOrganizationAdmin, OrganizationID,city } =
         this.state.doctorForm;
       const obj = {
         fullName: fullName,
         email: email,
         password: password,
         isOrganizationAdmin: isOrganizationAdmin,
-
+        lat: this.state.lat,
+        lng: this.state.lng,
         OrganizationID: OrganizationID,
+        city:city
       };
 
-      if(errors) return;
+      if (errors) return;
       try {
         const response = await signingUp(obj);
         localStorage.setItem("token", response.headers["x-auth-token"]);
@@ -359,8 +376,9 @@ class SignUpAsOrganization extends Form {
                   </article>
                 </article>
               </article>
+
               {this.state.doctorForm.OrganizationID ===
-                "61d5bc5c69b35ef18754dc9a" && (
+                "6223295de22df25d9a0dd773" && (
                 <article
                   // style={{ marginTop: "0.5rem" }}
                   className="signup-org-group servies-org"
@@ -403,7 +421,7 @@ class SignUpAsOrganization extends Form {
               )}
 
               {this.state.doctorForm.OrganizationID ===
-                "61d5bc5c69b35ef18754dc9a" && (
+                "6223295de22df25d9a0dd773" && (
                 <article>
                   <article
                     className="txt-upload-label signup-label"
@@ -438,6 +456,50 @@ class SignUpAsOrganization extends Form {
                   "Request To Be an Organization Admin"
                 )}
               </article> */}
+
+              <article
+                className="signup-org-group"
+                style={{
+                  display: "flex",
+                  justifyContent: "start",
+                }}
+              >
+                <article>
+                  <article className="signup-label" style={{ margin: "0" }}>
+                    {this.renderLabel("City", "city")}
+                  </article>
+                  <article
+                    className="txtField-signup-org"
+                    style={{ width: "34rem" }}
+                  >
+                    {this.renderDropDown(
+                      "City",
+                      this.state.city,
+                      "city",
+                      "city",
+                      "Select Your City"
+                    )}
+                  </article>
+                </article>
+                {/* <article className="signup-label">
+                    {this.renderLabel("Confirm Password", "email")}
+                  </article>
+                  <article>{this.renderInput("text", "email", "email")}</article> */}
+                {/* <article className="second-item dropdown-second-item">
+                  <article className="signup-label" style={{ margin: "0" }}>
+                    {this.renderLabel("Organization", "organization")}
+                  </article>
+                  <article className="txtField-signup-org">
+                    {this.renderDropDown(
+                      "service For",
+                      this.state.organizations,
+                      "OrganizationID",
+                      "OrganizationID",
+                      "Select Your Organization"
+                    )}
+                  </article>
+                </article> */}
+              </article>
 
               <article className="btn-orgSignUp org-btn signup-page-btn">
                 {this.renderBtn("Sign Up")}

@@ -148,6 +148,8 @@ class NurseForm extends Form {
         name: "9 PM to 12 AM",
       },
     ],
+    lat: "",
+    lng: "",
   };
 
   schema = {
@@ -255,7 +257,7 @@ class NurseForm extends Form {
       Organization: user.Organization,
       qualificationID: doctorForm.qualification,
       phone: doctorForm.phone,
-
+      city: user.city,
       availableTime: this.state.slotTime,
       availableDays: this.state.daysAvailable,
       // availabilityFrom: doctorForm.availabilityFrom,
@@ -264,6 +266,8 @@ class NurseForm extends Form {
       // availabileDayTo: doctorForm.availabileDayTo,
       Rating: 0,
       RatingAvgCount: 0,
+      lat: user.lat,
+      lng: user.lng,
 
       // email: doctorForm.email,
     };
@@ -354,7 +358,7 @@ class NurseForm extends Form {
 
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
-
+    console.log("admin signed:", user);
     let { data: services } = await axios.get(
       `http://localhost:3000/api/services?organization=${user.Organization._id}`
     );

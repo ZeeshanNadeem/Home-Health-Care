@@ -3,6 +3,7 @@ import Joi from "joi-browser";
 import axios from "axios";
 import moment from "moment";
 import config from "../Api/config.json";
+import jwtDecode from "jwt-decode";
 import "../UserRequestService/ModalData/CheckAvailability";
 
 class Form extends React.Component {
@@ -633,11 +634,18 @@ class Form extends React.Component {
     else if (dayNo === 4) dayNo = "THRU";
     else if (dayNo === 5) dayNo = "FRI";
     else if (dayNo === 6) dayNo = "SAT";
+
     let { data: availabilityData } = await axios.get(
       config.staff +
-        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}`
+        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}`
     );
 
+    console.log("city :::", this.state.doctorForm.city);
+    let { data: allStaff } = await axios.get(
+      config.staff +
+        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&allStaff=true`
+    );
+    this.setState({ allStaff });
     availabilityData = await this.StaffLeaves(availabilityData);
 
     // const { availableSlots } = this.state;
@@ -799,6 +807,223 @@ class Form extends React.Component {
     } else this.setState({ requestTime: availabilityData });
   };
 
+  //Task
+  //Filter all Independent employees available
+
+  async FilterAllIndependentEmployees(schedule, serviceSelected) {
+    const jwt = localStorage.getItem("token");
+    let user = "";
+    if (jwt) {
+      user = jwtDecode(jwt);
+    }
+
+    console.log("filter all employees:::user.city:::", user.city);
+    let track = [];
+
+    let slotTime = [
+      "12AM to 3AM",
+      "3AM to 6AM",
+      "6AM to 9AM",
+      "9AM to 12PM",
+      "12PM to 3PM",
+      "3PM to 6PM",
+      "6PM to 9PM",
+      "9PM to 12AM",
+    ];
+
+    //62090281cb9bf2316c5853f8
+    const doctorForm = { ...this.state.doctorForm };
+    let { organization, service } = doctorForm;
+    if (!service) service = serviceSelected;
+
+    const m = moment(schedule);
+    let dayNo = m.day();
+    if (dayNo === 0) dayNo = "SUN";
+    else if (dayNo === 1) dayNo = "MON";
+    else if (dayNo === 2) dayNo = "TUE";
+    else if (dayNo === 3) dayNo = "WED";
+    else if (dayNo === 4) dayNo = "THRU";
+    else if (dayNo === 5) dayNo = "FRI";
+    else if (dayNo === 6) dayNo = "SAT";
+    let { data: availabilityData } = await axios.get(
+      config.staff +
+        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}`
+    );
+
+    availabilityData = await this.StaffLeaves(availabilityData);
+
+    // const { availableSlots } = this.state;
+    for (let i = 0; i < availabilityData.length; i++) {
+      for (let j = 0; j < slotTime.length; j++) {
+        let checkSlot = track.some(
+          (x) => x.timeSlot === slotTime[j] && x.BookedSlot === false
+        );
+        if (checkSlot) continue;
+
+        let staffContainsSlot = availabilityData[i].availableTime.some(
+          (staff) => staff.time === slotTime[j] && staff.value === true
+        );
+        let slotBooked = false;
+        if (staffContainsSlot) {
+          //   //Checking staff member's duty booked
+          //   //On a slot or not.Slots are predefined
+          //   //Staff members are sent to this function one by one
+
+          const slotBookedOfStaffMember = await this.getBookedSlots(
+            availabilityData[i],
+            slotTime[j]
+          );
+
+          if (slotBookedOfStaffMember) {
+            //Slot is booked
+            //We send false here
+            //So on that basis cross could be represented
+
+            //Checking if this timeSlot exists and tick is there
+            let check = track.some(
+              (x) => x.timeSlot === slotTime[j] && x.BookedSlot === false
+            );
+
+            //Checking if timeSlots exists and slot is booked means cross
+            let check1 = track.some(
+              (x) => x.timeSlot === slotTime[j] && x.BookedSlot === true
+            );
+            if (!check && !check1) {
+              track.push({
+                timeSlot: slotTime[j],
+                name: availabilityData[i].fullname,
+                rating: availabilityData[i].rating,
+                distance: "1KM",
+                BookedSlot: true,
+              });
+            }
+            slotBooked = true;
+          }
+
+          if (!slotBooked) {
+            //Slot is not booked
+            //We send true here
+            //So on that basis tick could be represented
+            //If any staff member is avaialable at a paticular slot
+            //we just show tick as available there and push that time slot
+            //in an array.Next time we don't need a check on that slot
+
+            let check = track.some(
+              (x) => x.timeSlot === slotTime[j] && x.BookedSlot === false
+            );
+
+            let check1 = track.some(
+              (x) => x.timeSlot === slotTime[j] && x.BookedSlot === true
+            );
+            if (!check && !check1) {
+              track.push({
+                timeSlot: slotTime[j],
+                BookedSlot: false,
+                free: "free",
+                name: availabilityData[i].fullname,
+                rating: availabilityData[i].rating,
+                distance: "1KM",
+
+                BookedSlot: true,
+              });
+            }
+            if (check1) {
+              if (track.length > 0) {
+                for (let t = 0; t < track.length; t++) {
+                  if (
+                    track[t].timeSlot === slotTime[j] &&
+                    track[t].BookedSlot === true
+                  ) {
+                    track[t].timeSlot = slotTime[j];
+                    track[t].BookedSlot = false;
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          //Slot doesn't lie between staff member timing
+          //We send false here
+          //So on that basis cross could be represented
+
+          let check = track.some(
+            (x) => x.timeSlot === slotTime[j] && x.BookedSlot === false
+          );
+
+          let check1 = track.some(
+            (x) => x.timeSlot === slotTime[j] && x.BookedSlot === true
+          );
+          if (!check && !check1) {
+            track.push({
+              timeSlot: slotTime[j],
+              BookedSlot: true,
+              name: availabilityData[i].fullname,
+              rating: availabilityData[i].rating,
+              distance: "1KM",
+            });
+          }
+        }
+      }
+    }
+
+    if (track.length > 0) {
+      const timeSlots = track.filter((time) => time.BookedSlot === false);
+      let requestTime = [
+        {
+          _id: "12AM to 3AM",
+          name: "12 AM to 3 AM",
+        },
+        {
+          _id: "3AM to 6AM",
+          name: "3 AM to 6 AM",
+        },
+
+        {
+          _id: "6AM to 9AM",
+          name: "6 AM to 9 AM",
+        },
+        {
+          _id: "9AM to 12PM",
+          name: "9 AM to 12 PM",
+        },
+        {
+          _id: "12PM to 3PM",
+          name: "12 PM to 3 PM",
+        },
+        {
+          _id: "3PM to 6PM",
+          name: "3 PM to 6 PM",
+        },
+        {
+          _id: "6PM to 9PM",
+          name: "6 PM to 9 PM",
+        },
+        {
+          _id: "9PM to 12AM",
+          name: "9 PM to 12 AM",
+        },
+      ];
+      let filterReqTime = [];
+      for (let i = 0; i < timeSlots.length; i++) {
+        for (let j = 0; j < requestTime.length; j++) {
+          if (timeSlots[i].timeSlot === requestTime[j]._id)
+            filterReqTime.push(requestTime[j]);
+        }
+      }
+      global.availableSlots = filterReqTime;
+
+      // for (let i = 0; i < filterReqTime; i++) {}
+
+      console.log("task!! ...");
+      console.log("available staff:::", filterReqTime);
+      // this.setState({ requestTime: filterReqTime });
+      this.filterTimeGonePastToday(schedule, filterReqTime);
+
+      // this.setState({ requestTime: filterReqTime });
+    } else this.setState({ availabeIndependentStaff: availabilityData });
+  }
+
   //Sets avaialable Staff in check availability popover
   // based on organization and service asked.
   //At schedule a service page
@@ -819,9 +1044,10 @@ class Form extends React.Component {
       else if (dayNo === 6) dayNo = "SAT";
       const { service: serviceGot } = doctorForm;
       const { organization: orgGot } = doctorForm;
+      const { city } = doctorForm;
       const { data } = await axios.get(
         config.staff +
-          `?day=${dayNo}&service=${serviceGot}&organization=${orgGot}`
+          `?day=${dayNo}&service=${serviceGot}&organization=${orgGot}&city=${city}`
       );
 
       // let filteredStaff_ = [];
@@ -862,9 +1088,14 @@ class Form extends React.Component {
       }
       temp1.push(temp[0]);
       for (let i = 0; i < temp.length; i++) {
+        let foundDup = false;
         for (let j = 0; j < temp1.length; j++) {
-          if (temp1[j].serviceName !== temp[i].serviceName) temp1.push(temp[j]);
+          if (temp1[j].serviceName === temp[i].serviceName) {
+            foundDup = true;
+            break;
+          }
         }
+        if (!foundDup) temp1.push(temp[i]);
       }
 
       this.setState({ Conditionalservices: temp1 });
@@ -1019,11 +1250,13 @@ class Form extends React.Component {
 
     this.setState({ doctorForm, errors });
 
-    const { service, organization, schedule } = doctorForm;
+    const { service, organization, schedule, city } = doctorForm;
+
     if (
-      (input.name === "schedule" && service && organization) ||
-      (input.name === "service" && schedule && organization) ||
-      (input.name === "organization" && service && schedule)
+      (input.name === "schedule" && service && organization && city) ||
+      (input.name === "service" && schedule && organization && city) ||
+      (input.name === "organization" && service && schedule && city) ||
+      (input.name === "city" && service && organization && schedule)
     ) {
       this.FilterNotAvailableSlots(schedule, service);
       this.filterTime(schedule);
