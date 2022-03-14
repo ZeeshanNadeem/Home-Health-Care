@@ -22,6 +22,7 @@ import LoadingBar from "react-top-loading-bar";
 import PageNotFound from "./Components/NotFound/PageNotFound";
 import AvailableDays from "./Components/SignUp/SignUpPage/AvailableDays";
 import AboutUs from "./Components/AboutUS/AboutUs";
+import Maps from "./Components/MapsWithRadius/Maps";
 
 const App = () => {
   const isLoggedIn = localStorage.getItem("token");
@@ -176,6 +177,10 @@ const App = () => {
       <Route
         path="/About/Us"
         render={(props) => <AboutUs setProgress={setProgress} {...props} />}
+      />
+      <Route
+        path="/maps"
+        render={(props) => <Maps setProgress={setProgress} {...props} />}
       />
     </article>
   );

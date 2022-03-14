@@ -15,6 +15,7 @@ const Home = ({ setProgress }) => {
     let userGot = "";
     if (jwt) {
       userGot = jwtDecode(jwt);
+      console.log("hone::", userGot);
     }
 
     if (

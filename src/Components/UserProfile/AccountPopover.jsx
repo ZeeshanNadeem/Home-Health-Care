@@ -19,8 +19,12 @@ export default function AccountPopOver({ user }) {
       <ul>
         <li className="nav-li" onClick={handleClick}>
           <span className="current-user">
-            <Avatar alt={user.fullName} src="." className="avatar" />
-            <p className="logged-in-user">{user.fullName}</p>
+            <Avatar
+              alt={user.firstName || user.username}
+              src="."
+              className="avatar"
+            />
+            <p className="logged-in-user">{user.firstName || user.username}</p>
           </span>
         </li>
       </ul>

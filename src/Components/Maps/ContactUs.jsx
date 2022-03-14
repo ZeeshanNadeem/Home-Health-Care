@@ -17,6 +17,7 @@ class ContactUs extends React.Component {
     state: "",
     zoom: 15,
     height: 400,
+    markers: [],
     mapPosition: {
       lat: 0,
       lng: 0,
@@ -27,12 +28,31 @@ class ContactUs extends React.Component {
     },
   };
 
+  mapClicked = (event) => {
+    const { markers } = this.state;
+    this.setState({
+      mapPosition: {
+        lat: event.lat,
+        lng: event.lng,
+      },
+      // markers: [
+      //   {
+      //     position: event.latLng,
+      //     key: Date.now(),
+      //     defaultAnimation: 2,
+      //   },
+      //   ...markers,
+      // ],
+    });
+  };
+
   render() {
     const MapWithAMarker = withScriptjs(
       withGoogleMap((props) => (
         <GoogleMap
           defaultZoom={10.2}
           defaultCenter={{ lat: 33.738045, lng: 73.084488 }}
+          onClick={this.mapClicked}
           onGoogleApiLoaded={({ map, maps }) =>
             new google.maps.Circle({
               strokeColor: "#FF0000",
@@ -47,6 +67,13 @@ class ContactUs extends React.Component {
           }
         >
           {/* <Marker position={{ lat: 33.738045, lng: 73.084488 }} /> */}
+          <Marker
+            title={"Geolocation"}
+            position={{
+              lat: this.state.mapPosition.lat,
+              lng: this.state.mapPosition.lng,
+            }}
+          />
           <Circle center={{ lat: 33.738045, lng: 73.084488 }} radius={100} />
           <Circle center={{ lat: 33.626057, lng: 73.071442 }} radius={7000} />
         </GoogleMap>
@@ -60,7 +87,7 @@ class ContactUs extends React.Component {
         loadingElement={<div style={{ height: `100%` }} />}
         containerElement={<div style={{ height: `400px` }} />}
         mapElement={<div style={{ height: `100%` }} />}
-      />
+      ></MapWithAMarker>
     );
   }
 }

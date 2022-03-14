@@ -23,6 +23,7 @@
     "@mui/styled-engine-sc": "^5.0.0",
     "@mui/styles": "^5.0.2",
     "@pdftron/webviewer": "^8.2.0",
+    "@reach/combobox": "^0.16.5",
     "@react-google-maps/api": "^2.7.0",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
@@ -61,6 +62,7 @@
     "react-toastify": "^8.0.3",
     "react-top-loading-bar": "^2.1.0",
     "styled-components": "^5.3.1",
+    "use-places-autocomplete": "^2.0.0",
     "web-vitals": "^1.1.2"
   },
   "scripts": {

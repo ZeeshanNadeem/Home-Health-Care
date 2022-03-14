@@ -18,6 +18,7 @@ class NavBar extends Component {
       const jwt = localStorage.getItem("token");
       if (jwt) {
         const user = jwtDecode(jwt);
+        console.log("user::", user.username);
         this.setState({ user });
       }
     } catch (ex) {}
@@ -34,8 +35,13 @@ class NavBar extends Component {
     return (
       <li className="nav-li">
         <span className="current-user">
-          <Avatar alt={user.fullName} src="." className="avatar" />
-          <p className="logged-in-user">{user.fullName}</p>
+          <Avatar
+            alt={user.username || user.firstName}
+            src="."
+            className="avatar"
+          />
+          {console.log("user....:", user.username)}
+          <p className="logged-in-user">{user.firstName || user.username}</p>
         </span>
       </li>
     );

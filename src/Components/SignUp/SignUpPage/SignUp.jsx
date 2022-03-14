@@ -13,8 +13,9 @@ import { Link } from "react-router-dom";
 class SignUp extends Form {
   state = {
     doctorForm: {
-      fullName: "",
-      dateOfBirth: "",
+      firstName: "",
+      lastName: "",
+      username: "",
       email: "",
       password: "",
       isOrganizationAdmin: false,
@@ -23,8 +24,9 @@ class SignUp extends Form {
   };
 
   schema = {
-    fullName: Joi.string().min(5).max(50).required(),
-    dateOfBirth: Joi.string().required(),
+    firstName: Joi.string().min(5).max(50).required(),
+    lastName: Joi.string().min(5).max(50).required(),
+    username: Joi.string().required(),
     email: Joi.string().min(5).max(255).required().email(),
     password: Joi.string().min(5).max(255).required(),
     isOrganizationAdmin: Joi.boolean().required(),
@@ -68,19 +70,25 @@ class SignUp extends Form {
                 </h1>
               </header>
               <article className="signup-label">
-                {this.renderLabel("FULL NAME", "fname")}
+                {this.renderLabel("First Name", "fname")}
               </article>
               <article>
-                {this.renderInput("text", "fullName", "fullName")}
+                {this.renderInput("text", "firstName", "firstName")}
+              </article>
+              <article className="signup-label">
+                {this.renderLabel("Last Name", "lname")}
+              </article>
+              <article>
+                {this.renderInput("text", "lastName", "lastName")}
               </article>
               <article className="signup-dob signup-label">
-                {this.renderLabel("Date of Birth", "dob")}
+                {this.renderLabel("UserName", "username")}
               </article>
               <article>
                 {this.renderInput(
-                  "date",
-                  "dateOfBirth",
-                  "dateOfBirth",
+                  "text",
+                  "username",
+                  "username",
                   "",
                   "",
                   dobSignUpMaxDate
