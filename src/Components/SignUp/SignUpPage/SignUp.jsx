@@ -13,9 +13,9 @@ import { Link } from "react-router-dom";
 class SignUp extends Form {
   state = {
     doctorForm: {
-      firstName: "",
-      lastName: "",
-      username: "",
+      fullName: "",
+      // lastName: "",
+      // username: "",
       email: "",
       password: "",
       isOrganizationAdmin: false,
@@ -24,9 +24,7 @@ class SignUp extends Form {
   };
 
   schema = {
-    firstName: Joi.string().min(5).max(50).required(),
-    lastName: Joi.string().min(5).max(50).required(),
-    username: Joi.string().required(),
+    fullName: Joi.string().min(5).max(50).required(),
     email: Joi.string().min(5).max(255).required().email(),
     password: Joi.string().min(5).max(255).required(),
     isOrganizationAdmin: Joi.boolean().required(),
@@ -70,12 +68,12 @@ class SignUp extends Form {
                 </h1>
               </header>
               <article className="signup-label">
-                {this.renderLabel("First Name", "fname")}
+                {this.renderLabel("Full Name", "fname")}
               </article>
               <article>
-                {this.renderInput("text", "firstName", "firstName")}
+                {this.renderInput("text", "fullName", "fullName")}
               </article>
-              <article className="signup-label">
+              {/* <article className="signup-label">
                 {this.renderLabel("Last Name", "lname")}
               </article>
               <article>
@@ -93,7 +91,7 @@ class SignUp extends Form {
                   "",
                   dobSignUpMaxDate
                 )}
-              </article>
+              </article> */}
               <article className="signup-label">
                 {this.renderLabel("Email", "email")}
               </article>

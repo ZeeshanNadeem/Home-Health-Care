@@ -36,12 +36,12 @@ class NavBar extends Component {
       <li className="nav-li">
         <span className="current-user">
           <Avatar
-            alt={user.username || user.firstName}
+            alt={user.fullName}
             src="."
             className="avatar"
           />
           {console.log("user....:", user.username)}
-          <p className="logged-in-user">{user.firstName || user.username}</p>
+          <p className="logged-in-user">{user.fullName}</p>
         </span>
       </li>
     );

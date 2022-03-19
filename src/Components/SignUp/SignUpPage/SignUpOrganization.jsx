@@ -10,6 +10,9 @@ import axios from "axios";
 import config from "../../Api/config.json";
 import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
+
 
 import { useForm } from "antd/lib/form/Form";
 class SignUpAsOrganization extends Form {
@@ -313,6 +316,7 @@ class SignUpAsOrganization extends Form {
                   Sign Up
                 </h1>
               </header>
+
               <article className="signup-org-group">
                 <article>
                   <article className="signup-label" style={{ margin: "0" }}>
@@ -330,6 +334,7 @@ class SignUpAsOrganization extends Form {
                     {this.renderInput("text", "email", "email")}
                   </article>
                 </article>
+
               </article>
               {/* <article
                 className="signup-dob signup-label"
@@ -458,19 +463,26 @@ class SignUpAsOrganization extends Form {
               </article> */}
 
               <article
+              
                 className="signup-org-group"
                 style={{
                   display: "flex",
                   justifyContent: "start",
                 }}
               >
-                <article>
+                   
+
+
+
+              <article>
+
                   <article className="signup-label" style={{ margin: "0" }}>
                     {this.renderLabel("City", "city")}
                   </article>
+
                   <article
                     className="txtField-signup-org"
-                    style={{ width: "34rem" }}
+                    // style={{ width: "34rem" }}
                   >
                     {this.renderDropDown(
                       "City",
@@ -479,8 +491,36 @@ class SignUpAsOrganization extends Form {
                       "city",
                       "Select Your City"
                     )}
-                  </article>
                 </article>
+
+               
+                
+
+              </article>
+
+              <article className="second-item">
+                      <article className="signup-label" style={{ margin: "0" }}>
+                        {this.renderLabel("Set Your Service Locality", "serviceLocality")}
+                      </article>
+
+                      <div style={{marginLeft:"auto",marginRight:"auto"}}>
+                      <Link to="/maps"
+                     target="_blank"
+                      >
+                       Open Map
+                      <FontAwesomeIcon icon={faLocationArrow}
+                      style={{marginLeft:"1rem"}}
+                      />
+                      </Link>
+                      </div>
+                     
+
+                  </article>
+
+
+
+              
+
                 {/* <article className="signup-label">
                     {this.renderLabel("Confirm Password", "email")}
                   </article>

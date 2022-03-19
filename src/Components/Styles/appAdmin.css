@@ -382,26 +382,65 @@ main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
   border: 1px solid #000;
 }
 
-.search {
+/* Maps */
+
+/* .search {
   position: absolute;
   top: 1rem;
   display: flex;
   justify-content: center;
   width: 100%;
-  /* max-width: 400px; */
-  z-index: 10;
-}
 
-.search input {
+  z-index: 10;
+} */
+
+/* .search input {
   padding: 0.3rem;
   font-size: 1.3rem;
   width: 100%;
   border-radius: 2px;
-}
+} */
 
-.radius {
+/* .radius {
   position: absolute;
   top: 2rem;
 
   z-index: 10;
+} */
+
+.search {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 400px;
+  z-index: 10;
+}
+
+.search input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 0;
+  width: 100%;
+}
+
+.search.radius{
+outline: none;
+}
+
+
+/* cutomization-alert */
+.cutomization-alert{
+  position: absolute;
+  right: 2rem;
+  top:15rem
+
+}
+
+.alert-container{
+  display: flex;
+  justify-content: end;
+
+
 }

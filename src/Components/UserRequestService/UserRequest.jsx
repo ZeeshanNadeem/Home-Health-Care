@@ -9,6 +9,10 @@ import jwtDecode from "jwt-decode";
 import config from "../Api/config.json";
 import VaccinationPlan from "./Modal/VaccinationPlan";
 import BasicModal from "./Modal/AvailableStaffModal";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
+
 
 class UserRequestService extends Form {
   state = {
@@ -1098,6 +1102,16 @@ class UserRequestService extends Form {
                       "Please Select Your City"
                     )}
                   </article>
+                  <div style={{marginLeft:"auto",marginRight:"auto"}}>
+                      <Link to="/maps"
+                     target="_blank"
+                      >
+                       Specify Your Location Open Map
+                      <FontAwesomeIcon icon={faLocationArrow}
+                      style={{marginLeft:"1rem"}}
+                      />
+                      </Link>
+                      </div>
                 </article>
 
                 {/* schedule replace city */}
