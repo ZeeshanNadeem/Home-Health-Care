@@ -150,7 +150,7 @@ const ManageOrganizations = (props) => {
     <article className="manage-org-wrapper">
       <AddOrgModal reloadOrganzations={reloadOrganzations} />
       <ToastContainer />
-      <article className="searchBar-wrapper">
+      {organizations.length>0 && <article className="searchBar-wrapper">
         <input
           className="search-Bar"
           type="text"
@@ -162,9 +162,9 @@ const ManageOrganizations = (props) => {
           <FontAwesomeIcon icon={faSearch} style={{ marginRight: "0.6rem" }} />
           Search
         </button>
-      </article>
+      </article>}
       <article className="table-responsive table-Services organizations-table">
-        <table className="table">
+        {organizations.length>0 && <table className="table">
           <thead className="table-th assign-duty-th">
             <tr>
               <th scope="col">Organizations</th>
@@ -199,7 +199,7 @@ const ManageOrganizations = (props) => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table>}
       </article>
       {checkPages() && (
         <div className="pagination">

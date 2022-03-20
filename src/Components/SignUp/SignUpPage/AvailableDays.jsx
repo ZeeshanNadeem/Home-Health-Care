@@ -193,6 +193,7 @@ class AvailableDays extends Form {
           Rating: 0,
           RatingAvgCount: 0,
           city: global.city,
+          userID:global.userID
         };
 
         const { data: staffAdded } = await axios.post(

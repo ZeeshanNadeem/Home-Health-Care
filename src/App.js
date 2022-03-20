@@ -182,6 +182,7 @@ const App = () => {
         path="/maps"
         render={(props) => <Maps setProgress={setProgress} {...props} />}
       />
+       
     </article>
   );
 };

@@ -12,7 +12,12 @@ import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
-
+import { withRouter } from "react-router-dom";
+import { Global } from "@emotion/react";
+import { connect } from "react-redux";
+import Maps from "../../MapsWithRadius/Maps";
+import { SetLocationAction } from "../../redux/actions/Organzationlocation";
+import store from "../../../store";
 
 import { useForm } from "antd/lib/form/Form";
 class SignUpAsOrganization extends Form {
@@ -130,6 +135,7 @@ class SignUpAsOrganization extends Form {
   };
 
   async componentDidMount() {
+  
     const jwt = localStorage.getItem("token");
     if (jwt) {
       const user = jwtDecode(jwt);
@@ -145,10 +151,10 @@ class SignUpAsOrganization extends Form {
       }
     }
 
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.setState({ lat: position.coords.latitude });
-      this.setState({ lng: position.coords.longitude });
-    });
+    // navigator.geolocation.getCurrentPosition((position) => {
+    //   this.setState({ lat: position.coords.latitude });
+    //   this.setState({ lng: position.coords.longitude });
+    // });
     // const d = distance(lat, saddarLat, lng, saddatlng);
     // const t = parseInt(d);
     // setDistance(t);
@@ -160,7 +166,7 @@ class SignUpAsOrganization extends Form {
       config.apiEndPoint + "/independentServices"
     );
 
-    console.log("Organizations::", data.results);
+  
     this.setState({
       organizations: data.results,
       qualification,
@@ -184,8 +190,13 @@ class SignUpAsOrganization extends Form {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+  
+   const lat= localStorage.getItem("lat");
+   const lng= localStorage.getItem("lng");
+   const radius= localStorage.getItem("radius");
+  
     const isIndependentPerson =
-      this.state.doctorForm.OrganizationID === "6223295de22df25d9a0dd773"
+      this.state.doctorForm.OrganizationID === "6237270f9179e6123218a579"
         ? true
         : false;
 
@@ -233,6 +244,10 @@ class SignUpAsOrganization extends Form {
             this.state.doctorForm.OrganizationID
           );
           formData.append("city", this.state.doctorForm.city);
+          formData.append("lat", lat);
+          formData.append("lng", lng);
+          formData.append("radius", radius);
+
           global.selectedFile = this.state.doctorForm.selectedFile;
           const response = await signingUp(formData);
           localStorage.setItem("token", response.headers["x-auth-token"]);
@@ -268,6 +283,7 @@ class SignUpAsOrganization extends Form {
         }
       }
     } else if (!isIndependentPerson) {
+      console.log("props:",this.props);
       const { fullName, email, password, isOrganizationAdmin, OrganizationID,city } =
         this.state.doctorForm;
       const obj = {
@@ -275,16 +291,21 @@ class SignUpAsOrganization extends Form {
         email: email,
         password: password,
         isOrganizationAdmin: isOrganizationAdmin,
-        lat: this.state.lat,
-        lng: this.state.lng,
+        lat: lat,
+        lng: lng,
+        radius:radius,
         OrganizationID: OrganizationID,
-        city:city
+        city:city,
+
       };
 
       if (errors) return;
       try {
         const response = await signingUp(obj);
         localStorage.setItem("token", response.headers["x-auth-token"]);
+        localStorage.removeItem("lat");
+        localStorage.removeItem("lng");
+        localStorage.removeItem("radius");
         window.location = "/Home";
       } catch (ex) {
         if (ex.response && ex.response.status === 400) {
@@ -383,7 +404,7 @@ class SignUpAsOrganization extends Form {
               </article>
 
               {this.state.doctorForm.OrganizationID ===
-                "6223295de22df25d9a0dd773" && (
+                "6237270f9179e6123218a579" && (
                 <article
                   // style={{ marginTop: "0.5rem" }}
                   className="signup-org-group servies-org"
@@ -426,7 +447,7 @@ class SignUpAsOrganization extends Form {
               )}
 
               {this.state.doctorForm.OrganizationID ===
-                "6223295de22df25d9a0dd773" && (
+                "6237270f9179e6123218a579" && (
                 <article>
                   <article
                     className="txt-upload-label signup-label"
@@ -555,4 +576,20 @@ class SignUpAsOrganization extends Form {
   }
 }
 
-export default SignUpAsOrganization;
+
+const mapStateToProps = (state) => {
+  console.log("state:::",state);
+  return {
+      Organizationlocation: state.SetLocation,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+      setLocation: (location) => dispatch(SetLocationAction(location)),
+  };
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(SignUpAsOrganization)
+);

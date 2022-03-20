@@ -22,6 +22,10 @@ import {
 } from "@reach/combobox";
 import { Form, Container, Row, Col } from "react-bootstrap";
 import { Circle } from '@react-google-maps/api';
+import { Global } from "@emotion/react";
+import { useSelector,useDispatch } from "react-redux";
+import { SetLocationAction } from "../redux/actions/Organzationlocation";
+
 
 const mapContainerStyle = {
   width: "100vw",
@@ -43,6 +47,8 @@ const options = {
 };
 
 const Maps = () => {
+  const myState=useSelector((state)=>state.SetLocation);
+  const dispatch=useDispatch();
   const libraries = ["places"];
   // const { isLoaded, loadError } = useLoadScript({
   //   googleMapsApiKey: process.env.React_APP_GOOGLE_MAPS_API_KEY,
@@ -74,6 +80,17 @@ const Maps = () => {
 
   const handleRadius=(e)=>{
     if(e.currentTarget.value!="" && markers.length>0){
+
+      localStorage.setItem("lat",markers[0].lat);
+      localStorage.setItem("lng",markers[0].lng);
+      localStorage.setItem("radius",e.currentTarget.value);
+   
+        // dispatch(SetLocationAction({
+        //   lat:markers[0].lat,
+        //   lng:markers[0].lng,
+        //   radius:e.currentTarget.value
+        // }))
+      
       setCreateRadius(true);
       setAlert(true);
     }
@@ -106,6 +123,7 @@ const Maps = () => {
   
     </div>
 
+      {/* <Temp/> */}
       <LoadScript googleMapsApiKey={config.apiKey} libraries={libraries}>
         <GoogleMap
           mapContainerStyle={mapContainerStyle}

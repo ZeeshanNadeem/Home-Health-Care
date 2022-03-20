@@ -11,10 +11,18 @@ import { BrowserRouter } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import "../src/Components/Styles/footer.css";
 import "../src/Components/Styles/appAdmin.css";
+import { Provider } from "react-redux";
+import store from "./store";
+
+
+// store.subscribe(()=>console.log(store.getState()))
+
 
 ReactDOM.render(
   <BrowserRouter>
+  <Provider store={store}>
     <App />
+    </Provider>
   </BrowserRouter>,
 
   document.getElementById("root")
