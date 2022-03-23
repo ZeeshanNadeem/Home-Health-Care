@@ -268,6 +268,7 @@ class NurseForm extends Form {
       RatingAvgCount: 0,
       lat: user.lat,
       lng: user.lng,
+      radius:user.radius
 
       // email: doctorForm.email,
     };
@@ -358,7 +359,7 @@ class NurseForm extends Form {
 
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
-    console.log("admin signed:", user);
+ 
     let { data: services } = await axios.get(
       `http://localhost:3000/api/services?organization=${user.Organization._id}`
     );

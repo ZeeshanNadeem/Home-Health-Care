@@ -178,6 +178,10 @@ class AvailableDays extends Form {
           config.apiEndPoint + "/services",
           serviceObj
         );
+        const lat= localStorage.getItem("lat");
+        const lng= localStorage.getItem("lng");
+        const radius= localStorage.getItem("radius");
+    
         const addStaffMember = {
           fullName: global.staffDetails.fullName,
           email: global.staffDetails.email,
@@ -193,8 +197,13 @@ class AvailableDays extends Form {
           Rating: 0,
           RatingAvgCount: 0,
           city: global.city,
-          userID:global.userID
+         
+          lat:lat,
+          lng:lng,
+          radius:radius
         };
+
+       
 
         const { data: staffAdded } = await axios.post(
           `http://localhost:3000/api/staff?dontCheck=true&signUpOrg=true`,
@@ -206,6 +215,9 @@ class AvailableDays extends Form {
           // staffMemberID: response.data._id
           staffMemberID: global.userID,
         });
+        localStorage.removeItem("lat");
+        localStorage.removeItem("lng");
+        localStorage.removeItem("radius");
         window.location = "/Home";
         // }
       } catch (ex) {

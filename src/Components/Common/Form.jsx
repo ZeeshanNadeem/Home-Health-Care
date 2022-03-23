@@ -516,7 +516,7 @@ class Form extends React.Component {
 
       this.setState({ requestTime });
     } else this.setState({ requestTime });
-    console.log("request Time:", requestTime);
+   
   };
 
   //when service,organization,date has been
@@ -635,12 +635,16 @@ class Form extends React.Component {
     else if (dayNo === 5) dayNo = "FRI";
     else if (dayNo === 6) dayNo = "SAT";
 
+    const lat= localStorage.getItem("lat")
+    const lng= localStorage.getItem("lng")
+
+    if(lat && lng){
     let { data: availabilityData } = await axios.get(
       config.staff +
-        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}`
+        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${lat}&lng=${lng}`
     );
 
-    console.log("city :::", this.state.doctorForm.city);
+   
     let { data: allStaff } = await axios.get(
       config.staff +
         `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&allStaff=true`
@@ -805,11 +809,12 @@ class Form extends React.Component {
 
       // this.setState({ requestTime: filterReqTime });
     } else this.setState({ requestTime: availabilityData });
+
+  }
   };
 
   //Task
   //Filter all Independent employees available
-
   async FilterAllIndependentEmployees(schedule, serviceSelected) {
     const jwt = localStorage.getItem("token");
     let user = "";
@@ -1045,9 +1050,12 @@ class Form extends React.Component {
       const { service: serviceGot } = doctorForm;
       const { organization: orgGot } = doctorForm;
       const { city } = doctorForm;
+      const lat= localStorage.getItem("lat")
+      const lng= localStorage.getItem("lng")
+      if(lat && lng){
       const { data } = await axios.get(
         config.staff +
-          `?day=${dayNo}&service=${serviceGot}&organization=${orgGot}&city=${city}`
+          `?day=${dayNo}&service=${serviceGot}&organization=${orgGot}&city=${city}&lat=${lat}&lng=${lng}`
       );
 
       // let filteredStaff_ = [];
@@ -1057,7 +1065,7 @@ class Form extends React.Component {
       // filteredStaff_ = await this.StaffBookedSlots(filteredStaff);
 
       this.setState({ availabilityData: filteredStaff });
-
+      }
       // if (filteredStaff.length > 0)
       //   this.setState({ availabilityData: filteredStaff });
       // else this.setState({ availabilityData: data });

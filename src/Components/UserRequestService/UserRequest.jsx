@@ -1,7 +1,7 @@
 import React from "react";
 import Form from "../Common/Form";
 import axios from "axios";
-import Joi from "joi-browser";
+import Joi, { errors } from "joi-browser";
 import moment from "moment";
 import CheckAvailability from "./Modal/CheckAvailability";
 import { toast, ToastContainer } from "react-toastify";
@@ -75,10 +75,18 @@ class UserRequestService extends Form {
         name: "9 PM to 12 AM",
       },
     ],
+    serviceLocalityError:"",
     availableSlots: [],
     lat: "",
     lng: "",
   };
+
+  constructor(props){
+    super(props);
+    localStorage.removeItem("lat");
+    localStorage.removeItem("lng");
+    localStorage.removeItem("radius");
+  }
   async componentDidMount() {
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({ lat: position.coords.latitude });
@@ -99,7 +107,7 @@ class UserRequestService extends Form {
 
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
-    console.log("user req user logged In::", user.city);
+  
     const isUser =
       !user.isAppAdmin &&
       !user.staffMember &&
@@ -672,6 +680,8 @@ class UserRequestService extends Form {
     const { organization, service, city } = this.state.doctorForm;
     const m = moment(this.state.doctorForm.schedule);
     let dayNo = m.day();
+    const lat= localStorage.getItem("lat")
+    const lng= localStorage.getItem("lng")
     if (dayNo === 0) dayNo = "SUN";
     else if (dayNo === 1) dayNo = "MON";
     else if (dayNo === 2) dayNo = "TUE";
@@ -679,22 +689,14 @@ class UserRequestService extends Form {
     else if (dayNo === 4) dayNo = "THRU";
     else if (dayNo === 5) dayNo = "FRI";
     else if (dayNo === 6) dayNo = "SAT";
+
+    if(lat && lng){
     const { data: staff } = await axios.get(
       config.staff +
-        `/?day=${dayNo}&service=${service}&organization=${organization}&city=${city}`
+        `/?day=${dayNo}&service=${service}&organization=${organization}&city=${city}&lat=${lat}&lng=${lng}`
     );
-
-    // availableDays
-
-    // const staff = await Staff.find({
-    //   "staffSpeciality._id": req.query.service,
-    //   "Organization._id": req.query.organization,
-    // }).and([
-    //   { "availableDays.name": req.query.day },
-    //   { "availableDays.value": true },
-    // ]);
-
-    // const { data: staff } = await axios.get(config.staff);
+ 
+    
 
     const { staffLeaves } = this.state;
 
@@ -844,20 +846,15 @@ class UserRequestService extends Form {
       }
     }
 
-    tempArray.sort((a, b) => (a.distance > b.distance ? 1 : -1));
+    // tempArray.sort((a, b) => (a.distance > b.distance ? 1 : -1));
 
     //Assigning duty on the basis of rating
     if (tempArray.length > 0) {
-      let maxIndex = null;
-      for (let c = 0; c < tempArray.length - 1; c++) {
-        for (let k = 1; k < tempArray.length; k++) {
-          if (tempArray[c].Rating > tempArray[k].Rating) {
-            maxIndex = c;
-          } else maxIndex = k;
-        }
-      }
+   
 
-      if (!maxIndex) maxIndex = 0;
+      tempArray.sort((a, b) => (tempArray.Rating > tempArray.Rating ? -1 : 1));
+
+      // if (!maxIndex) maxIndex = 0;
       if (doctorForm.vaccination) {
         let temp = new Date(this.state.doctorForm.schedule);
         const FullDate1 = new Date(new Date().setDate(temp.getDate() + 37));
@@ -907,7 +904,7 @@ class UserRequestService extends Form {
         const userRequest = {};
         userRequest.fullName = doctorForm.fullname;
         userRequest.userID = this.state.user._id;
-        userRequest.staffMemberID = tempArray[maxIndex]._id;
+        userRequest.staffMemberID = tempArray[0]._id;
         userRequest.OrganizationID = doctorForm.organization;
         userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
         userRequest.vaccination = doctorForm.vaccination;
@@ -931,7 +928,7 @@ class UserRequestService extends Form {
           const userRequest = {};
           userRequest.fullName = doctorForm.fullname;
           userRequest.userID = this.state.user._id;
-          userRequest.staffMemberID = tempArray[maxIndex]._id;
+          userRequest.staffMemberID = tempArray[0]._id;
           userRequest.OrganizationID = doctorForm.organization;
           userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
           userRequest.vaccination = doctorForm.vaccination;
@@ -960,7 +957,7 @@ class UserRequestService extends Form {
         const userRequest = {};
         userRequest.fullName = doctorForm.fullname;
         userRequest.userID = this.state.user._id;
-        userRequest.staffMemberID = tempArray[maxIndex]._id;
+        userRequest.staffMemberID = tempArray[0]._id;
         userRequest.OrganizationID = doctorForm.organization;
         userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
         userRequest.vaccination = doctorForm.vaccination;
@@ -987,6 +984,8 @@ class UserRequestService extends Form {
       toast.error("No Availability For the Specified Time!");
       toast.error("Please Check Availability and then Schedule!");
     }
+
+  }
     // if (gotSlotBooked || !liesBetween || staffOnLeave ) {
     //   toast.error("No Availability For the Specified Time!");
     //   toast.error("Please Check Availability and then Schedule!");
@@ -995,6 +994,17 @@ class UserRequestService extends Form {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+
+    const lat= localStorage.getItem("lat");
+    const lng= localStorage.getItem("lng");
+    const radius= localStorage.getItem("radius");
+ 
+    if(lat && lng && radius)
+    this.setState({serviceLocalityError:""})
+    else if(!lat || !lng && !radius)
+    this.setState({serviceLocalityError:"Location is required"})
+
+
     let errors = this.validate();
     if (this.state.servicePlan === "None") {
       delete errors["noOfMeetings"];
@@ -1112,6 +1122,11 @@ class UserRequestService extends Form {
                       />
                       </Link>
                       </div>
+                      {this.state.serviceLocalityError &&
+                      !this.state.errors.city &&
+                      <p className="error">
+                     {this.state.serviceLocalityError}
+                      </p>}
                 </article>
 
                 {/* schedule replace city */}
@@ -1183,7 +1198,7 @@ class UserRequestService extends Form {
                     <article
                       className={`user-request-input-wrapper ${this.state.errorClass}`}
                     >
-                      <div>
+                      {/* <div>
                         <CheckAvailability
                           availabilityData={availabilityData}
                           userScheduledDate={schedule}
@@ -1223,7 +1238,7 @@ class UserRequestService extends Form {
                             }
                           />
                         </article>
-                      </div>
+                      </div> */}
                     </article>
                   </article>
                   {/* City */}

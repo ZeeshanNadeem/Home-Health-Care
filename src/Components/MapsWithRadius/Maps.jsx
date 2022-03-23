@@ -25,7 +25,7 @@ import { Circle } from '@react-google-maps/api';
 import { Global } from "@emotion/react";
 import { useSelector,useDispatch } from "react-redux";
 import { SetLocationAction } from "../redux/actions/Organzationlocation";
-
+import GetCurrentUser from "../CurrentUser/GetCurrentUser";
 
 const mapContainerStyle = {
   width: "100vw",
@@ -45,11 +45,11 @@ const options = {
   disableDefaultUI: true,
   zoomControl: true,
 };
-
+const libraries = ["places"];
 const Maps = () => {
   const myState=useSelector((state)=>state.SetLocation);
   const dispatch=useDispatch();
-  const libraries = ["places"];
+  
   // const { isLoaded, loadError } = useLoadScript({
   //   googleMapsApiKey: process.env.React_APP_GOOGLE_MAPS_API_KEY,
   //   libraries,
@@ -59,6 +59,8 @@ const Maps = () => {
   const [radius, setRadius] = React.useState(null);
   const [createRadius, setCreateRadius] = React.useState(false);
   const [showAlert, setAlert] = React.useState(false);
+  const user=GetCurrentUser();
+  console.log("currentUser:",user);
 
   const mapRef = React.useRef();
   const onMapLoad = React.useCallback((map) => {
@@ -74,6 +76,14 @@ const Maps = () => {
         time: new Date(),
       },
     ]);
+    if(user){
+      setAlert(true);
+      localStorage.setItem("lat",event.latLng.lat());
+      localStorage.setItem("lng", event.latLng.lng());
+  
+   
+    }
+    
   }, []);
 
  
@@ -112,7 +122,11 @@ const Maps = () => {
   return (
     <div>
       {/* <Search /> */}
+      {/* !user.isAppAdmin &&
+        user.isOrganizationAdmin === "false" &&
+        !user.staffMember ? */}
 
+     {!user  &&
       <div className="search radius">
      
      <input type="text"
@@ -121,10 +135,12 @@ const Maps = () => {
      />
         
   
-    </div>
+    </div>}
 
       {/* <Temp/> */}
-      <LoadScript googleMapsApiKey={config.apiKey} libraries={libraries}>
+      <LoadScript googleMapsApiKey={config.apiKey} 
+      libraries={libraries}
+      >
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
           zoom={12}

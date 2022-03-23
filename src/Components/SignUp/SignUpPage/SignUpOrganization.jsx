@@ -34,8 +34,10 @@ class SignUpAsOrganization extends Form {
       serviceOrg_: "",
       qualification: "",
       city: "",
+   
       // selectedFile: null,
     },
+    serviceLocalityError:"",
     errors: {},
     selectedFile: null,
     organizations: [],
@@ -112,13 +114,14 @@ class SignUpAsOrganization extends Form {
   };
 
   schema = {
-    fullName: Joi.string().min(5).max(50).required(),
+    fullName: Joi.string().required(),
     // dateOfBirth: Joi.string().required(),
     email: Joi.string().required().email(),
     password: Joi.string().min(5).max(255).required(),
     isOrganizationAdmin: Joi.boolean().required(),
     OrganizationID: Joi.string().required(),
-    city: Joi.string(),
+    city: Joi.string().required(),
+    
 
     // price: Joi.string().required(),
 
@@ -134,6 +137,12 @@ class SignUpAsOrganization extends Form {
         : Joi.string().optional().label("Qualification"),
   };
 
+  constructor(props){
+    super(props);
+    localStorage.removeItem("lat");
+    localStorage.removeItem("lng");
+    localStorage.removeItem("radius");
+  }
   async componentDidMount() {
   
     const jwt = localStorage.getItem("token");
@@ -194,6 +203,9 @@ class SignUpAsOrganization extends Form {
    const lat= localStorage.getItem("lat");
    const lng= localStorage.getItem("lng");
    const radius= localStorage.getItem("radius");
+
+   if(lat && lng && radius)
+   this.setState({serviceLocalityError:""})
   
     const isIndependentPerson =
       this.state.doctorForm.OrganizationID === "6237270f9179e6123218a579"
@@ -203,6 +215,7 @@ class SignUpAsOrganization extends Form {
     global.staffDetails = this.state.doctorForm;
 
     let errors = this.validate();
+   
     if (!isIndependentPerson) {
       delete errors["qualification"];
       delete errors["serviceOrg_"];
@@ -210,7 +223,8 @@ class SignUpAsOrganization extends Form {
         !errors.fullName &&
         !errors.email &&
         !errors.password &&
-        !errors.OrganizationID
+        !errors.OrganizationID &&
+        !errors.city 
       ) {
         errors = null;
       }
@@ -218,7 +232,12 @@ class SignUpAsOrganization extends Form {
 
     if (isIndependentPerson) this.GenerateFileNotUploadError();
 
-    this.setState({ errors: errors || {} });
+    if(errors){
+      this.setState({ errors: errors  });
+      return;
+    }
+   
+    
 
     if (!errors && this.state.selectedFile) {
       try {
@@ -276,14 +295,19 @@ class SignUpAsOrganization extends Form {
       } catch (ex) {
         if (ex.response && ex.response.status === 400) {
           const error = { ...this.state.errors };
-
+          console.log("eXX:",ex);
+          
           error.email = ex.response.data;
 
           this.setState({ errors: error });
+        
         }
       }
     } else if (!isIndependentPerson) {
-      console.log("props:",this.props);
+      const lat=localStorage.getItem("lat");
+      const lng=localStorage.getItem("lng");
+      const radius=localStorage.getItem("radius");
+      if(lat && lng && radius){
       const { fullName, email, password, isOrganizationAdmin, OrganizationID,city } =
         this.state.doctorForm;
       const obj = {
@@ -316,6 +340,10 @@ class SignUpAsOrganization extends Form {
           this.setState({ errors: error });
         }
       }
+    }
+    else {
+          this.setState({serviceLocalityError:"Service Locality Required"})
+    }
     }
   };
   render() {
@@ -524,16 +552,24 @@ class SignUpAsOrganization extends Form {
                         {this.renderLabel("Set Your Service Locality", "serviceLocality")}
                       </article>
 
-                      <div style={{marginLeft:"auto",marginRight:"auto"}}>
+                      <div style={{marginLeft:"auto",marginRight:"auto"}}
+                      className="open-map"
+                      >
                       <Link to="/maps"
                      target="_blank"
+                     
                       >
                        Open Map
                       <FontAwesomeIcon icon={faLocationArrow}
-                      style={{marginLeft:"1rem"}}
+                      style={{marginLeft:"0.5rem"}}
                       />
                       </Link>
                       </div>
+                      {this.state.serviceLocalityError &&
+
+                      
+                        <p className="error">{this.state.serviceLocalityError}</p>}
+                      
                      
 
                   </article>

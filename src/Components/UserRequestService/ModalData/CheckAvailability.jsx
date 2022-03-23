@@ -22,7 +22,7 @@ const CheckAvailability = ({
     "9PM to 12AM",
   ]);
 
-  console.log("check Availability!!!!!::", availabilityData);
+
   let [track, setTrack] = useState([]);
 
   //Checking booked slots of a staff
