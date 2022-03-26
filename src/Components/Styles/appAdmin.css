@@ -448,3 +448,8 @@ outline: none;
 margin-top: 0.5rem;
 
 }
+
+/* Maps */
+input[type=text]:disabled {
+  background: #dddddd;
+}

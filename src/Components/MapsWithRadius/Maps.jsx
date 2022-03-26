@@ -47,40 +47,70 @@ const options = {
 };
 const libraries = ["places"];
 const Maps = () => {
-  const myState=useSelector((state)=>state.SetLocation);
-  const dispatch=useDispatch();
   
-  // const { isLoaded, loadError } = useLoadScript({
-  //   googleMapsApiKey: process.env.React_APP_GOOGLE_MAPS_API_KEY,
-  //   libraries,
-  // });
+
+
   const [markers, setMarkers] = React.useState([]);
   const [selected, setSelected] = React.useState(null);
-  const [radius, setRadius] = React.useState(null);
-  const [createRadius, setCreateRadius] = React.useState(false);
+
+ 
+
   const [showAlert, setAlert] = React.useState(false);
+  const [inputRadius, setInputRadius] = React.useState("");
   const user=GetCurrentUser();
-  console.log("currentUser:",user);
+
+  
 
   const mapRef = React.useRef();
   const onMapLoad = React.useCallback((map) => {
     mapRef.current = map;
   }, []);
 
+
+  React.useEffect(()=>{
+
+    const markers_=markers.map((marker)=>{
+       if(marker.selected===true)
+       delete marker.selected;
+        
+       return marker;
+       
+
+    })
+    
+    
+  },[markers])
+
   const onMapClick = React.useCallback((event) => {
+
+
+
+
+  
+    
+   const lat=parseFloat(event.latLng.lat())
+   const lng=parseFloat(event.latLng.lng())
+   console.log("lat::",lat);
+   console.log("lat::",lng);
+
     setMarkers((current) => [
-      // ...current,
+
+      
+      ...current,
       {
-        lat: event.latLng.lat(),
-        lng: event.latLng.lng(),
+        lat:lat,
+        lng:lng,
         time: new Date(),
-      },
+      }
+     
     ]);
+  
+   
+  
     if(user){
       setAlert(true);
-      localStorage.setItem("lat",event.latLng.lat());
-      localStorage.setItem("lng", event.latLng.lng());
-  
+      localStorage.setItem("lat",parseFloat(event.latLng.lat()));
+      localStorage.setItem("lng", parseFloat(event.latLng.lng()));
    
     }
     
@@ -89,30 +119,51 @@ const Maps = () => {
  
 
   const handleRadius=(e)=>{
+ 
+   const selected=markers.filter(x=>x.selected===true);
+   if(selected.length>0){
+     const indexOfSelected=markers.indexOf(selected[0]);
+     markers[indexOfSelected].radius=e.currentTarget.value;
+
+   }
+   else 
+   markers[markers.length-1].radius=e.currentTarget.value;
+    setInputRadius(e.currentTarget.value);
+
+
     if(e.currentTarget.value!="" && markers.length>0){
 
-      localStorage.setItem("lat",markers[0].lat);
-      localStorage.setItem("lng",markers[0].lng);
-      localStorage.setItem("radius",e.currentTarget.value);
-   
-        // dispatch(SetLocationAction({
-        //   lat:markers[0].lat,
-        //   lng:markers[0].lng,
-        //   radius:e.currentTarget.value
-        // }))
-      
-      setCreateRadius(true);
+    
+    
       setAlert(true);
     }
-    else {
-      setCreateRadius(false);
-    }
-    setRadius(e.currentTarget.value)
+   
 
+  
+
+
+    
   }
   // if (loadError) return "Error loading maps";
   // else if (!isLoaded) return "Loading Maps";
 
+  // React.useCallback((event) => {
+
+ const checkRadius= React.useCallback(()=>{
+ 
+
+    if(markers.length>0){
+     
+     
+      localStorage.setItem("markers",JSON.stringify(markers));
+    
+     
+     
+      return true;
+    }
+   
+    else return false;
+ },[markers])
 
  const eraseAlert=()=>{
     setTimeout(()=>{
@@ -121,23 +172,23 @@ const Maps = () => {
   }
   return (
     <div>
-      {/* <Search /> */}
-      {/* !user.isAppAdmin &&
-        user.isOrganizationAdmin === "false" &&
-        !user.staffMember ? */}
+       
 
      {!user  &&
       <div className="search radius">
      
      <input type="text"
+     value={inputRadius}
      placeholder="Enter Radius in km"
+    
+     
      onChange={handleRadius}
      />
         
   
     </div>}
 
-      {/* <Temp/> */}
+     
       <LoadScript googleMapsApiKey={config.apiKey} 
       libraries={libraries}
       >
@@ -159,19 +210,27 @@ const Maps = () => {
           }
           
           {markers.map((marker) => (
+          
+           
             <Marker
               key={marker.time.toISOString()}
-              position={{ lat: marker.lat, lng: marker.lng }}
+              position={{ lat: parseFloat(marker.lat) , lng: parseFloat(marker.lng) }}
+              
               icon={{
-                url: "/pin.png",
+                url: marker.selected? "/pin2.png":"/pin.png",
                 scaledSize: new window.google.maps.Size(30, 30),
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(15, 15),
+                
+                
               }}
+              
               onClick={() => {
+                marker.selected=true;
                 setSelected(marker);
               }}
             />
+            
           ))}
 
           {selected && (
@@ -184,8 +243,21 @@ const Maps = () => {
               <h6>Your Pinned Location </h6>
             </InfoWindow>
           )}
-           {createRadius &&
-             <Circle center={{ lat: markers[0].lat, lng: markers[0].lng }} radius={radius*1000} />}
+           {checkRadius() &&
+
+      
+
+             markers.map((marker)=>{
+           
+              
+            return <Circle 
+            key={marker.time.toISOString()}
+             center={{ lat: parseFloat(marker.lat) , lng:parseFloat(marker.lng)}}
+             
+             radius={marker.radius*1000} />
+             })
+            
+            }
         </GoogleMap>
       </LoadScript>
     </div>
@@ -197,84 +269,3 @@ export default Maps;
 
 
 
-// function radius() {
-//   return (
-//     <div className="search">
-//       <Combobox
-//         onSelect={(address) => {
-//           console.log(address);
-//         }}
-//       >
-//         <ComboboxInput
-//           value={value}
-//           onChange={(e) => {
-//             setValue(e.target.value);
-//           }}
-//           disabled={!ready}
-//           placeholder="Enter a address.."
-//         />
-        
-//       </Combobox>
-//     </div>
-//   );
-// }
-
-
-
-// function Search() {
-//   const {
-//     ready,
-//     value,
-//     suggestions: { status, data },
-//     setValue,
-//     clearSuggestions,
-//   } = usePlacesAutocomplete(
-//     {
-//     requestOptions: {
-//       location: { lat: () => 43.6532, lng: () => -79.3832 },
-//       radius: 100 * 1000,
-//     },
-//   }
-//   );
-
-//   console.log("ready:",ready);
-//   // https://developers.google.com/maps/documentation/javascript/reference/places-autocomplete-service#AutocompletionRequest
-
-//   const handleInput = (e) => {
-//     setValue(e.target.value);
-//   };
-
-//   const handleSelect = async (address) => {
-//     // setValue(address, false);
-//     // clearSuggestions();
-
-//     // try {
-//     //   const results = await getGeocode({ address });
-//     //   const { lat, lng } = await getLatLng(results[0]);
-//     //   panTo({ lat, lng });
-//     // } catch (error) {
-//     //   console.log("😱 Error: ", error);
-//     // }
-//   };
-
-//   return (
-//     <div className="search">
-//       <Combobox onSelect={handleSelect}>
-//         <ComboboxInput
-//           value={value}
-//           onChange={handleInput}
-//           // disabled={!ready}
-//           placeholder="Search your location"
-//         />
-//         <ComboboxPopover>
-//           <ComboboxList>
-//             {status === "OK" &&
-//               data.map(({ id, description }) => (
-//                 <ComboboxOption key={id} value={description} />
-//               ))}
-//           </ComboboxList>
-//         </ComboboxPopover>
-//       </Combobox>
-//     </div>
-//   );
-// }
