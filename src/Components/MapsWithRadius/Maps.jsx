@@ -27,6 +27,7 @@ import { useSelector,useDispatch } from "react-redux";
 import { SetLocationAction } from "../redux/actions/Organzationlocation";
 import GetCurrentUser from "../CurrentUser/GetCurrentUser";
 
+
 const mapContainerStyle = {
   width: "100vw",
   height: "100vh",
@@ -49,50 +50,27 @@ const libraries = ["places"];
 const Maps = () => {
   
 
-
-  const [markers, setMarkers] = React.useState([]);
+  let [markers, setMarkers] = React.useState([]);
   const [selected, setSelected] = React.useState(null);
-
- 
-
   const [showAlert, setAlert] = React.useState(false);
-  const [inputRadius, setInputRadius] = React.useState("");
+  let [inputRadius, setInputRadius] = React.useState("");
+
   const user=GetCurrentUser();
-
-  
-
   const mapRef = React.useRef();
   const onMapLoad = React.useCallback((map) => {
     mapRef.current = map;
   }, []);
 
 
-  React.useEffect(()=>{
-
-    const markers_=markers.map((marker)=>{
-       if(marker.selected===true)
-       delete marker.selected;
-        
-       return marker;
-       
-
-    })
-    
-    
-  },[markers])
+ 
 
   const onMapClick = React.useCallback((event) => {
 
-
-
-
-  
-    
    const lat=parseFloat(event.latLng.lat())
    const lng=parseFloat(event.latLng.lng())
-   console.log("lat::",lat);
-   console.log("lat::",lng);
 
+
+   
     setMarkers((current) => [
 
       
@@ -105,7 +83,7 @@ const Maps = () => {
      
     ]);
   
-   
+    setInputRadius("");
   
     if(user){
       setAlert(true);
@@ -120,6 +98,7 @@ const Maps = () => {
 
   const handleRadius=(e)=>{
  
+    
    const selected=markers.filter(x=>x.selected===true);
    if(selected.length>0){
      const indexOfSelected=markers.indexOf(selected[0]);
@@ -130,7 +109,7 @@ const Maps = () => {
    markers[markers.length-1].radius=e.currentTarget.value;
     setInputRadius(e.currentTarget.value);
 
-
+   
     if(e.currentTarget.value!="" && markers.length>0){
 
     
@@ -154,7 +133,7 @@ const Maps = () => {
 
     if(markers.length>0){
      
-     
+    
       localStorage.setItem("markers",JSON.stringify(markers));
     
      
@@ -163,7 +142,66 @@ const Maps = () => {
     }
    
     else return false;
- },[markers])
+ })
+
+ const setSelectedMarker=(marker)=>{
+
+ 
+     markers=markers.map((m)=>{
+       if(m.selected===true)
+       delete m.selected;
+        
+       return m;
+       
+
+    })
+  
+  inputRadius=marker.radius? marker.radius :"";
+  marker.selected=true;
+  setSelected(marker);
+  setInputRadius(inputRadius)
+
+ }
+
+
+ const deleteMarker=(marker)=>{
+
+  markers=markers.filter(m=>m!==marker)
+  setMarkers(markers);
+ }
+ 
+ const onMarkerDrag=(e,marker)=>{
+
+  const filterMaker=markers.filter(m=>m===marker);
+  const index=markers.indexOf(filterMaker[0]);
+  const lat=parseFloat(e.latLng.lat())
+  const lng=parseFloat(e.latLng.lng())
+
+  marker.lat=lat;
+  marker.lng=lng;
+
+  markers[index]=marker;
+  // if(marker.radius){
+  //   marker.radius="";
+  // }
+
+  const newMarkers=markers.filter(m=>m!==marker);
+
+
+  setMarkers(() => [
+
+      
+    ...newMarkers,
+    {
+      lat:lat,
+      lng:lng,
+      radius:marker.radius,
+      time: new Date(),
+    }
+   
+  ]);
+  
+ }
 
  const eraseAlert=()=>{
     setTimeout(()=>{
@@ -177,7 +215,7 @@ const Maps = () => {
      {!user  &&
       <div className="search radius">
      
-     <input type="text"
+     <input type="tel"
      value={inputRadius}
      placeholder="Enter Radius in km"
     
@@ -209,31 +247,34 @@ const Maps = () => {
               </div>
           }
           
-          {markers.map((marker) => (
+          
+          { markers.map((marker,index) => (
           
            
             <Marker
               key={marker.time.toISOString()}
-              position={{ lat: parseFloat(marker.lat) , lng: parseFloat(marker.lng) }}
+              position={{ lat: parseFloat(marker.lat) , lng: parseFloat(marker.lng) }}  
+              draggable
               
               icon={{
-                url: marker.selected? "/pin2.png":"/pin.png",
+                url: marker.selected || (index===markers.length-1 && !markers.some(x=>x.selected===true)) ? "/pinBlue.png":"/pin.png",
                 scaledSize: new window.google.maps.Size(30, 30),
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(15, 15),
+               
+
                 
                 
               }}
               
-              onClick={() => {
-                marker.selected=true;
-                setSelected(marker);
-              }}
+              onClick={()=>{setSelectedMarker(marker)}}
+              onRightClick={(()=>{deleteMarker(marker)})}
+              onDragEnd={(e)=>onMarkerDrag(e,marker)}
             />
             
           ))}
 
-          {selected && (
+          {/* {selected && (
             <InfoWindow
               position={{ lat: selected.lat, lng: selected.lng }}
               onCloseClick={() => {
@@ -242,8 +283,8 @@ const Maps = () => {
             >
               <h6>Your Pinned Location </h6>
             </InfoWindow>
-          )}
-           {checkRadius() &&
+          )} */}
+           {checkRadius() && 
 
       
 
@@ -252,7 +293,7 @@ const Maps = () => {
               
             return <Circle 
             key={marker.time.toISOString()}
-             center={{ lat: parseFloat(marker.lat) , lng:parseFloat(marker.lng)}}
+            center={{ lat: parseFloat(marker.lat) , lng:parseFloat(marker.lng)}}
              
              radius={marker.radius*1000} />
              })

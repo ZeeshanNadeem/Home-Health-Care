@@ -200,12 +200,12 @@ class SignUpAsOrganization extends Form {
   handleSubmit = async (e) => {
     e.preventDefault();
   
-   const lat= localStorage.getItem("lat");
-   const lng= localStorage.getItem("lng");
-   const radius= localStorage.getItem("radius");
+  //  const lat= localStorage.getItem("lat");
+  //  const lng= localStorage.getItem("lng");
+  //  const radius= localStorage.getItem("radius");
 
-   if(lat && lng && radius)
-   this.setState({serviceLocalityError:""})
+  //  if(lat && lng && radius)
+  //  this.setState({serviceLocalityError:""})
   
     const isIndependentPerson =
       this.state.doctorForm.OrganizationID === "6237270f9179e6123218a579"
@@ -262,10 +262,20 @@ class SignUpAsOrganization extends Form {
             "OrganizationID",
             this.state.doctorForm.OrganizationID
           );
+          const locations=JSON.parse(localStorage.getItem("markers"));
+          const newLocation=locations.map((marker)=>{
+              if(marker.selected===true)
+              delete marker.selected;
+              if(marker.time)
+              delete marker.time
+    
+              return marker;
+          })
+
+
           formData.append("city", this.state.doctorForm.city);
-          formData.append("lat", lat);
-          formData.append("lng", lng);
-          formData.append("radius", radius);
+          formData.append("locations", newLocation);
+        
 
           global.selectedFile = this.state.doctorForm.selectedFile;
           const response = await signingUp(formData);
@@ -304,10 +314,17 @@ class SignUpAsOrganization extends Form {
         }
       }
     } else if (!isIndependentPerson) {
-      const lat=localStorage.getItem("lat");
-      const lng=localStorage.getItem("lng");
-      const radius=localStorage.getItem("radius");
-      if(lat && lng && radius){
+      const locations=JSON.parse(localStorage.getItem("markers"));
+      const newLocation=locations.map((marker)=>{
+          if(marker.selected===true)
+          delete marker.selected;
+          if(marker.time)
+          delete marker.time
+
+          return marker;
+      })
+ 
+      // if(lat && lng && radius){
       const { fullName, email, password, isOrganizationAdmin, OrganizationID,city } =
         this.state.doctorForm;
       const obj = {
@@ -315,11 +332,10 @@ class SignUpAsOrganization extends Form {
         email: email,
         password: password,
         isOrganizationAdmin: isOrganizationAdmin,
-        lat: lat,
-        lng: lng,
-        radius:radius,
+        locations:newLocation,
         OrganizationID: OrganizationID,
         city:city,
+       
 
       };
 
@@ -327,9 +343,9 @@ class SignUpAsOrganization extends Form {
       try {
         const response = await signingUp(obj);
         localStorage.setItem("token", response.headers["x-auth-token"]);
-        localStorage.removeItem("lat");
-        localStorage.removeItem("lng");
-        localStorage.removeItem("radius");
+        // localStorage.removeItem("lat");
+        // localStorage.removeItem("lng");
+        // localStorage.removeItem("radius");
         window.location = "/Home";
       } catch (ex) {
         if (ex.response && ex.response.status === 400) {
@@ -345,7 +361,7 @@ class SignUpAsOrganization extends Form {
           this.setState({serviceLocalityError:"Service Locality Required"})
     }
     }
-  };
+  // };
   render() {
     const year = new Date().getFullYear();
     const dobSignUpMaxDate = year + "-12-31";
