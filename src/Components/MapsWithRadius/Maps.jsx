@@ -6,7 +6,7 @@ import {
   LoadScript,
 } from "@react-google-maps/api";
 import mapStyles from "./MapStyles";
-import React from "react";
+import React, { useEffect } from "react";
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
@@ -57,6 +57,14 @@ const Maps = () => {
 
   const user=GetCurrentUser();
   const mapRef = React.useRef();
+
+
+  useEffect(()=>{
+      localStorage.removeItem("markers");
+      localStorage.removeItem("lat");
+      localStorage.removeItem("lng");
+  },[])
+
   const onMapLoad = React.useCallback((map) => {
     mapRef.current = map;
   }, []);
@@ -70,7 +78,14 @@ const Maps = () => {
    const lng=parseFloat(event.latLng.lng())
 
 
-   
+   if(user){
+    setMarkers( [{
+      lat:lat,
+      lng:lng,
+      time: new Date(),
+    }])
+   }
+   else {
     setMarkers((current) => [
 
       
@@ -82,6 +97,7 @@ const Maps = () => {
       }
      
     ]);
+  }
   
     setInputRadius("");
   
@@ -134,6 +150,7 @@ const Maps = () => {
     if(markers.length>0){
      
     
+    
       localStorage.setItem("markers",JSON.stringify(markers));
     
      
@@ -165,13 +182,14 @@ const Maps = () => {
 
 
  const deleteMarker=(marker)=>{
-
+  console.log("marker:",marker)
   markers=markers.filter(m=>m!==marker)
+  console.log("deleted:",markers)
   setMarkers(markers);
  }
  
  const onMarkerDrag=(e,marker)=>{
-
+  
   const filterMaker=markers.filter(m=>m===marker);
   const index=markers.indexOf(filterMaker[0]);
   const lat=parseFloat(e.latLng.lat())
@@ -188,9 +206,25 @@ const Maps = () => {
   const newMarkers=markers.filter(m=>m!==marker);
 
 
-  setMarkers(() => [
+ 
+  if(user){
+   
+    setMarkers( [{
+      lat:e.latLng.lat(),
+      lng:e.latLng.lng(),
+     
+      time: new Date(),
+    }])
+    if(user){
+      setAlert(true);
+      localStorage.setItem("lat",parseFloat(lat));
+      localStorage.setItem("lng", parseFloat(lng));
+   
+    }
+   }
 
-      
+   else{
+  setMarkers(() => [
     ...newMarkers,
     {
       lat:lat,
@@ -200,6 +234,7 @@ const Maps = () => {
     }
    
   ]);
+}
   
  }
 

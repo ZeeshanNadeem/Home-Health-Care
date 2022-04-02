@@ -139,9 +139,8 @@ class SignUpAsOrganization extends Form {
 
   constructor(props){
     super(props);
-    localStorage.removeItem("lat");
-    localStorage.removeItem("lng");
-    localStorage.removeItem("radius");
+    localStorage.removeItem("markers");
+ 
   }
   async componentDidMount() {
   
@@ -323,6 +322,8 @@ class SignUpAsOrganization extends Form {
 
           return marker;
       })
+
+      
  
       // if(lat && lng && radius){
       const { fullName, email, password, isOrganizationAdmin, OrganizationID,city } =

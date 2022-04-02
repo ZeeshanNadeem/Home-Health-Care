@@ -250,7 +250,6 @@ class NurseForm extends Form {
 
     const addStaffMember = {
       fullName: doctorForm.fullName,
-      // dateOfBirth: doctorForm.dateOfBirth,
       email: doctorForm.email,
       password: doctorForm.password,
       serviceID: doctorForm.serviceID,
@@ -260,33 +259,24 @@ class NurseForm extends Form {
       city: user.city,
       availableTime: this.state.slotTime,
       availableDays: this.state.daysAvailable,
-      // availabilityFrom: doctorForm.availabilityFrom,
-      // availabilityTo: doctorForm.availabilityTo,
-      // availabileDayFrom: doctorForm.availabileDayFrom,
-      // availabileDayTo: doctorForm.availabileDayTo,
+   
       Rating: 0,
       RatingAvgCount: 0,
-      lat: user.lat,
-      lng: user.lng,
-      radius:user.radius
+      locations: user.locations,
+    
 
-      // email: doctorForm.email,
     };
-    //  const user = {
-    //    staffTypeID: doctorForm.staffType,
-    //    qualificationID: doctorForm.qualification,
-    //    phone: doctorForm.phone,
-    //    availabilityFrom: doctorForm.availabilityFrom,
-    //    availabilityTo: doctorForm.availabilityTo,
-    //    availabileDayFrom: doctorForm.availabileDayFrom,
-    //    availabileDayTo: doctorForm.availabileDayTo,
-    //  };
+   
     try {
       const userObj = {};
+      const CurrentUser = jwtDecode(jwt);
+     
       userObj.fullName = addStaffMember.fullName;
       userObj.email = addStaffMember.email;
       userObj.password = addStaffMember.password;
-      //  userObj.staffMemberID = staffAdded._id;
+      userObj.locations= CurrentUser.locations;
+    
+    
 
       const { data: user } = await axios.post(
         config.apiEndPoint + "/user",
@@ -305,6 +295,7 @@ class NurseForm extends Form {
 
       RefreshStaffMembers();
     } catch (ex) {
+      console.log("ex::",ex);
       const error = { ...this.state.errors };
       error.email = ex.response.data;
       this.setState({ errors: error });
