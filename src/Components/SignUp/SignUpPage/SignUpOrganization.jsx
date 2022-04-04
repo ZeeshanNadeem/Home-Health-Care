@@ -182,9 +182,7 @@ class SignUpAsOrganization extends Form {
     });
   }
 
-  // setFile = (e) => {
-  //   this.setState({ selectedFile: e.target.files[0] });
-  // };
+ 
 
   onChange = (e) => {
     // setFile(e.target.files[0]);
@@ -199,12 +197,16 @@ class SignUpAsOrganization extends Form {
   handleSubmit = async (e) => {
     e.preventDefault();
   
-  //  const lat= localStorage.getItem("lat");
-  //  const lng= localStorage.getItem("lng");
-  //  const radius= localStorage.getItem("radius");
 
-  //  if(lat && lng && radius)
-  //  this.setState({serviceLocalityError:""})
+   const locations= JSON.parse(localStorage.getItem("markers"));
+
+
+  
+   if(!locations || locations.length===0)
+   this.setState({serviceLocalityError:"Please Set Your Service Locality"})
+
+   else 
+   this.setState({serviceLocalityError:""})
   
     const isIndependentPerson =
       this.state.doctorForm.OrganizationID === "6237270f9179e6123218a579"
@@ -215,7 +217,7 @@ class SignUpAsOrganization extends Form {
 
     let errors = this.validate();
    
-    if (!isIndependentPerson) {
+    if (!isIndependentPerson && errors && errors.qualification && errors.serviceOrg_) {
       delete errors["qualification"];
       delete errors["serviceOrg_"];
       if (
@@ -237,18 +239,14 @@ class SignUpAsOrganization extends Form {
     }
    
     
+    
+    if(locations && locations.length>0){
 
-    if (!errors && this.state.selectedFile) {
+    if (!errors ) {
       try {
-        // global.formData = formData;
-        // global.staffDetails = this.state.doctorForm;
-        // this.state.doctorForm = formData;
-        // const response = await signingUp(this.state.doctorForm);
-        // global.data = this.state.doctorForm;
-
-        if (isIndependentPerson) {
+        if (isIndependentPerson && this.state.selectedFile) {
           const formData = new FormData();
-
+          const locations=JSON.parse(localStorage.getItem("markers"));
           formData.append("CV", this.state.selectedFile);
           formData.append("fullName", this.state.doctorForm.fullName);
           formData.append("email", this.state.doctorForm.email);
@@ -261,7 +259,12 @@ class SignUpAsOrganization extends Form {
             "OrganizationID",
             this.state.doctorForm.OrganizationID
           );
-          const locations=JSON.parse(localStorage.getItem("markers"));
+         
+
+         
+         
+
+     
           const newLocation=locations.map((marker)=>{
               if(marker.selected===true)
               delete marker.selected;
@@ -270,14 +273,14 @@ class SignUpAsOrganization extends Form {
     
               return marker;
           })
-
+          
 
           formData.append("city", this.state.doctorForm.city);
-          formData.append("locations", newLocation);
+          formData.append("locations",  JSON.stringify(newLocation) );
         
 
           global.selectedFile = this.state.doctorForm.selectedFile;
-          const response = await signingUp(formData);
+          const response = await signingUp(formData,"indepedentServiceProvider");
           localStorage.setItem("token", response.headers["x-auth-token"]);
           global.userID = response.data._id;
           global.formData = formData;
@@ -285,22 +288,59 @@ class SignUpAsOrganization extends Form {
           global.city = this.state.doctorForm.city;
           global.serviceSelectedID = this.state.doctorForm.serviceOrg_;
           this.props.history.push("/signUp/details");
+       
+       
         }
-        // window.location = "/Home";
-        // const { serviceOrg_, qualification, OrganizationID } =
-        //   this.state.doctorForm;
-        // if (serviceOrg_ && qualification) {
-        //   const obj = {};
-        //   obj.serviceName = serviceOrg_;
-        //   obj.serviceOrgranization = OrganizationID;
-        //   // obj.servicePrice = price;
-        //   // obj.userID = response.data._id;
-        //   // await axios.post(config.apiEndPoint + "/services", obj);
-        //   global.serviceObj = obj;
-        //   global.staffDetails = this.state.doctorForm;
-        //   this.props.history.push("/signUp/details");
-        // }
-        // if (!price && !serviceOrg_ && !qualification) window.location = "/Home";
+        else if (!isIndependentPerson) {
+          const locations=JSON.parse(localStorage.getItem("markers"));
+    
+         
+          const newLocation=locations.map((marker)=>{
+              if(marker.selected===true)
+              delete marker.selected;
+              if(marker.time)
+              delete marker.time
+    
+              return marker;
+          })
+    
+          
+     
+          // if(lat && lng && radius){
+          const { fullName, email, password, isOrganizationAdmin, OrganizationID,city } =
+            this.state.doctorForm;
+          const obj = {
+            fullName: fullName,
+            email: email,
+            password: password,
+            isOrganizationAdmin: isOrganizationAdmin,
+            locations:newLocation,
+            OrganizationID: OrganizationID,
+            city:city,
+           
+    
+          };
+    
+          if (errors) return;
+          try {
+            const response = await signingUp(obj);
+            localStorage.setItem("token", response.headers["x-auth-token"]);
+            
+            window.location = "/Home";
+    
+    
+          } catch (ex) {
+            if (ex.response && ex.response.status === 400) {
+              const error = { ...this.state.errors };
+    
+              error.email = ex.response.data;
+    
+              this.setState({ errors: error });
+            }
+          }
+       
+        }
+      
       } catch (ex) {
         if (ex.response && ex.response.status === 400) {
           const error = { ...this.state.errors };
@@ -312,55 +352,8 @@ class SignUpAsOrganization extends Form {
         
         }
       }
-    } else if (!isIndependentPerson) {
-      const locations=JSON.parse(localStorage.getItem("markers"));
-      const newLocation=locations.map((marker)=>{
-          if(marker.selected===true)
-          delete marker.selected;
-          if(marker.time)
-          delete marker.time
-
-          return marker;
-      })
-
-      
- 
-      // if(lat && lng && radius){
-      const { fullName, email, password, isOrganizationAdmin, OrganizationID,city } =
-        this.state.doctorForm;
-      const obj = {
-        fullName: fullName,
-        email: email,
-        password: password,
-        isOrganizationAdmin: isOrganizationAdmin,
-        locations:newLocation,
-        OrganizationID: OrganizationID,
-        city:city,
-       
-
-      };
-
-      if (errors) return;
-      try {
-        const response = await signingUp(obj);
-        localStorage.setItem("token", response.headers["x-auth-token"]);
-        // localStorage.removeItem("lat");
-        // localStorage.removeItem("lng");
-        // localStorage.removeItem("radius");
-        window.location = "/Home";
-      } catch (ex) {
-        if (ex.response && ex.response.status === 400) {
-          const error = { ...this.state.errors };
-
-          error.email = ex.response.data;
-
-          this.setState({ errors: error });
-        }
-      }
-    }
-    else {
-          this.setState({serviceLocalityError:"Service Locality Required"})
-    }
+    } 
+  }
     }
   // };
   render() {
@@ -402,22 +395,7 @@ class SignUpAsOrganization extends Form {
                 </article>
 
               </article>
-              {/* <article
-                className="signup-dob signup-label"
-                style={{ margin: "0" }}
-              >
-                {this.renderLabel("Date of Birth", "dob")}
-              </article>
-              <article>
-                {this.renderInput(
-                  "date",
-                  "dateOfBirth",
-                  "dateOfBirth",
-                  "",
-                  "",
-                  dobSignUpMaxDate
-                )}
-              </article> */}
+             
 
               <article className="signup-org-group">
                 <article>
@@ -428,10 +406,7 @@ class SignUpAsOrganization extends Form {
                     {this.renderInput("password", "password", "password")}
                   </article>
                 </article>
-                {/* <article className="signup-label">
-                    {this.renderLabel("Confirm Password", "email")}
-                  </article>
-                  <article>{this.renderInput("text", "email", "email")}</article> */}
+               
                 <article className="second-item dropdown-second-item">
                   <article className="signup-label" style={{ margin: "0" }}>
                     {this.renderLabel("Organization", "organization")}
@@ -451,7 +426,7 @@ class SignUpAsOrganization extends Form {
               {this.state.doctorForm.OrganizationID ===
                 "6237270f9179e6123218a579" && (
                 <article
-                  // style={{ marginTop: "0.5rem" }}
+               
                   className="signup-org-group servies-org"
                 >
                   <article>
@@ -471,7 +446,7 @@ class SignUpAsOrganization extends Form {
                   <article>
                     <article
                       className="second-item"
-                      // style={{ marginTop: "1rem" }}
+                   
                     ></article>
                   </article>
                   <article>
@@ -511,22 +486,10 @@ class SignUpAsOrganization extends Form {
                     <p className="error">Please Upload Your Resume</p>
                   )}
 
-                  {/* {this.renderFile(
-                    "file",
-                    "selectedFile",
-                    "selectedFile",
-                    ".pdf,.docx"
-                  )} */}
+                 
                 </article>
               )}
-              {/* <article className="ChkBox-signup">
-                {this.renderCheckBox(
-                  "checkbox",
-                  "isOrganizationAdmin",
-                  "isOrganizationAdmin",
-                  "Request To Be an Organization Admin"
-                )}
-              </article> */}
+            
 
               <article
               
@@ -548,7 +511,7 @@ class SignUpAsOrganization extends Form {
 
                   <article
                     className="txtField-signup-org"
-                    // style={{ width: "34rem" }}
+                  
                   >
                     {this.renderDropDown(
                       "City",
@@ -595,32 +558,13 @@ class SignUpAsOrganization extends Form {
 
               
 
-                {/* <article className="signup-label">
-                    {this.renderLabel("Confirm Password", "email")}
-                  </article>
-                  <article>{this.renderInput("text", "email", "email")}</article> */}
-                {/* <article className="second-item dropdown-second-item">
-                  <article className="signup-label" style={{ margin: "0" }}>
-                    {this.renderLabel("Organization", "organization")}
-                  </article>
-                  <article className="txtField-signup-org">
-                    {this.renderDropDown(
-                      "service For",
-                      this.state.organizations,
-                      "OrganizationID",
-                      "OrganizationID",
-                      "Select Your Organization"
-                    )}
-                  </article>
-                </article> */}
+            
               </article>
 
               <article className="btn-orgSignUp org-btn signup-page-btn">
                 {this.renderBtn("Sign Up")}
               </article>
-              {/* <a href="#" className="google btn">
-                  <i className="fa fa-google fa-fw"></i> SignUp with Google
-                </a> */}
+            
             </main>
           </article>
         </form>

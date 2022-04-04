@@ -115,6 +115,7 @@ const Maps = () => {
   const handleRadius=(e)=>{
  
     
+    if(markers.length===0) return;
    const selected=markers.filter(x=>x.selected===true);
    if(selected.length>0){
      const indexOfSelected=markers.indexOf(selected[0]);
@@ -182,9 +183,9 @@ const Maps = () => {
 
 
  const deleteMarker=(marker)=>{
-  console.log("marker:",marker)
+  
   markers=markers.filter(m=>m!==marker)
-  console.log("deleted:",markers)
+  
   setMarkers(markers);
  }
  

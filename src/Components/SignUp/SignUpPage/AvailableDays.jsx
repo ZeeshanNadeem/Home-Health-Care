@@ -178,9 +178,17 @@ class AvailableDays extends Form {
           config.apiEndPoint + "/services",
           serviceObj
         );
-        const lat= localStorage.getItem("lat");
-        const lng= localStorage.getItem("lng");
-        const radius= localStorage.getItem("radius");
+        const locations=JSON.parse(localStorage.getItem("markers"));
+        const newLocation=locations.map((marker)=>{
+            if(marker.selected===true)
+            delete marker.selected;
+            if(marker.time)
+            delete marker.time
+  
+            return marker;
+        })
+        
+        
     
         const addStaffMember = {
           fullName: global.staffDetails.fullName,
@@ -196,11 +204,9 @@ class AvailableDays extends Form {
           availableDays: this.state.daysAvailable,
           Rating: 0,
           RatingAvgCount: 0,
+          locations:newLocation,
           city: global.city,
-         
-          lat:lat,
-          lng:lng,
-          radius:radius
+          locations:newLocation
         };
 
        
@@ -215,9 +221,8 @@ class AvailableDays extends Form {
           // staffMemberID: response.data._id
           staffMemberID: global.userID,
         });
-        localStorage.removeItem("lat");
-        localStorage.removeItem("lng");
-        localStorage.removeItem("radius");
+       
+        localStorage.removeItem("markers");
         window.location = "/Home";
         // }
       } catch (ex) {
