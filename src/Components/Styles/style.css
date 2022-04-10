@@ -636,7 +636,7 @@ textarea#address {
   .address-txt {
     /* width: 20rem; */
   }
-  .row {
+  .Row {
     display: grid !important;
     grid-template: repeat(1, 6.4rem) / repeat(2, 23rem);
     justify-items: center;
@@ -645,7 +645,7 @@ textarea#address {
     align-content: center;
   }
 
-  article.row.row-grid {
+  article.Row.Row-grid {
     grid-template: repeat(1, 5rem) / repeat(2, 23rem);
     grid-template: repeat;
   }

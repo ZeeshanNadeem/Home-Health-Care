@@ -23,6 +23,7 @@ import PageNotFound from "./Components/NotFound/PageNotFound";
 import AvailableDays from "./Components/SignUp/SignUpPage/AvailableDays";
 import AboutUs from "./Components/AboutUS/AboutUs";
 import Maps from "./Components/MapsWithRadius/Maps";
+import MyAvailability from "./Components/IndependentStaff/MyAvailability";
 
 const App = () => {
   const isLoggedIn = localStorage.getItem("token");
@@ -181,6 +182,11 @@ const App = () => {
       <Route
         path="/maps"
         render={(props) => <Maps setProgress={setProgress} {...props} />}
+      />
+
+      <Route
+        path="/staff/availability"
+        render={(props) => <MyAvailability setProgress={setProgress} {...props} />}
       />
        
     </article>

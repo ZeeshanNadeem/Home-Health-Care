@@ -208,6 +208,7 @@ class NurseForm extends Form {
       phone: doctorForm.phone,
     };
 
+
     const updateUser = {
       fullName: doctorForm.fullName,
       staffID: staffMemberData._id,
@@ -220,6 +221,8 @@ class NurseForm extends Form {
       // availabileDayTo: doctorForm.availabileDayTo,
       // phone: doctorForm.phone,
     };
+
+ 
     try {
       await axios.put(
         "http://localhost:3000/api/staff/" + staffMemberData._id,

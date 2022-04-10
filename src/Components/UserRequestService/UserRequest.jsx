@@ -1035,7 +1035,7 @@ class UserRequestService extends Form {
                 {this.renderDropDown("Profession", profession, "serviceFor")}
               </article> */}
             <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
-              <article className="row row-grid">
+              <article className="Row Row-grid">
                 <article
                   className={`user-request-input-wrapper ${this.state.errorClass}`}
                 >
@@ -1066,7 +1066,7 @@ class UserRequestService extends Form {
                   </article>
                 </article>
               </article>
-              <article className="row">
+              <article className="Row">
                 <article
                   className={`user-request-input-wrapper ${this.state.errorClass}`}
                 >
@@ -1132,7 +1132,7 @@ class UserRequestService extends Form {
                 {/* schedule replace city */}
               </article>
 
-              <article className="row row-grid email-txt">
+              <article className="Row Row-grid email-txt">
                 <article className="email-label">
                   <article>{this.renderLabel("Email", "Email")}</article>
                   <article>
@@ -1151,7 +1151,7 @@ class UserRequestService extends Form {
                   </article>
                 </article>
               </article>
-              <article className="row row-grid">
+              <article className="Row Row-grid">
                 <article>
                   <article
                     className={`user-request-input-wrapper ${this.state.errorClass}`}

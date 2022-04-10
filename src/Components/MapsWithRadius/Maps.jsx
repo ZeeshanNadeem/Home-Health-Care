@@ -74,25 +74,26 @@ const Maps = () => {
 
   const onMapClick = React.useCallback((event) => {
 
-   const lat=parseFloat(event.latLng.lat())
-   const lng=parseFloat(event.latLng.lng())
+  //  const lat=
+  //  const lng=
 
 
    if(user){
     setMarkers( [{
-      lat:lat,
-      lng:lng,
+      lat:Number(event.latLng.lat()),
+      lng:Number(event.latLng.lng()),
       time: new Date(),
     }])
    }
+
    else {
     setMarkers((current) => [
 
       
       ...current,
       {
-        lat:lat,
-        lng:lng,
+        lat:Number(event.latLng.lat()),
+        lng:Number(event.latLng.lng()),
         time: new Date(),
       }
      
@@ -103,8 +104,8 @@ const Maps = () => {
   
     if(user){
       setAlert(true);
-      localStorage.setItem("lat",parseFloat(event.latLng.lat()));
-      localStorage.setItem("lng", parseFloat(event.latLng.lng()));
+      localStorage.setItem("lat",Number(event.latLng.lat()));
+      localStorage.setItem("lng", Number(event.latLng.lng()));
    
     }
     
@@ -289,7 +290,7 @@ const Maps = () => {
            
             <Marker
               key={marker.time.toISOString()}
-              position={{ lat: parseFloat(marker.lat) , lng: parseFloat(marker.lng) }}  
+              position={{ lat: marker.lat , lng: marker.lng}}  
               draggable
               
               icon={{

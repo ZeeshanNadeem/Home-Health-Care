@@ -453,3 +453,24 @@ margin-top: 0.5rem;
 input[type=text]:disabled {
   background: #dddddd;
 }
+
+/* Independent-Service-Availability-Page */
+.avaialbility-container{
+  /* background: url("../../Images/bg1.png");
+  object-fit: cover;
+  height: 100vh;
+  background-color: #1e293b;
+  background-position: center;
+  background-size: cover;
+  overflow: hidden; */
+}
+
+.label-style1{
+  color:#000;
+}
+
+.availability-hd{
+  color:#000;
+  margin-top: 1rem;
+  text-align: center;
+}

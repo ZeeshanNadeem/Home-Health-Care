@@ -575,7 +575,7 @@ class SignUpAsOrganization extends Form {
 
 
 const mapStateToProps = (state) => {
-  console.log("state:::",state);
+ 
   return {
       Organizationlocation: state.SetLocation,
   };

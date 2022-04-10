@@ -13,6 +13,7 @@ const UserProfileMenu = () => {
 
     if (jwt) {
       let user = jwtDecode(jwt);
+      console.log("userprofile::",user);
       setUser(user);
 
       isUser =
@@ -84,6 +85,30 @@ const UserProfileMenu = () => {
           </span>
         </span>
       )}
+
+    {user.isOrganizationAdmin==="Independent Member Approved" && (
+        <span>
+          <span>
+            <span className="user-account-popover">
+              <article className="logout-wrapper-icon my-home-visits-icon">
+                <FontAwesomeIcon
+                  icon={faHouseUser}
+                  style={{ marginTop: "0.2rem" }}
+                />
+              </article>
+              <Link
+                to="/staff/availability"
+                className="user-account-menu-item sheduled-visits"
+              >
+                <span style={{ marginLeft: "0.2rem" }}>My Availability</span>
+              </Link>
+            </span>
+            <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+          </span>
+        </span>
+      )}
+
+
 
       {user.staffMember && (
         <span>
