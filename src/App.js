@@ -24,10 +24,15 @@ import AvailableDays from "./Components/SignUp/SignUpPage/AvailableDays";
 import AboutUs from "./Components/AboutUS/AboutUs";
 import Maps from "./Components/MapsWithRadius/Maps";
 import MyAvailability from "./Components/IndependentStaff/MyAvailability";
+import GetCurrentUser from "./Components/CurrentUser/GetCurrentUser";
+import IndependentServices from "./Components/AppAdmin/PanelPages/IndependentServices"
+
 
 const App = () => {
   const isLoggedIn = localStorage.getItem("token");
   const [progress, setProgress] = useState(0);
+  const user=GetCurrentUser();
+  console.log("app user::",user)
 
   return (
     <article>
@@ -41,7 +46,9 @@ const App = () => {
       <article className="admin-routes">
         <Route
           path="/admin"
-          render={(props) => <Admin setProgress={setProgress} {...props} />}
+          render={(props) =>  <Admin setProgress={setProgress} {...props} />
+        
+        }
         />
 
         <Route
@@ -64,6 +71,7 @@ const App = () => {
         />
         {/* <Route path="/admin/Staff" component={AdminStaff} /> */}
       </article>
+
       <article className="admin-routes appAdmin">
         <Route
           path="/app/admin"
@@ -81,6 +89,13 @@ const App = () => {
             <OrganizationAdminRequests setProgress={setProgress} {...props} />
           )}
         />
+          <Route
+          path="/app/admin/services/:id?"
+          render={(props) => (
+            <IndependentServices setProgress={setProgress} {...props} />
+          )}
+        />
+
       </article>
       <Route
         exact

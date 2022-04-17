@@ -174,14 +174,17 @@ const ShowAllEmployees = ({
           `/staffLeave?staffMemberID=${availabilityData[i]._id}`
       );
       if (leaves.length > 0) tookLeaveOrNot = checkTookLeave(leaves);
-
+      const d = distance(lat, availabilityData[i].locations[0].lat, lng, availabilityData[i].locations[0].lng);
+      const t = parseInt(d);
       if (containsDay && containsSlot && !slotBookedOrNot && !tookLeaveOrNot) {
+
+        
         temp.push({
           _id: availabilityData[i]._id,
           name: availabilityData[i].fullName,
           rating: availabilityData[i].Rating,
           free: "YES",
-          Distance: distanceFound + " KM",
+          Distance:  t + " KM",
         });
       } else {
         temp.push({
@@ -189,7 +192,7 @@ const ShowAllEmployees = ({
           name: availabilityData[i].fullName,
           rating: availabilityData[i].Rating,
           free: "NO",
-          Distance: distanceFound + " KM",
+          Distance: t + " KM",
         });
       }
     }

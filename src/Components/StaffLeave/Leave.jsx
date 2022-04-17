@@ -81,7 +81,7 @@ class Leave extends Form {
 
     const { data: staffGot } = await axios.get(
       config.staff +
-        `/?day=${dayNo}&service=${Service._id}&organization=${Organization._id}`
+        `/?day=${dayNo}&service=${Service._id}&organization=${Organization._id}&ignoreCity=true`
     );
 
     const { data: staffLeaves } = await axios.get(

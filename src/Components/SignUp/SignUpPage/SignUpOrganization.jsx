@@ -178,7 +178,7 @@ class SignUpAsOrganization extends Form {
     this.setState({
       organizations: data.results,
       qualification,
-      IndependentServices: services,
+      IndependentServices: services.results,
     });
   }
 

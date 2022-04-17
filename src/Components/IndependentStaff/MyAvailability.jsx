@@ -1,10 +1,13 @@
 import {Container,Row,Col,Form,Button} from 'react-bootstrap'
 import GetCurrentUser from '../CurrentUser/GetCurrentUser';
+import { toast } from "react-toastify";
+import { ToastContainer } from 'react-toastify';
 import Joi from "joi-browser";
 import axios from "axios";
 import { useState,useEffect,useRef,useLayoutEffect} from 'react'
 import Select from 'react-select'
 import config from "../Api/config.json";
+
 const MyAvailability=()=>{
  const  daysSchema = Joi.object({
         name: Joi.string().required().label("Days").required(),
@@ -18,33 +21,30 @@ const MyAvailability=()=>{
       }).required()
     
  const daysChoosen=useRef([
- ]);
-
- const slotsForBackend=useRef([
-]);
-
-slotsForBackend.current=
-[
-    {time:"12AM to 3AM",name:"12 AM to 3 AM",value:false},
-    {time:"3AM to 6AM",name:"12 AM to 3 AM",value:false },
-    {time:"6AM to 9AM",name:"12 AM to 3 AM",value:false},
-    {time:"9AM to 12PM",name:"12 AM to 3 AM",value:false},
-    {time:"12PM to 3PM",name:"12 AM to 3 AM",value:false},
-    {time:"3PM to 6PM",name:"12 AM to 3 AM",value:false},
-    {time:"6PM to 9PM",name:"12 AM to 3 AM",value:false},
-    {time:"9PM to 12AM",name:"12 AM to 3 AM",value:false},
-  
-]
-
-
-  daysChoosen.current=[
   {name:"MON",value:false},
   {name:"TUE",value:false},
   {name:"WED",value:false},
   {name:"THRU",value:false},
   {name:"FRI",value:false},
   {name:"SAT",value:false},
-  {name:"SUN",value:false}];
+  {name:"SUN",value:false}
+ ]);
+
+ const slotsForBackend=useRef([
+  {time:"12AM to 3AM",name:"12 AM to 3 AM",value:false},
+  {time:"3AM to 6AM",name:"12 AM to 3 AM",value:false },
+  {time:"6AM to 9AM",name:"12 AM to 3 AM",value:false},
+  {time:"9AM to 12PM",name:"12 AM to 3 AM",value:false},
+  {time:"12PM to 3PM",name:"12 AM to 3 AM",value:false},
+  {time:"3PM to 6PM",name:"12 AM to 3 AM",value:false},
+  {time:"6PM to 9PM",name:"12 AM to 3 AM",value:false},
+  {time:"9PM to 12AM",name:"12 AM to 3 AM",value:false},
+]);
+
+
+
+
+
    let optionDays=[];
 
   const  schema = {
@@ -297,10 +297,15 @@ slotsForBackend.current=
     const onChangeSlots=(e)=>{
      
      for(let backendSlot of slotsForBackend.current){
+      let found=false;
          for(let slot of e){
-             if(backendSlot.time===slot.value)
-             backendSlot.value=true;
+             if(backendSlot.time===slot.value){
+              backendSlot.value=true;
+              found=true;
+             }
+            
          }
+         if(!found) backendSlot.value=false;
      }
      console.log("backendSlot::",slotsForBackend.current)
 
@@ -310,14 +315,21 @@ slotsForBackend.current=
 
     const onChangeDays=(e)=>{
 
-        
+     
         for(let day of  daysChoosen.current){
+          let found=false;
             for(let d of e){
-                if(day.name===d.value)
-                day.value=true;
+                if(day.name===d.value){
+                  day.value=true;
+                  found=true;
+
+                }
+                
+               
             }
+            if(!found) day.value=false;
         }
-        console.log("daysChoosen.current::",daysChoosen.current)
+      
    
         
       }
@@ -352,39 +364,66 @@ slotsForBackend.current=
       };
 
 
-    const updateDetials=(e)=>{
+    const updateDetials=async(e)=>{
           e.preventDefault();
-        console.log("update");
+         const user=GetCurrentUser();
       
         const errors=validate();
         setErrors(errors || {})
 
 
+        const { data:service } = await axios.get(
+          config.apiEndPoint + `/services?findServiceByUser=true&userID=${user._id}`
+        );
+        
+
+       
+
+        
+        const { data: userObjInTable } = await axios.get(
+          config.apiEndPoint + `/user/${staffDetails._id}`
+        );
+     
+       
         if(!errors){
           let obj={
               fullName,
+              email:userObjInTable.email,
+              password:userObjInTable.password,
+              serviceID:service[0]._id,
+              Organization:staffDetails.Organization,
               availableDays:daysChoosen.current,
               availableTime:slotsForBackend.current,
               phone:phoneNo,
-              qualificationID:qualification,
-              serviceID:service
+              qualificationID:staffDetails.qualification._id,
+          
+              Rating: staffDetails.Rating,
+              RatingAvgCount: staffDetails.RatingAvgCount
 
           }
 
-          console.log("objjj::",obj);
-
-        //   const { data: userObjInTable } = await axios.get(
-        //     config.apiEndPoint + `/user/${staffMemberData._id}`
-        //   );
-    
-        //   await axios.put(
-        //     config.apiEndPoint + `/user/${userObjInTable._id}?findUser=abc`,
-        //     updateUser
-        //   );
-        //   await axios.put(
-        //     "http://localhost:3000/api/staff/" + staffMemberData._id,
-        //     updateStaff
-        //   );
+       
+          try {
+            await axios.put(
+              "http://localhost:3000/api/staff/" + `${staffDetails._id}`,
+              obj
+            );
+      
+            const updateUser = {
+              fullName: fullName,
+              staffID: staffDetails._id,
+            
+            };
+           
+         
+            await axios.put(
+              config.apiEndPoint + `/user/${userObjInTable._id}?findUser=abc`,
+              updateUser
+            );
+            toast.success("Details Updated");
+          } catch (ex) {
+            toast.error(ex.response.data);
+          }
         }
     }
   
@@ -402,7 +441,8 @@ slotsForBackend.current=
      
       
     return(
-    
+    <>
+    <ToastContainer/>
     <div className="avaialbility-container">
        
         <h2 className='availability-hd'>My Details</h2>
@@ -591,7 +631,7 @@ slotsForBackend.current=
 </Container>
 
 </div>
-
+</>
     )
 }
 

@@ -11,11 +11,11 @@ import "animate.css";
 const AppAdmin = (props) => {
   React.useEffect(() => {
     const jwt = localStorage.getItem("token");
-    if (!jwt) props.history.push("/NotFound");
+    // if (!jwt) props.history.push("/NotFound");
     if (jwt) {
       const user = jwtDecode(jwt);
-      if (user.isAppAdmin === "false" || !user.isAppAdmin)
-        props.history.push("/NotFound");
+      // if (user.isAppAdmin === "false" || !user.isAppAdmin)
+      //   props.history.push("/NotFound");
       props.setProgress(0);
       props.setProgress(10);
       props.setProgress(20);
@@ -41,6 +41,19 @@ const AppAdmin = (props) => {
                 </li>
               </Link>
 
+
+              <Link to="/app/admin/services">
+                <li className="admin-li app-admin-li">
+                  {" "}
+                  <FontAwesomeIcon
+                    icon={faUsers}
+                    style={{ marginRight: "0.6rem" }}
+                  />
+                 Independent Services
+                </li>
+              </Link>
+
+
               <Link to="/app/admin/requests">
                 <li className="admin-li app-admin-li">
                   {" "}
@@ -51,6 +64,8 @@ const AppAdmin = (props) => {
                   Admin Requests
                 </li>
               </Link>
+
+             
             </ul>
           </article>
         </span>

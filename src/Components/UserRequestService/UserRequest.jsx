@@ -12,6 +12,7 @@ import BasicModal from "./Modal/AvailableStaffModal";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
+import {Container,Row,Col,Button} from 'react-bootstrap'
 
 
 class UserRequestService extends Form {
@@ -852,7 +853,8 @@ class UserRequestService extends Form {
     if (tempArray.length > 0) {
    
 
-      tempArray.sort((a, b) => (tempArray.Rating > tempArray.Rating ? -1 : 1));
+      
+      tempArray.sort((a, b) => (a.Rating > b.Rating ? -1 : 1));
 
       // if (!maxIndex) maxIndex = 0;
       if (doctorForm.vaccination) {
@@ -1035,7 +1037,13 @@ class UserRequestService extends Form {
                 {this.renderDropDown("Profession", profession, "serviceFor")}
               </article> */}
             <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
-              <article className="Row Row-grid">
+
+              <div className="mb-3">
+              <Row>
+              {/* <article className="RowSR RowSR-grid"> */}
+
+              
+                <Col>
                 <article
                   className={`user-request-input-wrapper ${this.state.errorClass}`}
                 >
@@ -1049,6 +1057,9 @@ class UserRequestService extends Form {
                     )}
                   </article>
                 </article>
+                </Col>
+
+                <Col>
                 <article
                   className={`user-request-input-wrapper ${this.state.errorClass}`}
                 >
@@ -1065,8 +1076,19 @@ class UserRequestService extends Form {
                     )}
                   </article>
                 </article>
-              </article>
-              <article className="Row">
+                </Col>
+
+
+              {/* </article> */}
+              </Row>
+              </div>
+
+
+              <div className="mb-2">
+              <Row>
+              {/* <article className="RowSR"> */}
+
+                <Col>
                 <article
                   className={`user-request-input-wrapper ${this.state.errorClass}`}
                 >
@@ -1081,7 +1103,7 @@ class UserRequestService extends Form {
                   {this.state.vaccinationSelected && <VaccinationPlan />}
                   <span style={{ marginLeft: "1rem" }}>
                     {this.state.vaccinationSelected &&
-                      this.renderCheckBox2(
+                      this.renderCheckBox3(
                         "vaccination,",
                         "vaccination",
                         "",
@@ -1100,7 +1122,10 @@ class UserRequestService extends Form {
                     </span>
                   )} */}
                 </article>
+                </Col>
                 {/* schedule replace city */}
+
+                <Col>
                 <article>
                   <article>{this.renderLabel("City", "city")}</article>
                   <article>
@@ -1128,17 +1153,28 @@ class UserRequestService extends Form {
                      {this.state.serviceLocalityError}
                       </p>}
                 </article>
+                </Col>
 
                 {/* schedule replace city */}
-              </article>
+              {/* </article> */}
+              </Row>
+              </div>
 
-              <article className="Row Row-grid email-txt">
+
+              <div className="mb-3">
+              <Row>
+              {/* <article className="RowSR RowSR-grid email-txt"> */}
+
+                <Col>
                 <article className="email-label">
                   <article>{this.renderLabel("Email", "Email")}</article>
                   <article>
                     {this.renderInput("text", "email", "email", "Email")}
                   </article>
                 </article>
+                </Col>
+
+                <Col>
                 <article>
                   <article>{this.renderLabel("Phone No", "phoneno")}</article>
                   <article>
@@ -1146,12 +1182,21 @@ class UserRequestService extends Form {
                       "tel",
                       "phoneno",
                       "phoneno",
-                      "Example 03448123901"
+                      "Example 03448133901"
                     )}
                   </article>
                 </article>
-              </article>
-              <article className="Row Row-grid">
+                </Col>
+              {/* </article> */}
+              </Row>
+              </div>
+
+
+
+              <div className="mb-3">
+              <Row>
+              {/* <article className="RowSR RowSR-grid"> */}
+                <Col>
                 <article>
                   <article
                     className={`user-request-input-wrapper ${this.state.errorClass}`}
@@ -1177,81 +1222,13 @@ class UserRequestService extends Form {
                     </article>
                   </article>
                 </article>
-                <article>
-                  {/* City */}
-                  <article
-                    className={`user-request-input-wrapper ${this.state.errorClass}`}
-                  >
-                    <article>
-                      {this.renderLabel("Schedule", "schedule")}
-                    </article>
-                    <article>
-                      {this.renderInput(
-                        "date",
-                        "schedule",
-                        "schedule",
-                        "Schedule a Meeting",
-                        this.state.minDate,
-                        this.state.maxDate
-                      )}
-                    </article>
-                    <article
-                      className={`user-request-input-wrapper ${this.state.errorClass}`}
-                    >
-                      {/* <div>
-                        <CheckAvailability
-                          availabilityData={availabilityData}
-                          userScheduledDate={schedule}
-                          staffDateSelected={this.state.doctorForm.schedule}
-                          filterTimeGonePastToday={
-                            this.filterTimeGonePastTodayAvailability
-                          }
-                          requestTimeLength={
-                            this.state.doctorForm.service &&
-                            this.state.doctorForm.organization &&
-                            this.state.doctorForm.schedule
-                              ? this.state.requestTime.length
-                              : 0
-                          }
-                        />
-                        <article
-                          style={{ display: "flex", justifyContent: "end" }}
-                        >
-                          <BasicModal
-                            lat={this.state.lat}
-                            lng={this.state.lng}
-                            availabilityData={this.state.allStaff}
-                            userScheduledDate={schedule}
-                            staffDateSelected={this.state.doctorForm.schedule}
-                            filterTimeGonePastToday={
-                              this.filterTimeGonePastTodayAvailability
-                            }
-                            requestTimeLength={
-                              this.state.doctorForm.service &&
-                              this.state.doctorForm.organization &&
-                              this.state.doctorForm.schedule
-                                ? this.state.requestTime.length
-                                : 0
-                            }
-                            selectedSlot={
-                              this.state.doctorForm.ServiceNeededFrom
-                            }
-                          />
-                        </article>
-                      </div> */}
-                    </article>
-                  </article>
-                  {/* City */}
-                </article>
-              </article>
-
-              {!this.state.vaccinationSelected && (
+                {!this.state.vaccinationSelected && (
                 <>
                   <article style={{ display: "flex" }}>
                     <span style={{ marginLeft: "1rem", marginTop: "0.5rem" }}>
                       {this.renderRadioBtn1("daily", "servicePlan", "Daily")}
                       <span style={{ marginLeft: "0.5rem" }}>
-                        {this.renderRadioBtn2(
+                        {this.renderRadioBtn3(
                           "weekly",
                           "servicePlan",
                           "Weekly"
@@ -1292,6 +1269,60 @@ class UserRequestService extends Form {
                   </article>
                 </>
               )}
+                </Col>
+                <Col>
+                <article>
+                  {/* City */}
+                  <article
+                    className={`user-request-input-wrapper ${this.state.errorClass}`}
+                  >
+                    <article>
+                      {this.renderLabel("Schedule", "schedule")}
+                    </article>
+                    <article>
+                      {this.renderInput(
+                        "date",
+                        "schedule",
+                        "schedule",
+                        "Schedule a Meeting",
+                        this.state.minDate,
+                        this.state.maxDate
+                      )}
+                    </article>
+                  
+                  </article>
+                  {/* City */}
+                </article>
+                <article
+                          style={{ display: "flex", justifyContent: "end" }}
+                        >
+                          <BasicModal
+                            lat={localStorage.getItem("lat")}
+                            lng={localStorage.getItem("lng")}
+                            availabilityData={this.state.allStaff}
+                            userScheduledDate={schedule}
+                            staffDateSelected={this.state.doctorForm.schedule}
+                            filterTimeGonePastToday={
+                              this.filterTimeGonePastTodayAvailability
+                            }
+                            requestTimeLength={
+                              this.state.doctorForm.service &&
+                              this.state.doctorForm.organization &&
+                              this.state.doctorForm.schedule
+                                ? this.state.requestTime.length
+                                : 0
+                            }
+                            selectedSlot={
+                              this.state.doctorForm.ServiceNeededFrom
+                            }
+                          />
+                        </article>
+                </Col>
+              {/* </article> */}
+              </Row>
+              </div>
+
+             
 
               <article
                 className={`user-request-input-wrapper ${this.state.errorClass} address-grid`}
