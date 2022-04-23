@@ -81,6 +81,8 @@ class ConfirmMeeting extends Form {
         rated: data[i].rated,
         staffMemberAssigned: data[i].staffMemberAssigned,
         user: data[i].user,
+        lat:data[i].lat,
+        lng:data[i].lng
       };
 
       try {

@@ -639,6 +639,8 @@ class Form extends React.Component {
     const lng= localStorage.getItem("lng")
 
     if(lat && lng){
+    
+      
     let { data: availabilityData } = await axios.get(
       config.staff +
         `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${lat}&lng=${lng}`

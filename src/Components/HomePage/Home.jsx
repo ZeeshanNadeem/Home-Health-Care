@@ -11,6 +11,9 @@ import ServiceCardDet from "./ServiceCardDet";
 
 const Home = ({ setProgress }) => {
   useEffect(() => {
+    localStorage.removeItem("lat");
+    localStorage.removeItem("lng");
+    localStorage.removeItem("radius");
     const jwt = localStorage.getItem("token");
     let userGot = "";
     if (jwt) {

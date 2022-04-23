@@ -87,9 +87,7 @@ class UserRequestService extends Form {
 
   constructor(props){
     super(props);
-    localStorage.removeItem("lat");
-    localStorage.removeItem("lng");
-    localStorage.removeItem("radius");
+   
   }
   async componentDidMount() {
    
@@ -115,25 +113,37 @@ class UserRequestService extends Form {
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
 
+    try{
     const {data}= await axios.get(config.apiEndPoint+`/userRequests?userID=${user._id}`)
     
     if(data.length>0){
-      this.populateServices(data[data.length-1].Organization._id);
-      this.FilterNotAvailableSlots(data[data.length-1].Schedule, data[data.length-1].Service._id);
-      this.filterTime(data[data.length-1].Schedule);
-    const doctorForm={...this.state.doctorForm};
+      const doctorForm={...this.state.doctorForm};
     doctorForm.fullname=data[data.length-1].fullName;
     doctorForm.address=data[data.length-1].Address;
     doctorForm.phoneno=data[data.length-1].PhoneNo;
     doctorForm.city=data[data.length-1].City;
     doctorForm.email=data[data.length-1].Email;
-    doctorForm.organization=data[data.length-1].Organization._id;
+ ;
     doctorForm.service=data[data.length-1].Service._id;
-    doctorForm.ServiceNeededFrom=data[data.length-1].ServiceNeededFrom;
+    doctorForm.ServiceNeededFrom=data[data.length-1].ServiceNeededTime;
     doctorForm.schedule=data[data.length-1].Schedule;
-    this.setState({doctorForm})
-  }
   
+   
+      doctorForm.organization=data[data.length-1].Organization._id
+      this.setState({doctorForm})
+      localStorage.setItem("lat",data[data.length-1].lat)
+      localStorage.setItem("lng",data[data.length-1].lng)
+    
+      this.populateServices(data[data.length-1].Organization._id);
+
+      this.FilterNotAvailableSlots(data[data.length-1].Schedule, data[data.length-1].Service._id);
+      this.filterTime(data[data.length-1].Schedule);
+    
+  }
+}
+catch(ex){
+  console.log("ex::",ex);
+}
     const isUser =
       !user.isAppAdmin &&
       !user.staffMember &&
@@ -937,6 +947,7 @@ class UserRequestService extends Form {
         userRequest.vaccination = doctorForm.vaccination;
         userRequest.ServiceID = doctorForm.service;
         userRequest.Schedule = doctorForm.schedule;
+       
         
         // userRequest.Recursive = doctorForm.recursive;
         userRequest.Address = doctorForm.address;
@@ -996,6 +1007,8 @@ class UserRequestService extends Form {
         userRequest.PhoneNo = doctorForm.phoneno;
         userRequest.city = doctorForm.city;
         userRequest.email = doctorForm.email;
+        userRequest.lat=localStorage.getItem("lat");
+        userRequest.lng=localStorage.getItem("lng");
 
         try {
           await axios.post(config.apiEndPoint + "/confirmService", userRequest);
