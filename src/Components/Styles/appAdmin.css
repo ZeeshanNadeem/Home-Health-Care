@@ -474,3 +474,50 @@ input[type=text]:disabled {
   margin-top: 1rem;
   text-align: center;
 }
+
+
+.search {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 400px;
+  z-index: 10;
+}
+
+.search input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 0;
+  
+  width: 100%;
+}
+
+
+.popover-style{
+     background-color: #fff;
+     border:1.5px solid lightgray;
+     padding:0.5rem;
+     padding-left: 0rem;
+  
+}
+
+.popover-option{
+     cursor: pointer;
+     
+}
+
+.popover-option:hover{
+     color:#666;
+}
+
+.locate{
+     position: absolute;
+     top:1rem;
+     right: 1rem;
+     background: none;
+     border: none;
+     z-index: 10;
+     cursor: pointer;
+}

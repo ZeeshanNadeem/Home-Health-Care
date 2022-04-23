@@ -48,10 +48,11 @@ const ShowAllEmployees = ({
   // let [uniqueArr, setUniqueArr] = React.useState([{ name: "hhh" }]);
   let [allStaff, AllStaff] = React.useState([]);
   React.useEffect(() => {
-    navigator.geolocation.getCurrentPosition((position) => {
-      setLat(position.coords.latitude);
-      setLng(position.coords.longitude);
-    });
+    //currentLocation
+    // navigator.geolocation.getCurrentPosition((position) => {
+    //   setLat(position.coords.latitude);
+    //   setLng(position.coords.longitude);
+    // });
     const d = distance(lat, currentUserLat, lng, currentUserLng);
     const t = parseInt(d);
 
@@ -174,19 +175,36 @@ const ShowAllEmployees = ({
           `/staffLeave?staffMemberID=${availabilityData[i]._id}`
       );
       if (leaves.length > 0) tookLeaveOrNot = checkTookLeave(leaves);
-      const d = distance(lat, availabilityData[i].locations[0].lat, lng, availabilityData[i].locations[0].lng);
-      const t = parseInt(d);
-      if (containsDay && containsSlot && !slotBookedOrNot && !tookLeaveOrNot) {
 
-        
+      let TotalDistance="";
+      let LiesInRadius=false;
+      // const d = distance(lat, availabilityData[i].locations[0].lat, lng, availabilityData[i].locations[0].lng);
+      
+      // const t = parseInt(d);
+
+      for(let location of availabilityData[i].locations){
+        const distanceInDecimal = distance(lat,location.lat, lng,location.lng);
+        const distanceFound = parseInt(distanceInDecimal);
+        for(let staffLocation of availabilityData[i].locations){
+           if(distanceFound<=staffLocation.radius){
+            LiesInRadius=true;
+            TotalDistance=distanceFound;
+            break;
+           }
+        }
+       if(LiesInRadius) break;
+      }
+      if (LiesInRadius && containsDay && containsSlot && !slotBookedOrNot && !tookLeaveOrNot) {
         temp.push({
           _id: availabilityData[i]._id,
           name: availabilityData[i].fullName,
           rating: availabilityData[i].Rating,
           free: "YES",
-          Distance:  t + " KM",
+          Distance:  TotalDistance + " KM",
         });
       } else {
+      const d = distance(lat, availabilityData[i].locations[0].lat, lng, availabilityData[i].locations[0].lng);
+      const t = parseInt(d);
         temp.push({
           _id: availabilityData[i]._id,
           name: availabilityData[i].fullName,

@@ -1193,6 +1193,25 @@ class Form extends React.Component {
     } else this.setState({ requestTime });
   };
 
+
+  //This function checks if lon lat has changed
+  //If Yes,It filter slots according to the location
+  //specified by service taker
+  myInterval= setInterval(()=>{
+  
+    const locationChanged=localStorage.getItem("locationChanged");
+    if(locationChanged==="true"){
+      const { service, organization, schedule, city } = this.state.doctorForm;
+      if(locationChanged==="true" && service && organization && city){
+
+        this.FilterNotAvailableSlots(schedule, service);
+        this.filterTime(schedule);
+        localStorage.setItem("locationChanged","false")
+      }
+    }
+  
+  }, 1000);
+
   handleChange = ({ currentTarget: input }) => {
     const errorMessage = this.validateProperty(input);
     const errors = { ...this.state.errors };
@@ -1246,6 +1265,8 @@ class Form extends React.Component {
       } else this.setState({ vaccinationSelected: false });
     }
 
+   
+
     if (input.name === "phoneno" || input.name === "phone") {
       let phoneNo = input.value;
       if (phoneNo[0] !== "0" || phoneNo[1] !== "3" || phoneNo.length !== 11) {
@@ -1260,6 +1281,7 @@ class Form extends React.Component {
 
     const { service, organization, schedule, city } = doctorForm;
 
+  
     if (
       (input.name === "schedule" && service && organization && city) ||
       (input.name === "service" && schedule && organization && city) ||
@@ -1354,7 +1376,7 @@ class Form extends React.Component {
   };
 
   handleChangeForRadioBtn3 = () => {
-    this.setState({ servicePlan: "None" });
+    this.setState({ servicePlan: "Weekly" });
   };
 
   renderRadioBtn3 = (id, name, label, checkedStatus) => {

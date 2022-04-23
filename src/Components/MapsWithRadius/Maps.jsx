@@ -12,13 +12,15 @@ import usePlacesAutocomplete, {
   getLatLng,
 } from "use-places-autocomplete";
 import config from "./config.json";
+import compass from "../../Images/compass.png"
 
 import {
   Combobox,
-  ComboboxInput,
+  ComboxInput,
   ComboboxPopover,
   ComboboxList,
   ComboboxOption,
+  ComboboxInput,
 } from "@reach/combobox";
 import { Form, Container, Row, Col } from "react-bootstrap";
 import { Circle } from '@react-google-maps/api';
@@ -47,6 +49,9 @@ const options = {
   zoomControl: true,
 };
 const libraries = ["places"];
+
+
+
 const Maps = () => {
   
 
@@ -63,8 +68,15 @@ const Maps = () => {
       localStorage.removeItem("markers");
       localStorage.removeItem("lat");
       localStorage.removeItem("lng");
+      localStorage.removeItem("locationChanged")
   },[])
+  
 
+  const panTo=React.useCallback(({lat,lng})=>{
+    mapRef.current.panTo({lat,lng});
+    mapRef.current.setZoom(14);
+  
+  },[])
   const onMapLoad = React.useCallback((map) => {
     mapRef.current = map;
   }, []);
@@ -106,6 +118,7 @@ const Maps = () => {
       setAlert(true);
       localStorage.setItem("lat",Number(event.latLng.lat()));
       localStorage.setItem("lng", Number(event.latLng.lng()));
+      localStorage.setItem("locationChanged", "true");
    
     }
     
@@ -221,6 +234,7 @@ const Maps = () => {
       setAlert(true);
       localStorage.setItem("lat",parseFloat(lat));
       localStorage.setItem("lng", parseFloat(lng));
+      localStorage.setItem("locationChanged", "true");
    
     }
    }
@@ -255,7 +269,7 @@ const Maps = () => {
      <input type="tel"
      value={inputRadius}
      placeholder="Enter Radius in km"
-    
+     style={{marginTop:"4rem"}}
      
      onChange={handleRadius}
      />
@@ -263,10 +277,16 @@ const Maps = () => {
   
     </div>}
 
+    
+
      
       <LoadScript googleMapsApiKey={config.apiKey} 
       libraries={libraries}
       >
+        <Search 
+          panTo={panTo}
+          />
+          <Locate panTo={panTo}/>
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
           zoom={12}
@@ -341,6 +361,98 @@ const Maps = () => {
     </div>
   );
 };
+
+
+function Locate({panTo}){
+  const locateUser=()=>{
+    navigator.geolocation.getCurrentPosition((position)=>{
+      panTo({lat:position.coords.latitude,
+     lng:position.coords.longitude   
+     })
+    })
+  }
+    return(
+      <button className="locate">
+      <img
+           style={{height:"4rem",width:"4rem"}}
+           src={compass}
+           alt="compass - locate me"
+           onClick={locateUser}
+         />
+      </button>
+    )
+  }
+ 
+   function Search({panTo}){
+ 
+     const {ready,
+         value,
+       suggestions:{status,data},
+       setValue,
+       clearSuggestions
+ 
+   }=usePlacesAutocomplete(
+     //   {
+     //   requestOptions:{
+     //     location:{ lat:()=> 33.6844,
+     //       lng:()=>  73.0479,
+     //       radius:200*1000
+     //     }
+     //   }
+     // }
+     );
+
+     console.log('ready:',ready)
+ 
+     const handleSelect=async(address)=>{
+       setValue(address,false);
+       clearSuggestions();
+      
+       try{
+         const results =await getGeocode({address});
+         const {lat ,lng}=await getLatLng(results[0]);
+         panTo({lat,lng})
+      
+       }
+       catch(error){
+        
+       }
+     }
+     
+ 
+     return(
+       <Combobox
+       onSelect={(address)=>{handleSelect(address)}}
+       >
+ 
+         <div className="search">
+         <ComboboxInput
+         value={value}
+         onChange={(e)=>{
+           setValue(e.target.value)
+         }}
+         disabled={!ready}
+         placeholder="Enter an address"
+         ></ComboboxInput>
+         </div>
+ 
+               <ComboboxPopover
+                 className="popover-style"
+                 >
+                 <ComboboxList>
+                         {status === "OK" && 
+                             data.map(({ id, description },i) => (
+                                 <ComboboxOption key={i} value={description}
+                                 className="popover-option"
+                                
+                                 />
+                             ))}
+                     </ComboboxList>
+                 </ComboboxPopover>
+       </Combobox>
+     )
+   }
+   
 
 export default Maps;
 

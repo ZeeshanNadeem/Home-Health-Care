@@ -13,6 +13,8 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
 import {Container,Row,Col,Button} from 'react-bootstrap'
+import GetCurrentUser from "../CurrentUser/GetCurrentUser";
+import Geocode from "react-geocode";
 
 
 class UserRequestService extends Form {
@@ -80,6 +82,7 @@ class UserRequestService extends Form {
     availableSlots: [],
     lat: "",
     lng: "",
+    locationChanged:false
   };
 
   constructor(props){
@@ -89,6 +92,9 @@ class UserRequestService extends Form {
     localStorage.removeItem("radius");
   }
   async componentDidMount() {
+   
+  
+
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({ lat: position.coords.latitude });
       this.setState({ lng: position.coords.longitude });
@@ -108,6 +114,25 @@ class UserRequestService extends Form {
 
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
+
+    const {data}= await axios.get(config.apiEndPoint+`/userRequests?userID=${user._id}`)
+    
+    if(data.length>0){
+      this.populateServices(data[data.length-1].Organization._id);
+      this.FilterNotAvailableSlots(data[data.length-1].Schedule, data[data.length-1].Service._id);
+      this.filterTime(data[data.length-1].Schedule);
+    const doctorForm={...this.state.doctorForm};
+    doctorForm.fullname=data[data.length-1].fullName;
+    doctorForm.address=data[data.length-1].Address;
+    doctorForm.phoneno=data[data.length-1].PhoneNo;
+    doctorForm.city=data[data.length-1].City;
+    doctorForm.email=data[data.length-1].Email;
+    doctorForm.organization=data[data.length-1].Organization._id;
+    doctorForm.service=data[data.length-1].Service._id;
+    doctorForm.ServiceNeededFrom=data[data.length-1].ServiceNeededFrom;
+    doctorForm.schedule=data[data.length-1].Schedule;
+    this.setState({doctorForm})
+  }
   
     const isUser =
       !user.isAppAdmin &&
@@ -912,6 +937,7 @@ class UserRequestService extends Form {
         userRequest.vaccination = doctorForm.vaccination;
         userRequest.ServiceID = doctorForm.service;
         userRequest.Schedule = doctorForm.schedule;
+        
         // userRequest.Recursive = doctorForm.recursive;
         userRequest.Address = doctorForm.address;
         userRequest.PhoneNo = doctorForm.phoneno;
@@ -993,6 +1019,9 @@ class UserRequestService extends Form {
     //   toast.error("Please Check Availability and then Schedule!");
     // }
   };
+ 
+
+
 
   handleSubmit = async (e) => {
     e.preventDefault();
@@ -1084,7 +1113,7 @@ class UserRequestService extends Form {
               </div>
 
 
-              <div className="mb-2">
+              <div className="mb-3">
               <Row>
               {/* <article className="RowSR"> */}
 
@@ -1222,6 +1251,40 @@ class UserRequestService extends Form {
                     </article>
                   </article>
                 </article>
+               
+                </Col>
+                <Col>
+                <article>
+                  {/* City */}
+                  <article
+                    className={`user-request-input-wrapper ${this.state.errorClass}`}
+                  >
+                    <article>
+                      {this.renderLabel("Schedule", "schedule")}
+                    </article>
+                    <article>
+                      {this.renderInput(
+                        "date",
+                        "schedule",
+                        "schedule",
+                        "Schedule a Meeting",
+                        this.state.minDate,
+                        this.state.maxDate
+                      )}
+                    </article>
+                  
+                  </article>
+                  {/* City */}
+                </article>
+             
+                </Col>
+              {/* </article> */}
+              </Row>
+              </div>
+
+
+                <Row>
+                  <Col>
                 {!this.state.vaccinationSelected && (
                 <>
                   <article style={{ display: "flex" }}>
@@ -1262,38 +1325,16 @@ class UserRequestService extends Form {
                           this.state.meetings,
                           "noOfMeetings",
                           "noOfMeetings",
-                          "No of Meetings?"
+                          "Meetings?"
                         )}
                       </span>
                     )}
                   </article>
                 </>
               )}
-                </Col>
-                <Col>
-                <article>
-                  {/* City */}
-                  <article
-                    className={`user-request-input-wrapper ${this.state.errorClass}`}
-                  >
-                    <article>
-                      {this.renderLabel("Schedule", "schedule")}
-                    </article>
-                    <article>
-                      {this.renderInput(
-                        "date",
-                        "schedule",
-                        "schedule",
-                        "Schedule a Meeting",
-                        this.state.minDate,
-                        this.state.maxDate
-                      )}
-                    </article>
-                  
-                  </article>
-                  {/* City */}
-                </article>
-                <article
+              </Col>
+              <Col md={2}>
+              <article
                           style={{ display: "flex", justifyContent: "end" }}
                         >
                           <BasicModal
@@ -1317,11 +1358,8 @@ class UserRequestService extends Form {
                             }
                           />
                         </article>
-                </Col>
-              {/* </article> */}
-              </Row>
-              </div>
-
+              </Col>
+                </Row>
              
 
               <article
