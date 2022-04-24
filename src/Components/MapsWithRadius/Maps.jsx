@@ -12,7 +12,9 @@ import usePlacesAutocomplete, {
   getLatLng,
 } from "use-places-autocomplete";
 import config from "./config.json";
-import compass from "../../Images/compass.png"
+import compass from "../../Images/compass.png";
+
+
 
 import {
   Combobox,
@@ -28,6 +30,7 @@ import { Global } from "@emotion/react";
 import { useSelector,useDispatch } from "react-redux";
 import { SetLocationAction } from "../redux/actions/Organzationlocation";
 import GetCurrentUser from "../CurrentUser/GetCurrentUser";
+import axios from "axios";
 
 
 const mapContainerStyle = {
@@ -55,20 +58,42 @@ const libraries = ["places"];
 const Maps = () => {
   
 
-  let [markers, setMarkers] = React.useState([]);
+  let [markers, setMarkers] = React.useState([
+  
+]);
   const [selected, setSelected] = React.useState(null);
   const [showAlert, setAlert] = React.useState(false);
   let [inputRadius, setInputRadius] = React.useState("");
 
   const user=GetCurrentUser();
+
   const mapRef = React.useRef();
+  const {isLoaded}= useLoadScript({googleMapsApiKey:config.apiKey,
+  libraries:libraries
+  })
 
 
-  useEffect(()=>{
+  useEffect(async ()=>{
+   
+   
+    if(!user){
+     
       localStorage.removeItem("markers");
+      
       localStorage.removeItem("lat");
       localStorage.removeItem("lng");
       localStorage.removeItem("locationChanged")
+      }
+    
+      if(user){
+       const {data} =await axios.get(config.apiEndPoint+`/api/userRequests?userID=${user._id}`)
+       if(data.length>0){
+        const marker=JSON.parse(data[data.length-1].markers);
+        console.log("marker:",marker);
+       
+        setMarkers(marker)
+      }
+      }
   },[])
   
 
@@ -260,7 +285,8 @@ const Maps = () => {
   }, 1000);
   }
   return (
-    <div>
+    <>
+    {isLoaded && <div>
        
 
      {!user  &&
@@ -280,9 +306,10 @@ const Maps = () => {
     
 
      
-      <LoadScript googleMapsApiKey={config.apiKey} 
+      {/* <LoadScript googleMapsApiKey={config.apiKey} 
       libraries={libraries}
-      >
+      
+      > */}
         <Search 
           panTo={panTo}
           />
@@ -305,19 +332,27 @@ const Maps = () => {
           }
           
           
-          { markers.map((marker,index) => (
+          {markers.length>0  && 
+          
+          markers.map((marker,index) => (
+        
           
            
-            <Marker
-              key={marker.time.toISOString()}
+            
+          
+              <Marker
+              key={index}
               position={{ lat: marker.lat , lng: marker.lng}}  
               draggable
-              
+            
+           
               icon={{
                 url: marker.selected || (index===markers.length-1 && !markers.some(x=>x.selected===true)) ? "/pinBlue.png":"/pin.png",
                 scaledSize: new window.google.maps.Size(30, 30),
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(15, 15),
+              
+              
                
 
                 
@@ -328,8 +363,14 @@ const Maps = () => {
               onRightClick={(()=>{deleteMarker(marker)})}
               onDragEnd={(e)=>onMarkerDrag(e,marker)}
             />
+        
+             
+          
             
           ))}
+        
+         
+       
 
           {/* {selected && (
             <InfoWindow
@@ -345,11 +386,11 @@ const Maps = () => {
 
       
 
-             markers.map((marker)=>{
+             markers.map((marker,index)=>{
            
               
             return <Circle 
-            key={marker.time.toISOString()}
+            key={index}
             center={{ lat: parseFloat(marker.lat) , lng:parseFloat(marker.lng)}}
              
              radius={marker.radius*1000} />
@@ -357,8 +398,9 @@ const Maps = () => {
             
             }
         </GoogleMap>
-      </LoadScript>
-    </div>
+      {/* </LoadScript> */}
+    </div>}
+    </>
   );
 };
 

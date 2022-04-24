@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import config from "../../Api/config.json";
 import axios from "axios";
 import RattingModal from "./RattingModal/RattingModal";
+import Button from '@mui/material/Button';
 import moment from "moment";
 
 const Ratting = (props) => {
@@ -235,6 +236,13 @@ const Ratting = (props) => {
     setUserRequests(ratingRecord);
   };
 
+ const rescheduleAppointment=async(appointment)=>{
+   
+   await axios.patch(config.apiEndPoint+`/userRequests?id=${appointment._id}&rescheduleAppointment=true`,{
+     status:true
+   })
+   props.history.push("/user/request",appointment);
+  }
   return (
     <article>
       <ToastContainer />
@@ -253,6 +261,7 @@ const Ratting = (props) => {
               <TableCell>Date</TableCell>
               <TableCell align="left"></TableCell>
               <TableCell align="left"></TableCell>
+              <TableCell align="left"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -267,6 +276,7 @@ const Ratting = (props) => {
                 <TableCell>{row.Organization.name}</TableCell>
                 <TableCell>{row.Service.servicePrice}</TableCell>
                 <TableCell>{row.ServiceNeededTime}</TableCell>
+                
 
                 <TableCell>
                   {row.Schedule[8]}
@@ -281,6 +291,7 @@ const Ratting = (props) => {
                   {row.Schedule[3]}
                 </TableCell>
                 <TableCell align="left">{checkRequest(row)}</TableCell>
+               
                 <TableCell>
                   {checkRequestStatus(row) ? (
                     <RattingModal row={row} updateRating={RattingRefactor} />
@@ -288,6 +299,9 @@ const Ratting = (props) => {
                     ""
                   )}
                 </TableCell>
+                <TableCell>  <Button variant="contained"
+                onClick={()=>rescheduleAppointment(row)}
+                >ReSchedule</Button></TableCell>
               </TableRow>
             ))}
           </TableBody>

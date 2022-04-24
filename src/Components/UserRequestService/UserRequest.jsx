@@ -18,6 +18,7 @@ import Geocode from "react-geocode";
 
 
 class UserRequestService extends Form {
+ 
   state = {
     doctorForm: {
       fullname: "",
@@ -82,8 +83,11 @@ class UserRequestService extends Form {
     availableSlots: [],
     lat: "",
     lng: "",
-    locationChanged:false
+    locationChanged:false,
+    reschedule:false,
+    
   };
+
 
   constructor(props){
     super(props);
@@ -113,36 +117,64 @@ class UserRequestService extends Form {
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
 
-    try{
-    const {data}= await axios.get(config.apiEndPoint+`/userRequests?userID=${user._id}`)
-    
-    if(data.length>0){
+    const rescheduleData=this.props.location.state;
+    if(rescheduleData){
       const doctorForm={...this.state.doctorForm};
-    doctorForm.fullname=data[data.length-1].fullName;
-    doctorForm.address=data[data.length-1].Address;
-    doctorForm.phoneno=data[data.length-1].PhoneNo;
-    doctorForm.city=data[data.length-1].City;
-    doctorForm.email=data[data.length-1].Email;
- ;
-    doctorForm.service=data[data.length-1].Service._id;
-    doctorForm.ServiceNeededFrom=data[data.length-1].ServiceNeededTime;
-    doctorForm.schedule=data[data.length-1].Schedule;
-  
-   
-      doctorForm.organization=data[data.length-1].Organization._id
-      this.setState({doctorForm})
-      localStorage.setItem("lat",data[data.length-1].lat)
-      localStorage.setItem("lng",data[data.length-1].lng)
+      doctorForm.fullname=rescheduleData.fullName;
+      doctorForm.address=rescheduleData.Address;
+      doctorForm.phoneno=rescheduleData.PhoneNo;
+      doctorForm.city=rescheduleData.City;
+      doctorForm.email=rescheduleData.Email;
+  ;
+      doctorForm.service=rescheduleData.Service._id;
+      doctorForm.ServiceNeededFrom=rescheduleData.ServiceNeededTime;
+      doctorForm.schedule=rescheduleData.Schedule;
     
-      this.populateServices(data[data.length-1].Organization._id);
+    
+        doctorForm.organization=rescheduleData.Organization._id
+        this.setState({doctorForm,reschedule:true})
+        localStorage.setItem("lat",rescheduleData.lat)
+        localStorage.setItem("lng",rescheduleData.lng)
+        localStorage.setItem("markers",JSON.stringify(rescheduleData.markers))
+      
+        this.populateServices(rescheduleData.Organization._id);
 
-      this.FilterNotAvailableSlots(data[data.length-1].Schedule, data[data.length-1].Service._id);
-      this.filterTime(data[data.length-1].Schedule);
-    
-  }
-}
-catch(ex){
-  console.log("ex::",ex);
+        this.FilterNotAvailableSlots(rescheduleData.Schedule, rescheduleData.Service._id);
+        this.filterTime(rescheduleData.Schedule);
+    }
+    else{
+          try{
+          const {data}= await axios.get(config.apiEndPoint+`/userRequests?userID=${user._id}`)
+          
+          if(data.length>0){
+          const doctorForm={...this.state.doctorForm};
+          doctorForm.fullname=data[data.length-1].fullName;
+          doctorForm.address=data[data.length-1].Address;
+          doctorForm.phoneno=data[data.length-1].PhoneNo;
+          doctorForm.city=data[data.length-1].City;
+          doctorForm.email=data[data.length-1].Email;
+      ;
+          doctorForm.service=data[data.length-1].Service._id;
+          doctorForm.ServiceNeededFrom=data[data.length-1].ServiceNeededTime;
+          doctorForm.schedule=data[data.length-1].Schedule;
+        
+        
+            doctorForm.organization=data[data.length-1].Organization._id
+            this.setState({doctorForm})
+            localStorage.setItem("lat",data[data.length-1].lat)
+            localStorage.setItem("lng",data[data.length-1].lng)
+            localStorage.setItem("markers",JSON.stringify(data[data.length-1].markers))
+          
+            this.populateServices(data[data.length-1].Organization._id);
+
+            this.FilterNotAvailableSlots(data[data.length-1].Schedule, data[data.length-1].Service._id);
+            this.filterTime(data[data.length-1].Schedule);
+          
+        }
+      }
+      catch(ex){
+        console.log("ex::",ex);
+      }
 }
     const isUser =
       !user.isAppAdmin &&
@@ -649,6 +681,7 @@ catch(ex){
               userRequest.totalMeetingsRequested =
                 this.state.doctorForm.noOfMeetings;
 
+             
               try {
                 await axios.post(
                   config.apiEndPoint + "/confirmService",
@@ -659,6 +692,7 @@ catch(ex){
               } catch (ex) {
                 toast.error(ex.response.data);
               }
+            
               // this.props.history.push("/Confirm/Meeting");
               // }
               // return;
@@ -670,6 +704,9 @@ catch(ex){
     if (tempArray.length > 0) {
       global.servicePlan = this.state.servicePlan;
       global.totalMeetings = parseInt(totalMeetings);
+      if(this.state.reschedule)
+      this.props.history.push("/Confirm/Meeting",this.props.location.state);
+      else 
       this.props.history.push("/Confirm/Meeting");
     }
   };
@@ -1009,7 +1046,9 @@ catch(ex){
         userRequest.email = doctorForm.email;
         userRequest.lat=localStorage.getItem("lat");
         userRequest.lng=localStorage.getItem("lng");
-
+      
+        userRequest.markers=JSON.parse(localStorage.getItem("markers"));
+   
         try {
           await axios.post(config.apiEndPoint + "/confirmService", userRequest);
 
@@ -1017,7 +1056,19 @@ catch(ex){
         } catch (ex) {
           toast.error(ex.response.data);
         }
-        this.props.history.push("/Confirm/Meeting");
+        if(this.props.location.state){
+          
+          userRequest._id=this.props.location.state._id
+          this.props.history.push("/Confirm/Meeting",userRequest
+      
+          );
+        }
+        else{
+          this.props.history.push("/Confirm/Meeting"
+      
+          );
+        }
+        
 
         return;
       }

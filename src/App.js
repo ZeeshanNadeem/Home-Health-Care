@@ -17,7 +17,7 @@ import ContactPage from "./Components/Maps/ContactPage";
 import SignUpAsOrganization from "./Components/SignUp/SignUpPage/SignUpOrganization";
 import Ratting from "./Components/Ratting/UI/Ratting";
 import ConfirmMeeting from "./Components/UserRequestService/ConfirmMeeting";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoadingBar from "react-top-loading-bar";
 import PageNotFound from "./Components/NotFound/PageNotFound";
 import AvailableDays from "./Components/SignUp/SignUpPage/AvailableDays";
@@ -26,6 +26,8 @@ import Maps from "./Components/MapsWithRadius/Maps";
 import MyAvailability from "./Components/IndependentStaff/MyAvailability";
 import GetCurrentUser from "./Components/CurrentUser/GetCurrentUser";
 import IndependentServices from "./Components/AppAdmin/PanelPages/IndependentServices"
+import axios from "axios";
+import config from "./Components/Api/config.json"
 
 
 const App = () => {
@@ -33,6 +35,21 @@ const App = () => {
   const [progress, setProgress] = useState(0);
   const user=GetCurrentUser();
   console.log("app user::",user)
+
+  useEffect(async()=>{
+
+    try{
+      await axios.patch(config.apiEndPoint+`/userRequests?rescheduleFalse=true`,{
+        status:false
+      })
+    }
+    catch(ex){
+
+    }
+
+  },[])
+
+ 
 
   return (
     <article>
