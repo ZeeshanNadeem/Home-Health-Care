@@ -1196,7 +1196,7 @@ class UserRequestService extends Form {
                   {this.state.vaccinationSelected && <VaccinationPlan />}
                   <span style={{ marginLeft: "1rem" }}>
                     {this.state.vaccinationSelected &&
-                      this.renderCheckBox3(
+                      this.renderCheckBox2(
                         "vaccination,",
                         "vaccination",
                         "",

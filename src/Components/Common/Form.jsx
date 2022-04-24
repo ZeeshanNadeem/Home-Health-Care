@@ -1259,9 +1259,14 @@ class Form extends React.Component {
         (s) => s._id === input.value
       );
 
+      console.log(service[0].serviceName.trim().toUpperCase())
       if (
         service.length > 0 &&
-        service[0].serviceName.trim().toUpperCase() === "BABY VACCINATION"
+        service[0].serviceName.trim().toUpperCase() === "BABY VACINATION" ||
+        service[0].serviceName.toUpperCase().includes("BABY VACCINATION")  ||
+        service[0].serviceName.toUpperCase().includes("BABY VACINATION")  ||
+        service[0].serviceName.toUpperCase().includes("VACINATION BABY") ||
+        service[0].serviceName.toUpperCase().includes("BABY'S VACINATION")
       ) {
         this.setState({ vaccinationSelected: true });
       } else this.setState({ vaccinationSelected: false });
