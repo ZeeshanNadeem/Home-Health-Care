@@ -4,6 +4,7 @@ import "animate.css";
 import NavBar from "../../HomePage/NavBar";
 import login from "../Auth/auth";
 import Joi from "joi-browser";
+import {Row,Col} from "react-bootstrap"
 class Login extends Form {
   state = {
     doctorForm: {
@@ -55,16 +56,30 @@ class Login extends Form {
                   Login
                 </h1>
               </header>
+              <Row>
+                <Col xs={12} md={12} lg={12}>
               <article>{this.renderLabel("Email", "email")}</article>
               <article>{this.renderInput("text", "email", "email")}</article>
+              </Col>
+              </Row>
+
+
+              <Row>
+                <Col xs={12} md={12} lg={12}>
               <article>{this.renderLabel("Password", "password")}</article>
               <article>
                 {this.renderInput("password", "password", "password")}
               </article>
+              </Col>
+              </Row>
 
+              <Row>
+                <Col  xs={12} md={12} lg={12}>
               <article className="login-page-btn login-btn-styling-">
                 {this.renderBtn("Login")}
               </article>
+              </Col>
+              </Row>
             </main>
           </article>
         </form>

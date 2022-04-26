@@ -66,6 +66,7 @@
     "react-tinder-card": "^1.4.5",
     "react-toastify": "^8.0.3",
     "react-top-loading-bar": "^2.1.0",
+    "reactstrap": "^8.10.1",
     "redux": "^4.1.2",
     "styled-components": "^5.3.1",
     "use-places-autocomplete": "^2.0.0",

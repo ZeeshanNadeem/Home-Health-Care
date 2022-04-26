@@ -9,6 +9,9 @@ import { ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHospitalAlt, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import {Row,Col} from "react-bootstrap";
+import { Card, CardImg, CardText, CardBody,
+  CardTitle, CardSubtitle, Button } from 'reactstrap';
 
 class SignUp extends Form {
   state = {
@@ -67,12 +70,17 @@ class SignUp extends Form {
                   Sign Up
                 </h1>
               </header>
+
+              <Row>
+                <Col md={12} xs={12} lg={12}>
               <article className="signup-label">
                 {this.renderLabel("Full Name", "fname")}
               </article>
               <article>
                 {this.renderInput("text", "fullName", "fullName")}
               </article>
+              </Col>
+              </Row>
               {/* <article className="signup-label">
                 {this.renderLabel("Last Name", "lname")}
               </article>
@@ -92,16 +100,25 @@ class SignUp extends Form {
                   dobSignUpMaxDate
                 )}
               </article> */}
+              <Row>
+                <Col md={12} xs={12} lg={12}>
               <article className="signup-label">
                 {this.renderLabel("Email", "email")}
               </article>
               <article>{this.renderInput("text", "email", "email")}</article>
+              </Col>
+              </Row>
+
+              <Row>
+                <Col md={12} xs={12} lg={12}>
               <article className="signup-label">
                 {this.renderLabel("Password", "password")}
               </article>
               <article>
                 {this.renderInput("password", "password", "password")}
               </article>
+              </Col>
+              </Row>
               {/* <article className="signup-label">
                   {this.renderLabel("Confirm Password", "email")}
                 </article>
@@ -115,6 +132,9 @@ class SignUp extends Form {
                   "Request To Be an Organization Admin"
                 )}
               </article> */}
+
+              <Row>
+                <Col md={12} xs={12} lg={12}>
               <article
                 style={{
                   // textAlign: "center",
@@ -133,9 +153,16 @@ class SignUp extends Form {
                   </span>
                 </Link>
               </article>
+              </Col>
+              </Row>
+
+              <Col md={12} xs={12} lg={12}>
+              <Row>
               <article className="signup-page-btn">
                 {this.renderBtn("Sign Up")}
               </article>
+              </Row>
+              </Col>
             </main>
           </article>
         </form>

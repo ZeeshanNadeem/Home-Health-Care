@@ -350,6 +350,8 @@ textarea#address {
 }
 
 @media screen and (min-width: 200px) and (max-width: 449px) {
+
+
   .user-req {
     overflow-y: auto;
   }
@@ -360,10 +362,10 @@ textarea#address {
     margin-top: 0;
   }
   article.email-label {
-    margin-top: 0.9rem;
+    /* margin-top: 0.9rem; */
   }
   .style-User-Request {
-    height: 62.5rem;
+    height:  54.5rem;
   }
   h2.menu-title {
     padding: 0;
@@ -431,7 +433,15 @@ textarea#address {
   .one-group-first-item {
     margin-left: 1rem;
   }
+ 
 }
+
+/* @media screen and (min-width:280px)  {
+  .add-staff-form {
+    width: 20rem;
+    max-width: 20rem !important;
+  }
+} */
 
 @media screen and (min-width: 450px) and (max-width: 899px) {
   .user-req {
@@ -445,10 +455,10 @@ textarea#address {
     margin-top: 0;
   }
   article.email-label {
-    margin-top: 0.9rem;
+    /* margin-top: 0.9rem; */
   }
   .style-User-Request {
-    height: 62.5rem;
+    height:  46.5rem;
   }
   article.input-addStaff,
   input#availabilityTo {
@@ -511,10 +521,10 @@ textarea#address {
     margin-bottom: 1rem;
   }
   article.email-label {
-    margin-top: 0.9rem;
+    /* margin-top: 0.9rem; */
   }
   .style-User-Request {
-    height: 62.5rem;
+    height: 44.5rem;
   }
   .one-group-first-item,
   .addStaff-input,

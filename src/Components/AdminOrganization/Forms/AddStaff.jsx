@@ -6,6 +6,7 @@ import Alert from "@material-ui/lab/Alert";
 import { toast } from "react-toastify";
 import jwtDecode from "jwt-decode";
 import config from "../../Api/config.json";
+import {Row,Col} from "react-bootstrap"
 
 class NurseForm extends Form {
   state = {
@@ -406,7 +407,7 @@ class NurseForm extends Form {
                 Add A Staff Member
               </h1>
             </header>
-
+            
             <article className="addStaff-Fields-grouping add-staff-input-styling">
               <article className="one-group-first-item addStaff-group-alignment">
                 <article className="label-addStaff">
