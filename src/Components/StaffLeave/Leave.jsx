@@ -78,12 +78,15 @@ class Leave extends Form {
     else if (dayNo === "Thursday") dayNo = "THRU";
     else if (dayNo === "Friday") dayNo = "FRI";
     else if (dayNo === "Saturday") dayNo = "SAT";
+    console.log(config.staff +
+      `?day=${dayNo}&service=${Service._id}&organization=${Organization._id}&ignoreCity=true`)
 
+     
     const { data: staffGot } = await axios.get(
       config.staff +
-        `/?day=${dayNo}&service=${Service._id}&organization=${Organization._id}&ignoreCity=true`
+        `?day=${dayNo}&service=${Service._id}&organization=${Organization._id}&ignoreCity=true`
     );
-
+    
     const { data: staffLeaves } = await axios.get(
       config.apiEndPoint + "/staffLeave"
     );
@@ -460,6 +463,7 @@ class Leave extends Form {
         City,
         Address,
         PhoneNo,
+        markers
       } = userRequestStaff[i];
       const customer = {
         fullName: fullName,
@@ -473,6 +477,7 @@ class Leave extends Form {
         rated: rated,
         Address: Address,
         PhoneNo: PhoneNo,
+        markers:markers
       };
 
       const compareDate = moment(userRequestDate_, "YYYY/MM/DD");

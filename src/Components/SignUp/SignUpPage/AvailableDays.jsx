@@ -90,8 +90,9 @@ class AvailableDays extends Form {
   };
 
   async componentDidMount() {
+    const obj=this.props.location.state;
     const { data } = await axios.get(
-      `http://localhost:3000/api/independentServices?serviceID=${global.serviceSelectedID}`
+      `http://localhost:3000/api/independentServices?serviceID=${obj.serviceSelectedID}`
     );
 
     let doctorForm = { ...this.state.doctorForm };
@@ -112,61 +113,15 @@ class AvailableDays extends Form {
     this.setState({ errors: errors || {} });
     if (!errors && hasSelectedSlot && hasSelectedDay) {
       try {
-        // const response = await signingUp(global.formData);
-        // localStorage.setItem("token", response.headers["x-auth-token"]);
+    
 
-        let serviceOrg = global.staffDetails.serviceOrg_;
-        let OrgID = global.staffDetails.OrganizationID;
+        const obj=this.props.location.state;
+        console.log("obj got abcd ::",obj)
+        let serviceOrg = obj.staffDetails.serviceOrg_;
+        let OrgID = obj.staffDetails.OrganizationID;
         let price = this.state.doctorForm.price;
-        let user = global.userID;
-        // let user = response.data._id;
-
-        // const { data: service } = await axios.get(
-        //   `http://localhost:3000/api/services?IndependentServiceID=${global.serviceSelectedID}`
-        // );
-
-        // if (service.length > 0) {
-
-        //   let serviceObj = {
-        //     serviceID: service[0].IndependentService._id,
-        //     serviceOrgranization:
-        //       service[0].IndependentService.serviceOrganization,
-        //     servicePrice: service[0].servicePrice,
-        //     userID: user,
-        //   };
-        //   // const { data: service } = await axios.post(
-        //   //   config.apiEndPoint + "/services",
-        //   //   serviceObj
-        //   // );
-        //   const addStaffMember = {
-        //     fullName: global.staffDetails.fullName,
-        //     email: global.staffDetails.email,
-        //     password: global.staffDetails.password,
-
-        //     serviceID: serviceObj.serviceID,
-
-        //     Organization: serviceObj.serviceOrgranization,
-        //     qualificationID: global.staffDetails.qualification,
-        //     phone: this.state.doctorForm.phone,
-        //     availableTime: this.state.slotTime,
-        //     availableDays: this.state.daysAvailable,
-        //     Rating: 0,
-        //     RatingAvgCount: 0,
-        //   };
-
-        //   const { data: staffAdded } = await axios.post(
-        //     `http://localhost:3000/api/staff?dontCheck=true&signUpOrg=true`,
-        //     addStaffMember
-        //   );
-
-        //   await axios.patch(config.apiEndPoint + "/user?EditUser=true", {
-        //     staffMemberObj: staffAdded,
-        //     // staffMemberID: response.data._id
-        //     staffMemberID: global.userID,
-        //   });
-        //   window.location = "/Home";
-        // }
-        // else {
+        let user = obj.userID;
+     
 
         let serviceObj = {
           serviceID: serviceOrg,
@@ -191,21 +146,21 @@ class AvailableDays extends Form {
         
     
         const addStaffMember = {
-          fullName: global.staffDetails.fullName,
-          email: global.staffDetails.email,
-          password: global.staffDetails.password,
+          fullName: obj.staffDetails.fullName,
+          email: obj.staffDetails.email,
+          password: obj.staffDetails.password,
 
           serviceID: serviceObj.serviceID,
 
           Organization: service.serviceOrgranization,
-          qualificationID: global.staffDetails.qualification,
+          qualificationID: obj.staffDetails.qualification,
           phone: this.state.doctorForm.phone,
           availableTime: this.state.slotTime,
           availableDays: this.state.daysAvailable,
           Rating: 0,
           RatingAvgCount: 0,
           locations:newLocation,
-          city: global.city,
+          city: obj.city,
           locations:newLocation
         };
 
@@ -218,13 +173,13 @@ class AvailableDays extends Form {
 
         await axios.patch(config.apiEndPoint + "/user?EditUser=true", {
           staffMemberObj: staffAdded,
-          // staffMemberID: response.data._id
-          staffMemberID: global.userID,
+      
+          staffMemberID: obj.userID,
         });
        
         localStorage.removeItem("markers");
         window.location = "/Home";
-        // }
+     
       } catch (ex) {
         toast.error(ex.response.data);
       }

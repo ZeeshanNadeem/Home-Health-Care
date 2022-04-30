@@ -7,6 +7,7 @@ import config from "../../Api/config.json";
 import axios from "axios";
 import { useEffect } from "react";
 import moment from "moment";
+import swal from 'sweetalert';
 
 const styles = {
   root: {
@@ -26,8 +27,9 @@ const Schedule = () => {
 
       const { data: staffRecord } = await axios.get(
         config.apiEndPoint +
-          `/userRequests?staffMemberId=${user.staffMember._id}`
+          `/userRequests?staffMemberId=${user.staffMember._id}&showMyDuties=true`
       );
+      console.log("staff Record::",staffRecord)
       const date = new Date();
       let day = date.getDate();
       let month = date.getMonth() + 1;
@@ -36,19 +38,42 @@ const Schedule = () => {
       if (day < 10) day = "0" + day;
       const todaysDate = year + "/" + month + "/" + day;
       console.log("todaysDate:", todaysDate);
-      if (staffRecord.length > 0) {
-        const todaysDate_ = moment(todaysDate, "YYYY/MM/DD");
-        let duties = [];
-        for (let i = 0; i < staffRecord.length; i++) {
-          const dutyDate = moment(staffRecord[i].Schedule, "YYYY/MM/DD");
-          if (todaysDate_.isAfter(dutyDate)) continue;
-          else duties.push(staffRecord[i]);
-        }
-        setStaffDetials(duties);
-      } else setStaffDetials(staffRecord);
+
+      //Filtering those requests that are gone past today
+      //checking on date
+      // if (staffRecord.length > 0) {
+      //   const todaysDate_ = moment(todaysDate, "YYYY/MM/DD");
+      //   let duties = [];
+      //   for (let i = 0; i < staffRecord.length; i++) {
+      //     const dutyDate = moment(staffRecord[i].Schedule, "YYYY/MM/DD");
+      //     if (todaysDate_.isAfter(dutyDate)) continue;
+      //     else duties.push(staffRecord[i]);
+      //   }
+      //   setStaffDetials(duties);
+      // } else 
+      
+      setStaffDetials(staffRecord);
     } catch (ex) {}
   }, []);
 
+const serviceCompleted=async(id)=>{
+  
+try{
+  await axios.patch(
+    config.apiEndPoint +
+      `/userRequests?serviceCompleted=true&id=${id}`,{completeStatus:true}
+  );
+  const { data: staffRecord } = await axios.get(
+    config.apiEndPoint +
+      `/userRequests?staffMemberId=${user.staffMember._id}&showMyDuties=true`
+  );
+  setStaffDetials(staffRecord);
+  swal("Service Completed Successfully!", "You have completed Your Service!", "success")
+}
+catch{
+
+}
+}
   return staffDetails.length > 0 ? (
     <React.Fragment>
       <img
@@ -68,7 +93,8 @@ const Schedule = () => {
             <th className="td-schedule">Patient Phone No</th>
             <th className="td-schedule">Patient Adresss</th>
             <th className="td-schedule">Date</th>
-            <th className="td-schedule">SLOT</th>
+            <th className="td-schedule">Slot</th>
+            <th className="td-schedule">Status</th>
           </tr>
         </thead>
 
@@ -100,6 +126,15 @@ const Schedule = () => {
               </td>
               <td className="td-schedule">
                 <small> {staff.ServiceNeededTime}</small>
+              </td>
+              <td className="td-schedule">
+              {staff.completed ? 
+             <span className="badge badge-secondary completed-badge-myduties"
+          
+             >Completed</span>
+              :<button className="btn btn-primary" type="submit"
+              onClick={()=>{serviceCompleted(staff._id)}}
+              >COMPLETE</button>}
               </td>
             </tr>
           </tbody>

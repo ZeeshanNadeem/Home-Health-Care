@@ -290,18 +290,50 @@ const Ratting = (props) => {
                   {row.Schedule[2]}
                   {row.Schedule[3]}
                 </TableCell>
-                <TableCell align="left">{checkRequest(row)}</TableCell>
-               
-                <TableCell>
-                  {checkRequestStatus(row) ? (
+                <TableCell align="left">{
+                  //request checking status before
+                  
+                // checkRequest(row)
+                //now
+                row.completed ?
+                <div className="progress">
+              <div
+                className="progress-bar progress-bar-striped bg-success"
+                role="progressbar"
+                style={{ width: "100%" }}
+                aria-valuenow="100"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                completed
+              </div>
+            </div> :
+            <div className="progress">
+            <div
+              className="progress-bar progress-bar-warning progress-bar-striped"
+              role="progressbar"
+              aria-valuenow="0"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style={{ width: "100%" }}
+            >
+              pending
+            </div>
+          </div>
+                }</TableCell>
+                
+                {  row.completed && <TableCell>
+                  
+                    
+                 
+                   
                     <RattingModal row={row} updateRating={RattingRefactor} />
-                  ) : (
-                    ""
-                  )}
-                </TableCell>
-                <TableCell>  <Button variant="contained"
+                  
+                  
+                </TableCell>}
+                { !row.completed &&<TableCell>  <Button variant="contained"
                 onClick={()=>rescheduleAppointment(row)}
-                >ReSchedule</Button></TableCell>
+                >ReSchedule</Button></TableCell>}
               </TableRow>
             ))}
           </TableBody>

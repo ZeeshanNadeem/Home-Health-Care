@@ -278,7 +278,7 @@ class SignUpAsOrganization extends Form {
           formData.append("city", this.state.doctorForm.city);
           formData.append("locations",  JSON.stringify(newLocation) );
         
-
+         
           global.selectedFile = this.state.doctorForm.selectedFile;
           const response = await signingUp(formData,"indepedentServiceProvider");
           localStorage.setItem("token", response.headers["x-auth-token"]);
@@ -287,7 +287,18 @@ class SignUpAsOrganization extends Form {
           global.staffDetails = this.state.doctorForm;
           global.city = this.state.doctorForm.city;
           global.serviceSelectedID = this.state.doctorForm.serviceOrg_;
-          this.props.history.push("/signUp/details");
+
+
+          const obj={
+          
+            userID:response.data._id,
+            // formData:formData,
+            staffDetails:this.state.doctorForm,
+            city:this.state.doctorForm.city,
+            serviceSelectedID:this.state.doctorForm.serviceOrg_
+          }
+          console.log("abcccdee::",obj)
+          this.props.history.push("/signUp/details",obj);
        
        
         }

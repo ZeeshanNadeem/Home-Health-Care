@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
 import {Container,Row,Col,Button} from 'react-bootstrap'
+import swal from 'sweetalert';
 import GetCurrentUser from "../CurrentUser/GetCurrentUser";
 import Geocode from "react-geocode";
 
@@ -97,10 +98,10 @@ class UserRequestService extends Form {
    
   
 
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.setState({ lat: position.coords.latitude });
-      this.setState({ lng: position.coords.longitude });
-    });
+    // navigator.geolocation.getCurrentPosition((position) => {
+    //   this.setState({ lat: position.coords.latitude });
+    //   this.setState({ lng: position.coords.longitude });
+    // });
 
     const { data: meetingDetials } = await axios.get(
       config.apiEndPoint + "/confirmService"
@@ -119,6 +120,9 @@ class UserRequestService extends Form {
 
     const rescheduleData=this.props.location.state;
     if(rescheduleData){
+      await axios.patch(config.apiEndPoint+`/userRequests?id=${rescheduleData._id}&rescheduleAppointment=true`,{
+        status:true
+      })
       const doctorForm={...this.state.doctorForm};
       doctorForm.fullname=rescheduleData.fullName;
       doctorForm.address=rescheduleData.Address;
@@ -1291,6 +1295,34 @@ class UserRequestService extends Form {
               {/* <article className="RowSR RowSR-grid"> */}
                 <Col>
                 <article>
+                  {/* City */}
+                  <article
+                    className={`user-request-input-wrapper ${this.state.errorClass}`}
+                  >
+                    <article>
+                      {this.renderLabel("Schedule", "schedule")}
+                    </article>
+                    <article>
+                      {this.renderInput(
+                        "date",
+                        "schedule",
+                        "schedule",
+                        "Schedule a Meeting",
+                        this.state.minDate,
+                        // this.state.maxDate
+                      )}
+                    </article>
+                  
+                  </article>
+                  {/* City */}
+                </article>
+              
+              
+               
+                </Col>
+                <Col>
+                
+                <article>
                   <article
                     className={`user-request-input-wrapper ${this.state.errorClass}`}
                   >
@@ -1315,32 +1347,6 @@ class UserRequestService extends Form {
                     </article>
                   </article>
                 </article>
-               
-                </Col>
-                <Col>
-                <article>
-                  {/* City */}
-                  <article
-                    className={`user-request-input-wrapper ${this.state.errorClass}`}
-                  >
-                    <article>
-                      {this.renderLabel("Schedule", "schedule")}
-                    </article>
-                    <article>
-                      {this.renderInput(
-                        "date",
-                        "schedule",
-                        "schedule",
-                        "Schedule a Meeting",
-                        this.state.minDate,
-                        this.state.maxDate
-                      )}
-                    </article>
-                  
-                  </article>
-                  {/* City */}
-                </article>
-             
                 </Col>
               {/* </article> */}
               </Row>

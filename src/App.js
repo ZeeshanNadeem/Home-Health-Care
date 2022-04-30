@@ -34,7 +34,7 @@ const App = () => {
   const isLoggedIn = localStorage.getItem("token");
   const [progress, setProgress] = useState(0);
   const user=GetCurrentUser();
-  console.log("app user::",user)
+ 
 
   useEffect(async()=>{
 
@@ -44,7 +44,7 @@ const App = () => {
       })
     }
     catch(ex){
-
+        // console.log("ex:::=>",ex);
     }
 
   },[])

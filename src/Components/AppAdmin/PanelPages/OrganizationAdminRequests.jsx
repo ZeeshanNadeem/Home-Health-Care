@@ -13,6 +13,7 @@ import jwtDecode from "jwt-decode";
 import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 
 import { faFileWord } from "@fortawesome/free-solid-svg-icons";
+import swal from 'sweetalert';
 import StaffDetails from "./StaffDetails";
 
 const OrganizationAdminRequests = (props) => {
@@ -61,6 +62,7 @@ const OrganizationAdminRequests = (props) => {
         await axios.put(config.apiEndPoint + "/user/" + admin._id, {
           isOrganizationAdmin: "Independent Member Approved",
         });
+        swal("Admin Approved!", "You have approved independent working employee", "success")
         const { data: service } = await axios.get(
           config.apiEndPoint +
             `/services?findServiceByUser=yes&userID=${admin._id}`
@@ -72,6 +74,8 @@ const OrganizationAdminRequests = (props) => {
         await axios.put(config.apiEndPoint + "/user/" + admin._id, {
           isOrganizationAdmin: "Approved Admin",
         });
+        swal("Admin Approved!", "You have organzation admin", "success")
+
       }
     } catch (ex) {
       toast.error(ex.response.data);

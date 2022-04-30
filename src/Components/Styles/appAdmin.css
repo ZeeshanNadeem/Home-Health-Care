@@ -521,3 +521,8 @@ input[type=text]:disabled {
      z-index: 10;
      cursor: pointer;
 }
+.completed-badge-myduties{
+  color: #fff;
+    background-color: gray;
+}
+

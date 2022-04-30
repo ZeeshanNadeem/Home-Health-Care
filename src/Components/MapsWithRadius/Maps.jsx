@@ -13,6 +13,7 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import config from "./config.json";
 import compass from "../../Images/compass.png";
+import configApi from "../Api/config.json"
 
 
 
@@ -66,6 +67,7 @@ const Maps = () => {
   let [inputRadius, setInputRadius] = React.useState("");
 
   const user=GetCurrentUser();
+  console.log("user:",user);
 
   const mapRef = React.useRef();
   const {isLoaded}= useLoadScript({googleMapsApiKey:config.apiKey,
@@ -86,9 +88,10 @@ const Maps = () => {
       }
     
       if(user){
-       const {data} =await axios.get(config.apiEndPoint+`/api/userRequests?userID=${user._id}`)
-       if(data.length>0){
-        const marker=JSON.parse(data[data.length-1].markers);
+        // http://localhost:3000/api/userRequests?userID=625a9d48daec0ebe9a2e4ca6
+       const {data} =await axios.get(configApi.apiEndPoint+`/userRequests?userID=${user._id}`)
+       if(data.length>0 && data[data.length-1].markers.length>0){
+        const marker=data[data.length-1].markers;
         console.log("marker:",marker);
        
         setMarkers(marker)
