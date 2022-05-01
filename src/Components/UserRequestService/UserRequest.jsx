@@ -1225,7 +1225,7 @@ class UserRequestService extends Form {
                 <Col>
                 <article>
                   <article>{this.renderLabel("City", "city")}</article>
-                  <article>
+                  <article className="signup-org-city_">
                     {this.renderDropDown(
                       "City",
                       this.state.cites,
@@ -1263,7 +1263,7 @@ class UserRequestService extends Form {
               {/* <article className="RowSR RowSR-grid email-txt"> */}
 
                 <Col>
-                <article className="email-label">
+                <article className="email-label user_req_email_style">
                   <article>{this.renderLabel("Email", "Email")}</article>
                   <article>
                     {this.renderInput("text", "email", "email", "Email")}

@@ -148,7 +148,7 @@ class AddService extends Form {
               )}
             </article>
             <article className="add-service-btn">
-              {this.renderBtn("Add Service")}
+              {this.renderBtn("Add Service","addServiceBtn")}
             </article>
           </article>
         </article>

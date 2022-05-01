@@ -90,6 +90,7 @@ class AvailableDays extends Form {
   };
 
   async componentDidMount() {
+ 
     const obj=this.props.location.state;
     const { data } = await axios.get(
       `http://localhost:3000/api/independentServices?serviceID=${obj.serviceSelectedID}`
@@ -114,6 +115,7 @@ class AvailableDays extends Form {
     if (!errors && hasSelectedSlot && hasSelectedDay) {
       try {
     
+        //hea
 
         const obj=this.props.location.state;
         console.log("obj got abcd ::",obj)

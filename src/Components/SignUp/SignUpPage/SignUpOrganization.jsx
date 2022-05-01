@@ -297,7 +297,7 @@ class SignUpAsOrganization extends Form {
             city:this.state.doctorForm.city,
             serviceSelectedID:this.state.doctorForm.serviceOrg_
           }
-          console.log("abcccdee::",obj)
+          
           this.props.history.push("/signUp/details",obj);
        
        

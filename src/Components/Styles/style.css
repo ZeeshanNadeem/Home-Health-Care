@@ -388,19 +388,19 @@ textarea#address {
   }
   .add-staff-form {
     /* width: 20rem; */
-    width: 90%;
+    /* width: 90%; */
   }
-  .addStaff-Fields-grouping {
+  /* .addStaff-Fields-grouping {
     display: flex;
     justify-content: space-between;
-  }
+  } */
 
-  article.input-addStaff,
+  /* article.input-addStaff,
   input#availabilityTo {
     width: 10rem !important;
-  }
+  } */
 
-  select#staff,
+  /* select#staff,
   input#availabilityFrom,
   input#availabilityTo,
   select#availabileDayFrom,
@@ -408,31 +408,31 @@ textarea#address {
   .input-addStaff > article > input#password,
   .input-addStaff > article > input#phoneno {
     width: 7.5rem !important;
-  }
-  input#availabilityTo {
+  } */
+  /* input#availabilityTo {
     margin-right: 1.6rem;
-  }
-  select#docQualification {
+  } */
+  /* select#docQualification {
     margin-left: 0.8rem;
-  }
-  .input-addStaff > article > input#password {
+  } */
+  /* .input-addStaff > article > input#password {
     margin-left: 0.9rem;
-  }
-  .input-addStaff > article > input#phoneno {
+  } */
+  /* .input-addStaff > article > input#phoneno {
     margin-left: -2rem;
-  }
-  select#availabileDayTo {
+  } */
+  /* select#availabileDayTo {
     margin-left: -1.2rem !important;
-    /* margin-right: -5rem; */
+  
     width: 7.5rem !important;
-  }
-  .one-group-second-item,
+  } */
+  /* .one-group-second-item,
   .add-staff-dob > article > input#password {
     margin-left: 0.5rem;
-  }
-  .one-group-first-item {
+  } */
+  /* .one-group-first-item {
     margin-left: 1rem;
-  }
+  } */
  
 }
 
@@ -540,7 +540,7 @@ textarea#address {
   }
 
   article.addStaff-group-alignment.addStaff-btn {
-    margin-left: 1rem;
+    /* margin-left: 1rem; */
   }
 
   .label-addStaff {
@@ -606,7 +606,7 @@ textarea#address {
 
 @media screen and (min-width: 1000px) {
   .user-req {
-    overflow-y: hidden !important;
+    overflow-y: hidden;
   }
   article.email-label {
     margin-top: 0 !important;

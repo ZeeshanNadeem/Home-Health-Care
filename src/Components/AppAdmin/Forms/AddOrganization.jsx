@@ -76,7 +76,7 @@ class AddOrganization extends Form {
             <article className="app-admin-panel-label">
               {this.renderLabel("Organization Name", "organization Name")}
             </article>
-            <article>
+            <article className="org-name-input">
               {this.renderInput(
                 "text",
                 "name",

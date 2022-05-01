@@ -63,8 +63,12 @@ class SignUp extends Form {
         <NavBar />
         <ToastContainer />
         <form onSubmit={this.handleSubmit}>
-          <article className="signup-page">
-            <main className="card-signup signup-style animate__animated animate__fadeInLeft">
+          <article className="signup-page"
+          style={{display:"flex",alignItems:"center"}}
+          >
+            <main className="card-signup signup-style animate__animated animate__fadeInLeft"
+             style={{marginBottom:"3rem"}}
+            >
               <header>
                 <h1 className="sign-up-header-text animate__animated animate__zoomIn">
                   Sign Up

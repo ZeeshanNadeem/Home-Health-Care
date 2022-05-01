@@ -1553,8 +1553,9 @@ class Form extends React.Component {
     );
   };
 
-  renderBtn = (label) => {
-    return <button className="btns">{label}</button>;
+  renderBtn = (label,temp="") => {
+    if (temp)   return <button className="btns addServiceBtn">{label}</button>;
+   else return <button className="btns">{label}</button>;
   };
 
   renderConditionalDropDown = (id, name, label) => {

@@ -28,6 +28,7 @@ import GetCurrentUser from "./Components/CurrentUser/GetCurrentUser";
 import IndependentServices from "./Components/AppAdmin/PanelPages/IndependentServices"
 import axios from "axios";
 import config from "./Components/Api/config.json"
+import Res from "./Components/responsive/signup";
 
 
 const App = () => {
@@ -219,6 +220,11 @@ const App = () => {
       <Route
         path="/staff/availability"
         render={(props) => <MyAvailability setProgress={setProgress} {...props} />}
+      />
+
+      <Route
+        path="/res"
+        render={(props) => <Res setProgress={setProgress} {...props} />}
       />
        
     </article>

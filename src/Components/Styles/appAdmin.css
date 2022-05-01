@@ -104,21 +104,21 @@ main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
   }
 
   select#serviceOrg_ {
-    width: 6.6rem;
-    /* margin-right: 0.7rem; */
+    /* width: 6.6rem; */
+    
   }
 
   .servies-org {
-    margin-left: 2rem;
+    /* margin-left: 2rem; */
   }
   .txtField-signup-org {
-    width: 6.6rem;
+    /* width: 6.6rem; */
   }
   .dropdown-second-item {
     margin-left: 0.5rem;
   }
   .org-signup {
-    width: 22rem;
+    /* width: 22rem; */
     margin-left: 4rem;
     margin-right: 4rem;
   }
@@ -147,21 +147,21 @@ main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
 
   select#serviceOrg_ {
     margin: 0;
-    width: 10rem;
+    /* width: 10rem; */
 
-    /* margin-right: 0.7rem; */
+  
   }
   .servies-org {
-    margin-left: 2rem;
+    /* margin-left: 2rem; */
   }
   .txtField-signup-org {
-    width: 10rem;
+    /* width: 10rem; */
   }
   .dropdown-second-item {
     margin-left: 0.5rem;
   }
   .org-signup {
-    width: 27rem;
+    /* width: 27rem; */
     margin-left: 4rem;
     margin-right: 4rem;
   }
@@ -208,7 +208,7 @@ main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
     margin-left: 1rem !important;
   }
   .btn-orgSignUp {
-    /* margin-top: 0.3rem !important; */
+  
     padding-bottom: 2rem;
   }
   .signup-org-group {
@@ -219,7 +219,7 @@ main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
   .org-signup {
     max-width: 50rem !important;
     width: 40rem !important;
-    /* height: 21.5rem; */
+    
     margin-left: 2rem;
     margin-right: 2rem;
   }
@@ -230,7 +230,7 @@ main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
   select#serviceOrg_ {
     margin: 0;
     width: 16.5rem;
-    /* width: 26rem; */
+   
   }
   .txt-upload-label {
     margin-left: 1rem;
@@ -244,7 +244,7 @@ main.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
   .available-slots {
     max-width: 50rem !important;
     width: 47rem !important;
-    /* height: 21.5rem; */
+   
     margin-left: 2rem;
     margin-right: 2rem;
   }
@@ -526,3 +526,185 @@ input[type=text]:disabled {
     background-color: gray;
 }
 
+
+@media only screen and (max-width: 280px)  {
+  
+  .login-card.login-,.card-signup.signup-style{
+    width: 16rem;
+  }
+
+}
+
+@media only screen and (min-width:290px) and (max-width: 380px)  {
+  
+  .card-signup.signup-style{
+    width: 19rem;
+    max-width: 19rem;
+  }
+
+}
+
+@media only screen and (min-width:198px) and (max-width: 256px)  {
+  
+  .card-signup{
+    width: 12rem;
+    max-width: 12rem;
+  }
+
+}
+
+@media only screen  and (max-width: 197px)  {
+  
+  .card-signup{
+    width: 8rem;
+    max-width:8rem;
+  }
+
+}
+
+@media screen and (min-width: 281px) and (max-width: 449px){
+
+  .style-User-Request.user-req-card{
+    width: 22rem;
+  }
+  input#schedule {
+    width: 7.1rem;
+}
+}
+
+@media screen and (max-width:280px) {
+  .card-signup.doc-form.style-User-Request.user-req-card.user-req-layout {
+    width: 16rem;
+    height: 68rem;
+}
+.user_req_email_style{
+  margin-top: 1rem;
+}
+main.org-signup.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
+  width: 16rem;
+  /* height: 33.5rem; */
+}
+}
+
+
+@media screen and (min-width:700px) and (max-width:950px) {
+  article.wrapper-user-req.user-req-new {
+  display: flex;
+  align-items: center;
+  height: 100vh;
+}
+}
+
+article.wrapper-user-req.user-req-new{
+  overflow-y: auto !important;
+}
+
+@media screen and (min-width:500px) and (max-width:600px) {
+  .card-signup.doc-form.style-User-Request.user-req-card.user-req-layout {
+    width: 29rem;
+    height: 50rem;
+  }
+}
+
+
+@media screen and (min-width:200px) and (max-width:850px) {
+  article.card-signup.doc-form.addservice.add-service-form-wrapper {
+    height: 28rem;
+}
+}
+
+
+
+@media screen and (min-width:300px) and (max-width:600px) {
+  main.org-signup.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
+    width: 21rem;
+}
+
+article.txtField-signup-org {
+  width: 7rem;
+}
+
+
+}
+
+@media screen and (min-width:300px) and (max-width:499px)  {
+  .add-staff-form {
+    width: 20rem;
+    /* width: 90%; */
+    height: 41rem;
+  }
+  .time-slots-Chk-Box {
+    margin-left: 0rem;
+    flex-wrap: wrap;
+  }
+  .card-signup.doc-form.add-staff-form{
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media screen and (max-width:299px){
+  .add-staff-form {
+    width: 16rem;
+    /* width: 90%; */
+    height: 41rem;
+  }
+  .time-slots-Chk-Box {
+    margin-left: 0rem;
+    flex-wrap: wrap;
+  }
+  .card-signup.doc-form.add-staff-form{
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  article.time-slots {
+    flex-wrap: wrap;
+}
+label.chkBox-Msg {
+  margin-left: 0rem;
+}
+}
+
+@media screen and (min-width:500px) and (max-width:850px) {
+  article.time-slots {
+    flex-wrap: wrap;
+}
+}
+
+@media screen and (min-width:280px) and (max-width:399px){
+  .view-staff-details{
+    width: 1rem;
+  }
+}
+
+@media screen and (max-width:280px){
+  
+h1.sign-up-header-text.doc-header {
+  font-size: 1.5rem;
+}
+
+
+article.card-signup.doc-form.addservice.addOrg {
+  width: 17rem;
+}
+.org-name-input >article > input#name {
+  font-size: 0.8rem;
+}
+.addServiceBtn{
+  height: 3.2rem;
+}
+
+main.org-signup.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
+    width: 16rem;
+  
+    margin-bottom: 14rem;
+    margin-top: 3rem;
+
+
+}
+.signup-org-admin {
+
+  height: 130vh;
+  
+}
+}
