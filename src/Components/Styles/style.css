@@ -101,7 +101,7 @@ a.google.btn {
 .card-style {
   padding-top: 2.5rem;
   padding-bottom: 2.5rem;
-  height: 27rem;
+  /* height: 27rem; */
   margin-top: 1rem;
 }
 .login-card {

@@ -68,7 +68,17 @@ class Form extends React.Component {
     for (let i = 0; i < staff.length; i++) {
       let staffOnLeave = false;
       for (let j = 0; j < staffLeaves.length; j++) {
+        
+        //new line added in staff leaves check 
+        //when staff member has taken leave on slot 
+        //dont block the entire day
+        if(staffLeaves[j].slotLeave)continue;
+        //new line added in staff leaves check 
+        //when staff member has taken leave on slot 
+        //dont block the entire day
+
         if (staff[i]._id === staffLeaves[j].staff._id) {
+         
           if (staffLeaves[j].leaveFrom === schedule) {
             staffOnLeave = true;
 
@@ -643,7 +653,7 @@ class Form extends React.Component {
       
     let { data: availabilityData } = await axios.get(
       config.staff +
-        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${lat}&lng=${lng}`
+        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${lat}&lng=${lng}&date=${schedule}`
     );
 
    

@@ -708,3 +708,71 @@ main.org-signup.org.card-signup.signup-style-org.animate__animated.animate__fade
   
 }
 }
+
+@media screen and (min-width:300px) and (max-width:500px) {
+  .confirm-meeting-card {
+    z-index: 0;
+    /* height: 33rem; */
+    width: 22rem;
+    overflow-y: auto;
+}
+}
+
+main.confirm-meeting-card.card-signup.card-style.animate__animated.animate__fadeInLeft {
+  margin-top: -5rem;
+}
+
+@media screen and (max-width:280px) {
+  .confirm-meeting-card {
+    width: 16rem;
+}
+.confirm-title {
+  margin-left: 0;
+}
+.style-meeting-detials {
+  display:block;
+  margin-left: 0;
+}
+.style-meeting-detials-1 {
+  display:block;
+  margin-left: 0;
+}
+.style-meeting-detials-2 {
+  display:block;
+  margin-left: 0;
+}
+.style-meeting-detials-4 {
+  display:block;
+  margin-left: 0;
+}
+.style-meeting-detials-5 {
+  display:block;
+  margin-left: 0;
+}
+.style-meeting-detials-6 {
+  display:block;
+  margin-left: 0;
+}
+.style-meeting-detials-7 {
+  display:block;
+  margin-left: 0;
+  max-width: 24ch;
+}
+.style-meeting-detials-8 {
+  display:block;
+  margin-left: 0;
+
+
+}
+.confirm-meeting {
+  
+  overflow-y: auto;
+}
+.confirm-meeting-page {
+  height: 125vh;
+}
+button.btns {
+
+  height: 3rem;
+}
+}

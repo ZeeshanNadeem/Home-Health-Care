@@ -4,6 +4,7 @@ import Joi from "joi-browser";
 import config from "../Api/config.json";
 import jwtDecode from "jwt-decode";
 import { ToastContainer, toast } from "react-toastify";
+import Select from 'react-select'
 import moment from "moment";
 import axios from "axios";
 class Leave extends Form {
@@ -14,11 +15,16 @@ class Leave extends Form {
     },
     user: "",
     minDate: "",
+    leaveSlot:false,
+    slots:[],
+    leaveSlots:[]
   };
-  componentDidMount() {
+ async componentDidMount() {
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
-
+    const {data}=await axios.get(config.apiEndPoint+`/staff/${user.staffMember._id}`)
+    const slots=data.availableTime.filter(s=>s.value===true);
+    this.setState({slots})
     this.setState({ user });
   }
 
@@ -530,6 +536,29 @@ class Leave extends Form {
     const errors = this.validate();
     this.setState({ errors: errors || {} });
     if (!errors) {
+      console.log(this.state.leaveSlots)
+      if(this.state.leaveSlots.length>0){
+      const leave = {
+        leave_from: this.state.doctorForm.leave_from,
+        leave_to: this.state.doctorForm.leave_to,
+        staffID: this.state.user.staffMember._id,
+        slots:this.state.leaveSlots
+      };
+      try {
+        console.log(leave)
+        const { data: leaveGot } = await await axios.post(
+          config.apiEndPoint + "/staffLeave?slotLeave=true",
+          leave
+        );
+
+        toast.success("Leave Scheduled!");
+        this.setState({ leaveGot });
+        // await this.AssignSubstituteStaff(leaveGot.leaveFrom, leaveGot.leaveTo);
+      } catch (ex) {
+        toast.error(ex.response.data);
+      }
+      }
+      else{
       const leave = {
         leave_from: this.state.doctorForm.leave_from,
         leave_to: this.state.doctorForm.leave_to,
@@ -548,7 +577,27 @@ class Leave extends Form {
         toast.error(ex.response.data);
       }
     }
+    }
   };
+
+  slotLeaveCheck=(e)=>{
+   this.setState({leaveSlot:e.target.checked})
+  }
+  getSlots=()=>{
+    let arr=[]
+    for(let slot of this.state.slots){
+        arr.push({value: slot.time, label: slot.time})
+    }
+    return arr;
+  }
+  handleSlots=(e)=>{
+
+    const leaveSlots=[...this.state.leaveSlots];
+    leaveSlots.push(e[0]);
+    this.setState({leaveSlots:e})
+  }
+ 
+  
   render() {
     let date = new Date();
     let month = date.getMonth() + 1;
@@ -576,6 +625,7 @@ class Leave extends Form {
                 maxDate
               )}
             </article>
+
             <article>{this.renderLabel("To", "leave_to")}</article>
             <article>
               {this.renderInput(
@@ -587,6 +637,35 @@ class Leave extends Form {
                 maxDate
               )}
             </article>
+       
+
+
+         
+          <div className="form-check">
+          <input className="form-check-input" type="checkbox" value={this.state.leaveSlot} id="flexCheckDefault"
+          onChange={this.slotLeaveCheck}
+          />
+          <div  style={{marginTop:"0.5rem"}}>
+          <label className="form-check-label" htmlFor="flexCheckDefault">
+          Leave On Slot?
+          </label>
+          </div>
+          </div>
+
+          {this.state.leaveSlot && <>
+          <label className="form-check-label mt-2" htmlFor="flexCheckDefault">
+          Select Slots
+          </label>
+          <div style={{marginTop:"0rem"}}>
+          <Select options={this.getSlots()}
+          onChange={this.handleSlots}
+          isMulti
+          />
+         
+          </div> </>}
+
+
+
             <article className="staff-leave-btn">
               {this.renderBtn("Apply For Leave")}
             </article>

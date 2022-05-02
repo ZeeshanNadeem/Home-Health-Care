@@ -485,7 +485,7 @@ element.style {
 }
 
 .staff-leave {
-  height: 20rem;
+  /* height: 20rem; */
 }
 
 .staff-leave-btn {
@@ -539,7 +539,7 @@ element.style {
 
 .confirm-meeting-card {
   /* height: 100vh; */
-  height: 22rem;
+  /* height: 22rem; */
 }
 
 .confirm-meeting-page {
@@ -603,7 +603,7 @@ li.nav-li {
 
 .confirm-meeting-card {
   z-index: 0;
-  height: 33rem;
+  /* height: 33rem; */
 }
 
 .style-meeting-detials {
