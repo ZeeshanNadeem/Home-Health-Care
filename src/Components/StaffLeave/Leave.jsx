@@ -84,8 +84,7 @@ class Leave extends Form {
     else if (dayNo === "Thursday") dayNo = "THRU";
     else if (dayNo === "Friday") dayNo = "FRI";
     else if (dayNo === "Saturday") dayNo = "SAT";
-    console.log(config.staff +
-      `?day=${dayNo}&service=${Service._id}&organization=${Organization._id}&ignoreCity=true`)
+   
 
      
     const { data: staffGot } = await axios.get(
@@ -365,7 +364,10 @@ class Leave extends Form {
       // IF That staff is neither on leave nor got slot booked in that time
       // Assigning that staff a duty
       if (!gotSlotBooked && !staffOnLeave && liesBetween) {
+        const jwt = localStorage.getItem("token");
+        const user = jwtDecode(jwt);
         serviceDemander.staffMemberID = staffGot[j]._id;
+        serviceDemander.userID=user._id;
 
         try {
           count++;
@@ -403,6 +405,7 @@ class Leave extends Form {
       const jwt = localStorage.getItem("token");
       const user = jwtDecode(jwt);
       serviceDemander.staffMemberID = user.staffMember._id;
+      serviceDemander.userID=user._id;
       try {
         await axios.post(
           "http://localhost:3000/api/userRequests?assignDuty=abc",
@@ -429,7 +432,7 @@ class Leave extends Form {
   //This function checks if the required staff member
   //who took leave its assigned duties need to rescheduled
   //or not
-  ReScheduleDuty = async (userRequestStaff, leave_from, leave_to) => {
+  ReScheduleDuty = async (userRequestStaff, leave_from, leave_to,leaveSaved="") => {
     let staffLeaveDateFrom = leave_from.split("-");
     let staffLeaveDateTo = leave_to.split("-");
 
@@ -514,10 +517,16 @@ class Leave extends Form {
     else {
       toast.error("Sorry!! You can't take leave");
       toast.error("No Substitute Staff Member Available to Assign Your Shift");
+
+      if(leaveSaved){
+      await axios.delete(
+        config.apiEndPoint + "/staffLeave/" + leaveSaved._id
+      );
+    }
     }
   };
 
-  AssignSubstituteStaff = async (leave_from, leave_to) => {
+  AssignSubstituteStaff = async (leave_from, leave_to,leaveSaved="") => {
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
     //checking if this person who took leave has
@@ -527,7 +536,7 @@ class Leave extends Form {
     );
 
     if (data.length === 0) toast.success("You've been granted leave ! ");
-    else await this.ReScheduleDuty(data, leave_from, leave_to);
+    else await this.ReScheduleDuty(data, leave_from, leave_to,leaveSaved);
   };
 
   handleSubmit = async (e) => {
@@ -538,6 +547,8 @@ class Leave extends Form {
     if (!errors) {
       console.log(this.state.leaveSlots)
       if(this.state.leaveSlots.length>0){
+ 
+    
       const leave = {
         leave_from: this.state.doctorForm.leave_from,
         leave_to: this.state.doctorForm.leave_to,
@@ -545,18 +556,52 @@ class Leave extends Form {
         slots:this.state.leaveSlots
       };
       try {
-        console.log(leave)
+     
         const { data: leaveGot } = await await axios.post(
           config.apiEndPoint + "/staffLeave?slotLeave=true",
           leave
         );
-
-        toast.success("Leave Scheduled!");
         this.setState({ leaveGot });
-        // await this.AssignSubstituteStaff(leaveGot.leaveFrom, leaveGot.leaveTo);
+       //checking slots need to re-assigned on slot leave
+      const {data}= await axios.post(config.apiEndPoint+"/staff?SlotsBooked=true",leave)
+     
+      let rescheduleCount = 0;
+      if(data.length>0) 
+      {
+        for(let userReq of data){
+          await axios.delete(
+            config.apiEndPoint + "/userRequests/" + userReq._id
+          );
+          rescheduleCount=  await this.AssignAutomatedStaffDuty(userReq,data.length)
+          
+        }
+        if (rescheduleCount && rescheduleCount > 0) {
+          toast.success("Leave Scheduled!!");
+          toast.success(
+            "Check your schedule to know what duties have been substituted"
+          );
+        } 
+        else {
+          toast.error("Sorry!! You can't take leave");
+          toast.error("No Substitute Staff Member Available to Assign Your Shift");
+          await axios.delete(
+            config.apiEndPoint + "/staffLeave/" + leaveGot._id
+          );
+        }
+    
+      }
+      else toast.success("You've been granted leave");
+
+      
+
+
+       
+     
+
       } catch (ex) {
         toast.error(ex.response.data);
       }
+
       }
       else{
       const leave = {
@@ -572,7 +617,7 @@ class Leave extends Form {
 
         // toast.success("Leave Scheduled!");
         this.setState({ leaveGot });
-        await this.AssignSubstituteStaff(leaveGot.leaveFrom, leaveGot.leaveTo);
+        await this.AssignSubstituteStaff(leaveGot.leaveFrom, leaveGot.leaveTo,leaveGot);
       } catch (ex) {
         toast.error(ex.response.data);
       }
