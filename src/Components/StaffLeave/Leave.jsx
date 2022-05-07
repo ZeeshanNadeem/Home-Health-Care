@@ -367,7 +367,7 @@ class Leave extends Form {
         const jwt = localStorage.getItem("token");
         const user = jwtDecode(jwt);
         serviceDemander.staffMemberID = staffGot[j]._id;
-        serviceDemander.userID=user._id;
+        serviceDemander.userID=serviceDemander.user._id;
 
         try {
           count++;
@@ -405,7 +405,7 @@ class Leave extends Form {
       const jwt = localStorage.getItem("token");
       const user = jwtDecode(jwt);
       serviceDemander.staffMemberID = user.staffMember._id;
-      serviceDemander.userID=user._id;
+      serviceDemander.userID=serviceDemander.user._id;
       try {
         await axios.post(
           "http://localhost:3000/api/userRequests?assignDuty=abc",
@@ -546,7 +546,7 @@ class Leave extends Form {
     this.setState({ errors: errors || {} });
     if (!errors) {
       console.log(this.state.leaveSlots)
-      if(this.state.leaveSlots.length>0){
+      if(this.state.leaveSlot){
  
     
       const leave = {

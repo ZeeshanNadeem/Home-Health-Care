@@ -29,6 +29,7 @@ import IndependentServices from "./Components/AppAdmin/PanelPages/IndependentSer
 import axios from "axios";
 import config from "./Components/Api/config.json"
 import Res from "./Components/responsive/signup";
+import MyLeaves from "./Components/MyLeaves/MyLeaves";
 
 
 const App = () => {
@@ -61,10 +62,10 @@ const App = () => {
         // onLoaderFinished={() => setProgress(0)}
       />
 
-      <article className="admin-routes">
-        <Route
+<article className="admin-routes">
+     <Route
           path="/admin"
-          render={(props) =>  <Admin setProgress={setProgress} {...props} />
+          render={(props) =>  <Admin setProgress={setProgress} {...props} /> 
         
         }
         />
@@ -223,8 +224,8 @@ const App = () => {
       />
 
       <Route
-        path="/res"
-        render={(props) => <Res setProgress={setProgress} {...props} />}
+        path="/staff/leaves"
+        render={(props) => <MyLeaves setProgress={setProgress} {...props} />}
       />
        
     </article>

@@ -88,15 +88,25 @@ const Maps = () => {
       }
     
       if(user){
-        // http://localhost:3000/api/userRequests?userID=625a9d48daec0ebe9a2e4ca6
+        // localStorage.removeItem("lat");
+        // localStorage.removeItem("lng");
        const {data} =await axios.get(configApi.apiEndPoint+`/userRequests?userID=${user._id}`)
        if(data.length>0 && data[data.length-1].markers.length>0){
         const marker=data[data.length-1].markers;
-        console.log("marker:",marker);
+        
        
+        setMarkers(marker)
+      } else if(localStorage.getItem("lat") && localStorage.getItem("lng")){
+          let marker=[];
+          marker.push({lat:Number(localStorage.getItem("lat")),
+          lng:Number(localStorage.getItem("lng"))
+        
+        })
         setMarkers(marker)
       }
       }
+    
+
   },[])
   
 

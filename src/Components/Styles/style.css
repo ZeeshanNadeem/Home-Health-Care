@@ -31,10 +31,10 @@
   height: 2.3rem;
 }
 
-article > .error,
+/* article > .error,
 article > input {
   margin-bottom: 0;
-}
+} */
 /* input[type="checkbox"] {
   width: 2rem;
   height: 1rem;
@@ -343,7 +343,7 @@ textarea#address {
 }
 
 .user-req-card {
-  height: 45rem;
+  /* height: 45rem; */
 }
 .user-req {
   overflow-y: auto !important;
@@ -365,7 +365,7 @@ textarea#address {
     /* margin-top: 0.9rem; */
   }
   .style-User-Request {
-    height:  54.5rem;
+    height:  51.5rem;
   }
   h2.menu-title {
     padding: 0;
@@ -524,7 +524,7 @@ textarea#address {
     /* margin-top: 0.9rem; */
   }
   .style-User-Request {
-    height: 44.5rem;
+    /* height: 44.5rem; */
   }
   .one-group-first-item,
   .addStaff-input,
@@ -639,9 +639,9 @@ textarea#address {
   .user-req-card,
   .style-User-Request {
     width: 49rem !important;
-    height: 44rem !important;
-    margin-top: 1rem;
-    margin-bottom: 2rem;
+    /* height: 44rem !important; */
+    /* margin-top: 1rem;
+    margin-bottom: 2rem; */
   }
   .address-txt {
     /* width: 20rem; */

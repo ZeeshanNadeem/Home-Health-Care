@@ -86,7 +86,7 @@ const UserProfileMenu = () => {
         </span>
       )}
 
-    {user.isOrganizationAdmin==="Independent Member Approved" && (
+    {user.isOrganizationAdmin==="Approved Admin" && (
         <span>
           <span>
             <span className="user-account-popover">
@@ -130,6 +130,22 @@ const UserProfileMenu = () => {
             <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
           </span>
           <span>
+          <span className="user-account-popover">
+              <article className="logout-wrapper-icon my-home-visits-icon">
+                <FontAwesomeIcon
+                  icon={faHouseUser}
+                  style={{ marginTop: "0.2rem" }}
+                />
+              </article>
+              <Link
+                to="/staff/leaves"
+                className="user-account-menu-item sheduled-visits"
+              >
+                <span style={{ marginLeft: "0.7rem" }}>My Leaves</span>
+              </Link>
+              
+            </span>
+            <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
             <span className="user-account-popover">
               <article className="logout-wrapper-icon my-home-visits-icon">
                 <FontAwesomeIcon
@@ -143,7 +159,10 @@ const UserProfileMenu = () => {
               >
                 <span style={{ marginLeft: "0.7rem" }}>My Duties</span>
               </Link>
+              
             </span>
+            
+          
             <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
           </span>
         </span>

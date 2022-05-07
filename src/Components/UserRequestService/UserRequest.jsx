@@ -12,7 +12,8 @@ import BasicModal from "./Modal/AvailableStaffModal";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
-import {Container,Row,Col,Button} from 'react-bootstrap'
+import {Container,Row,Col,Button} from 'react-bootstrap';
+import { MapPin } from "react-feather";
 import swal from 'sweetalert';
 import GetCurrentUser from "../CurrentUser/GetCurrentUser";
 import Geocode from "react-geocode";
@@ -96,8 +97,8 @@ class UserRequestService extends Form {
   }
   async componentDidMount() {
    
-  
-
+    
+    
     // navigator.geolocation.getCurrentPosition((position) => {
     //   this.setState({ lat: position.coords.latitude });
     //   this.setState({ lng: position.coords.longitude });
@@ -1087,7 +1088,6 @@ class UserRequestService extends Form {
     //   toast.error("Please Check Availability and then Schedule!");
     // }
   };
- 
 
 
 
@@ -1096,11 +1096,11 @@ class UserRequestService extends Form {
 
     const lat= localStorage.getItem("lat");
     const lng= localStorage.getItem("lng");
-    const radius= localStorage.getItem("radius");
+    // const radius= localStorage.getItem("radius");
  
-    if(lat && lng && radius)
+    if(lat && lng)
     this.setState({serviceLocalityError:""})
-    else if(!lat || !lng && !radius)
+    else if(!lat || !lng)
     this.setState({serviceLocalityError:"Location is required"})
 
 
@@ -1239,9 +1239,10 @@ class UserRequestService extends Form {
                      target="_blank"
                       >
                        Specify Your Location Open Map
-                      <FontAwesomeIcon icon={faLocationArrow}
-                      style={{marginLeft:"1rem"}}
-                      />
+                       <MapPin  style={{marginLeft:"2px",display:"inline-block",height:"17px"}}/>
+                      {/* <FontAwesomeIcon icon={MapPin} */}
+                     
+                    
                       </Link>
                       </div>
                       {this.state.serviceLocalityError &&

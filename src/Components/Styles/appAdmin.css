@@ -44,7 +44,7 @@
 }
 
 .wrapper-user-req {
-  margin-top: 0.5rem;
+  /* margin-top: 0.5rem; */
 }
 
 .payment-btn {
@@ -575,7 +575,7 @@ input[type=text]:disabled {
 @media screen and (max-width:280px) {
   .card-signup.doc-form.style-User-Request.user-req-card.user-req-layout {
     width: 16rem;
-    height: 68rem;
+    height: 63rem;
 }
 .user_req_email_style{
   margin-top: 1rem;
@@ -775,4 +775,19 @@ button.btns {
 
   height: 3rem;
 }
+}
+
+article.user-request-input-wrapper.errorClass {
+  margin-bottom: 0;
+}
+
+.card-signup.doc-form.style-User-Request.user-req-card.user-req-layout {
+  height: auto;
+}
+
+.errorClass{
+  margin-bottom: 0;
+}
+.dropdown-error-msg{
+  color: #ff0000;
 }

@@ -1205,12 +1205,15 @@ class Form extends React.Component {
     } else this.setState({ requestTime });
   };
 
-
+ 
   //This function checks if lon lat has changed
   //If Yes,It filter slots according to the location
   //specified by service taker
   myInterval= setInterval(()=>{
   
+    if(localStorage.getItem("lat") &&
+    localStorage.getItem("lng"))
+    this.setState({serviceLocalityError:""})
     const locationChanged=localStorage.getItem("locationChanged");
     if(locationChanged==="true"){
       const { service, organization, schedule, city } = this.state.doctorForm;
@@ -1223,6 +1226,7 @@ class Form extends React.Component {
     }
   
   }, 1000);
+
 
   handleChange = ({ currentTarget: input }) => {
     const errorMessage = this.validateProperty(input);
