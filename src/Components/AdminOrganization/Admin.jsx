@@ -7,21 +7,21 @@ import { Link } from "react-router-dom";
 import "animate.css";
 const Admin = (props) => {
   useEffect(() => {
-    const jwt = localStorage.getItem("token");
-    if (!jwt) props.history.push("/NotFound");
-    if (jwt) {
-      const user = jwtDecode(jwt);
-      if (
-        user.isOrganizationAdmin === "false" ||
-        user.isOrganizationAdmin === "pending"
-      )
-        props.history.push("/NotFound");
+    // const jwt = localStorage.getItem("token");
+    // if (!jwt) props.history.push("/NotFound");
+    // if (jwt) {
+      // const user = jwtDecode(jwt);
+      // if (
+      //   user.isOrganizationAdmin === "false" ||
+      //   user.isOrganizationAdmin === "pending"
+      // )
+      //   props.history.push("/NotFound");
       props.setProgress(0);
       props.setProgress(10);
       props.setProgress(20);
       props.setProgress(40);
       props.setProgress(100);
-    }
+    // }
   }, []);
 
   return (

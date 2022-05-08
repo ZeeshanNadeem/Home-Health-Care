@@ -11,11 +11,11 @@ import "animate.css";
 const AppAdmin = (props) => {
   React.useEffect(() => {
     const jwt = localStorage.getItem("token");
-    // if (!jwt) props.history.push("/NotFound");
+    if (!jwt) props.history.push("/NotFound");
     if (jwt) {
       const user = jwtDecode(jwt);
-      // if (user.isAppAdmin === "false" || !user.isAppAdmin)
-      //   props.history.push("/NotFound");
+      if (user.isAppAdmin === "false" || !user.isAppAdmin)
+        props.history.push("/NotFound");
       props.setProgress(0);
       props.setProgress(10);
       props.setProgress(20);

@@ -88,19 +88,19 @@ const StaffPanel = (props) => {
   };
   useEffect(() => {
     async function fetchData() {
-      const jwt = localStorage.getItem("token");
-      if (!jwt) props.history.push("/NotFound");
+      // const jwt = localStorage.getItem("token");
+      // if (!jwt) props.history.push("/NotFound");
 
-      if (jwt) {
-        const user = jwtDecode(jwt);
-        if (
-          user.isOrganizationAdmin === "false" ||
-          user.isOrganizationAdmin === "pending"
-        )
-          props.history.push("/NotFound");
-        if (user.isOrganizationAdmin === "Approved Admin")
+      // if (jwt) {
+        // const user = jwtDecode(jwt);
+        // if (
+        //   user.isOrganizationAdmin === "false" ||
+        //   user.isOrganizationAdmin === "pending"
+        // )
+        //   props.history.push("/NotFound");
+        // if (user.isOrganizationAdmin === "Approved Admin")
           await PopulateTable();
-      }
+      // }
       const { data } = await axios.get(
         config.apiEndPoint + "/user?GetStaff=true"
       );

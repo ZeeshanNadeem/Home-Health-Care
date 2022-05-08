@@ -10,7 +10,7 @@ const PageNotFound = () => {
       }}
     >
       <h1>PAGE NOT FOUND!</h1>
-      <p>asd</p>
+      
     </div>
   );
 };

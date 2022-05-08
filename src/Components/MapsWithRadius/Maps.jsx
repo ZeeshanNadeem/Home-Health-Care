@@ -355,7 +355,7 @@ const Maps = () => {
           
               <Marker
               key={index}
-              position={{ lat: marker.lat , lng: marker.lng}}  
+              position={{ lat: Number(marker.lat), lng: Number(marker.lng)}}  
               draggable
             
            
@@ -395,18 +395,27 @@ const Maps = () => {
               <h6>Your Pinned Location </h6>
             </InfoWindow>
           )} */}
+
            {checkRadius() && 
 
       
-
+             
              markers.map((marker,index)=>{
            
-              
+              if(marker.radius){
             return <Circle 
             key={index}
-            center={{ lat: parseFloat(marker.lat) , lng:parseFloat(marker.lng)}}
+            center={{ lat: Number(marker.lat) , lng:Number(marker.lng)}}
              
-             radius={marker.radius*1000} />
+             radius={Number(marker.radius*1000)} />
+            }
+            else {
+              return <Circle 
+              key={index}
+              center={{ lat: Number(marker.lat) , lng:Number(marker.lng)}}
+               
+               />
+            }
              })
             
             }

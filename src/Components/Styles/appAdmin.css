@@ -70,6 +70,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow-y: auto;
 }
 
 .org {
@@ -618,6 +619,7 @@ article.wrapper-user-req.user-req-new{
 @media screen and (min-width:300px) and (max-width:600px) {
   main.org-signup.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
     width: 21rem;
+    margin-top: 9rem !important;
 }
 
 article.txtField-signup-org {
@@ -696,10 +698,10 @@ article.card-signup.doc-form.addservice.addOrg {
 
 main.org-signup.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
     width: 16rem;
-  
+   
     margin-bottom: 14rem;
     margin-top: 3rem;
-
+    margin-top: 19rem !important;
 
 }
 .signup-org-admin {
@@ -790,4 +792,10 @@ article.user-request-input-wrapper.errorClass {
 }
 .dropdown-error-msg{
   color: #ff0000;
+}
+
+
+main.org-signup.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
+  padding-top: 0rem;
+  margin-top: 4rem;
 }

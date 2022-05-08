@@ -8,20 +8,23 @@ import axios from "axios";
 import { useEffect } from "react";
 import moment from "moment";
 import swal from 'sweetalert';
+import GetCurrentUser from "../../CurrentUser/GetCurrentUser";
 
 const styles = {
   root: {
     marginLeft: "40rem",
   },
 };
-const Schedule = () => {
+const Schedule = (props) => {
   const { root } = styles;
   const [user, setUser] = React.useState([]);
   const [staffDetails, setStaffDetials] = React.useState([]);
 
+  
   useEffect(async () => {
     try {
       const jwt = localStorage.getItem("token");
+
       const user = jwtDecode(jwt);
       setUser(user);
 
@@ -29,7 +32,7 @@ const Schedule = () => {
         config.apiEndPoint +
           `/userRequests?staffMemberId=${user.staffMember._id}&showMyDuties=true`
       );
-      console.log("staff Record::",staffRecord)
+     
       const date = new Date();
       let day = date.getDate();
       let month = date.getMonth() + 1;

@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom";
+import { Route,Switch } from "react-router-dom";
 import Login from "./Components/Login/LoginPage/Login";
 import SignUp from "./Components/SignUp/SignUpPage/SignUp";
 import Home from "./Components/HomePage/Home";
@@ -36,7 +36,7 @@ const App = () => {
   const isLoggedIn = localStorage.getItem("token");
   const [progress, setProgress] = useState(0);
   const user=GetCurrentUser();
- 
+ console.log("window:",window.location.href.includes("/staff/schedule"))
 
   useEffect(async()=>{
 
@@ -62,60 +62,11 @@ const App = () => {
         // onLoaderFinished={() => setProgress(0)}
       />
 
-<article className="admin-routes">
-     <Route
-          path="/admin"
-          render={(props) =>  <Admin setProgress={setProgress} {...props} /> 
-        
-        }
-        />
+  
 
-        <Route
-          path="/admin/Nurse"
-          render={(props) => (
-            <StaffPanel setProgress={setProgress} {...props} />
-          )}
-        />
-        <Route
-          path="/admin/Services/:id?"
-          render={(props) => (
-            <EditService setProgress={setProgress} {...props} />
-          )}
-        />
-        <Route
-          path="/admin/Requests"
-          render={(props) => (
-            <AdminUserRequest setProgress={setProgress} {...props} />
-          )}
-        />
-        {/* <Route path="/admin/Staff" component={AdminStaff} /> */}
-      </article>
+      
 
-      <article className="admin-routes appAdmin">
-        <Route
-          path="/app/admin"
-          render={(props) => <AppAdmin setProgress={setProgress} {...props} />}
-        />
-        <Route
-          path="/app/admin/org/:id?"
-          render={(props) => (
-            <ManageOrganizations setProgress={setProgress} {...props} />
-          )}
-        />
-        <Route
-          path="/app/admin/requests/:id?"
-          render={(props) => (
-            <OrganizationAdminRequests setProgress={setProgress} {...props} />
-          )}
-        />
-          <Route
-          path="/app/admin/services/:id?"
-          render={(props) => (
-            <IndependentServices setProgress={setProgress} {...props} />
-          )}
-        />
-
-      </article>
+<Switch>
       <Route
         exact
         path="/"
@@ -170,33 +121,17 @@ const App = () => {
         }
         // component={UserRequestService}
       />
-      <Route
-        exact
-        path="/staff/schedule"
-        render={(props) => <Schedule setProgress={setProgress} {...props} />}
-      />
+      
+     
+      
+      
       <Route
         exact
         path="/contact"
         render={(props) => <ContactPage setProgress={setProgress} {...props} />}
       />
-      <Route
-        exact
-        path="/staff/leave/:id?"
-        render={(props) => <Leave setProgress={setProgress} {...props} />}
-      />
-      <Route
-        exact
-        path="/Ratting"
-        render={(props) => <Ratting setProgress={setProgress} {...props} />}
-      />
-      <Route
-        exact
-        path="/Confirm/Meeting"
-        render={(props) => (
-          <ConfirmMeeting setProgress={setProgress} {...props} />
-        )}
-      />
+      
+     
       <Route
         path="/NotFound"
         render={(props) => (
@@ -218,6 +153,18 @@ const App = () => {
         render={(props) => <Maps setProgress={setProgress} {...props} />}
       />
 
+{(user && user.staffMember) || (user && !user.isAppAdmin &&
+        user.isOrganizationAdmin === "false" &&
+        !user.staffMember) || (user && user.isOrganizationAdmin==="Approved Admin") || 
+        (user && user.isAppAdmin)
+        ?
+      <>
+      <Route
+        exact
+        path="/staff/schedule"
+        render={(props) => <Schedule setProgress={setProgress} {...props} />}
+      /> 
+
       <Route
         path="/staff/availability"
         render={(props) => <MyAvailability setProgress={setProgress} {...props} />}
@@ -227,8 +174,83 @@ const App = () => {
         path="/staff/leaves"
         render={(props) => <MyLeaves setProgress={setProgress} {...props} />}
       />
+       <Route
+        exact
+        path="/staff/leave/:id?"
+        render={(props) => <Leave setProgress={setProgress} {...props} />}
+      />
+         <Route
+        exact
+        path="/Ratting"
+        render={(props) => <Ratting setProgress={setProgress} {...props} />}
+      />
+      <Route
+        exact
+        path="/Confirm/Meeting"
+        render={(props) => (
+          <ConfirmMeeting setProgress={setProgress} {...props} />
+        )}
+
+        
+      />
+      
+        <article className="admin-routes">
+        <Route
+          path="/admin"
+          render={(props) =>  <Admin setProgress={setProgress} {...props} /> 
+        
+        }
+        />
+
+        <Route
+          path="/admin/Nurse"
+          render={(props) => (
+            <StaffPanel setProgress={setProgress} {...props} />
+          )}
+        />
+        <Route
+          path="/admin/Services/:id?"
+          render={(props) => (
+            <EditService setProgress={setProgress} {...props} />
+          )}
+        />
+        
+        
+        
+      </article>
+
+      <article className="admin-routes appAdmin">
+        <Route
+          path="/app/admin"
+          render={(props) => <AppAdmin setProgress={setProgress} {...props} />}
+        />
+        <Route
+          path="/app/admin/org/:id?"
+          render={(props) => (
+            <ManageOrganizations setProgress={setProgress} {...props} />
+          )}
+        />
+        <Route
+          path="/app/admin/requests/:id?"
+          render={(props) => (
+            <OrganizationAdminRequests setProgress={setProgress} {...props} />
+          )}
+        />
+          <Route
+          path="/app/admin/services/:id?"
+          render={(props) => (
+            <IndependentServices setProgress={setProgress} {...props} />
+          )}
+        />
+
+      </article>
+      </>:<PageNotFound/>
+      }
+      </Switch>
        
     </article>
+
+    
   );
 };
 

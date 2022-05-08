@@ -1212,7 +1212,7 @@ class Form extends React.Component {
   myInterval= setInterval(()=>{
   
     if(localStorage.getItem("lat") &&
-    localStorage.getItem("lng"))
+    localStorage.getItem("lng") && this.state.serviceLocalityError)
     this.setState({serviceLocalityError:""})
     const locationChanged=localStorage.getItem("locationChanged");
     if(locationChanged==="true"){
@@ -1228,7 +1228,7 @@ class Form extends React.Component {
   }, 1000);
 
 
-  handleChange = ({ currentTarget: input }) => {
+  handleChange = async({ currentTarget: input }) => {
     const errorMessage = this.validateProperty(input);
     const errors = { ...this.state.errors };
     if (errorMessage) errors[input.name] = errorMessage;
@@ -1295,8 +1295,20 @@ class Form extends React.Component {
       }
     }
     //62090281cb9bf2316c5853f8
+   
     const doctorForm = { ...this.state.doctorForm };
     doctorForm[input.name] = input.value;
+    if(input.name==="OrganizationID"){
+      const {data}=await axios.get(config.apiEndPoint+`/independentServices`);
+      let IndependentPerson=false;
+      if(data.results.length>0){
+        if(data.results[0].serviceOrganization._id===doctorForm.OrganizationID)
+        IndependentPerson=true;
+      }
+      if(IndependentPerson)
+      this.setState({isIndependentPerson:IndependentPerson})
+      else  this.setState({isIndependentPerson:false})
+    }
 
     this.setState({ doctorForm, errors });
 

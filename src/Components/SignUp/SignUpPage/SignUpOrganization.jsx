@@ -111,6 +111,7 @@ class SignUpAsOrganization extends Form {
     city: ["Islamabad", "Rawalpindi"],
     lat: "",
     lng: "",
+    isIndependentPerson:false
   };
 
   schema = {
@@ -207,12 +208,15 @@ class SignUpAsOrganization extends Form {
 
    else 
    this.setState({serviceLocalityError:""})
-  
-    const isIndependentPerson =
-      this.state.doctorForm.OrganizationID === "6237270f9179e6123218a579"
-        ? true
-        : false;
+ 
 
+ 
+
+    const isIndependentPerson =
+    this.state.isIndependentPerson? true: false;
+
+    
+      this.setState({isIndependentPerson})
     global.staffDetails = this.state.doctorForm;
 
     let errors = this.validate();
@@ -434,8 +438,7 @@ class SignUpAsOrganization extends Form {
                 </article>
               </article>
 
-              {this.state.doctorForm.OrganizationID ===
-                "6237270f9179e6123218a579" && (
+              {this.state.isIndependentPerson && (
                 <article
                
                   className="signup-org-group servies-org"
@@ -477,8 +480,7 @@ class SignUpAsOrganization extends Form {
                 </article>
               )}
 
-              {this.state.doctorForm.OrganizationID ===
-                "6237270f9179e6123218a579" && (
+              {this.state.isIndependentPerson && (
                 <article>
                   <article
                     className="txt-upload-label signup-label"
