@@ -482,8 +482,10 @@ input[type=text]:disabled {
   top: 1rem;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
+  /* width: 100%; */
+  display: inline-block;
   max-width: 400px;
+  min-width: 100px;
   z-index: 10;
 }
 
@@ -491,8 +493,8 @@ input[type=text]:disabled {
   padding: 0.5rem;
   font-size: 1rem;
   border: 0;
-  
-  width: 100%;
+
+  /* width: 100%; */
 }
 
 
@@ -798,4 +800,8 @@ article.user-request-input-wrapper.errorClass {
 main.org-signup.org.card-signup.signup-style-org.animate__animated.animate__fadeInLeft {
   padding-top: 0rem;
   margin-top: 4rem;
+}
+
+.popover-style {
+  z-index: 99;
 }

@@ -13,7 +13,7 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 import config from "./config.json";
 import compass from "../../Images/compass.png";
-import configApi from "../Api/config.json"
+import configApi from "../Api/config.json";
 
 
 
