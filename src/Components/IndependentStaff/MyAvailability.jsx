@@ -211,12 +211,12 @@ const MyAvailability=()=>{
          daysChoosen.current=StaffDetails.availableDays;
          slotsForBackend.current=StaffDetails.availableTime;
 
-        console.log(" daysChoosen.current::", daysChoosen.current)
+        console.log("independent Services::", services)
         console.log(" slotsForBackend.current::",  slotsForBackend.current)
      
 
           const daysAvailable= StaffDetails.availableDays.filter(d=>d.value===true);
-        
+      
           const slotsAvailable= StaffDetails.availableTime.filter(d=>d.value===true);
         
           let slotsAvailable_=[];
@@ -243,7 +243,7 @@ const MyAvailability=()=>{
          setAvailableDays(optionDays)
         
         
-          setIndependentServices(services)
+          setIndependentServices(services.results)
           setTotalQualification(qualificationsArr)
           setQualification(StaffDetails.qualification._id)
           setService(StaffDetails.staffSpeciality._id)
@@ -286,8 +286,10 @@ const MyAvailability=()=>{
         setPhoneNo(e.currentTarget.value)
         }
         else if(Name==="service"){
+          console.log("e.currentTarget.value::",e.currentTarget.value)
             setService(e.currentTarget.value)
         }
+       
       
        setErrors(errors)
           
@@ -372,7 +374,7 @@ const MyAvailability=()=>{
         setErrors(errors || {})
 
 
-        const { data:service } = await axios.get(
+        const { data:serviceGot } = await axios.get(
           config.apiEndPoint + `/services?findServiceByUser=true&userID=${user._id}`
         );
         
@@ -386,16 +388,17 @@ const MyAvailability=()=>{
      
        
         if(!errors){
+        
           let obj={
               fullName,
               email:userObjInTable.email,
               password:userObjInTable.password,
-              serviceID:service[0]._id,
+              serviceID:service,
               Organization:staffDetails.Organization,
               availableDays:daysChoosen.current,
               availableTime:slotsForBackend.current,
               phone:phoneNo,
-              qualificationID:staffDetails.qualification._id,
+              qualificationID:qualification,
           
               Rating: staffDetails.Rating,
               RatingAvgCount: staffDetails.RatingAvgCount
@@ -404,8 +407,9 @@ const MyAvailability=()=>{
 
        
           try {
+          
             await axios.put(
-              "http://localhost:3000/api/staff/" + `${staffDetails._id}`,
+              "http://localhost:3000/api/staff/" + `${staffDetails._id}?updateIndependent=true`,
               obj
             );
       
@@ -535,14 +539,12 @@ const MyAvailability=()=>{
                 <Form.Select 
                  onChange={onChangeTextFields}
                  name="service"
-            
-               
                  value={service && service}
                
                 aria-label="Default select example">
                     <option value="">Select Your Service</option>
                     
-                    {independentServices.map((data,i)=>(
+                    {independentServices.length>0 && independentServices.map((data,i)=>(
                     <option key={i} value={data._id}
                      
                     >{data.serviceName}

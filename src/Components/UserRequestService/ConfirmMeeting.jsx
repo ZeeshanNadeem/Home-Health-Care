@@ -103,8 +103,8 @@ class ConfirmMeeting extends Form {
           // userRequest.email = doctorForm.email;
           // userRequest.lat=localStorage.getItem("lat");
           // userRequest.lng=localStorage.getItem("lng");
-  const rescheduleData=this.props.location.state;
-         const obj= {
+          const rescheduleData=this.props.location.state;
+          const obj= {
              fullName :rescheduleData.fullName,
            
              vaccination:rescheduleData.vaccination,
@@ -171,11 +171,11 @@ class ConfirmMeeting extends Form {
           <ToastContainer 
           autoClose={4100}
           />
-
+        
           {this.state.totalMeetingsRequested !== 0 &&
-            this.state.totalConfirmMeetings.length !==
+            this.state.totalConfirmMeetings.length-1 !==
               this.state.totalMeetingsRequested &&
-            this.state.totalConfirmMeetings.length !== 1 && (
+            this.state.totalConfirmMeetings.length-1 !== 1 && (
               <Alert severity="error">
                 Some Further Meetings might not have been scheduled due to
                 non-availability of staff.

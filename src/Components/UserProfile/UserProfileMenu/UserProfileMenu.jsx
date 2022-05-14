@@ -86,7 +86,7 @@ const UserProfileMenu = () => {
         </span>
       )}
 
-    {user.isOrganizationAdmin==="Independent Approved Admin" && (
+    {user.isOrganizationAdmin==="Independent Member Approved" && (
         <span>
           <span>
             <span className="user-account-popover">

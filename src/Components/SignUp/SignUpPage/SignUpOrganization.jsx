@@ -108,7 +108,9 @@ class SignUpAsOrganization extends Form {
       },
     ],
     fileUpload: true,
-    city: ["Islamabad", "Rawalpindi"],
+    city: ["Islamabad", "Rawalpindi","Karachi","Lahore","Multan","Hyderabad","Quetta","Faisalabad",
+    "Sialkot","Dera Ghazi Khan"
+  ],
     lat: "",
     lng: "",
     isIndependentPerson:false

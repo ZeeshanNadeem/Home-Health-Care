@@ -1115,6 +1115,7 @@ class UserRequestService extends Form {
     if (!errors || Object.keys(errors).length === 0)
       await this.AssignAutomatedStaff();
   };
+
   render() {
     const { organization, availabilityData } = this.state;
     const { schedule } = this.state.doctorForm;

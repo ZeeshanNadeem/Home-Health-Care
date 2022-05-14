@@ -1088,38 +1088,60 @@ class Form extends React.Component {
   //Populating the current organization's services in the next dropdown that
   // is named service
   populateServices = async (inputValue) => {
+   
     let { data } = await axios.get(
       `http://localhost:3000/api/services?organization=${inputValue}`
     );
 
-    if (this.state.doctorForm.organization === "61d5bc5c69b35ef18754dc9a") {
-      data.results = data.results.filter(
-        (req) => req.user.isOrganizationAdmin === "Approved Independent Member"
-      );
-      let temp = [];
-      let temp1 = [];
-      for (let i = 0; i < data.results.length; i++) {
-        temp.push({
-          _id: data.results[i].IndependentService._id,
-          serviceName: data.results[i].serviceName,
-          servicePrice: data.results[i].servicePrice,
-          serviceOrgranization: data.results[i].serviceOrgranization,
-        });
-      }
-      temp1.push(temp[0]);
-      for (let i = 0; i < temp.length; i++) {
-        let foundDup = false;
-        for (let j = 0; j < temp1.length; j++) {
-          if (temp1[j].serviceName === temp[i].serviceName) {
-            foundDup = true;
-            break;
-          }
-        }
-        if (!foundDup) temp1.push(temp[i]);
-      }
+    const {data:indepServices}=await axios.get(config.apiEndPoint+`/independentServices`);
+    if(indepServices.results[0].serviceOrganization._id===inputValue){
+      const services=data.results.filter(s=>s.IndependentService!=undefined)
+      let tempArr=[];
+       services.map(function(item, pos) {
+         
+         let chk=tempArr.some(s=>s.serviceName===item.serviceName);
+         console.log(chk);
+        if(chk===false)
+         tempArr.push({
+                _id: item.IndependentService._id,
+                serviceName: item.serviceName,
+                servicePrice: item.servicePrice,
+                serviceOrgranization:item.serviceOrgranization,
+              });
+    })
+      this.setState({ Conditionalservices: tempArr });
+    }
 
-      this.setState({ Conditionalservices: temp1 });
-    } else this.setState({ Conditionalservices: data.results });
+    // if (this.state.doctorForm.organization === "61d5bc5c69b35ef18754dc9a") {
+    //   data.results = data.results.filter(
+    //     (req) => req.user.isOrganizationAdmin === "Approved Independent Member"
+    //   );
+    //   let temp = [];
+    //   let temp1 = [];
+    //   for (let i = 0; i < data.results.length; i++) {
+    //     temp.push({
+    //       _id: data.results[i].IndependentService._id,
+    //       serviceName: data.results[i].serviceName,
+    //       servicePrice: data.results[i].servicePrice,
+    //       serviceOrgranization: data.results[i].serviceOrgranization,
+    //     });
+    //   }
+    //   temp1.push(temp[0]);
+    //   for (let i = 0; i < temp.length; i++) {
+    //     let foundDup = false;
+    //     for (let j = 0; j < temp1.length; j++) {
+    //       if (temp1[j].serviceName === temp[i].serviceName) {
+    //         foundDup = true;
+    //         break;
+    //       }
+    //     }
+    //     if (!foundDup) temp1.push(temp[i]);
+    //   }
+
+    //   this.setState({ Conditionalservices: temp1 });
+    // } 
+    
+    else this.setState({ Conditionalservices: data.results });
   };
 
   //This function puts all the available time in
@@ -1206,8 +1228,8 @@ class Form extends React.Component {
   };
 
  
-  //This function checks if lon lat has changed
-  //If Yes,It filter slots according to the location
+  //This function checks if lon lat has changed by appointment taker
+  //If Yes,It filters slots according to the location
   //specified by service taker
   myInterval= setInterval(()=>{
   
@@ -1216,6 +1238,7 @@ class Form extends React.Component {
     this.setState({serviceLocalityError:""})
     const locationChanged=localStorage.getItem("locationChanged");
     if(locationChanged==="true"){
+      if(this.state.doctorForm!=undefined){
       const { service, organization, schedule, city } = this.state.doctorForm;
       if(locationChanged==="true" && service && organization && city){
 
@@ -1224,8 +1247,10 @@ class Form extends React.Component {
         localStorage.setItem("locationChanged","false")
       }
     }
+    }
   
   }, 1000);
+
 
 
   handleChange = async({ currentTarget: input }) => {
