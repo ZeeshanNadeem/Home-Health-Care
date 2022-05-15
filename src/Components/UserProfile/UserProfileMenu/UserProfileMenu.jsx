@@ -2,6 +2,11 @@ import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 import { faHouseUser } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarDay } from "@fortawesome/free-solid-svg-icons";
+
+import { faUserLock } from "@fortawesome/free-solid-svg-icons";
+import { faUserNurse } from "@fortawesome/free-solid-svg-icons";
+import {calender} from "react-feather";
 import { Link } from "react-router-dom";
 import jwtDecode from "jwt-decode";
 
@@ -90,11 +95,14 @@ const UserProfileMenu = () => {
         <span>
           <span>
             <span className="user-account-popover">
-              <article className="logout-wrapper-icon my-home-visits-icon">
+              <article className="logout-wrapper-icon my-home-visits-icon"
+           
+              >
                 <FontAwesomeIcon
-                  icon={faHouseUser}
-                  style={{ marginTop: "0.2rem" }}
+                  icon={faCalendarDay}
+                  style={{ marginTop: "0.2rem",textAlign:"center",marginLeft:"2px"}}
                 />
+              
               </article>
               <Link
                 to="/staff/availability"
@@ -116,7 +124,7 @@ const UserProfileMenu = () => {
             <span className="user-account-popover">
               <article className="logout-wrapper-icon my-home-visits-icon">
                 <FontAwesomeIcon
-                  icon={faHouseUser}
+                  icon={faUserLock}
                   style={{ marginTop: "0.2rem" }}
                 />
               </article>
@@ -132,8 +140,8 @@ const UserProfileMenu = () => {
           <span>
           <span className="user-account-popover">
               <article className="logout-wrapper-icon my-home-visits-icon">
-                <FontAwesomeIcon
-                  icon={faHouseUser}
+              <FontAwesomeIcon
+                  icon={faUserLock}
                   style={{ marginTop: "0.2rem" }}
                 />
               </article>
@@ -149,8 +157,8 @@ const UserProfileMenu = () => {
             <span className="user-account-popover">
               <article className="logout-wrapper-icon my-home-visits-icon">
                 <FontAwesomeIcon
-                  icon={faHouseUser}
-                  style={{ marginTop: "0.2rem" }}
+                  icon={faUserNurse}
+                  style={{ marginTop: "0.2rem",marginLeft:"2px" }}
                 />
               </article>
               <Link

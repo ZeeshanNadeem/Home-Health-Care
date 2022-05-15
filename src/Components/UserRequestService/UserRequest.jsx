@@ -906,7 +906,10 @@ class UserRequestService extends Form {
           userRequest.PhoneNo = doctorForm.phoneno;
           userRequest.city = doctorForm.city;
           userRequest.email = doctorForm.email;
-
+          userRequest.lat=lat;
+          userRequest.lng=lng;
+         
+          console.log("userReq:",userRequest)
           try {
             await axios.post(
               config.apiEndPoint + "/confirmService",

@@ -89,13 +89,19 @@ class NavBar extends Component {
                     <AccountPopOver user={user} />
                   </span>
 
-                  {!user.isAppAdmin &&
+                  
+                  {/* Notifications */}
+
+                  {/* {!user.isAppAdmin &&
                     user.isOrganizationAdmin === "false" &&
                     !user.staffMember && (
                       <span style={{ marginTop: "0.51rem" }}>
                         <Notification />
                       </span>
-                    )}
+                    )} */}
+
+                     {/* Notifications */}
+                     
                 </span>
               </li>
             </React.Fragment>

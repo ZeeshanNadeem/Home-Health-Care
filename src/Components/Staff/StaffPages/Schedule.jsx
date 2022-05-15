@@ -452,7 +452,7 @@ const emptyRows =
                 </small>
               </td> */}
                   <TableCell >{row.fullName}</TableCell>
-                    <TableCell >{row.PhoneNo}</TableCell>
+                    <TableCell >0{row.PhoneNo}</TableCell>
                     <TableCell >{row.Address}</TableCell>
                     <TableCell >{reverseString(row.Schedule) }</TableCell>
                     <TableCell >{row.ServiceNeededTime}</TableCell>
@@ -509,7 +509,7 @@ const emptyRows =
       >
         You haven't been assigned a duty lately
       </span>
-      <div className="info" style={{ marginTop: "0.8rem" }}>
+      {/* <div className="info" style={{ marginTop: "0.8rem" }}>
         <p>
           <strong>Independent </strong>
           If you're working Independently (no organization association) then
@@ -523,7 +523,7 @@ const emptyRows =
           If you're assoicated with an organization then you aren't assigned a
           duty yet
         </p>
-      </div>
+      </div> */}
     </h5>
   );
 };

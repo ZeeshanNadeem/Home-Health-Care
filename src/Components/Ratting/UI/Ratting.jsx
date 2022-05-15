@@ -37,6 +37,7 @@ const Ratting = (props) => {
           config.apiEndPoint + `/userRequests?userID=${user._id}`
         );
 
+        console.log(userRequest)
         setUserRequests(userRequest);
       }
       props.setProgress(20);
@@ -331,9 +332,11 @@ const Ratting = (props) => {
                   
                   
                 </TableCell>}
-                { !row.completed &&<TableCell>  <Button variant="contained"
+                {/* ReScheule Appointment Button */}
+                
+                {/* { !row.completed &&<TableCell>  <Button variant="contained"
                 onClick={()=>rescheduleAppointment(row)}
-                >ReSchedule</Button></TableCell>}
+                >ReSchedule</Button></TableCell>} */}
               </TableRow>
             ))}
           </TableBody>

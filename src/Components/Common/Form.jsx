@@ -1094,9 +1094,12 @@ class Form extends React.Component {
     );
 
     const {data:indepServices}=await axios.get(config.apiEndPoint+`/independentServices`);
+    //Populating Independent Services
+    
     if(indepServices.results[0].serviceOrganization._id===inputValue){
       const services=data.results.filter(s=>s.IndependentService!=undefined)
       let tempArr=[];
+      //Making a unique arr
        services.map(function(item, pos) {
          
          let chk=tempArr.some(s=>s.serviceName===item.serviceName);

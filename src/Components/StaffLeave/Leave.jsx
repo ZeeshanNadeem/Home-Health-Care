@@ -84,14 +84,30 @@ class Leave extends Form {
     else if (dayNo === "Thursday") dayNo = "THRU";
     else if (dayNo === "Friday") dayNo = "FRI";
     else if (dayNo === "Saturday") dayNo = "SAT";
-   
+    let staffGot=[];
+      if(serviceDemander.Organization.name.toUpperCase().includes("INDEPENDENT")){
+        // let { data: availabilityData } = await axios.get(
+        //   config.staff +
+        //     `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${lat}&lng=${lng}&date=${schedule}`
+        // );
+    
 
-     
-    const { data: staffGot } = await axios.get(
+
+        const { data } = await axios.get(
+          config.staff +
+            `?day=${dayNo}&service=${Service._id}&organization=${Organization._id}&city=${serviceDemander.City}&lat=${serviceDemander.lat}&lng=${serviceDemander.lng}&date=${serviceDemander.Schedule}`
+          
+        );
+        staffGot=data;
+      }
+    else {
+    const { data } = await axios.get(
       config.staff +
         `?day=${dayNo}&service=${Service._id}&organization=${Organization._id}&ignoreCity=true`
     );
-    
+
+    staffGot=data;
+  }
     const { data: staffLeaves } = await axios.get(
       config.apiEndPoint + "/staffLeave"
     );
@@ -366,10 +382,11 @@ class Leave extends Form {
       if (!gotSlotBooked && !staffOnLeave && liesBetween) {
         const jwt = localStorage.getItem("token");
         const user = jwtDecode(jwt);
-        serviceDemander.staffMemberID = staffGot[j]._id;
-        serviceDemander.userID=serviceDemander.user._id;
+  
 
         try {
+          serviceDemander.staffMemberID = staffGot[j]._id;
+          serviceDemander.userID=serviceDemander.user && serviceDemander.user._id || serviceDemander.userID;
           count++;
           await axios.post(
             "http://localhost:3000/api/userRequests?assignDuty=abc",
@@ -404,9 +421,10 @@ class Leave extends Form {
     if (gotSlotBooked || !liesBetween || staffOnLeave) {
       const jwt = localStorage.getItem("token");
       const user = jwtDecode(jwt);
-      serviceDemander.staffMemberID = user.staffMember._id;
-      serviceDemander.userID=serviceDemander.user._id;
+    
       try {
+        serviceDemander.staffMemberID = user.staffMember._id;
+        serviceDemander.userID=serviceDemander.user && serviceDemander.user._id || serviceDemander.userID;
         await axios.post(
           "http://localhost:3000/api/userRequests?assignDuty=abc",
           serviceDemander
@@ -472,7 +490,10 @@ class Leave extends Form {
         City,
         Address,
         PhoneNo,
-        markers
+        markers,
+        lat,
+        lng,
+        
       } = userRequestStaff[i];
       const customer = {
         fullName: fullName,
@@ -486,7 +507,9 @@ class Leave extends Form {
         rated: rated,
         Address: Address,
         PhoneNo: PhoneNo,
-        markers:markers
+        markers:markers,
+        lat:lat,
+        lng:lng
       };
 
       const compareDate = moment(userRequestDate_, "YYYY/MM/DD");
@@ -546,6 +569,7 @@ class Leave extends Form {
     this.setState({ errors: errors || {} });
     if (!errors) {
       console.log(this.state.leaveSlots)
+      //Leave on the basis of slots
       if(this.state.leaveSlot){
  
     
@@ -603,7 +627,11 @@ class Leave extends Form {
       }
 
       }
+        //Leave on the basis of days
       else{
+
+        
+
       const leave = {
         leave_from: this.state.doctorForm.leave_from,
         leave_to: this.state.doctorForm.leave_to,
@@ -686,6 +714,9 @@ class Leave extends Form {
 
 
          
+         
+          {/* 
+           //leave on slot
           <div className="form-check">
           <input className="form-check-input" type="checkbox" value={this.state.leaveSlot} id="flexCheckDefault"
           onChange={this.slotLeaveCheck}
@@ -696,6 +727,10 @@ class Leave extends Form {
           </label>
           </div>
           </div>
+          
+
+          //leave on slot
+          */}
 
           {this.state.leaveSlot && <>
           <label className="form-check-label mt-2" htmlFor="flexCheckDefault">

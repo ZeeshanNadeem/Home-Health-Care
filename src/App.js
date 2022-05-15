@@ -36,7 +36,7 @@ const App = () => {
   const isLoggedIn = localStorage.getItem("token");
   const [progress, setProgress] = useState(0);
   const user=GetCurrentUser();
- console.log("window:",window.location.href.includes("/staff/schedule"))
+
 
   useEffect(async()=>{
 
