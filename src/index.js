@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+
 import "./Components/Styles/style.css";
 import "./Components/Styles/index.css";
 import App from "./App";
@@ -12,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "../src/Components/Styles/footer.css";
 import "../src/Components/Styles/appAdmin.css";
 import { Provider } from "react-redux";
+
 import store from "./store";
 
 

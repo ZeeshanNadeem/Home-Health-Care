@@ -23,6 +23,7 @@ import PageNotFound from "./Components/NotFound/PageNotFound";
 import AvailableDays from "./Components/SignUp/SignUpPage/AvailableDays";
 import AboutUs from "./Components/AboutUS/AboutUs";
 import Maps from "./Components/MapsWithRadius/Maps";
+
 import MyAvailability from "./Components/IndependentStaff/MyAvailability";
 import GetCurrentUser from "./Components/CurrentUser/GetCurrentUser";
 import IndependentServices from "./Components/AppAdmin/PanelPages/IndependentServices"
@@ -30,6 +31,7 @@ import axios from "axios";
 import config from "./Components/Api/config.json"
 import Res from "./Components/responsive/signup";
 import MyLeaves from "./Components/MyLeaves/MyLeaves";
+import PatientMap from "./Components/MapsWithRadius/PatientMap";
 
 
 const App = () => {
@@ -151,6 +153,10 @@ const App = () => {
       <Route
         path="/maps"
         render={(props) => <Maps setProgress={setProgress} {...props} />}
+      />
+      <Route
+        path="/patient/location"
+        render={(props) => <PatientMap setProgress={setProgress} {...props} />}
       />
 
 {(user && user.staffMember) || (user && !user.isAppAdmin &&

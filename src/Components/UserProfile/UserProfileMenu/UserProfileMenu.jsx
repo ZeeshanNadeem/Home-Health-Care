@@ -31,6 +31,7 @@ const UserProfileMenu = () => {
   return (
     <article>
       {isUser === true && (
+        <>
         <span>
           <span className="user-account-popover">
             <article className="logout-wrapper-icon my-home-visits-icon">
@@ -48,6 +49,25 @@ const UserProfileMenu = () => {
           </span>
           <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
         </span>
+        <span>
+          <span className="user-account-popover">
+            <article className="logout-wrapper-icon my-home-visits-icon">
+              <FontAwesomeIcon
+                icon={faHouseUser}
+                style={{ marginTop: "0.2rem" }}
+              />
+            </article>
+            <Link
+              to="/patient/location"
+              className="user-account-menu-item sheduled-visits"
+              target="_blank"
+            >
+              <span>Set Location</span>
+            </Link>
+          </span>
+          <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100"></div>
+        </span>
+        </>
       )}
       {user.isOrganizationAdmin === "Approved Admin" && (
         <span>

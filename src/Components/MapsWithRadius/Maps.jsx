@@ -87,23 +87,27 @@ const Maps = () => {
       localStorage.removeItem("locationChanged")
       }
     
-      if(user){
+      if(user && !user.isAppAdmin &&
+        !user.staffMember &&
+        user.isOrganizationAdmin === "false"){
         // localStorage.removeItem("lat");
         // localStorage.removeItem("lng");
-       const {data} =await axios.get(configApi.apiEndPoint+`/userRequests?userID=${user._id}`)
-       if(data.length>0 && data[data.length-1].markers.length>0){
-        const marker=data[data.length-1].markers;
+ 
+        const {data}=await axios.get(config.apiEndPoint+`/user?findUser_=${user._id}`)
+      
+        const marker=[{lat:data.lat,lng:data.lng}]
         
        
         setMarkers(marker)
-      } else if(localStorage.getItem("lat") && localStorage.getItem("lng")){
-          let marker=[];
-          marker.push({lat:Number(localStorage.getItem("lat")),
-          lng:Number(localStorage.getItem("lng"))
+      
+      // else if(localStorage.getItem("lat") && localStorage.getItem("lng")){
+      //     let marker=[];
+      //     marker.push({lat:Number(localStorage.getItem("lat")),
+      //     lng:Number(localStorage.getItem("lng"))
         
-        })
-        setMarkers(marker)
-      }
+      //   })
+      //   setMarkers(marker)
+      // }
       }
     
 
@@ -258,7 +262,7 @@ const Maps = () => {
 
   const newMarkers=markers.filter(m=>m!==marker);
 
-
+  
  
   if(user){
    

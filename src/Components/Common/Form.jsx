@@ -5,6 +5,7 @@ import moment from "moment";
 import config from "../Api/config.json";
 import jwtDecode from "jwt-decode";
 import "../UserRequestService/ModalData/CheckAvailability";
+import GetCurrentUser from "../CurrentUser/GetCurrentUser";
 
 class Form extends React.Component {
   state = {
@@ -1255,6 +1256,18 @@ class Form extends React.Component {
   }, 1000);
 
 
+  //This function populates organization in dropdown when 
+  //service is chosen.Only those organizations are shown 
+  //who lie in radius and provide that service
+  PopulateOrganizations=async()=>{
+    const user=GetCurrentUser();
+    const {data}=await axios.get(config.apiEndPoint+`/user?findUser_=${user._id}`)
+    console.log("lat:",data);
+    console.log("lng:",data);
+    console.log("service:",this.state.doctorForm.service)
+ const {data:organizations}=await axios.get(config.apiEndPoint+`/organizations?service=${this.state.doctorForm.service}&lat=${data.lat}&lng=${data.lng}&getOrganziations=true`)
+ console.log("organizations:",organizations)
+  }
 
   handleChange = async({ currentTarget: input }) => {
     const errorMessage = this.validateProperty(input);
@@ -1296,25 +1309,33 @@ class Form extends React.Component {
         name: "9 PM to 12 AM",
       },
     ];
-    if (input.name === "service") {
-      const service = this.state.Conditionalservices.filter(
-        (s) => s._id === input.value
-      );
 
-      console.log(service[0].serviceName.trim().toUpperCase())
-      if (
-        service.length > 0 &&
-        service[0].serviceName.trim().toUpperCase() === "BABY VACINATION" ||
-        service[0].serviceName.toUpperCase().includes("BABY VACCINATION")  ||
-        service[0].serviceName.toUpperCase().includes("BABY VACINATION")  ||
-        service[0].serviceName.toUpperCase().includes("VACINATION BABY") ||
-        service[0].serviceName.toUpperCase().includes("BABY'S VACINATION")
-      ) {
-        this.setState({ vaccinationSelected: true });
-      } else this.setState({ vaccinationSelected: false });
-    }
+   //Showing Vaccination Form Need To be Updated
+    // if (input.name === "service") {
+    //   const service = this.state.Conditionalservices.filter(
+    //     (s) => s._id === input.value
+    //   );
 
-   
+    //   console.log(service[0].serviceName.trim().toUpperCase())
+    //   if (
+    //     service.length > 0 &&
+    //     service[0].serviceName.trim().toUpperCase() === "BABY VACINATION" ||
+    //     service[0].serviceName.toUpperCase().includes("BABY VACCINATION")  ||
+    //     service[0].serviceName.toUpperCase().includes("BABY VACINATION")  ||
+    //     service[0].serviceName.toUpperCase().includes("VACINATION BABY") ||
+    //     service[0].serviceName.toUpperCase().includes("BABY'S VACINATION")
+    //   ) {
+    //     this.setState({ vaccinationSelected: true });
+    //   } else this.setState({ vaccinationSelected: false });
+    // }
+   //Showing Vaccination Form Need To be Updated
+
+   if(input.name==="service"){
+     //This function populates organization in dropdown based when 
+     //service is chosen.Only those organizations are shown 
+     //who lie in radius and provide that service
+    this.PopulateOrganizations()
+   }
 
     if (input.name === "phoneno" || input.name === "phone") {
       let phoneNo = input.value;
@@ -1353,7 +1374,7 @@ class Form extends React.Component {
       this.filterTime(schedule);
     }
     if (input.name === "organization") {
-      this.populateServices(input.value);
+      // this.populateServices(input.value);
     } else if (service && organization) {
       this.scheduleTime(input.value, doctorForm);
     }

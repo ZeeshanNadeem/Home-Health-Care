@@ -104,6 +104,13 @@ class UserRequestService extends Form {
     //   this.setState({ lng: position.coords.longitude });
     // });
 
+    //Conditionalservices
+    //http://localhost:3000/api/services?UniqueService=true
+
+  const {data}=  await axios.get(config.apiEndPoint+"/services?UniqueService=true");
+  console.log("data:",data);
+  this.setState({Conditionalservices:data})
+
     const { data: meetingDetials } = await axios.get(
       config.apiEndPoint + "/confirmService"
     );
@@ -204,7 +211,8 @@ class UserRequestService extends Form {
     }
 
     this.setState({
-      organization: organization.results,
+      // organization: organization.results,
+      organization:[],
       userRequests,
       staffLeaves,
     });
@@ -1139,7 +1147,7 @@ class UserRequestService extends Form {
               </article> */}
             <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
 
-              <div className="mb-3">
+              <div className="mb-2">
               <Row>
               {/* <article className="RowSR RowSR-grid"> */}
 
@@ -1160,44 +1168,18 @@ class UserRequestService extends Form {
                 </article>
                 </Col>
 
-                <Col>
-                <article
-                  className={`user-request-input-wrapper ${this.state.errorClass}`}
-                >
-                  <article>
-                    {this.renderLabel("Organization", "serviceFor")}
-                  </article>
-                  <article>
-                    {this.renderDropDown(
-                      "service For",
-                      organization,
-                      "serviceOrgranization",
-                      "organization",
-                      "Please Select an Organization"
-                    )}
-                  </article>
-                </article>
-                </Col>
-
-
-              {/* </article> */}
-              </Row>
-              </div>
-
-
-              <div className="mb-3">
-              <Row>
-              {/* <article className="RowSR"> */}
-
+                {/* Paste service here */}
                 <Col>
                 <article
                   className={`user-request-input-wrapper ${this.state.errorClass}`}
                 >
                   <article>{this.renderLabel("Service", "service")}</article>
                   <article>
-                    {this.renderConditionalDropDown(
+                    {this.renderDropDown(
                       "service",
+                      this.state.Conditionalservices,
                       "service",
+                     "service",
                       "Please Select a Service"
                     )}
                   </article>
@@ -1224,7 +1206,36 @@ class UserRequestService extends Form {
                   )} */}
                 </article>
                 </Col>
-                {/* schedule replace city */}
+
+
+              {/* </article> */}
+              </Row>
+              </div>
+
+
+              <div className="mb-2">
+              <Row>
+            
+                {/* Paste Organization here */}
+               
+                <Col>
+                <article
+                  className={`user-request-input-wrapper ${this.state.errorClass}`}
+                >
+                  <article>
+                    {this.renderLabel("Organization", "serviceFor")}
+                  </article>
+                  <article>
+                    {this.renderDropDown(
+                      "service For",
+                      organization,
+                      "serviceOrgranization",
+                      "organization",
+                      "Please Select an Organization"
+                    )}
+                  </article>
+                </article>
+                </Col>
 
                 <Col>
                 <article>
@@ -1263,7 +1274,7 @@ class UserRequestService extends Form {
               </div>
 
 
-              <div className="mb-3">
+              <div className="mb-2">
               <Row>
               {/* <article className="RowSR RowSR-grid email-txt"> */}
 

@@ -8,10 +8,10 @@ import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHospitalAlt, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
+import {  Button } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import {Row,Col} from "react-bootstrap";
-import { Card, CardImg, CardText, CardBody,
-  CardTitle, CardSubtitle, Button } from 'reactstrap';
+import { MapPin } from "react-feather";
 
 class SignUp extends Form {
   state = {
@@ -22,25 +22,47 @@ class SignUp extends Form {
       email: "",
       password: "",
       isOrganizationAdmin: false,
+     
     },
     errors: {},
+    locationError:false
   };
 
+  componentDidMount(){
+    localStorage.removeItem("markers")
+  }
   schema = {
     fullName: Joi.string().min(5).max(50).required(),
     email: Joi.string().min(5).max(255).required().email(),
     password: Joi.string().min(5).max(255).required(),
     isOrganizationAdmin: Joi.boolean().required(),
+   
   };
 
   handleSubmit = async (e) => {
     e.preventDefault();
 
+   const patientLocation= JSON.parse(localStorage.getItem("markers"));
+ 
+   let lat="";
+   let lng="";
+   if(patientLocation && patientLocation.length>0){
+     lat=patientLocation[0].lat;
+     lng=patientLocation[0].lng;
+   }
+ 
+
+   if(!lat || !lng) {
+     
+    this.setState({locationError:true});
+
+   }
+ 
     const errors = this.validate();
     this.setState({ errors: errors || {} });
-    if (!errors) {
+    if (!errors && lat && lng) {
       try {
-        const response = await signingUp(this.state.doctorForm);
+        const response = await signingUp({...this.state.doctorForm,lat,lng});
         localStorage.setItem("token", response.headers["x-auth-token"]);
         window.location = "/Home";
       } catch (ex) {
@@ -123,6 +145,20 @@ class SignUp extends Form {
               </article>
               </Col>
               </Row>
+              <Row>
+                <Col md={12} xs={12} lg={12}>
+                <Link to="/patient/location"
+                     target="_blank"
+                      >
+                       Specify Your Location Open Map
+                       <MapPin  style={{marginLeft:"2px",display:"inline-block",height:"17px"}}/>
+                      {/* <FontAwesomeIcon icon={MapPin} */}
+                     
+                    
+                      </Link>
+                      {this.state.locationError && <p className="error">Please pin your Location</p>}
+              </Col>
+              </Row>
               {/* <article className="signup-label">
                   {this.renderLabel("Confirm Password", "email")}
                 </article>
@@ -142,7 +178,7 @@ class SignUp extends Form {
               <article
                 style={{
                   // textAlign: "center",
-                  marginTop: "0.3rem",
+                  marginTop: "0.4rem",
                   fontWeight: "600",
                   color: "#142F43",
                 }}

@@ -10,6 +10,8 @@ export default async function signingUp(user,independent) {
     return await axios.post(apiEndPoint, user);
 
   }
-  else
-  return await axios.post(apiEndPoint, user);
+  else{
+    console.log("user::",user);
+    return await axios.post(apiEndPoint, user);}
+  
 }
