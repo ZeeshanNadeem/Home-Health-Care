@@ -618,6 +618,8 @@ class Form extends React.Component {
   //determined.we show only that time slots in time dropdown on
   //which staff is available.Unavailable slot get filtered (booked slots)
   FilterNotAvailableSlots = async (schedule, serviceSelected) => {
+
+
     let track = [];
 
     let slotTime = [
@@ -645,16 +647,16 @@ class Form extends React.Component {
     else if (dayNo === 4) dayNo = "THRU";
     else if (dayNo === 5) dayNo = "FRI";
     else if (dayNo === 6) dayNo = "SAT";
+      const user=GetCurrentUser();
+    const {data}=await axios.get(config.apiEndPoint+`/user?findUser_=${user._id}`)
+ 
 
-    const lat= localStorage.getItem("lat")
-    const lng= localStorage.getItem("lng")
-
-    if(lat && lng){
+    
     
       
     let { data: availabilityData } = await axios.get(
       config.staff +
-        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${lat}&lng=${lng}&date=${schedule}`
+        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${data.lat}&lng=${data.lng}&date=${schedule}`
     );
 
    
@@ -823,7 +825,7 @@ class Form extends React.Component {
       // this.setState({ requestTime: filterReqTime });
     } else this.setState({ requestTime: availabilityData });
 
-  }
+  
   };
 
   //Task
@@ -1262,11 +1264,11 @@ class Form extends React.Component {
   PopulateOrganizations=async()=>{
     const user=GetCurrentUser();
     const {data}=await axios.get(config.apiEndPoint+`/user?findUser_=${user._id}`)
-    console.log("lat:",data);
-    console.log("lng:",data);
-    console.log("service:",this.state.doctorForm.service)
+  
  const {data:organizations}=await axios.get(config.apiEndPoint+`/organizations?service=${this.state.doctorForm.service}&lat=${data.lat}&lng=${data.lng}&getOrganziations=true`)
- console.log("organizations:",organizations)
+ console.log("orgs::",organizations)
+ this.setState({organization:organizations})
+ 
   }
 
   handleChange = async({ currentTarget: input }) => {
