@@ -52,7 +52,7 @@ class ConfirmMeeting extends Form {
     //   "totalConfirmMeetings...:",
     //   meetingDetials[0].totalMeetingsRequested
     // );
-    console.log("global.totalMeetings::", global.totalMeetings);
+ 
     this.props.setProgress(100);
   }
   handleSubmit = async (e) => {

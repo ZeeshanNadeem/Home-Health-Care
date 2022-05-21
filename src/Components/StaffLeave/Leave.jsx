@@ -95,7 +95,7 @@ class Leave extends Form {
 
         const { data } = await axios.get(
           config.staff +
-            `?day=${dayNo}&service=${Service._id}&organization=${Organization._id}&city=${serviceDemander.City}&lat=${serviceDemander.lat}&lng=${serviceDemander.lng}&date=${serviceDemander.Schedule}`
+            `?day=${dayNo}&service=${Service.serviceName}&organization=${Organization._id}&city=${serviceDemander.City}&lat=${serviceDemander.lat}&lng=${serviceDemander.lng}&date=${serviceDemander.Schedule}`
           
         );
         staffGot=data;
@@ -103,7 +103,7 @@ class Leave extends Form {
     else {
     const { data } = await axios.get(
       config.staff +
-        `?day=${dayNo}&service=${Service._id}&organization=${Organization._id}&ignoreCity=true`
+        `?day=${dayNo}&service=${Service.serviceName}&organization=${Organization._id}&ignoreCity=true`
     );
 
     staffGot=data;
@@ -487,7 +487,7 @@ class Leave extends Form {
         user,
         Email,
         rated,
-        City,
+    
         Address,
         PhoneNo,
         markers,
@@ -502,7 +502,7 @@ class Leave extends Form {
         Schedule: Schedule,
         ServiceNeededTime: ServiceNeededTime,
         userID: user._id,
-        City: City,
+
         Email: Email,
         rated: rated,
         Address: Address,

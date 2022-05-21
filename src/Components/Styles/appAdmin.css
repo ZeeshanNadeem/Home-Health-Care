@@ -805,3 +805,20 @@ main.org-signup.org.card-signup.signup-style-org.animate__animated.animate__fade
 .popover-style {
   z-index: 99;
 }
+
+button.btn.btn-outline-primary {
+  background: none;
+  color: #1c6dd0;
+  height: 2.27rem;
+}
+
+@media screen and (min-width: 1000px) {
+.style-map-pin{
+  padding-left: 7rem !important;
+}
+}
+
+.rmsc.multi-select {
+  width: 12rem;
+  margin-left: 1rem;
+}

@@ -32,6 +32,7 @@ import config from "./Components/Api/config.json"
 import Res from "./Components/responsive/signup";
 import MyLeaves from "./Components/MyLeaves/MyLeaves";
 import PatientMap from "./Components/MapsWithRadius/PatientMap";
+import MultiSelect from "./Components/ReactMultiSelect/MultiSelect";
 
 
 const App = () => {
@@ -156,9 +157,15 @@ const App = () => {
       />
       <Route
         path="/patient/location"
-        render={(props) => <PatientMap setProgress={setProgress} {...props} />}
+        render={(props) => <PatientMap setProgress={setProgress} {...props} />
+      
+      }
+      
       />
-
+       <Route
+        path="/multi"
+        render={(props) => <MultiSelect setProgress={setProgress} {...props} />}
+      />
 {(user && user.staffMember) || (user && !user.isAppAdmin &&
         user.isOrganizationAdmin === "false" &&
         !user.staffMember) || (user && user.isOrganizationAdmin==="Approved Admin") || 

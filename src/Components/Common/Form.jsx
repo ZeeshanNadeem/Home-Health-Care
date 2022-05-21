@@ -1363,14 +1363,14 @@ class Form extends React.Component {
 
     this.setState({ doctorForm, errors });
 
-    const { service, organization, schedule, city } = doctorForm;
+    const { service, organization, schedule} = doctorForm;
 
   
     if (
-      (input.name === "schedule" && service && organization && city) ||
-      (input.name === "service" && schedule && organization && city) ||
-      (input.name === "organization" && service && schedule && city) ||
-      (input.name === "city" && service && organization && schedule)
+      (input.name === "schedule" && service && organization ) ||
+      (input.name === "service" && schedule && organization) ||
+      (input.name === "organization" && service && schedule) 
+     
     ) {
       this.FilterNotAvailableSlots(schedule, service);
       this.filterTime(schedule);
@@ -1713,6 +1713,31 @@ class Form extends React.Component {
       </article>
     );
   };
+
+
+
+  renderDropOrg = (label, optionsArray, id, name, dropDownLabel = "")=>{
+    const { doctorForm, errors } = this.state;
+    return(
+      <select
+            value={doctorForm[name]}
+            name={name}
+            id={id}
+            className="form-select dropdown"
+            aria-label="Default select example"
+            onChange={this.handleChange}
+          >
+            <option value="">{dropDownLabel}</option>
+
+            {optionsArray.length > 0 &&
+              optionsArray.map((option) => (
+                <option value={option._id || option} key={option._id || option}>
+                  {option.serviceName || option.name || option}
+                </option>
+              ))}
+          </select>
+    )
+  }
 
   SmallDropDown = (optionsArray) => {
     return (

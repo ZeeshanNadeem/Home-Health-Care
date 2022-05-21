@@ -186,7 +186,7 @@ const ShowAllEmployees = ({
         const distanceInDecimal = distance(lat,location.lat, lng,location.lng);
         const distanceFound = parseInt(distanceInDecimal);
         for(let staffLocation of availabilityData[i].locations){
-           if(distanceFound<=staffLocation.radius){
+           if(distanceFound<=parseInt(staffLocation.radius)){
             LiesInRadius=true;
             TotalDistance=distanceFound;
             break;
