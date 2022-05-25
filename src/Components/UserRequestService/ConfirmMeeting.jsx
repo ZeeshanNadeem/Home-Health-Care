@@ -25,13 +25,14 @@ class ConfirmMeeting extends Form {
     const { data: meetingDetials } = await axios.get(
       "http://localhost:3000/api/confirmService"
     );
+    console.log("meetingDetails:", meetingDetials)
 
     let temp = [];
     temp.push(meetingDetials[0]);
     this.props.setProgress(70);
 
-   
-   
+
+
 
     if (
       meetingDetials.length > 0 &&
@@ -52,7 +53,7 @@ class ConfirmMeeting extends Form {
     //   "totalConfirmMeetings...:",
     //   meetingDetials[0].totalMeetingsRequested
     // );
- 
+
     this.props.setProgress(100);
   }
   handleSubmit = async (e) => {
@@ -79,13 +80,13 @@ class ConfirmMeeting extends Form {
         rated: data[i].rated,
         staffMemberAssigned: data[i].staffMemberAssigned,
         user: data[i].user,
-        lat:data[i].lat,
-        lng:data[i].lng,
-        markers:data[i].markers
+        lat: data[i].lat,
+        lng: data[i].lng,
+        markers: data[i].markers
       };
 
       try {
-        if(this.props.location.state){
+        if (this.props.location.state) {
           ///Put Request
 
           // userRequest.fullName = doctorForm.fullname;
@@ -103,34 +104,34 @@ class ConfirmMeeting extends Form {
           // userRequest.email = doctorForm.email;
           // userRequest.lat=localStorage.getItem("lat");
           // userRequest.lng=localStorage.getItem("lng");
-          const rescheduleData=this.props.location.state;
-          const obj= {
-             fullName :rescheduleData.fullName,
-           
-             vaccination:rescheduleData.vaccination,
-            staffMemberID:rescheduleData.
-            staffMemberID,
-            OrganizationID:rescheduleData.OrganizationID,
-            ServiceID:rescheduleData.ServiceID,
-            Schedule:rescheduleData.Schedule,
-            ServiceNeededTime:rescheduleData.
-            ServiceNeededTime,
-         
-            PhoneNo:rescheduleData.PhoneNo,
-            email:rescheduleData.email,
-            city:rescheduleData.city,
+          const rescheduleData = this.props.location.state;
+          const obj = {
+            fullName: rescheduleData.fullName,
 
-           
-           Address : rescheduleData.
-           Address,
-           PhoneNo : rescheduleData.phoneno,
-           city : rescheduleData.city,
-           email : rescheduleData.email,
-           lat:rescheduleData.lat,
-           lng:rescheduleData.lng,
-          
-            
-            }
+            vaccination: rescheduleData.vaccination,
+            staffMemberID: rescheduleData.
+              staffMemberID,
+            OrganizationID: rescheduleData.OrganizationID,
+            ServiceID: rescheduleData.ServiceID,
+            Schedule: rescheduleData.Schedule,
+            ServiceNeededTime: rescheduleData.
+              ServiceNeededTime,
+
+            PhoneNo: rescheduleData.PhoneNo,
+            email: rescheduleData.email,
+            city: rescheduleData.city,
+
+
+            Address: rescheduleData.
+              Address,
+            PhoneNo: rescheduleData.phoneno,
+            city: rescheduleData.city,
+            email: rescheduleData.email,
+            lat: rescheduleData.lat,
+            lng: rescheduleData.lng,
+
+
+          }
           await axios.put(
             config.apiEndPoint + `/userRequests/${rescheduleData._id}`,
             obj
@@ -141,22 +142,22 @@ class ConfirmMeeting extends Form {
           toast.success("Meeting has been rescheduled!");
         }
 
-        else{
-        await axios.post(
-          config.apiEndPoint + "/userRequests?postObj=abc",
-          confirmedService
-        );
-      
-        await axios.delete(
-          config.apiEndPoint + "/confirmService/" + data[i]._id
-        );
-        toast.success("Meeting Scheduled");
-      }
+        else {
+          await axios.post(
+            config.apiEndPoint + "/userRequests?postObj=abc",
+            confirmedService
+          );
+
+          await axios.delete(
+            config.apiEndPoint + "/confirmService/" + data[i]._id
+          );
+          toast.success("Meeting Scheduled");
+        }
       } catch (ex) {
         toast.error(ex.response.data);
       }
     }
-   
+
 
     setTimeout(() => {
       if (window.location.href.endsWith("/Confirm/Meeting"))
@@ -168,14 +169,16 @@ class ConfirmMeeting extends Form {
     return (
       <article>
         <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
-          <ToastContainer 
-          autoClose={4100}
+          <ToastContainer
+            autoClose={4100}
           />
-        
+          {console.log("this.state.totalMeetingsRequested:", this.state.totalMeetingsRequested)}
+          {console.log("this.state.totalConfirmMeetings.length:", this.state.totalConfirmMeetings.length)}
           {this.state.totalMeetingsRequested !== 0 &&
-            this.state.totalConfirmMeetings.length-1 !==
-              this.state.totalMeetingsRequested &&
-            this.state.totalConfirmMeetings.length-1 !== 1 && (
+            this.state.totalConfirmMeetings.length !== 0 &&
+            this.state.totalConfirmMeetings.length !==
+            this.state.totalMeetingsRequested &&
+            this.state.totalConfirmMeetings.length !== 1 && (
               <Alert severity="error">
                 Some Further Meetings might not have been scheduled due to
                 non-availability of staff.
@@ -282,7 +285,7 @@ class ConfirmMeeting extends Form {
                       Phone No &nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span className="style-meeting-detials-8">
-                      0{data.PhoneNo}
+                      {data.PhoneNo}
                     </span>
                   </p>
                 </article>

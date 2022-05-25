@@ -69,17 +69,17 @@ class Form extends React.Component {
     for (let i = 0; i < staff.length; i++) {
       let staffOnLeave = false;
       for (let j = 0; j < staffLeaves.length; j++) {
-        
+
         //new line added in staff leaves check 
         //when staff member has taken leave on slot 
         //dont block the entire day
-        if(staffLeaves[j].slotLeave)continue;
+        if (staffLeaves[j].slotLeave) continue;
         //new line added in staff leaves check 
         //when staff member has taken leave on slot 
         //dont block the entire day
 
         if (staff[i]._id === staffLeaves[j].staff._id) {
-         
+
           if (staffLeaves[j].leaveFrom === schedule) {
             staffOnLeave = true;
 
@@ -527,7 +527,7 @@ class Form extends React.Component {
 
       this.setState({ requestTime });
     } else this.setState({ requestTime });
-   
+
   };
 
   //when service,organization,date has been
@@ -647,22 +647,22 @@ class Form extends React.Component {
     else if (dayNo === 4) dayNo = "THRU";
     else if (dayNo === 5) dayNo = "FRI";
     else if (dayNo === 6) dayNo = "SAT";
-      const user=GetCurrentUser();
-    const {data}=await axios.get(config.apiEndPoint+`/user?findUser_=${user._id}`)
- 
+    const user = GetCurrentUser();
+    const { data } = await axios.get(config.apiEndPoint + `/user?findUser_=${user._id}`)
 
-    
-    
-      
+
+
+
+
     let { data: availabilityData } = await axios.get(
       config.staff +
-        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${data.lat}&lng=${data.lng}&date=${schedule}`
+      `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${data.lat}&lng=${data.lng}&date=${schedule}`
     );
 
-   
+
     let { data: allStaff } = await axios.get(
       config.staff +
-        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&allStaff=true`
+      `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&allStaff=true`
     );
     this.setState({ allStaff });
     availabilityData = await this.StaffLeaves(availabilityData);
@@ -825,7 +825,7 @@ class Form extends React.Component {
       // this.setState({ requestTime: filterReqTime });
     } else this.setState({ requestTime: availabilityData });
 
-  
+
   };
 
   //Task
@@ -867,7 +867,7 @@ class Form extends React.Component {
     else if (dayNo === 6) dayNo = "SAT";
     let { data: availabilityData } = await axios.get(
       config.staff +
-        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}`
+      `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}`
     );
 
     availabilityData = await this.StaffLeaves(availabilityData);
@@ -1065,21 +1065,21 @@ class Form extends React.Component {
       const { service: serviceGot } = doctorForm;
       const { organization: orgGot } = doctorForm;
       const { city } = doctorForm;
-      const lat= localStorage.getItem("lat")
-      const lng= localStorage.getItem("lng")
-      if(lat && lng){
-      const { data } = await axios.get(
-        config.staff +
+      const lat = localStorage.getItem("lat")
+      const lng = localStorage.getItem("lng")
+      if (lat && lng) {
+        const { data } = await axios.get(
+          config.staff +
           `?day=${dayNo}&service=${serviceGot}&organization=${orgGot}&city=${city}&lat=${lat}&lng=${lng}`
-      );
+        );
 
-      // let filteredStaff_ = [];
-      const filteredStaff = await this.StaffLeaves(data);
+        // let filteredStaff_ = [];
+        const filteredStaff = await this.StaffLeaves(data);
 
-      // const filteredStaff_ = await this.filterTimeGonePastToday(filteredStaff);
-      // filteredStaff_ = await this.StaffBookedSlots(filteredStaff);
+        // const filteredStaff_ = await this.filterTimeGonePastToday(filteredStaff);
+        // filteredStaff_ = await this.StaffBookedSlots(filteredStaff);
 
-      this.setState({ availabilityData: filteredStaff });
+        this.setState({ availabilityData: filteredStaff });
       }
       // if (filteredStaff.length > 0)
       //   this.setState({ availabilityData: filteredStaff });
@@ -1091,30 +1091,30 @@ class Form extends React.Component {
   //Populating the current organization's services in the next dropdown that
   // is named service
   populateServices = async (inputValue) => {
-   
+
     let { data } = await axios.get(
       `http://localhost:3000/api/services?organization=${inputValue}`
     );
 
-    const {data:indepServices}=await axios.get(config.apiEndPoint+`/independentServices`);
+    const { data: indepServices } = await axios.get(config.apiEndPoint + `/independentServices`);
     //Populating Independent Services
-    
-    if(indepServices.results[0].serviceOrganization._id===inputValue){
-      const services=data.results.filter(s=>s.IndependentService!=undefined)
-      let tempArr=[];
+
+    if (indepServices.results[0].serviceOrganization._id === inputValue) {
+      const services = data.results.filter(s => s.IndependentService != undefined)
+      let tempArr = [];
       //Making a unique arr
-       services.map(function(item, pos) {
-         
-         let chk=tempArr.some(s=>s.serviceName===item.serviceName);
-         console.log(chk);
-        if(chk===false)
-         tempArr.push({
-                _id: item.IndependentService._id,
-                serviceName: item.serviceName,
-                servicePrice: item.servicePrice,
-                serviceOrgranization:item.serviceOrgranization,
-              });
-    })
+      services.map(function (item, pos) {
+
+        let chk = tempArr.some(s => s.serviceName === item.serviceName);
+        console.log(chk);
+        if (chk === false)
+          tempArr.push({
+            _id: item.IndependentService._id,
+            serviceName: item.serviceName,
+            servicePrice: item.servicePrice,
+            serviceOrgranization: item.serviceOrgranization,
+          });
+      })
       this.setState({ Conditionalservices: tempArr });
     }
 
@@ -1146,7 +1146,7 @@ class Form extends React.Component {
 
     //   this.setState({ Conditionalservices: temp1 });
     // } 
-    
+
     else this.setState({ Conditionalservices: data.results });
   };
 
@@ -1233,45 +1233,45 @@ class Form extends React.Component {
     } else this.setState({ requestTime });
   };
 
- 
+
   //This function checks if lon lat has changed by appointment taker
   //If Yes,It filters slots according to the location
   //specified by service taker
-  myInterval= setInterval(()=>{
-  
-    if(localStorage.getItem("lat") &&
-    localStorage.getItem("lng") && this.state.serviceLocalityError)
-    this.setState({serviceLocalityError:""})
-    const locationChanged=localStorage.getItem("locationChanged");
-    if(locationChanged==="true"){
-      if(this.state.doctorForm!=undefined){
-      const { service, organization, schedule, city } = this.state.doctorForm;
-      if(locationChanged==="true" && service && organization && city){
+  myInterval = setInterval(() => {
 
-        this.FilterNotAvailableSlots(schedule, service);
-        this.filterTime(schedule);
-        localStorage.setItem("locationChanged","false")
+    if (localStorage.getItem("lat") &&
+      localStorage.getItem("lng") && this.state.serviceLocalityError)
+      this.setState({ serviceLocalityError: "" })
+    const locationChanged = localStorage.getItem("locationChanged");
+    if (locationChanged === "true") {
+      if (this.state.doctorForm != undefined) {
+        const { service, organization, schedule, city } = this.state.doctorForm;
+        if (locationChanged === "true" && service && organization && city) {
+
+          this.FilterNotAvailableSlots(schedule, service);
+          this.filterTime(schedule);
+          localStorage.setItem("locationChanged", "false")
+        }
       }
     }
-    }
-  
+
   }, 1000);
 
 
   //This function populates organization in dropdown when 
   //service is chosen.Only those organizations are shown 
   //who lie in radius and provide that service
-  PopulateOrganizations=async()=>{
-    const user=GetCurrentUser();
-    const {data}=await axios.get(config.apiEndPoint+`/user?findUser_=${user._id}`)
-  
- const {data:organizations}=await axios.get(config.apiEndPoint+`/organizations?service=${this.state.doctorForm.service}&lat=${data.lat}&lng=${data.lng}&getOrganziations=true`)
- console.log("orgs::",organizations)
- this.setState({organization:organizations})
- 
+  PopulateOrganizations = async () => {
+    const user = GetCurrentUser();
+    const { data } = await axios.get(config.apiEndPoint + `/user?findUser_=${user._id}`)
+
+    const { data: organizations } = await axios.get(config.apiEndPoint + `/organizations?service=${this.state.doctorForm.service}&lat=${data.lat}&lng=${data.lng}&getOrganziations=true`)
+    console.log("orgs::", organizations)
+    this.setState({ organization: organizations })
+
   }
 
-  handleChange = async({ currentTarget: input }) => {
+  handleChange = async ({ currentTarget: input }) => {
     const errorMessage = this.validateProperty(input);
     const errors = { ...this.state.errors };
     if (errorMessage) errors[input.name] = errorMessage;
@@ -1312,32 +1312,34 @@ class Form extends React.Component {
       },
     ];
 
-   //Showing Vaccination Form Need To be Updated
+    //Showing Vaccination Form Need To be Updated
     // if (input.name === "service") {
     //   const service = this.state.Conditionalservices.filter(
     //     (s) => s._id === input.value
     //   );
 
     //   console.log(service[0].serviceName.trim().toUpperCase())
-    //   if (
-    //     service.length > 0 &&
-    //     service[0].serviceName.trim().toUpperCase() === "BABY VACINATION" ||
-    //     service[0].serviceName.toUpperCase().includes("BABY VACCINATION")  ||
-    //     service[0].serviceName.toUpperCase().includes("BABY VACINATION")  ||
-    //     service[0].serviceName.toUpperCase().includes("VACINATION BABY") ||
-    //     service[0].serviceName.toUpperCase().includes("BABY'S VACINATION")
-    //   ) {
-    //     this.setState({ vaccinationSelected: true });
-    //   } else this.setState({ vaccinationSelected: false });
-    // }
-   //Showing Vaccination Form Need To be Updated
 
-   if(input.name==="service"){
-     //This function populates organization in dropdown based when 
-     //service is chosen.Only those organizations are shown 
-     //who lie in radius and provide that service
-    this.PopulateOrganizations()
-   }
+
+    if (input.value.toUpperCase().includes("BABY")
+
+      && input.value.toUpperCase().includes("VACINATION") ||
+      input.value.toUpperCase().includes("VACCINATION")
+    ) {
+
+      this.setState({ vaccinationSelected: true });
+
+    }
+    else this.setState({ vaccinationSelected: false });
+
+    //Showing Vaccination Form Need To be Updated
+
+    if (input.name === "service") {
+      //This function populates organization in dropdown based when 
+      //service is chosen.Only those organizations are shown 
+      //who lie in radius and provide that service
+      this.PopulateOrganizations()
+    }
 
     if (input.name === "phoneno" || input.name === "phone") {
       let phoneNo = input.value;
@@ -1346,31 +1348,31 @@ class Form extends React.Component {
       }
     }
     //62090281cb9bf2316c5853f8
-   
+
     const doctorForm = { ...this.state.doctorForm };
     doctorForm[input.name] = input.value;
-    if(input.name==="OrganizationID"){
-      const {data}=await axios.get(config.apiEndPoint+`/independentServices`);
-      let IndependentPerson=false;
-      if(data.results.length>0){
-        if(data.results[0].serviceOrganization._id===doctorForm.OrganizationID)
-        IndependentPerson=true;
+    if (input.name === "OrganizationID") {
+      const { data } = await axios.get(config.apiEndPoint + `/independentServices`);
+      let IndependentPerson = false;
+      if (data.results.length > 0) {
+        if (data.results[0].serviceOrganization._id === doctorForm.OrganizationID)
+          IndependentPerson = true;
       }
-      if(IndependentPerson)
-      this.setState({isIndependentPerson:IndependentPerson})
-      else  this.setState({isIndependentPerson:false})
+      if (IndependentPerson)
+        this.setState({ isIndependentPerson: IndependentPerson })
+      else this.setState({ isIndependentPerson: false })
     }
 
     this.setState({ doctorForm, errors });
 
-    const { service, organization, schedule} = doctorForm;
+    const { service, organization, schedule } = doctorForm;
 
-  
+
     if (
-      (input.name === "schedule" && service && organization ) ||
+      (input.name === "schedule" && service && organization) ||
       (input.name === "service" && schedule && organization) ||
-      (input.name === "organization" && service && schedule) 
-     
+      (input.name === "organization" && service && schedule)
+
     ) {
       this.FilterNotAvailableSlots(schedule, service);
       this.filterTime(schedule);
@@ -1459,8 +1461,11 @@ class Form extends React.Component {
     );
   };
 
-  handleChangeForRadioBtn3 = () => {
-    this.setState({ servicePlan: "Weekly" });
+  handleChangeForRadioBtn3 = (e) => {
+    if (e.target.name === "None")
+      this.setState({ servicePlan: "None" })
+    else
+      this.setState({ servicePlan: "Weekly" });
   };
 
   renderRadioBtn3 = (id, name, label, checkedStatus) => {
@@ -1630,9 +1635,9 @@ class Form extends React.Component {
     );
   };
 
-  renderBtn = (label,temp="") => {
-    if (temp)   return <button className="btns addServiceBtn">{label}</button>;
-   else return <button className="btns">{label}</button>;
+  renderBtn = (label, temp = "") => {
+    if (temp) return <button className="btns addServiceBtn">{label}</button>;
+    else return <button className="btns">{label}</button>;
   };
 
   renderConditionalDropDown = (id, name, label) => {
@@ -1716,26 +1721,26 @@ class Form extends React.Component {
 
 
 
-  renderDropOrg = (label, optionsArray, id, name, dropDownLabel = "")=>{
+  renderDropOrg = (label, optionsArray, id, name, dropDownLabel = "") => {
     const { doctorForm, errors } = this.state;
-    return(
+    return (
       <select
-            value={doctorForm[name]}
-            name={name}
-            id={id}
-            className="form-select dropdown"
-            aria-label="Default select example"
-            onChange={this.handleChange}
-          >
-            <option value="">{dropDownLabel}</option>
+        value={doctorForm[name]}
+        name={name}
+        id={id}
+        className="form-select dropdown"
+        aria-label="Default select example"
+        onChange={this.handleChange}
+      >
+        <option value="">{dropDownLabel}</option>
 
-            {optionsArray.length > 0 &&
-              optionsArray.map((option) => (
-                <option value={option._id || option} key={option._id || option}>
-                  {option.serviceName || option.name || option}
-                </option>
-              ))}
-          </select>
+        {optionsArray.length > 0 &&
+          optionsArray.map((option) => (
+            <option value={option._id || option} key={option._id || option}>
+              {option.serviceName || option.name || option}
+            </option>
+          ))}
+      </select>
     )
   }
 

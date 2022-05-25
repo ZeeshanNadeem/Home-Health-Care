@@ -452,7 +452,7 @@ const emptyRows =
                 </small>
               </td> */}
                   <TableCell >{row.fullName}</TableCell>
-                    <TableCell >0{row.PhoneNo}</TableCell>
+                    <TableCell >{row.PhoneNo}</TableCell>
                     <TableCell >{row.Address}</TableCell>
                     <TableCell >{reverseString(row.Schedule) }</TableCell>
                     <TableCell >{row.ServiceNeededTime}</TableCell>
