@@ -656,7 +656,7 @@ class Form extends React.Component {
 
     let { data: availabilityData } = await axios.get(
       config.staff +
-      `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${data.lat}&lng=${data.lng}&date=${schedule}`
+      `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${this.state.patientLat}&lng=${this.state.patientLng}&date=${schedule}`
     );
 
 
@@ -1234,6 +1234,13 @@ class Form extends React.Component {
   };
 
 
+  //This function validates pakistani phone no
+  phoneNoValidation = phoneNo => {
+    let phoneNoValidator = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
+    const regex = new RegExp(phoneNoValidator);
+    return regex.test(phoneNo);
+  };
+
   //This function checks if lon lat has changed by appointment taker
   //If Yes,It filters slots according to the location
   //specified by service taker
@@ -1245,9 +1252,13 @@ class Form extends React.Component {
     const locationChanged = localStorage.getItem("locationChanged");
     if (locationChanged === "true") {
       if (this.state.doctorForm != undefined) {
-        const { service, organization, schedule, city } = this.state.doctorForm;
-        if (locationChanged === "true" && service && organization && city) {
+        const { service, organization, schedule } = this.state.doctorForm;
+        if (locationChanged === "true" && service && organization) {
 
+          this.setState({
+            patientLat: localStorage.getItem("lat"),
+            patientLng: localStorage.getItem("lng")
+          })
           this.FilterNotAvailableSlots(schedule, service);
           this.filterTime(schedule);
           localStorage.setItem("locationChanged", "false")
@@ -1342,10 +1353,13 @@ class Form extends React.Component {
     }
 
     if (input.name === "phoneno" || input.name === "phone") {
-      let phoneNo = input.value;
-      if (phoneNo[0] !== "0" || phoneNo[1] !== "3" || phoneNo.length !== 11) {
-        errors[input.name] = "Please Enter A Valid Phone No";
-      }
+      // let phoneNo = input.value;
+      // if (phoneNo[0] !== "0" || phoneNo[1] !== "3" || phoneNo.length !== 11) {
+      //   errors[input.name] = "Please Enter A Valid Phone No";
+      // }
+      const phoneNo = this.phoneNoValidation(input.value)
+      if (!phoneNo) errors[input.name] = "Please Enter A Valid Phone No";
+      else delete errors[input.name];
     }
     //62090281cb9bf2316c5853f8
 
