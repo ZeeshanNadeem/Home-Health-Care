@@ -20,7 +20,7 @@ export default function BasicPopover() {
       try {
         const { data } = await axios.patch(
           config.apiEndPoint +
-            `/userRequests?notification=true&userReqID=${NotificationMsg._id}`
+          `/userRequests?notification=true&userReqID=${NotificationMsg._id}`
         );
         setNotificationMsg(data);
       } catch (ex) {
@@ -47,6 +47,7 @@ export default function BasicPopover() {
   }
 
   const getNotification = async () => {
+  
     const { data } = await axios.get(
       config.apiEndPoint + `/userRequests?${user._id}`
     );
@@ -372,7 +373,7 @@ export default function BasicPopover() {
       <div>
         <span className="notification" onClick={handleClick}>
           {NotificationMsg.ServiceNeededTime &&
-          NotificationMsg.NotificationViewed === false ? (
+            NotificationMsg.NotificationViewed === false ? (
             <span
               style={{
                 color: "#fff",
@@ -423,7 +424,7 @@ export default function BasicPopover() {
                   className="avatar"
                   style={{ float: "left", marginRight: "5px" }}
                 /> */}
-                <img
+                {/* <img
                   src="https://scontent.fisb19-1.fna.fbcdn.net/v/t1.30497-1/p130x130/143086968_2856368904622192_1959732218791162458_n.png?_nc_cat=1&ccb=1-5&_nc_sid=dbb9e7&_nc_ohc=dmzWgju8PeoAX-ln22J&tn=kgN1yC2LYAlISIX2&_nc_ht=scontent.fisb19-1.fna&oh=00_AT9utViJEySvO6GijJFL5txi9mp5gLXnx9VQmNsc51B63g&oe=62304B74"
                   alt="Avatar"
                   className="avatar"
@@ -435,7 +436,7 @@ export default function BasicPopover() {
                     float: "left",
                     marginRight: "5px",
                   }}
-                />
+                /> */}
               </span>
               <span>
                 Your Vaccination Date is today {NotificationMsg.Schedule[8]}

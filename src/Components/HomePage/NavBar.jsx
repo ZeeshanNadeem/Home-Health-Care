@@ -18,10 +18,10 @@ class NavBar extends Component {
       const jwt = localStorage.getItem("token");
       if (jwt) {
         const user = jwtDecode(jwt);
-      
+
         this.setState({ user });
       }
-    } catch (ex) {}
+    } catch (ex) { }
   }
 
   handleMenu = () => {
@@ -89,19 +89,19 @@ class NavBar extends Component {
                     <AccountPopOver user={user} />
                   </span>
 
-                  
+
                   {/* Notifications */}
 
-                  {/* {!user.isAppAdmin &&
+                  {!user.isAppAdmin &&
                     user.isOrganizationAdmin === "false" &&
                     !user.staffMember && (
                       <span style={{ marginTop: "0.51rem" }}>
                         <Notification />
                       </span>
-                    )} */}
+                    )}
 
-                     {/* Notifications */}
-                     
+                  {/* Notifications */}
+
                 </span>
               </li>
             </React.Fragment>

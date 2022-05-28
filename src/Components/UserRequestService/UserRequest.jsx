@@ -171,7 +171,7 @@ class UserRequestService extends Form {
 
       try {
         const { data } = await axios.get(config.apiEndPoint + `/userRequests?userID=${user._id}`)
-
+        if (data[data.length - 1].VaccinationPlan === true) return;
         if (data.length > 0) {
           const doctorForm = { ...this.state.doctorForm };
           doctorForm.fullname = data[data.length - 1].fullName;
@@ -1457,7 +1457,7 @@ class UserRequestService extends Form {
               </div>
 
 
-              <div className="mb-2">
+              <div className="mb-3">
                 <Row>
                   {/* <article className="RowSR RowSR-grid email-txt"> */}
 

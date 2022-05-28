@@ -1341,7 +1341,12 @@ class Form extends React.Component {
       this.setState({ vaccinationSelected: true });
 
     }
-    else this.setState({ vaccinationSelected: false });
+    else if (this.state.doctorForm.service &&
+      !this.state.doctorForm.service.toUpperCase("BABY VACINATION"))
+
+
+
+      this.setState({ vaccinationSelected: false });
 
     //Showing Vaccination Form Need To be Updated
 

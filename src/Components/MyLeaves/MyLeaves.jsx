@@ -228,7 +228,7 @@ EnhancedTableToolbar.propTypes = {
 export default function EnhancedTable() {
 
 
-   
+
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -237,13 +237,13 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [myleaves, setLeaves] = React.useState([]);
 
-  React.useEffect(async()=>{
-        
-     const user= await GetCurrentUser();
-    
-    const {data:Myleaves}=await axios.get(config.apiEndPoint+`/staffLeave?staffMemberID=${user.staffMember._id}`)
-    setLeaves(Myleaves);   
-    },[])
+  React.useEffect(async () => {
+
+    const user = await GetCurrentUser();
+
+    const { data: Myleaves } = await axios.get(config.apiEndPoint + `/staffLeave?staffMemberID=${user.staffMember._id}`)
+    setLeaves(Myleaves);
+  }, [])
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -300,26 +300,26 @@ export default function EnhancedTable() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
 
-    function reverseString(str) {
-        // Step 1. Use the split() method to return a new array
-        var splitString = str.split("-"); // var splitString = "hello".split("");
-        // ["h", "e", "l", "l", "o"]
-     
-        // Step 2. Use the reverse() method to reverse the new created array
-        var reverseArray = splitString.reverse(); // var reverseArray = ["h", "e", "l", "l", "o"].reverse();
-        // ["o", "l", "l", "e", "h"]
-     
-        // Step 3. Use the join() method to join all elements of the array into a string
-        var joinArray = reverseArray.join("/"); // var joinArray = ["o", "l", "l", "e", "h"].join("");
-        // "olleh"
-        
-        //Step 4. Return the reversed string
-        return joinArray; // "olleh"
-    }
+  function reverseString(str) {
+    // Step 1. Use the split() method to return a new array
+    var splitString = str.split("-"); // var splitString = "hello".split("");
+    // ["h", "e", "l", "l", "o"]
+
+    // Step 2. Use the reverse() method to reverse the new created array
+    var reverseArray = splitString.reverse(); // var reverseArray = ["h", "e", "l", "l", "o"].reverse();
+    // ["o", "l", "l", "e", "h"]
+
+    // Step 3. Use the join() method to join all elements of the array into a string
+    var joinArray = reverseArray.join("/"); // var joinArray = ["o", "l", "l", "e", "h"].join("");
+    // "olleh"
+
+    //Step 4. Return the reversed string
+    return joinArray; // "olleh"
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
+      {myleaves.length > 0 ? <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
@@ -336,12 +336,12 @@ export default function EnhancedTable() {
               rowCount={myleaves.length}
             /> */}
             <TableHead>
-            <TableRow>
-            <TableCell>Leave From</TableCell>
-            <TableCell >Leave To</TableCell>
-            <TableCell>Status</TableCell>
-           
-            </TableRow>
+              <TableRow>
+                <TableCell>Leave From</TableCell>
+                <TableCell >Leave To</TableCell>
+                <TableCell>Status</TableCell>
+
+              </TableRow>
             </TableHead>
             <thead>
 
@@ -358,19 +358,19 @@ export default function EnhancedTable() {
                   return (
                     <TableRow
                       hover
-                    //   onClick={(event) => handleClick(event, row.name)}
+                      //   onClick={(event) => handleClick(event, row.name)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.name}
                     //   selected={isItemSelected}
                     >
-                      
-                     
-                      <TableCell >{reverseString(row.leaveFrom) }</TableCell>
+
+
+                      <TableCell >{reverseString(row.leaveFrom)}</TableCell>
                       <TableCell >{reverseString(row.leaveTo)}</TableCell>
                       <TableCell >GRANTED</TableCell>
-                     
+
                     </TableRow>
                   );
                 })}
@@ -395,7 +395,7 @@ export default function EnhancedTable() {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </Paper>
+      </Paper> : <p style={{ color: "#396EB0", fontWeight: "bold", letterSpacing: "0.2px" }}>No Leaves</p>}
       {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
