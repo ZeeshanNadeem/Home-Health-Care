@@ -171,31 +171,32 @@ class UserRequestService extends Form {
 
       try {
         const { data } = await axios.get(config.apiEndPoint + `/userRequests?userID=${user._id}`)
-        if (data[data.length - 1].VaccinationPlan === true) return;
-        if (data.length > 0) {
-          const doctorForm = { ...this.state.doctorForm };
-          doctorForm.fullname = data[data.length - 1].fullName;
-          doctorForm.address = data[data.length - 1].Address;
-          doctorForm.phoneno = data[data.length - 1].PhoneNo;
-          // doctorForm.city=data[data.length-1].City;
-          doctorForm.email = data[data.length - 1].Email;
-          ;
-          doctorForm.service = data[data.length - 1].Service.serviceName;
-          doctorForm.ServiceNeededFrom = data[data.length - 1].ServiceNeededTime;
-          doctorForm.schedule = data[data.length - 1].Schedule;
+        if (data[data.length - 1].VaccinationPlan !== true) {
+          if (data.length > 0) {
+            const doctorForm = { ...this.state.doctorForm };
+            doctorForm.fullname = data[data.length - 1].fullName;
+            doctorForm.address = data[data.length - 1].Address;
+            doctorForm.phoneno = data[data.length - 1].PhoneNo;
+            // doctorForm.city=data[data.length-1].City;
+            doctorForm.email = data[data.length - 1].Email;
+            ;
+            doctorForm.service = data[data.length - 1].Service.serviceName;
+            doctorForm.ServiceNeededFrom = data[data.length - 1].ServiceNeededTime;
+            doctorForm.schedule = data[data.length - 1].Schedule;
 
 
-          doctorForm.organization = data[data.length - 1].Organization._id
-          this.setState({ doctorForm })
-          localStorage.setItem("lat", data[data.length - 1].lat)
-          localStorage.setItem("lng", data[data.length - 1].lng)
-          localStorage.setItem("markers", JSON.stringify(data[data.length - 1].markers))
+            doctorForm.organization = data[data.length - 1].Organization._id
+            this.setState({ doctorForm })
+            localStorage.setItem("lat", data[data.length - 1].lat)
+            localStorage.setItem("lng", data[data.length - 1].lng)
+            localStorage.setItem("markers", JSON.stringify(data[data.length - 1].markers))
 
-          this.PopulateOrganizations();
+            this.PopulateOrganizations();
 
-          this.FilterNotAvailableSlots(data[data.length - 1].Schedule, data[data.length - 1].Service.serviceName);
-          this.filterTime(data[data.length - 1].Schedule);
+            this.FilterNotAvailableSlots(data[data.length - 1].Schedule, data[data.length - 1].Service.serviceName);
+            this.filterTime(data[data.length - 1].Schedule);
 
+          }
         }
       }
       catch (ex) {
