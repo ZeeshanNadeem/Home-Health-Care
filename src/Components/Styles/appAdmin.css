@@ -816,9 +816,22 @@ button.btn.btn-outline-primary {
 .style-map-pin{
   padding-left: 7rem !important;
 }
+
+.services-multi{
+  width: 16.5rem;
+  }
+  /* .services-multi-org{
+    width: 20rem;
+  } */
+  .services-multi-org{
+    width: 20rem;
+    margin-left: 0.7rem;
+  }
 }
 
 .rmsc.multi-select {
   width: 12rem;
   margin-left: 1rem;
 }
+
+

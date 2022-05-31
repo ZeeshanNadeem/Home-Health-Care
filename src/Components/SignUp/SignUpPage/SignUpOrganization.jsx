@@ -18,6 +18,8 @@ import { connect } from "react-redux";
 import Maps from "../../MapsWithRadius/Maps";
 import { SetLocationAction } from "../../redux/actions/Organzationlocation";
 import store from "../../../store";
+import { MultiSelect } from "react-multi-select-component";
+import Example from "../../ReactMultiSelect/MultiServices";
 
 import { useForm } from "antd/lib/form/Form";
 class SignUpAsOrganization extends Form {
@@ -34,10 +36,10 @@ class SignUpAsOrganization extends Form {
       serviceOrg_: "",
       qualification: "",
       city: "",
-   
+
       // selectedFile: null,
     },
-    serviceLocalityError:"",
+    serviceLocalityError: "",
     errors: {},
     selectedFile: null,
     organizations: [],
@@ -108,12 +110,13 @@ class SignUpAsOrganization extends Form {
       },
     ],
     fileUpload: true,
-    city: ["Islamabad", "Rawalpindi","Karachi","Lahore","Multan","Hyderabad","Quetta","Faisalabad",
-    "Sialkot","Dera Ghazi Khan"
-  ],
+    city: ["Islamabad", "Rawalpindi", "Karachi", "Lahore", "Multan", "Hyderabad", "Quetta", "Faisalabad",
+      "Sialkot", "Dera Ghazi Khan"
+    ],
     lat: "",
     lng: "",
-    isIndependentPerson:false
+    isIndependentPerson: false,
+    servicesSelected: []
   };
 
   schema = {
@@ -124,29 +127,35 @@ class SignUpAsOrganization extends Form {
     isOrganizationAdmin: Joi.boolean().required(),
     OrganizationID: Joi.string().required(),
     city: Joi.string().required(),
-    
+
 
     // price: Joi.string().required(),
 
     // phone: Joi.string().required(),
     //61d5bc5c69b35ef18754dc9a
-    serviceOrg_:
-      this.state.doctorForm.OrganizationID === "61d5bc5c69b35ef18754dc9a"
-        ? Joi.string().required().label("Service")
-        : Joi.string().optional().label("Service"),
+    // serviceOrg_:
+    //   this.state.doctorForm.OrganizationID === "61d5bc5c69b35ef18754dc9a"
+    //     ? Joi.string().required().label("Service")
+    //     : Joi.string().optional().label("Service"),
     qualification:
       this.state.doctorForm.OrganizationID === "61d5bc5c69b35ef18754dc9a"
         ? Joi.string().required().label("Qualification")
         : Joi.string().optional().label("Qualification"),
   };
 
-  constructor(props){
+  options = [
+    { label: "Grapes 🍇", value: "grapes" },
+    { label: "Mango 🥭", value: "mango" },
+    { label: "Strawberry 🍓", value: "strawberry" }
+  ];
+
+  constructor(props) {
     super(props);
     localStorage.removeItem("markers");
- 
+
   }
   async componentDidMount() {
-  
+
     const jwt = localStorage.getItem("token");
     if (jwt) {
       const user = jwtDecode(jwt);
@@ -158,7 +167,7 @@ class SignUpAsOrganization extends Form {
           await axios.delete(config.apiEndPoint + `/user/${user._id}`);
           localStorage.removeItem("token");
           window.location = "/SignUp/Organization";
-        } catch (ex) {}
+        } catch (ex) { }
       }
     }
 
@@ -176,8 +185,14 @@ class SignUpAsOrganization extends Form {
     const { data: services } = await axios.get(
       config.apiEndPoint + "/independentServices"
     );
+    let multiSevices = [];
+    for (let s of services.results) {
+      multiSevices.push({ label: s.serviceName, value: s.serviceName });
+    }
 
-  
+    this.setState({ multiSevices })
+
+
     this.setState({
       organizations: data.results,
       qualification,
@@ -185,7 +200,7 @@ class SignUpAsOrganization extends Form {
     });
   }
 
- 
+
 
   onChange = (e) => {
     // setFile(e.target.files[0]);
@@ -199,30 +214,37 @@ class SignUpAsOrganization extends Form {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-  
 
-   const locations= JSON.parse(localStorage.getItem("markers"));
+    const servicesMulti = JSON.parse(localStorage.getItem("servicesMulti"));
+    let myServices = [];
+    for (let s of this.state.IndependentServices) {
+      if (servicesMulti.some(x => x.value === s.serviceName))
+        myServices.push(s);
+    }
 
 
-  
-   if(!locations || locations.length===0)
-   this.setState({serviceLocalityError:"Please Set Your Service Locality"})
+    const locations = JSON.parse(localStorage.getItem("markers"));
 
-   else 
-   this.setState({serviceLocalityError:""})
- 
 
- 
+
+    if (!locations || locations.length === 0)
+      this.setState({ serviceLocalityError: "Please Set Your Service Locality" })
+
+    else
+      this.setState({ serviceLocalityError: "" })
+
+
+
 
     const isIndependentPerson =
-    this.state.isIndependentPerson? true: false;
+      this.state.isIndependentPerson ? true : false;
 
-    
-      this.setState({isIndependentPerson})
+
+    this.setState({ isIndependentPerson })
     global.staffDetails = this.state.doctorForm;
 
     let errors = this.validate();
-   
+
     if (!isIndependentPerson && errors && errors.qualification && errors.serviceOrg_) {
       delete errors["qualification"];
       delete errors["serviceOrg_"];
@@ -231,7 +253,7 @@ class SignUpAsOrganization extends Form {
         !errors.email &&
         !errors.password &&
         !errors.OrganizationID &&
-        !errors.city 
+        !errors.city
       ) {
         errors = null;
       }
@@ -239,20 +261,20 @@ class SignUpAsOrganization extends Form {
 
     if (isIndependentPerson) this.GenerateFileNotUploadError();
 
-    if(errors){
-      this.setState({ errors: errors  });
-      return;
-    }
-   
-    
-    
-    if(locations && locations.length>0){
+    // if (errors) {
+    //   this.setState({ errors: errors });
+    //   return;
+    // }
 
-    if (!errors ) {
+
+
+    if (locations && locations.length >= 0) {
+
+      // if (!errors) {
       try {
         if (isIndependentPerson && this.state.selectedFile) {
           const formData = new FormData();
-          const locations=JSON.parse(localStorage.getItem("markers"));
+          const locations = JSON.parse(localStorage.getItem("markers"));
           formData.append("CV", this.state.selectedFile);
           formData.append("fullName", this.state.doctorForm.fullName);
           formData.append("email", this.state.doctorForm.email);
@@ -265,28 +287,28 @@ class SignUpAsOrganization extends Form {
             "OrganizationID",
             this.state.doctorForm.OrganizationID
           );
-         
 
-         
-         
 
-     
-          const newLocation=locations.map((marker)=>{
-              if(marker.selected===true)
+
+
+
+
+          const newLocation = locations.map((marker) => {
+            if (marker.selected === true)
               delete marker.selected;
-              if(marker.time)
+            if (marker.time)
               delete marker.time
-    
-              return marker;
+
+            return marker;
           })
-          
+
 
           formData.append("city", this.state.doctorForm.city);
-          formData.append("locations",  JSON.stringify(newLocation) );
-        
-         
+          formData.append("locations", JSON.stringify(newLocation));
+
+
           global.selectedFile = this.state.doctorForm.selectedFile;
-          const response = await signingUp(formData,"indepedentServiceProvider");
+          const response = await signingUp(formData, "indepedentServiceProvider");
           localStorage.setItem("token", response.headers["x-auth-token"]);
           global.userID = response.data._id;
           global.formData = formData;
@@ -295,83 +317,89 @@ class SignUpAsOrganization extends Form {
           global.serviceSelectedID = this.state.doctorForm.serviceOrg_;
 
 
-          const obj={
-          
-            userID:response.data._id,
-            // formData:formData,
-            staffDetails:this.state.doctorForm,
-            city:this.state.doctorForm.city,
-            serviceSelectedID:this.state.doctorForm.serviceOrg_
+          const servicesMulti = JSON.parse(localStorage.getItem("servicesMulti"));
+          let myServices = [];
+          for (let s of this.state.IndependentServices) {
+            if (servicesMulti.some(x => x.value === s.serviceName))
+              myServices.push(s);
           }
-          
-          this.props.history.push("/signUp/details",obj);
-       
-       
+          const obj = {
+            myServices,
+            userID: response.data._id,
+            // formData:formData,
+            staffDetails: this.state.doctorForm,
+            city: this.state.doctorForm.city,
+            serviceSelectedID: this.state.doctorForm.serviceOrg_
+          }
+
+          this.props.history.push("/signUp/details", obj);
+
+
         }
         else if (!isIndependentPerson) {
-          const locations=JSON.parse(localStorage.getItem("markers"));
-    
-         
-          const newLocation=locations.map((marker)=>{
-              if(marker.selected===true)
+          const locations = JSON.parse(localStorage.getItem("markers"));
+
+
+          const newLocation = locations.map((marker) => {
+            if (marker.selected === true)
               delete marker.selected;
-              if(marker.time)
+            if (marker.time)
               delete marker.time
-    
-              return marker;
+
+            return marker;
           })
-    
-          
-     
+
+
+
           // if(lat && lng && radius){
-          const { fullName, email, password, isOrganizationAdmin, OrganizationID,city } =
+          const { fullName, email, password, isOrganizationAdmin, OrganizationID, city } =
             this.state.doctorForm;
           const obj = {
             fullName: fullName,
             email: email,
             password: password,
             isOrganizationAdmin: isOrganizationAdmin,
-            locations:newLocation,
+            locations: newLocation,
             OrganizationID: OrganizationID,
-            city:city,
-           
-    
+            city: "Islamabad",
+
+
           };
-    
+
           if (errors) return;
           try {
             const response = await signingUp(obj);
             localStorage.setItem("token", response.headers["x-auth-token"]);
-            
+
             window.location = "/Home";
-    
-    
+
+
           } catch (ex) {
             if (ex.response && ex.response.status === 400) {
               const error = { ...this.state.errors };
-    
+
               error.email = ex.response.data;
-    
+
               this.setState({ errors: error });
             }
           }
-       
+
         }
-      
+
       } catch (ex) {
         if (ex.response && ex.response.status === 400) {
           const error = { ...this.state.errors };
-          console.log("eXX:",ex);
-          
+          console.log("eXX:", ex);
+
           error.email = ex.response.data;
 
           this.setState({ errors: error });
-        
+
         }
       }
-    } 
-  }
+      // }
     }
+  }
   // };
   render() {
     const year = new Date().getFullYear();
@@ -412,7 +440,7 @@ class SignUpAsOrganization extends Form {
                 </article>
 
               </article>
-             
+
 
               <article className="signup-org-group">
                 <article>
@@ -423,7 +451,7 @@ class SignUpAsOrganization extends Form {
                     {this.renderInput("password", "password", "password")}
                   </article>
                 </article>
-               
+
                 <article className="second-item dropdown-second-item">
                   <article className="signup-label" style={{ margin: "0" }}>
                     {this.renderLabel("Organization", "organization")}
@@ -441,45 +469,61 @@ class SignUpAsOrganization extends Form {
               </article>
 
               {this.state.isIndependentPerson && (
-                <article
-               
-                  className="signup-org-group servies-org"
-                >
-                  <article>
-                    <article style={{ margin: "0" }}>
-                      {this.renderLabel("Service", "service")}
+                <>
+
+                  <article
+                    style={{ display: "flex" }}
+                  // className="signup-org-group servies-org"
+                  >
+                    <article>
+                      <article style={{ margin: "0" }}>
+                        {this.renderLabel("Service", "service")}
+                      </article>
+                      <article>
+                        <Example
+
+                          services={this.state.multiSevices}
+                        />
+                        {/* <MultiSelect
+                          className="services-multi"
+                          options={this.options}
+                          selected={this.servicesSelected}
+                          onChange={(e) => { this.setState({ servicesSelected: e }) }}
+                          labelledBy={"Services"}
+                        /> */}
+                        {/* {this.renderDropDown(
+                          "",
+                          this.state.IndependentServices,
+                          "serviceOrg_",
+                          "serviceOrg_",
+                          "Please Select a Service",
+                 
+
+                        )} */}
+                      </article>
                     </article>
                     <article>
-                      {this.renderDropDown(
-                        "",
-                        this.state.IndependentServices,
-                        "serviceOrg_",
-                        "serviceOrg_",
-                        "Please Select a Service"
-                      )}
+                      <article
+                        className="second-item"
+
+                      ></article>
+                    </article>
+                    <article>
+                      <article className="signup-label" style={{ margin: "0" }}>
+                        {this.renderLabel("Qualification", "Qualification")}
+                      </article>
+                      <article className="txtField-signup-org">
+                        {this.renderDropDown(
+                          "service For",
+                          this.state.qualification,
+                          "qualification",
+                          "qualification",
+                          "Your Qualification?"
+                        )}
+                      </article>
                     </article>
                   </article>
-                  <article>
-                    <article
-                      className="second-item"
-                   
-                    ></article>
-                  </article>
-                  <article>
-                    <article className="signup-label" style={{ margin: "0" }}>
-                      {this.renderLabel("Qualification", "Qualification")}
-                    </article>
-                    <article className="txtField-signup-org">
-                      {this.renderDropDown(
-                        "service For",
-                        this.state.qualification,
-                        "qualification",
-                        "qualification",
-                        "Your Qualification?"
-                      )}
-                    </article>
-                  </article>
-                </article>
+                </>
               )}
 
               {this.state.isIndependentPerson && (
@@ -501,24 +545,24 @@ class SignUpAsOrganization extends Form {
                     <p className="error">Please Upload Your Resume</p>
                   )}
 
-                 
+
                 </article>
               )}
-            
+
 
               <article
-              
+
                 className="signup-org-group"
                 style={{
                   display: "flex",
                   justifyContent: "start",
                 }}
               >
-                   
 
 
 
-              <article>
+
+                <article>
 
                   <article className="signup-label" style={{ margin: "0" }}>
                     {this.renderLabel("City", "city")}
@@ -526,7 +570,7 @@ class SignUpAsOrganization extends Form {
 
                   <article
                     className="txtField-signup-org"
-                  
+
                   >
                     {this.renderDropDown(
                       "City",
@@ -535,51 +579,51 @@ class SignUpAsOrganization extends Form {
                       "city",
                       "Select Your City"
                     )}
-                </article>
-
-               
-                
-
-              </article>
-
-              <article className="second-item">
-                      <article className="signup-label" style={{ margin: "0" }}>
-                        {this.renderLabel("Set Your Service Locality", "serviceLocality")}
-                      </article>
-
-                      <div style={{marginLeft:"auto",marginRight:"auto"}}
-                      className="open-map"
-                      >
-                      <Link to="/maps"
-                     target="_blank"
-                     
-                      >
-                       Open Map
-                      <FontAwesomeIcon icon={faLocationArrow}
-                      style={{marginLeft:"0.5rem"}}
-                      />
-                      </Link>
-                      </div>
-                      {this.state.serviceLocalityError &&
-
-                      
-                        <p className="error">{this.state.serviceLocalityError}</p>}
-                      
-                     
-
                   </article>
 
 
 
-              
 
-            
+                </article>
+
+                <article className="second-item">
+                  <article className="signup-label" style={{ margin: "0" }}>
+                    {this.renderLabel("Set Your Service Locality", "serviceLocality")}
+                  </article>
+
+                  <div style={{ marginLeft: "auto", marginRight: "auto" }}
+                    className="open-map"
+                  >
+                    <Link to="/maps"
+                      target="_blank"
+
+                    >
+                      Open Map
+                      <FontAwesomeIcon icon={faLocationArrow}
+                        style={{ marginLeft: "0.5rem" }}
+                      />
+                    </Link>
+                  </div>
+                  {this.state.serviceLocalityError &&
+
+
+                    <p className="error">{this.state.serviceLocalityError}</p>}
+
+
+
+                </article>
+
+
+
+
+
+
               </article>
-
+              {/* <MultiServices /> */}
               <article className="btn-orgSignUp org-btn signup-page-btn">
                 {this.renderBtn("Sign Up")}
               </article>
-            
+
             </main>
           </article>
         </form>
@@ -590,15 +634,15 @@ class SignUpAsOrganization extends Form {
 
 
 const mapStateToProps = (state) => {
- 
+
   return {
-      Organizationlocation: state.SetLocation,
+    Organizationlocation: state.SetLocation,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-      setLocation: (location) => dispatch(SetLocationAction(location)),
+    setLocation: (location) => dispatch(SetLocationAction(location)),
   };
 };
 

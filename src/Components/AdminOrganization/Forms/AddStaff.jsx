@@ -6,7 +6,8 @@ import Alert from "@material-ui/lab/Alert";
 import { toast } from "react-toastify";
 import jwtDecode from "jwt-decode";
 import config from "../../Api/config.json";
-import {Row,Col} from "react-bootstrap"
+import ServicesMutiple from "../../ReactMultiSelect/MutipleServiceOrg";
+
 
 class NurseForm extends Form {
   state = {
@@ -15,7 +16,7 @@ class NurseForm extends Form {
       // dateOfBirth: "",
       email: "",
       password: "",
-      serviceID: "",
+      // serviceID: "",
       qualification: "",
       // availabilityFrom: "",
       // availabilityTo: "",
@@ -151,6 +152,7 @@ class NurseForm extends Form {
     ],
     lat: "",
     lng: "",
+    Orgservices: []
   };
 
   schema = {
@@ -158,20 +160,20 @@ class NurseForm extends Form {
     // dateOfBirth: Joi.string().required().label("Date of Birth"),
     email: this.state.isEditModel
       ? Joi.string()
-          .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
-          .min(5)
-          .max(255)
-          .required()
+        .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+        .min(5)
+        .max(255)
+        .required()
       : Joi.string()
-          .min(5)
-          .max(255)
-          .required()
-          .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
-          .label("Email"),
+        .min(5)
+        .max(255)
+        .required()
+        .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+        .label("Email"),
     password: this.state.isEditModel
       ? Joi.string()
       : Joi.string().min(5).max(255).required().label("Password"),
-    serviceID: Joi.string().required().label("Staff Type"),
+    // serviceID: Joi.string().required().label("Staff Type"),
     qualification: Joi.string().required().label("Qualification"),
     // availabilityFrom: Joi.string().required().label("Availability From"),
     // availabilityTo: Joi.string().required().label("Availability To"),
@@ -223,7 +225,7 @@ class NurseForm extends Form {
       // phone: doctorForm.phone,
     };
 
- 
+
     try {
       await axios.put(
         "http://localhost:3000/api/staff/" + staffMemberData._id,
@@ -246,7 +248,7 @@ class NurseForm extends Form {
     }
   };
 
-  addAStaffMember = async () => {
+  addAStaffMember = async (myServices) => {
     const { doctorForm } = this.state;
     const { RefreshStaffMembers } = this.props;
     const jwt = localStorage.getItem("token");
@@ -256,36 +258,38 @@ class NurseForm extends Form {
       fullName: doctorForm.fullName,
       email: doctorForm.email,
       password: doctorForm.password,
-      serviceID: doctorForm.serviceID,
+      serviceID: myServices,
       Organization: user.Organization,
       qualificationID: doctorForm.qualification,
       phone: doctorForm.phone,
       city: user.city,
       availableTime: this.state.slotTime,
       availableDays: this.state.daysAvailable,
-   
+
       Rating: 0,
       RatingAvgCount: 0,
       locations: user.locations,
-    
+
 
     };
-   
+
     try {
       const userObj = {};
       const CurrentUser = jwtDecode(jwt);
-     
+
       userObj.fullName = addStaffMember.fullName;
       userObj.email = addStaffMember.email;
       userObj.password = addStaffMember.password;
-      userObj.locations= CurrentUser.locations;
-    
-    
+      userObj.locations = CurrentUser.locations;
+
+
 
       const { data: user } = await axios.post(
         config.apiEndPoint + "/user",
         userObj
       );
+
+      console.log("addAStaffMember::", addStaffMember)
 
       const { data: staffAdded } = await axios.post(
         "http://localhost:3000/api/staff?dontCheck=true",
@@ -299,7 +303,7 @@ class NurseForm extends Form {
 
       RefreshStaffMembers();
     } catch (ex) {
-      console.log("ex::",ex);
+      console.log("ex::", ex);
       const error = { ...this.state.errors };
       error.email = ex.response.data;
       this.setState({ errors: error });
@@ -310,6 +314,12 @@ class NurseForm extends Form {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    const servicesMulti = JSON.parse(localStorage.getItem("servicesMultiOrg"));
+    let myServices = [];
+    for (let s of this.state.Orgservices) {
+      if (servicesMulti.some(x => x.value === s.serviceName))
+        myServices.push(s);
+    }
 
     let errors = {};
     // if (!isEditModel) {
@@ -324,7 +334,7 @@ class NurseForm extends Form {
     }
 
     if (!errors) {
-      this.addAStaffMember();
+      this.addAStaffMember(myServices);
       return;
     }
   };
@@ -354,11 +364,17 @@ class NurseForm extends Form {
 
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
- 
+
     let { data: services } = await axios.get(
       `http://localhost:3000/api/services?organization=${user.Organization._id}`
     );
 
+    this.setState({ Orgservices: services.results })
+    let multiple_services = [];
+    for (let s of services.results) {
+      multiple_services.push({ label: s.serviceName, value: s.serviceName })
+    }
+    this.setState({ MultipleServices: multiple_services })
     // let { data: services } = await axios.get(
     //   "http://localhost:3000/api/services"
     // );
@@ -407,7 +423,7 @@ class NurseForm extends Form {
                 Add A Staff Member
               </h1>
             </header>
-            
+
             <article className="addStaff-Fields-grouping add-staff-input-styling">
               <article className="one-group-first-item addStaff-group-alignment">
                 <article className="label-addStaff">
@@ -472,18 +488,28 @@ class NurseForm extends Form {
             )}
 
             <article className="addStaff-Fields-grouping">
-              <article className="one-group-first-item addStaff-group-alignment">
+              <article
+                className="one-group-first-item addStaff-group-alignment"
+              >
                 <article className="label-addStaff">
                   {this.renderLabel("Speciality", "serviceID")}
                 </article>
-                <article className="input-addStaff">
-                  {this.renderDropDown(
+                <article style={{ width: "100%" }} >
+                  {this.state.MultipleServices != undefined &&
+                    this.state.MultipleServices.length > 0 &&
+                    <ServicesMutiple
+                      services={this.state.MultipleServices}
+                    />}
+                  {/* <ServicesMutiple
+                    services={this.state.multiple_services}
+                  /> */}
+                  {/* {this.renderDropDown(
                     "Staff",
                     services,
                     "serviceID",
                     "serviceID",
                     "Please Select Speciality"
-                  )}
+                  )} */}
                 </article>
               </article>
               <article className="one-group-second-item addStaff-group-alignment">
@@ -509,9 +535,9 @@ class NurseForm extends Form {
                 <article className="time-slots">
                   {this.state.slotTime.map((day) =>
                     day.name === "12 PM to 3 PM" ||
-                    day.name === "3 PM to 6 PM" ||
-                    day.name === "6 PM to 9 PM" ||
-                    day.name === "9 PM to 12 AM" ? (
+                      day.name === "3 PM to 6 PM" ||
+                      day.name === "6 PM to 9 PM" ||
+                      day.name === "9 PM to 12 AM" ? (
                       <article key={day.name}></article>
                     ) : (
                       <article key={day.name}>
@@ -535,9 +561,9 @@ class NurseForm extends Form {
                 <article className="time-slots">
                   {this.state.slotTime.map((day) =>
                     day.name === "12 AM to 3 AM" ||
-                    day.name === "3 AM to 6 AM" ||
-                    day.name === "6 AM to 9 AM" ||
-                    day.name === "9 AM to 12 PM" ? (
+                      day.name === "3 AM to 6 AM" ||
+                      day.name === "6 AM to 9 AM" ||
+                      day.name === "9 AM to 12 PM" ? (
                       <article key={day.name}></article>
                     ) : (
                       <article key={day.name}>

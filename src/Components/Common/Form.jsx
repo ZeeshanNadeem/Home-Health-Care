@@ -1696,7 +1696,7 @@ class Form extends React.Component {
     );
   };
 
-  renderDropDown = (label, optionsArray, id, name, dropDownLabel = "") => {
+  renderDropDown = (label, optionsArray, id, name, dropDownLabel = "", multi = "") => {
     const { doctorForm, errors } = this.state;
 
     return (
@@ -1709,6 +1709,8 @@ class Form extends React.Component {
             className="form-select dropdown"
             aria-label="Default select example"
             onChange={this.handleChange}
+            multiple={multi}
+
           >
             <option value="">{dropDownLabel}</option>
 

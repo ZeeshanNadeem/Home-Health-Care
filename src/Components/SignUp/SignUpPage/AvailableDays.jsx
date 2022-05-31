@@ -9,7 +9,7 @@ import axios from "axios";
 class AvailableDays extends Form {
   state = {
     doctorForm: {
-      price: "",
+      // price: "",
       phone: "",
       // email: "",
       // password: "",
@@ -85,20 +85,20 @@ class AvailableDays extends Form {
   schema = {
     // email: Joi.string().min(5).max(255).required().email(),
     // password: Joi.string().min(5).max(255).required(),
-    price: Joi.string().required(),
+    // price: Joi.string().required(),
     phone: Joi.string().required(),
   };
 
   async componentDidMount() {
- 
-    const obj=this.props.location.state;
-    const { data } = await axios.get(
-      `http://localhost:3000/api/independentServices?serviceID=${obj.serviceSelectedID}`
-    );
 
-    let doctorForm = { ...this.state.doctorForm };
-    doctorForm.price = data[0].servicePrice;
-    this.setState({ doctorForm });
+    // const obj = this.props.location.state;
+    // const { data } = await axios.get(
+    //   `http://localhost:3000/api/independentServices?serviceID=${obj.serviceSelectedID}`
+    // );
+
+    // // let doctorForm = { ...this.state.doctorForm };
+    // // doctorForm.price = data[0].servicePrice;
+    // this.setState({ doctorForm });
   }
 
   handleSubmit = async (e) => {
@@ -114,59 +114,61 @@ class AvailableDays extends Form {
     this.setState({ errors: errors || {} });
     if (!errors && hasSelectedSlot && hasSelectedDay) {
       try {
-    
+
         //hea
 
-        const obj=this.props.location.state;
-        console.log("obj got abcd ::",obj)
+
+        const obj = this.props.location.state;
+        console.log("obj got abcd ::", obj)
         let serviceOrg = obj.staffDetails.serviceOrg_;
         let OrgID = obj.staffDetails.OrganizationID;
-        let price = this.state.doctorForm.price;
+        // let price = this.state.doctorForm.price;
         let user = obj.userID;
-     
+        let services = obj.myServices;
 
         let serviceObj = {
-          serviceID: serviceOrg,
+          serviceID: services[0]._id,
           serviceOrgranization: OrgID,
-          servicePrice: price,
+          // servicePrice: price,
           userID: user,
+          services
         };
         const { data: service } = await axios.post(
           config.apiEndPoint + "/services",
           serviceObj
         );
-        const locations=JSON.parse(localStorage.getItem("markers"));
-        const newLocation=locations.map((marker)=>{
-            if(marker.selected===true)
+        const locations = JSON.parse(localStorage.getItem("markers"));
+        const newLocation = locations.map((marker) => {
+          if (marker.selected === true)
             delete marker.selected;
-            if(marker.time)
+          if (marker.time)
             delete marker.time
-  
-            return marker;
+
+          return marker;
         })
-        
-        
-    
+
+
+
         const addStaffMember = {
           fullName: obj.staffDetails.fullName,
           email: obj.staffDetails.email,
           password: obj.staffDetails.password,
 
-          serviceID: serviceObj.serviceID,
+          serviceID: services,
 
-          Organization: service.serviceOrgranization,
+          Organization: services[0].serviceOrganization,
           qualificationID: obj.staffDetails.qualification,
           phone: this.state.doctorForm.phone,
           availableTime: this.state.slotTime,
           availableDays: this.state.daysAvailable,
           Rating: 0,
           RatingAvgCount: 0,
-          locations:newLocation,
+          locations: newLocation,
           city: obj.city,
-          locations:newLocation
+          locations: newLocation
         };
 
-       
+
 
         const { data: staffAdded } = await axios.post(
           `http://localhost:3000/api/staff?dontCheck=true&signUpOrg=true`,
@@ -175,15 +177,16 @@ class AvailableDays extends Form {
 
         await axios.patch(config.apiEndPoint + "/user?EditUser=true", {
           staffMemberObj: staffAdded,
-      
+
           staffMemberID: obj.userID,
         });
-       
+
         localStorage.removeItem("markers");
         window.location = "/Home";
-     
+
       } catch (ex) {
-        toast.error(ex.response.data);
+        console.log(ex.response);
+        // toast.error(ex.response.data);
       }
     }
   };
@@ -244,9 +247,9 @@ class AvailableDays extends Form {
                   <article className="time-slots">
                     {this.state.slotTime.map((day) =>
                       day.name === "12 PM to 3 PM" ||
-                      day.name === "3 PM to 6 PM" ||
-                      day.name === "6 PM to 9 PM" ||
-                      day.name === "9 PM to 12 AM" ? (
+                        day.name === "3 PM to 6 PM" ||
+                        day.name === "6 PM to 9 PM" ||
+                        day.name === "9 PM to 12 AM" ? (
                         <article key={day.name}></article>
                       ) : (
                         <article key={day.name}>
@@ -269,9 +272,9 @@ class AvailableDays extends Form {
                   <article className="time-slots">
                     {this.state.slotTime.map((day) =>
                       day.name === "12 AM to 3 AM" ||
-                      day.name === "3 AM to 6 AM" ||
-                      day.name === "6 AM to 9 AM" ||
-                      day.name === "9 AM to 12 PM" ? (
+                        day.name === "3 AM to 6 AM" ||
+                        day.name === "6 AM to 9 AM" ||
+                        day.name === "9 AM to 12 PM" ? (
                         <article key={day.name}></article>
                       ) : (
                         <article key={day.name}>

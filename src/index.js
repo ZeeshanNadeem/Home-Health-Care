@@ -14,6 +14,7 @@ import "../src/Components/Styles/footer.css";
 import "../src/Components/Styles/appAdmin.css";
 import { Provider } from "react-redux";
 
+
 import store from "./store";
 
 
@@ -23,7 +24,8 @@ import store from "./store";
 ReactDOM.render(
   <BrowserRouter>
   <Provider store={store}>
-    <App />
+    <App/>
+    
     </Provider>
   </BrowserRouter>,
 
