@@ -184,7 +184,7 @@ class NurseForm extends Form {
   };
 
   //Editing Data
-  updateStaffMember = async () => {
+  updateStaffMember = async (myServices) => {
     const { staffMemberData, RefreshStaffMembers } = this.props;
     const { doctorForm } = this.state;
     const jwt = localStorage.getItem("token");
@@ -200,7 +200,7 @@ class NurseForm extends Form {
       // dateOfBirth: doctorForm.dateOfBirth,
       email: userObj.email,
       password: userObj.password,
-      serviceID: doctorForm.serviceID,
+      serviceID: myServices,
       Organization: user.Organization,
       qualificationID: doctorForm.qualification,
       availableTime: this.state.slotTime,
@@ -289,7 +289,7 @@ class NurseForm extends Form {
         userObj
       );
 
-      console.log("addAStaffMember::", addStaffMember)
+
 
       const { data: staffAdded } = await axios.post(
         "http://localhost:3000/api/staff?dontCheck=true",
@@ -303,7 +303,7 @@ class NurseForm extends Form {
 
       RefreshStaffMembers();
     } catch (ex) {
-      console.log("ex::", ex);
+
       const error = { ...this.state.errors };
       error.email = ex.response.data;
       this.setState({ errors: error });
@@ -329,7 +329,7 @@ class NurseForm extends Form {
 
     const { staffMemberData } = this.props;
     if (staffMemberData) {
-      this.updateStaffMember();
+      this.updateStaffMember(myServices);
       return;
     }
 
@@ -381,7 +381,7 @@ class NurseForm extends Form {
 
     // let  uniqueServices= this.getUniqueArray(services.results);
     const { staffMemberData } = this.props;
-
+    console.log("staffMember:", staffMemberData);
     const doctorForm = { ...this.state.doctorForm };
 
     //Pre-Populating Staff Form on Edit Staff
@@ -499,6 +499,9 @@ class NurseForm extends Form {
                     this.state.MultipleServices.length > 0 &&
                     <ServicesMutiple
                       services={this.state.MultipleServices}
+                      PreSelectedService={
+                        this.state.isEditModel ?
+                          this.props.staffMemberData.staffSpeciality : []}
                     />}
                   {/* <ServicesMutiple
                     services={this.state.multiple_services}

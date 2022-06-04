@@ -12,10 +12,26 @@ const options = [
 ];
 
 const ServicesMutiple = (props) => {
-    console.log("props.services:", props.services)
+
     const [selected, setSelected] = useState([]);
 
+    React.useLayoutEffect(() => {
+        console.log("useLayoutEffect")
+        if (props.PreSelectedService != undefined && props.PreSelectedService.length > 0) {
+            console.log("props.PreSelectedService:", props.PreSelectedService)
+            let arr = [];
+            for (let v of props.PreSelectedService) {
+                arr.push({ label: v.serviceName || v.name, value: v.serviceName || v.name })
+            }
+            console.log("arr:", arr)
+            setSelected(arr)
+        }
+    }, [])
+
     React.useEffect(() => {
+
+
+
         localStorage.setItem("servicesMultiOrg", JSON.stringify(selected))
     }, [selected])
 
@@ -25,7 +41,9 @@ const ServicesMutiple = (props) => {
       <pre>{JSON.stringify(selected)}</pre> */}
             <MultiSelect
                 className="services-multi-org"
-                options={props.services}
+                options={props.services
+
+                }
                 value={selected}
                 onChange={setSelected}
                 labelledBy="Days"

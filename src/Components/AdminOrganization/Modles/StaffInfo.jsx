@@ -77,13 +77,19 @@ export default function BasicModal({ staffMember, staff }) {
             </span>
           </article>
           <article style={{ paddingTop: "0rem" }}>
-            <strong>Service</strong>
+            <strong>Services</strong>
             &nbsp;&nbsp;
+            {console.log("staffMember.staffSpeciality:", staffMember.staffSpeciality)}
             <span style={{ color: "#1C6DD0" }}>
-              <strong>{staffMember.staffSpeciality.name}</strong>
+              {staffMember.staffSpeciality.map((item, index) => (
+                <div>
+                  <strong key={index}>{item.serviceName + " "}</strong>
+                </div>
+              ))}
+
             </span>
           </article>
-          <article style={{ paddingTop: "0rem" }}>
+          {/* <article style={{ paddingTop: "0rem" }}>
             <strong>
               Service Price
               <FontAwesomeIcon
@@ -95,15 +101,15 @@ export default function BasicModal({ staffMember, staff }) {
             <span style={{ color: "#1C6DD0" }}>
               <strong>{staffMember.staffSpeciality.servicePrice}</strong>
             </span>
-          </article>
+          </article> */}
 
-          <article style={{ paddingTop: "0rem" }}>
+          {/* <article style={{ paddingTop: "0rem" }}>
             <strong>City</strong>
             &nbsp;&nbsp;
             <span style={{ color: "#1C6DD0" }}>
               <strong>{staffMember.city}</strong>
             </span>
-          </article>
+          </article> */}
           <article style={{ paddingTop: "0rem" }}>
             <strong>
               Phone No

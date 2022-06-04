@@ -28,6 +28,7 @@ class AddService extends Form {
     this.setState({ organizations: data.results });
 
     const { serviceData } = this.props;
+    
     const doctorForm = { ...this.state.doctorForm };
     if (serviceData) {
       doctorForm.serviceName = serviceData.serviceName;
@@ -79,7 +80,7 @@ class AddService extends Form {
         toast.success("Service has been added");
 
         updateService();
-      } catch (ex) {}
+      } catch (ex) { }
     }
   };
   schema = {

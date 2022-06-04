@@ -519,367 +519,41 @@ class UserRequestService extends Form {
         }
       }
     } else {
+      //Weekly And Daily Code
 
-      let sameDaySelected = false;
-      for (let j = 0; j < staff.length; j++) {
-        if (this.state.servicePlan === "Weekly") {
+      const { doctorForm, servicePlan } = this.state;
 
-          for (
-            let meetings = 0;
-            meetings < (parseInt(days.length) + 1);
-            meetings++
-          ) {
+      if (servicePlan === "Weekly" || servicePlan === "Daily") {
+        let userRequest = {};
+        userRequest.fullName = doctorForm.fullname;
+        userRequest.userID = this.state.user._id;
 
 
-            gotSlotBooked = false;
-            staffOnLeave = false;
-            // let liesBetween = false;
+        userRequest.vaccination = doctorForm.vaccination;
+        userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
+        userRequest.OrganizationID = doctorForm.organization;
+        userRequest.email = doctorForm.email;
+        userRequest.ServiceID = doctorForm.service;
 
-            let dayAvailable = new Date(FristDayServiceDate);
-            let d = dayAvailable.getDay();
-            if (d === 0) d = "SUN";
-            else if (d === 1) d = "MON";
-            else if (d === 2) d = "TUE";
-            else if (d === 3) d = "WED";
-            else if (d === 4) d = "THRU";
-            else if (d === 5) d = "FRI";
-            else if (d === 6) d = "SAT";
+        userRequest.Schedule = doctorForm.schedule;
 
-            let checkDayAvailability = staff[j].availableDays.some(
-              (staff) => staff.name === d && staff.value === true
-            );
-            if (!checkDayAvailability) continue;
-
-            let staffContainsSlot = staff[j].availableTime.some(
-              (staff) => staff.time === ServiceNeededFrom && staff.value === true
-            );
-
-            if (staffContainsSlot) {
-              for (let i = 0; i < userRequests.length; i++) {
-                if (staffOnLeave || gotSlotBooked) break;
-                if (staff[j]._id === userRequests[i].staffMemberAssigned._id) {
-                  //Checking If staff booked service time
-                  //lies between user requested time
-
-                  if (userRequests[i].ServiceNeededTime === ServiceNeededFrom) {
-                    const staffDutyOnSameDay =
-                      this.MatchUserSelected(FristDayServiceDate);
-                    if (staffDutyOnSameDay) {
-                      gotSlotBooked = true;
-                      break;
-                    }
-                  } else {
-                    continue;
-                  }
-                }
-              }
-              // If that staff hasn't gotten any slot booked at user Selected Service Time
-              // Then Checking whether is on leave at user selected date for service
-              if (!gotSlotBooked) {
-                for (let z = 0; z < staffLeaves.length; z++) {
-                  if (staff[j]._id === staffLeaves[z].staff._id) {
-                    if (staffLeaves[z].leaveFrom === FristDayServiceDate) {
-                      staffOnLeave = true;
-                      break;
-                    } else {
-                      let staffLeaveDateFrom =
-                        staffLeaves[z].leaveFrom.split("-");
-                      let staffLeaveDateTo = staffLeaves[z].leaveTo.split("-");
-                      let userSelectedDate = FristDayServiceDate.split("-");
-
-                      let staffLeaveDateFrom_ =
-                        staffLeaveDateFrom[0] +
-                        "/" +
-                        staffLeaveDateFrom[1] +
-                        "/" +
-                        staffLeaveDateFrom[2];
-                      let staffLeaveDateTo_ =
-                        staffLeaveDateTo[0] +
-                        "/" +
-                        staffLeaveDateTo[1] +
-                        "/" +
-                        staffLeaveDateTo[2];
-                      let userSelectedDate_ =
-                        userSelectedDate[0] +
-                        "/" +
-                        userSelectedDate[1] +
-                        "/" +
-                        userSelectedDate[2];
-                      const compareDate = moment(userSelectedDate_, "YYYY/MM/DD");
-                      const startDate = moment(staffLeaveDateFrom_, "YYYY/MM/DD");
-                      const endDate = moment(staffLeaveDateTo_, "YYYY/MM/DD");
-                      const isBetween = compareDate.isBetween(startDate, endDate);
-                      if (
-                        isBetween ||
-                        compareDate.isSame(startDate) ||
-                        compareDate.isSame(endDate)
-                      ) {
-                        staffOnLeave = true;
-                        break;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            if (!gotSlotBooked && !staffOnLeave && staffContainsSlot) {
-              if (!tempArray.some(x => x.ScheduleDate === FristDayServiceDate &&
-                x._id === staff[j]._id
-              )) {
-                let obj = {};
-                obj._id = staff[j]._id;
-
-                obj.ScheduleDate = FristDayServiceDate;
-
-                tempArray.push(obj);
-
-              }
-              else {
-                sameDaySelected = true;
-              }
-              let Cal = "";
-              if (days[meetings] === undefined) continue;
-              if (days[meetings].label === "MON") Cal = 1;
-              else if (days[meetings].label === "TUE") Cal = 2;
-              else if (days[meetings].label === "WED") Cal = 3;
-              else if (days[meetings].label === "THU") Cal = 4;
-              else if (days[meetings].label === "FRI") Cal = 5;
-              else if (days[meetings].label === "SAT") Cal = 6;
-              else if (days[meetings].label === "SUN") Cal = 7;
-
-              // let IntialMeeting = new Date(this.state.doctorForm.schedule);
-              let IntialMeeting = new Date();
-              FullDate1.setDate(IntialMeeting.getDate() + (((Cal + 7 - IntialMeeting.getDay()) % 7) || 7));
-
-              let day_ = FullDate1.getDate();
-              let month_ = FullDate1.getMonth() + 1;
-              const year_ = FullDate1.getFullYear();
-              if (month_ < 10) month_ = "0" + month_;
-              if (day_ < 10) day_ = "0" + day_;
-
-              FristDayServiceDate = year_ + "-" + month_ + "-" + day_;
+        userRequest.Address = doctorForm.address;
+        userRequest.PhoneNo = doctorForm.phoneno;
+        userRequest.repeatedMeetingsNo = parseInt(doctorForm.noOfMeetings) + 1;
 
 
+        try {
+          await axios.post(
+            config.apiEndPoint + `/confirmService?repeated=true&servicePlan=${servicePlan}&service=${doctorForm.service}&organization=${doctorForm.organization}`,
+            userRequest
+          );
 
-            }
-          }
 
+        } catch (ex) {
+          toast.error(ex.response.data);
         }
-
-        //Daily
-        else {
-          for (
-            let meetings = 0;
-            meetings < (parseInt(totalMeetings));
-            meetings++
-          ) {
-
-
-            gotSlotBooked = false;
-            staffOnLeave = false;
-            // let liesBetween = false;
-
-            let dayAvailable = new Date(FristDayServiceDate);
-            let d = dayAvailable.getDay();
-            if (d === 0) d = "SUN";
-            else if (d === 1) d = "MON";
-            else if (d === 2) d = "TUE";
-            else if (d === 3) d = "WED";
-            else if (d === 4) d = "THRU";
-            else if (d === 5) d = "FRI";
-            else if (d === 6) d = "SAT";
-
-            let checkDayAvailability = staff[j].availableDays.some(
-              (staff) => staff.name === d && staff.value === true
-            );
-            if (!checkDayAvailability) continue;
-
-            let staffContainsSlot = staff[j].availableTime.some(
-              (staff) => staff.time === ServiceNeededFrom && staff.value === true
-            );
-
-            if (staffContainsSlot) {
-              for (let i = 0; i < userRequests.length; i++) {
-                if (staffOnLeave || gotSlotBooked) break;
-                if (staff[j]._id === userRequests[i].staffMemberAssigned._id) {
-                  //Checking If staff booked service time
-                  //lies between user requested time
-
-                  if (userRequests[i].ServiceNeededTime === ServiceNeededFrom) {
-                    const staffDutyOnSameDay =
-                      this.MatchUserSelected(FristDayServiceDate);
-                    if (staffDutyOnSameDay) {
-                      gotSlotBooked = true;
-                      break;
-                    }
-                  } else {
-                    continue;
-                  }
-                }
-              }
-              // If that staff hasn't gotten any slot booked at user Selected Service Time
-              // Then Checking whether is on leave at user selected date for service
-              if (!gotSlotBooked) {
-                for (let z = 0; z < staffLeaves.length; z++) {
-                  if (staff[j]._id === staffLeaves[z].staff._id) {
-                    if (staffLeaves[z].leaveFrom === FristDayServiceDate) {
-                      staffOnLeave = true;
-                      break;
-                    } else {
-                      let staffLeaveDateFrom =
-                        staffLeaves[z].leaveFrom.split("-");
-                      let staffLeaveDateTo = staffLeaves[z].leaveTo.split("-");
-                      let userSelectedDate = FristDayServiceDate.split("-");
-
-                      let staffLeaveDateFrom_ =
-                        staffLeaveDateFrom[0] +
-                        "/" +
-                        staffLeaveDateFrom[1] +
-                        "/" +
-                        staffLeaveDateFrom[2];
-                      let staffLeaveDateTo_ =
-                        staffLeaveDateTo[0] +
-                        "/" +
-                        staffLeaveDateTo[1] +
-                        "/" +
-                        staffLeaveDateTo[2];
-                      let userSelectedDate_ =
-                        userSelectedDate[0] +
-                        "/" +
-                        userSelectedDate[1] +
-                        "/" +
-                        userSelectedDate[2];
-                      const compareDate = moment(userSelectedDate_, "YYYY/MM/DD");
-                      const startDate = moment(staffLeaveDateFrom_, "YYYY/MM/DD");
-                      const endDate = moment(staffLeaveDateTo_, "YYYY/MM/DD");
-                      const isBetween = compareDate.isBetween(startDate, endDate);
-                      if (
-                        isBetween ||
-                        compareDate.isSame(startDate) ||
-                        compareDate.isSame(endDate)
-                      ) {
-                        staffOnLeave = true;
-                        break;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            if (!gotSlotBooked && !staffOnLeave && staffContainsSlot) {
-              let obj = {};
-              obj._id = staff[j]._id;
-
-              obj.ScheduleDate = FristDayServiceDate;
-
-              tempArray.push(obj);
-
-              if (this.state.sevicePlan === "Weekly") {
-                let Cal = "";
-
-                if (days[meetings].label === "MON") Cal = 1;
-                else if (days[meetings].label === "TUE") Cal = 2;
-                else if (days[meetings].label === "WED") Cal = 3;
-                else if (days[meetings].label === "THU") Cal = 4;
-                else if (days[meetings].label === "FRI") Cal = 5;
-                else if (days[meetings].label === "SAT") Cal = 6;
-                else if (days[meetings].label === "SUN") Cal = 7;
-                FullDate1.setDate(FullDate1.getDate() + (((Cal + 7 - FullDate1.getDay()) % 7) || 7));
-
-                let day_ = FullDate1.getDate();
-                let month_ = FullDate1.getMonth() + 1;
-                const year_ = FullDate1.getFullYear();
-                if (month_ < 10) month_ = "0" + month_;
-                if (day_ < 10) day_ = "0" + day_;
-
-                FristDayServiceDate = year_ + "-" + month_ + "-" + day_;
-              }
-
-              else {
-                let temp = new Date(FristDayServiceDate);
-
-                let FullDate1 = new Date(
-                  new Date(FristDayServiceDate).setDate(temp.getDate() + 1)
-                );
-
-                let day_ = FullDate1.getDate();
-                let month_ = FullDate1.getMonth() + 1;
-                const year_ = FullDate1.getFullYear();
-                if (month_ < 10) month_ = "0" + month_;
-                if (day_ < 10) day_ = "0" + day_;
-                FristDayServiceDate = year_ + "-" + month_ + "-" + day_;
-              }
-            }
-          }
-        }
-        // IF That staff is neither on leave nor got slot booked in that time
-        //Assigning that staff a duty
 
       }
-
-      //Assigning duty on the basis of rating
-      if (tempArray.length > 0) {
-        const userRequest = {};
-
-        tempArray.sort((a, b) =>
-          parseInt(a.Rating) > parseInt(b.Rating) ? -1 : 1
-        );
-
-        let totalMeetingsLoop = totalMeetings ? parseInt(totalMeetings) : parseInt(days.length) + 1;
-        for (let i = 0; i < totalMeetingsLoop; i++) {
-
-
-
-
-          // if (i === tempArray.length) {
-          //   break;
-          // }
-          if (tempArray[i] === undefined) break;
-
-          // const temp1=new Date(this.state.doctorForm.schedule);
-          // const temp2=new Date(tempArray[i].ScheduleDate);
-
-          // if(temp1.getDate()===temp2.getDate()) continue;
-
-          userRequest.fullName = doctorForm.fullname;
-          userRequest.userID = this.state.user._id;
-
-          userRequest.staffMemberID = tempArray[i]._id;
-          userRequest.OrganizationID = doctorForm.organization;
-          userRequest.vaccination = doctorForm.vaccination;
-          userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
-
-          userRequest.ServiceID = doctorForm.service;
-          // const scheduleDate = new Date(new Date().setDate(date.getDate() + i));
-          userRequest.Schedule = tempArray[i].ScheduleDate;
-          // userRequest.Recursive = doctorForm.recursive;
-          userRequest.Address = doctorForm.address;
-          userRequest.PhoneNo = doctorForm.phoneno;
-          let totalMeetings_ = sameDaySelected === true ? days.length : days.length + 1;
-          userRequest.email = doctorForm.email;
-          userRequest.totalMeetingsRequested =
-            this.state.doctorForm.noOfMeetings || totalMeetings_;
-
-
-          try {
-            await axios.post(
-              config.apiEndPoint + "/confirmService",
-              userRequest
-            );
-
-            // toast.success("Meeting Scheduled");
-          } catch (ex) {
-            toast.error(ex.response.data);
-          }
-        }
-        // this.props.history.push("/Confirm/Meeting");
-        // }
-        // return;
-
-
-      }
-
-
     }
     if (tempArray.length > 0) {
       global.servicePlan = this.state.servicePlan;
@@ -1592,13 +1266,25 @@ class UserRequestService extends Form {
                           this.state.servicePlan !== "Weekly" &&
                           (
                             <>
-                              <span style={{ marginLeft: "1rem" }}>
-                                {this.renderDropDown(
-                                  "text",
-                                  this.state.meetings,
+                              {/* type,
+                              id,
+                              name,
+                              placeholder = "",
+                              minDate = "",
+                              maxDate = "",
+                              readonly = "" */}
+                              <span style={{ marginLeft: "1rem" }}
+                                className="repeated-wrapper"
+                              >
+                                {this.renderInput(
+                                  "number",
                                   "noOfMeetings",
                                   "noOfMeetings",
-                                  "Meetings?"
+                                  "Enter no of meetings",
+                                  "1",
+                                  "",
+                                  "",
+                                  "1"
                                 )}
                               </span>
 

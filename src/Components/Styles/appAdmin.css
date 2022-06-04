@@ -835,3 +835,6 @@ button.btn.btn-outline-primary {
 }
 
 
+.repeated-wrapper > article > .input{
+ border-radius: 3px;
+}

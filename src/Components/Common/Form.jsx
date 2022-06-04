@@ -1416,7 +1416,8 @@ class Form extends React.Component {
     placeholder = "",
     minDate = "",
     maxDate = "",
-    readonly = ""
+    readonly = "",
+    minVal = ""
   ) => {
     const { doctorForm, errors } = this.state;
     return (
@@ -1432,6 +1433,7 @@ class Form extends React.Component {
           min={minDate}
           max={maxDate}
           readOnly={readonly}
+          
         />
         {errors && errors[name] && <p className="error">{errors[name]}</p>}
       </article>

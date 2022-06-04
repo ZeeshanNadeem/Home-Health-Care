@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 
+
 const options = [
     { label: "MON", value: "MON" },
     { label: "TUE", value: "TUE" },
@@ -13,7 +14,7 @@ const options = [
 
 const Example = ({ services }) => {
     const [selected, setSelected] = useState([]);
-
+    
     React.useEffect(() => {
         localStorage.setItem("servicesMulti", JSON.stringify(selected))
     }, [selected])
@@ -28,6 +29,8 @@ const Example = ({ services }) => {
                 value={selected}
                 onChange={setSelected}
                 labelledBy="Days"
+
+
             />
         </div>
     );
