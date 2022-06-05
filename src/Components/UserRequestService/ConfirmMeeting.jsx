@@ -22,6 +22,7 @@ class ConfirmMeeting extends Form {
   async componentDidMount() {
     this.props.setProgress(10);
     this.props.setProgress(30);
+    console.log("this.props.location.state :", this.props.location.state)
     const { data: meetingDetials } = await axios.get(
       "http://localhost:3000/api/confirmService"
     );
@@ -49,116 +50,134 @@ class ConfirmMeeting extends Form {
         totalConfirmMeetings: meetingDetials,
       });
     }
-    // console.log(
-    //   "totalConfirmMeetings...:",
-    //   meetingDetials[0].totalMeetingsRequested
-    // );
 
     this.props.setProgress(100);
   }
   handleSubmit = async (e) => {
     e.preventDefault();
-    const counter = this.state.counter + 1;
-    this.setState({ counter });
-    if (counter >= 2) return;
-    const { confirmMeeting } = this.state;
-    const { data } = await axios.get(config.apiEndPoint + "/confirmService");
+    if (this.props.location.state) {
 
-    for (let i = 0; i < data.length; i++) {
-      const confirmedService = {
-        fullName: data[i].fullName,
-        Address: data[i].Address,
-        City: data[i].City,
-        Email: data[i].Email,
-        Organization: data[i].Organization,
-        vaccination: data[i].VaccinationPlan,
-        PhoneNo: data[i].PhoneNo,
-        Schedule: data[i].Schedule,
-        Service: data[i].Service,
-        ServiceNeededTime: data[i].ServiceNeededTime,
-        // ServiceNeededTo: data[i].ServiceNeededTo,
-        rated: data[i].rated,
-        staffMemberAssigned: data[i].staffMemberAssigned,
-        user: data[i].user,
-        lat: data[i].lat,
-        lng: data[i].lng,
-        markers: data[i].markers
-      };
-
+      const userRequest_ = { ...this.props.location.state };
+      console.log("userRequest:", userRequest_)
+      delete userRequest_.cost;
+      delete userRequest_.orgName;
+      delete userRequest_.servicePlan;
       try {
-        if (this.props.location.state) {
-          ///Put Request
 
-          // userRequest.fullName = doctorForm.fullname;
-          // userRequest.userID = this.state.user._id;
-          // userRequest.staffMemberID = tempArray[0]._id;
-          // userRequest.OrganizationID = doctorForm.organization;
-          // userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
-          // userRequest.vaccination = doctorForm.vaccination;
-          // userRequest.ServiceID = doctorForm.service;
-          // userRequest.Schedule = doctorForm.schedule;
-          // // userRequest.Recursive = doctorForm.recursive;
-          // userRequest.Address = doctorForm.address;
-          // userRequest.PhoneNo = doctorForm.phoneno;
-          // userRequest.city = doctorForm.city;
-          // userRequest.email = doctorForm.email;
-          // userRequest.lat=localStorage.getItem("lat");
-          // userRequest.lng=localStorage.getItem("lng");
-          const rescheduleData = this.props.location.state;
-          const obj = {
-            fullName: rescheduleData.fullName,
+        await axios.post(
+          config.apiEndPoint + `/userRequests?repeated=true&servicePlan=${this.props.location.state.servicePlan}&service=${userRequest_.ServiceID}&organization=${userRequest_.OrganizationID}`,
+          userRequest_
+        );
+          toast.success("Meetings Scheduled");
 
-            vaccination: rescheduleData.vaccination,
-            staffMemberID: rescheduleData.
-              staffMemberID,
-            OrganizationID: rescheduleData.OrganizationID,
-            ServiceID: rescheduleData.ServiceID,
-            Schedule: rescheduleData.Schedule,
-            ServiceNeededTime: rescheduleData.
-              ServiceNeededTime,
-
-            PhoneNo: rescheduleData.PhoneNo,
-            email: rescheduleData.email,
-            city: rescheduleData.city,
-
-
-            Address: rescheduleData.
-              Address,
-            PhoneNo: rescheduleData.phoneno,
-            city: rescheduleData.city,
-            email: rescheduleData.email,
-            lat: rescheduleData.lat,
-            lng: rescheduleData.lng,
-
-
-          }
-          await axios.put(
-            config.apiEndPoint + `/userRequests/${rescheduleData._id}`,
-            obj
-          );
-          await axios.delete(
-            config.apiEndPoint + "/confirmService/" + data[i]._id
-          );
-          toast.success("Meeting has been rescheduled!");
-        }
-
-        else {
-          await axios.post(
-            config.apiEndPoint + "/userRequests?postObj=abc",
-            confirmedService
-          );
-
-          await axios.delete(
-            config.apiEndPoint + "/confirmService/" + data[i]._id
-          );
-          toast.success("Meeting Scheduled");
-        }
       } catch (ex) {
         toast.error(ex.response.data);
       }
+
     }
 
+    else {
+      const counter = this.state.counter + 1;
+      this.setState({ counter });
+      if (counter >= 2) return;
+      const { confirmMeeting } = this.state;
+      const { data } = await axios.get(config.apiEndPoint + "/confirmService");
 
+      for (let i = 0; i < data.length; i++) {
+        const confirmedService = {
+          fullName: data[i].fullName,
+          Address: data[i].Address,
+          City: data[i].City,
+          Email: data[i].Email,
+          Organization: data[i].Organization,
+          vaccination: data[i].VaccinationPlan,
+          PhoneNo: data[i].PhoneNo,
+          Schedule: data[i].Schedule,
+          Service: data[i].Service,
+          ServiceNeededTime: data[i].ServiceNeededTime,
+          // ServiceNeededTo: data[i].ServiceNeededTo,
+          rated: data[i].rated,
+          staffMemberAssigned: data[i].staffMemberAssigned,
+          user: data[i].user,
+          lat: data[i].lat,
+          lng: data[i].lng,
+          markers: data[i].markers
+        };
+
+        try {
+          if (this.props.location.state) {
+            ///Put Request
+
+            // userRequest.fullName = doctorForm.fullname;
+            // userRequest.userID = this.state.user._id;
+            // userRequest.staffMemberID = tempArray[0]._id;
+            // userRequest.OrganizationID = doctorForm.organization;
+            // userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
+            // userRequest.vaccination = doctorForm.vaccination;
+            // userRequest.ServiceID = doctorForm.service;
+            // userRequest.Schedule = doctorForm.schedule;
+            // // userRequest.Recursive = doctorForm.recursive;
+            // userRequest.Address = doctorForm.address;
+            // userRequest.PhoneNo = doctorForm.phoneno;
+            // userRequest.city = doctorForm.city;
+            // userRequest.email = doctorForm.email;
+            // userRequest.lat=localStorage.getItem("lat");
+            // userRequest.lng=localStorage.getItem("lng");
+            const rescheduleData = this.props.location.state;
+            const obj = {
+              fullName: rescheduleData.fullName,
+
+              vaccination: rescheduleData.vaccination,
+              staffMemberID: rescheduleData.
+                staffMemberID,
+              OrganizationID: rescheduleData.OrganizationID,
+              ServiceID: rescheduleData.ServiceID,
+              Schedule: rescheduleData.Schedule,
+              ServiceNeededTime: rescheduleData.
+                ServiceNeededTime,
+
+              PhoneNo: rescheduleData.PhoneNo,
+              email: rescheduleData.email,
+              city: rescheduleData.city,
+
+
+              Address: rescheduleData.
+                Address,
+              PhoneNo: rescheduleData.phoneno,
+              city: rescheduleData.city,
+              email: rescheduleData.email,
+              lat: rescheduleData.lat,
+              lng: rescheduleData.lng,
+
+
+            }
+            await axios.put(
+              config.apiEndPoint + `/userRequests/${rescheduleData._id}`,
+              obj
+            );
+            await axios.delete(
+              config.apiEndPoint + "/confirmService/" + data[i]._id
+            );
+            toast.success("Meeting has been rescheduled!");
+          }
+
+          else {
+            await axios.post(
+              config.apiEndPoint + "/userRequests?postObj=abc",
+              confirmedService
+            );
+
+            await axios.delete(
+              config.apiEndPoint + "/confirmService/" + data[i]._id
+            );
+            toast.success("Meeting Scheduled");
+          }
+        } catch (ex) {
+          toast.error(ex.response.data);
+        }
+      }
+
+    }
     setTimeout(() => {
       if (window.location.href.endsWith("/Confirm/Meeting"))
         this.props.history.replace("/Ratting");
@@ -194,8 +213,8 @@ class ConfirmMeeting extends Form {
             )}
           <article className="signup-page confirm-meeting-page confirm-meeting">
             <main className="confirm-meeting-card card-signup card-style animate__animated animate__fadeInLeft">
-              {this.state.confirmMeeting.map((data) => (
-                <article key={data._id}>
+              {(this.state.confirmMeeting > 0 || [{ abc: "sad" }]).map((data, index) => (
+                <article key={data._id || index}>
                   {/* <span
                     style={{ display: "flex", justifyContent: "space-between" }}
                   > */}
@@ -212,7 +231,9 @@ class ConfirmMeeting extends Form {
                       Name&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span className="style-meeting-detials">
-                      {data.fullName}
+                      {this.props.location.state ?
+                        this.props.location.state.fullName :
+                        data.fullName}
                     </span>
                   </p>
                   <p>
@@ -220,16 +241,26 @@ class ConfirmMeeting extends Form {
                       Date&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span className="style-meeting-detials-1">
-                      {data.Schedule[8]}
-                      {data.Schedule[9]}
-                      {data.Schedule[7]}
-                      {data.Schedule[5]}
-                      {data.Schedule[6]}
-                      {data.Schedule[4]}
-                      {data.Schedule[0]}
-                      {data.Schedule[1]}
-                      {data.Schedule[2]}
-                      {data.Schedule[3]}
+                      {this.props.location.state ?
+                        this.props.location.state.Schedule[8] : data.Schedule[8]}
+                      {this.props.location.state ?
+                        this.props.location.state.Schedule[9] : data.Schedule[9]}
+                      {this.props.location.state ?
+                        this.props.location.state.Schedule[7] : data.Schedule[7]}
+                      {this.props.location.state ?
+                        this.props.location.state.Schedule[5] : data.Schedule[5]}
+                      {this.props.location.state ?
+                        this.props.location.state.Schedule[6] : data.Schedule[6]}
+                      {this.props.location.state ?
+                        this.props.location.state.Schedule[4] : data.Schedule[4]}
+                      {this.props.location.state ?
+                        this.props.location.state.Schedule[0] : data.Schedule[0]}
+                      {this.props.location.state ?
+                        this.props.location.state.Schedule[1] : data.Schedule[1]}
+                      {this.props.location.state ?
+                        this.props.location.state.Schedule[2] : data.Schedule[2]}
+                      {this.props.location.state ?
+                        this.props.location.state.Schedule[3] : data.Schedule[3]}
                       &nbsp;&nbsp; &nbsp;
                       {this.state.totalConfirmMeetings.length > 1 && (
                         <FurtherMeetingsPopOver />
@@ -241,7 +272,9 @@ class ConfirmMeeting extends Form {
                       Timing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span className="style-meeting-detials-2">
-                      {data.ServiceNeededTime}&nbsp; (Travel Time Included)
+                      {this.props.location.state ?
+                        this.props.location.state.ServiceNeededTime
+                        : data.ServiceNeededTime}&nbsp; (Travel Time Included)
                     </span>
                   </p>
 
@@ -250,7 +283,9 @@ class ConfirmMeeting extends Form {
                       Service &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{" "}
                     </span>
                     <span className="style-meeting-detials-4">
-                      {data.Service.serviceName}
+                      {this.props.location.state ?
+                        this.props.location.state.ServiceID
+                        : data.Service.serviceName}
                     </span>
                   </p>
                   <p>
@@ -258,7 +293,9 @@ class ConfirmMeeting extends Form {
                       Organization &nbsp;&nbsp;
                     </span>
                     <span className="style-meeting-detials-5">
-                      {data.Service.serviceOrgranization.name}
+                      {this.props.location.state ?
+                        this.props.location.state.orgName
+                        : data.Service.serviceOrgranization.name}
                     </span>
                   </p>
                   <p>
@@ -267,7 +304,10 @@ class ConfirmMeeting extends Form {
                     </span>
                     &nbsp; &nbsp; &nbsp;
                     <span className="style-meeting-detials-6">
-                      {data.Service.servicePrice ||
+                      {this.props.location.state ?
+                        this.props.location.state.cost :
+
+                        data.Service.servicePrice ||
                         data.staffMemberAssigned.staffSpeciality.servicePrice}
                     </span>
                   </p>
@@ -276,7 +316,9 @@ class ConfirmMeeting extends Form {
                       Address &nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span className="style-meeting-detials-7">
-                      {data.Address}
+                      {this.props.location.state ?
+                        this.props.location.state.Address
+                        : data.Address}
                     </span>
                   </p>
 
@@ -285,7 +327,9 @@ class ConfirmMeeting extends Form {
                       Phone No &nbsp;&nbsp;&nbsp;&nbsp;
                     </span>
                     <span className="style-meeting-detials-8">
-                      {data.PhoneNo}
+                      {this.props.location.state ?
+                        this.props.location.state.PhoneNo
+                        : data.PhoneNo}
                     </span>
                   </p>
                 </article>

@@ -16,10 +16,23 @@ import { Provider } from "react-redux";
 
 
 import store from "./store";
-
-
+import moment from "moment";
 // store.subscribe(()=>console.log(store.getState()))
 
+//Getting next day form a specific day.(Next Monday,Tue)
+//FullDate1.setDate(IntialMeeting.getDate() + (((Cal + 7 - IntialMeeting.getDay()) % 7) || 7));
+
+//Getting Next week
+// var firstDay = new Date("2022/06/07");
+// var nextWeek = new Date(firstDay.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+//Practice
+// var firstDay = new Date("2022/06/07");
+// var nextWeek = new Date(firstDay.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+var a = moment('2022-05-08'); 
+var b = a.clone().add(1, 'week').day("mon");
+console.log("week Add:",b.format())
 
 ReactDOM.render(
   <BrowserRouter>

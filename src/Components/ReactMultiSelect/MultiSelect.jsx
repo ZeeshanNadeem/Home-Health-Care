@@ -15,7 +15,7 @@ const Example = () => {
   const [selected, setSelected] = useState([]);
 
   React.useEffect(() => {
-    localStorage.setItem("daysSelectedWeekly",JSON.stringify(selected))
+    localStorage.setItem("daysSelectedWeekly", JSON.stringify(selected))
   }, [selected])
 
   return (
@@ -23,6 +23,7 @@ const Example = () => {
       {/* <h1>Select Fruits</h1>
       <pre>{JSON.stringify(selected)}</pre> */}
       <MultiSelect
+
         options={options}
         value={selected}
         onChange={setSelected}
@@ -30,5 +31,5 @@ const Example = () => {
       />
     </div>
   );
-  }
-  export default Example;
+}
+export default Example;

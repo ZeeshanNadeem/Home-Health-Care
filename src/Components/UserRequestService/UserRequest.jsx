@@ -525,28 +525,37 @@ class UserRequestService extends Form {
 
       if (servicePlan === "Weekly" || servicePlan === "Daily") {
         let userRequest = {};
+
+        const { data: serviceCost } = await axios.get(config.apiEndPoint + `/services?service=${doctorForm.service}&organizationID=${doctorForm.organization}&getServiceCost=true`);
+
+
+        const org = this.state.organization.filter(x => x._id === doctorForm.organization);
+
         userRequest.fullName = doctorForm.fullname;
         userRequest.userID = this.state.user._id;
-
-
         userRequest.vaccination = doctorForm.vaccination;
         userRequest.ServiceNeededTime = doctorForm.ServiceNeededFrom;
         userRequest.OrganizationID = doctorForm.organization;
         userRequest.email = doctorForm.email;
         userRequest.ServiceID = doctorForm.service;
-
+        userRequest.cost = serviceCost;
         userRequest.Schedule = doctorForm.schedule;
-
+        userRequest.orgName = org[0].name;
+        userRequest.servicePlan = this.state.servicePlan;
         userRequest.Address = doctorForm.address;
         userRequest.PhoneNo = doctorForm.phoneno;
         userRequest.repeatedMeetingsNo = parseInt(doctorForm.noOfMeetings) + 1;
 
-
+        const days = JSON.parse(localStorage.getItem("daysSelectedWeekly"));
+        if(days.length>0){
+          userRequest.days=days;
+        }
         try {
-          await axios.post(
-            config.apiEndPoint + `/confirmService?repeated=true&servicePlan=${servicePlan}&service=${doctorForm.service}&organization=${doctorForm.organization}`,
-            userRequest
-          );
+          this.props.history.push("/Confirm/Meeting", userRequest)
+          // await axios.post(
+          //   config.apiEndPoint + `/confirmService?repeated=true&servicePlan=${servicePlan}&service=${doctorForm.service}&organization=${doctorForm.organization}`,
+          //   userRequest
+          // );
 
 
         } catch (ex) {
@@ -955,7 +964,7 @@ class UserRequestService extends Form {
 
 
     let errors = this.validate();
-    if (this.state.servicePlan === "None" || this.state.servicePlan === "Weekly") {
+    if (this.state.servicePlan === "None") {
       delete errors["noOfMeetings"];
       if (!errors || Object.keys(errors).length === 0) errors = {};
     }
@@ -1263,7 +1272,7 @@ class UserRequestService extends Form {
                         </span>
 
                         {this.state.servicePlan !== "None" &&
-                          this.state.servicePlan !== "Weekly" &&
+
                           (
                             <>
                               {/* type,
@@ -1280,11 +1289,12 @@ class UserRequestService extends Form {
                                   "number",
                                   "noOfMeetings",
                                   "noOfMeetings",
-                                  "Enter no of meetings",
+                                  "Meetings?",
                                   "1",
                                   "",
                                   "",
-                                  "1"
+                                  "1",
+                                  "no-of-meetings-style"
                                 )}
                               </span>
 

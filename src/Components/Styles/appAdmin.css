@@ -827,6 +827,9 @@ button.btn.btn-outline-primary {
     width: 20rem;
     margin-left: 0.7rem;
   }
+  input#noOfMeetings {
+    width: 8rem;
+}
 }
 
 .rmsc.multi-select {
@@ -838,3 +841,4 @@ button.btn.btn-outline-primary {
 .repeated-wrapper > article > .input{
  border-radius: 3px;
 }
+

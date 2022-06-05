@@ -280,7 +280,8 @@ const Ratting = (props) => {
 
 
                 <TableCell>
-                  {row.Schedule[8]}
+                  {new Date(row.Schedule).getDate() + "-" + parseInt(new Date(row.Schedule).getMonth() + 1) + "-" + new Date(row.Schedule).getFullYear()}
+                  {/* {row.Schedule[8]}
                   {row.Schedule[9]}
                   {row.Schedule[7]}
                   {row.Schedule[5]}
@@ -289,7 +290,7 @@ const Ratting = (props) => {
                   {row.Schedule[0]}
                   {row.Schedule[1]}
                   {row.Schedule[2]}
-                  {row.Schedule[3]}
+                  {row.Schedule[3]} */}
                 </TableCell>
 
                 {row.canceled && <TableCell align="left"

@@ -1417,7 +1417,8 @@ class Form extends React.Component {
     minDate = "",
     maxDate = "",
     readonly = "",
-    minVal = ""
+    minVal = "",
+    classForStyle = ""
   ) => {
     const { doctorForm, errors } = this.state;
     return (
@@ -1426,14 +1427,14 @@ class Form extends React.Component {
           name={name}
           value={doctorForm[name]}
           placeholder={placeholder}
-          className="input"
+          className={`input ${classForStyle}`}
           type={type}
           id={id}
           onChange={this.handleChange}
           min={minDate}
           max={maxDate}
           readOnly={readonly}
-          
+
         />
         {errors && errors[name] && <p className="error">{errors[name]}</p>}
       </article>
