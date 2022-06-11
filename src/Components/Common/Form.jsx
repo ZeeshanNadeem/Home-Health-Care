@@ -112,6 +112,7 @@ class Form extends React.Component {
             const compareDate = moment(userSelectedDate_, "YYYY/MM/DD");
             const startDate = moment(staffLeaveDateFrom_, "YYYY/MM/DD");
             const endDate = moment(staffLeaveDateTo_, "YYYY/MM/DD");
+            
             const isBetween = compareDate.isBetween(startDate, endDate);
             if (
               isBetween ||

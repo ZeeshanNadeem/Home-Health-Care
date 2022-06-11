@@ -126,7 +126,7 @@ class SignUpAsOrganization extends Form {
     password: Joi.string().min(5).max(255).required(),
     isOrganizationAdmin: Joi.boolean().required(),
     OrganizationID: Joi.string().required(),
-    city: Joi.string().required(),
+
 
 
     // price: Joi.string().required(),
@@ -252,8 +252,8 @@ class SignUpAsOrganization extends Form {
         !errors.fullName &&
         !errors.email &&
         !errors.password &&
-        !errors.OrganizationID &&
-        !errors.city
+        !errors.OrganizationID
+
       ) {
         errors = null;
       }
@@ -564,11 +564,11 @@ class SignUpAsOrganization extends Form {
 
                 <article>
 
-                  <article className="signup-label" style={{ margin: "0" }}>
+                  {/* <article className="signup-label" style={{ margin: "0" }}>
                     {this.renderLabel("City", "city")}
-                  </article>
+                  </article> */}
 
-                  <article
+                  {/* <article
                     className="txtField-signup-org"
 
                   >
@@ -579,14 +579,16 @@ class SignUpAsOrganization extends Form {
                       "city",
                       "Select Your City"
                     )}
-                  </article>
+                  </article> */}
 
 
 
 
                 </article>
 
-                <article className="second-item">
+                <article className="second-item mt-2 ml-0"
+                  style={{ margin: 0 }}
+                >
                   <article className="signup-label" style={{ margin: "0" }}>
                     {this.renderLabel("Set Your Service Locality", "serviceLocality")}
                   </article>
