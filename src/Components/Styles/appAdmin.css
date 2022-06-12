@@ -830,6 +830,9 @@ button.btn.btn-outline-primary {
   input#noOfMeetings {
     width: 8rem;
 }
+.multi-services-indep{
+  width: 100%;
+}
 }
 
 .rmsc.multi-select {

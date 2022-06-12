@@ -303,7 +303,7 @@ class SignUpAsOrganization extends Form {
           })
 
 
-          formData.append("city", this.state.doctorForm.city);
+          // formData.append("city", this.state.doctorForm.city);
           formData.append("locations", JSON.stringify(newLocation));
 
 

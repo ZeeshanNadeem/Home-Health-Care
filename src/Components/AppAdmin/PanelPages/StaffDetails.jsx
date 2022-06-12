@@ -124,17 +124,21 @@ export default function StaffDetails({ staffMemberDetails }) {
               &nbsp;&nbsp;
               <span style={{ color: "#1C6DD0" }}>
                 <strong>{staffMemberDetails.staffMember.phone}</strong>
+
               </span>
             </article>
             <article style={{ paddingTop: "0.5rem" }}>
-              <strong>Service </strong>&nbsp;&nbsp;
+              <strong>Services </strong>&nbsp;&nbsp;
               <span style={{ color: "#1C6DD0" }}>
-                <strong>
-                  {staffMemberDetails.staffMember.staffSpeciality.name}
-                </strong>
+                {staffMemberDetails.staffMember.staffSpeciality.map((item, index) => (
+                  <div>
+                    <strong key={index}>{item.serviceName + " "}</strong>
+                  </div>
+                ))}
+
               </span>
             </article>
-            <article style={{ paddingTop: "0.5rem" }}>
+            {/* <article style={{ paddingTop: "0.5rem" }}>
               <strong>
                 Service Price
                 <FontAwesomeIcon
@@ -148,7 +152,7 @@ export default function StaffDetails({ staffMemberDetails }) {
                   {staffMemberDetails.staffMember.staffSpeciality.servicePrice}
                 </strong>
               </span>
-            </article>
+            </article> */}
           </Box>
         </Modal>
       )}

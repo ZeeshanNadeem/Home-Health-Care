@@ -164,7 +164,7 @@ class AvailableDays extends Form {
           Rating: 0,
           RatingAvgCount: 0,
           locations: newLocation,
-          city: obj.city,
+          // city: obj.city,
           locations: newLocation
         };
 
@@ -208,13 +208,13 @@ class AvailableDays extends Form {
               </header>
               <article className="signup-org-group">
                 <article>
-                  <article
+                  {/* <article
                     className="signup-label price-label"
                     style={{ margin: "0" }}
                   >
                     {this.renderLabel("Price", "price")}
-                  </article>
-                  <article className="price-txt txtField-signup-org">
+                  </article> */}
+                  {/* <article className="price-txt txtField-signup-org">
                     {this.renderInput(
                       "number",
                       "price",
@@ -224,13 +224,13 @@ class AvailableDays extends Form {
                       "",
                       "readonly"
                     )}
-                  </article>
+                  </article> */}
                 </article>
 
                 <article className="second-item">
                   <article
                     className="signup-label price-label"
-                    style={{ margin: "0" }}
+                    style={{ margin: "0", width: "100%" }}
                   >
                     {this.renderLabel("Phone No", "phone")}
                   </article>
