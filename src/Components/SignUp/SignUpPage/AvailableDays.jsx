@@ -119,7 +119,7 @@ class AvailableDays extends Form {
 
 
         const obj = this.props.location.state;
-        console.log("obj got abcd ::", obj)
+  
         let serviceOrg = obj.staffDetails.serviceOrg_;
         let OrgID = obj.staffDetails.OrganizationID;
         // let price = this.state.doctorForm.price;

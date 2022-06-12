@@ -425,8 +425,7 @@ const MyAvailability = () => {
         RatingAvgCount: staffDetails.RatingAvgCount
 
       }
-      console.log("myServices:", myServices)
-
+      
       try {
 
         await axios.put(
@@ -445,6 +444,14 @@ const MyAvailability = () => {
           config.apiEndPoint + `/user/${userObjInTable._id}?findUser=abc`,
           updateUser
         );
+        //user._id
+
+        await axios.post(config.apiEndPoint+`/services?updateServicesIndependent=true`,{
+          userID:user._id,
+          services:myServices,
+          serviceOrgranizationID:user.Organization._id
+        })
+
         toast.success("Details Updated");
       } catch (ex) {
         toast.error(ex.response.data);

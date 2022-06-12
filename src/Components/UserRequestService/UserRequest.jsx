@@ -116,7 +116,7 @@ class UserRequestService extends Form {
     const { data } = await axios.get(config.apiEndPoint + "/services?UniqueService=true");
     const current_user = GetCurrentUser();
     const { data: CurrentUser } = await axios.get(config.apiEndPoint + `/user?findUser_=${current_user._id}`)
-
+    console.log("services!!!:", CurrentUser)
     this.setState({
       Conditionalservices: data, patientLat: CurrentUser.lat,
       patientLng: CurrentUser.lng, user: current_user
@@ -547,8 +547,8 @@ class UserRequestService extends Form {
         userRequest.repeatedMeetingsNo = parseInt(doctorForm.noOfMeetings) + 1;
 
         const days = JSON.parse(localStorage.getItem("daysSelectedWeekly"));
-        if(days.length>0){
-          userRequest.days=days;
+        if (days.length > 0) {
+          userRequest.days = days;
         }
         try {
           this.props.history.push("/Confirm/Meeting", userRequest)
