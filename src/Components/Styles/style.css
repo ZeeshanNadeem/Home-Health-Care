@@ -346,7 +346,7 @@ textarea#address {
   /* height: 45rem; */
 }
 .user-req {
-  overflow-y: auto !important;
+  overflow-y: auto;
 }
 
 @media screen and (min-width: 200px) and (max-width: 449px) {

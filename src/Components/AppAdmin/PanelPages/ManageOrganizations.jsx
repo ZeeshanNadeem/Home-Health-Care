@@ -16,7 +16,7 @@ const ManageOrganizations = (props) => {
   const [totalPages, setTotalPages] = useState(1);
   const [pageSelected, setPageSelected] = useState(1);
   const [searchedService, setSearchedService] = useState("");
-  const [pageSize] = useState(9);
+  const [pageSize] = useState(7);
   useEffect(() => {
     const jwt = localStorage.getItem("token");
     if (!jwt) props.history.push("/NotFound");
@@ -150,56 +150,63 @@ const ManageOrganizations = (props) => {
     <article className="manage-org-wrapper">
       <AddOrgModal reloadOrganzations={reloadOrganzations} />
       <ToastContainer />
-      {organizations.length>0 && <article className="searchBar-wrapper">
-        <input
-          className="search-Bar"
-          type="text"
-          placeholder="Search Service"
-          value={searchedService}
-          onChange={handleChange}
-        />
-        <button className="search-btn">
-          <FontAwesomeIcon icon={faSearch} style={{ marginRight: "0.6rem" }} />
-          Search
-        </button>
-      </article>}
+      {organizations.length > 0 && (
+        <article className="searchBar-wrapper">
+          <input
+            className="search-Bar"
+            type="text"
+            placeholder="Search Service"
+            value={searchedService}
+            onChange={handleChange}
+          />
+          <button className="search-btn">
+            <FontAwesomeIcon
+              icon={faSearch}
+              style={{ marginRight: "0.6rem" }}
+            />
+            Search
+          </button>
+        </article>
+      )}
       <article className="table-responsive table-Services organizations-table">
-        {organizations.length>0 && <table className="table">
-          <thead className="table-th assign-duty-th">
-            <tr>
-              <th scope="col">Organizations</th>
-              <th scope="col"></th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {organizations.map((org) => (
-              <tr key={org._id}>
-                <td>{org.name}</td>
-                <td>
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      deleteOrganization(org._id);
-                    }}
-                  >
-                    <FontAwesomeIcon
-                      icon={faTrash}
-                      style={{ marginRight: "0.6rem" }}
-                    />
-                    Delete
-                  </Button>
-                </td>
-                <td>
-                  <EditModalOrg
-                    organizationData={org}
-                    reloadOrganzations={reloadOrganzations}
-                  />
-                </td>
+        {organizations.length > 0 && (
+          <table className="table">
+            <thead className="table-th assign-duty-th">
+              <tr>
+                <th scope="col">Organizations</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>}
+            </thead>
+            <tbody>
+              {organizations.map((org) => (
+                <tr key={org._id}>
+                  <td>{org.name}</td>
+                  <td>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        deleteOrganization(org._id);
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        style={{ marginRight: "0.6rem" }}
+                      />
+                      Delete
+                    </Button>
+                  </td>
+                  <td>
+                    <EditModalOrg
+                      organizationData={org}
+                      reloadOrganzations={reloadOrganzations}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </article>
       {checkPages() && (
         <div className="pagination">

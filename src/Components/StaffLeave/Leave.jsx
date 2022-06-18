@@ -4,7 +4,7 @@ import Joi from "joi-browser";
 import config from "../Api/config.json";
 import jwtDecode from "jwt-decode";
 import { ToastContainer, toast } from "react-toastify";
-import Select from 'react-select'
+import Select from "react-select";
 import moment from "moment";
 import axios from "axios";
 class Leave extends Form {
@@ -17,14 +17,16 @@ class Leave extends Form {
     minDate: "",
     leaveSlot: false,
     slots: [],
-    leaveSlots: []
+    leaveSlots: [],
   };
   async componentDidMount() {
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
-    const { data } = await axios.get(config.apiEndPoint + `/staff/${user.staffMember._id}`)
-    const slots = data.availableTime.filter(s => s.value === true);
-    this.setState({ slots })
+    const { data } = await axios.get(
+      config.apiEndPoint + `/staff/${user.staffMember._id}`
+    );
+    const slots = data.availableTime.filter((s) => s.value === true);
+    this.setState({ slots });
     this.setState({ user });
   }
 
@@ -85,25 +87,23 @@ class Leave extends Form {
     else if (dayNo === "Friday") dayNo = "FRI";
     else if (dayNo === "Saturday") dayNo = "SAT";
     let staffGot = [];
-    if (serviceDemander.Organization.name.toUpperCase().includes("INDEPENDENT")) {
+    if (
+      serviceDemander.Organization.name.toUpperCase().includes("INDEPENDENT")
+    ) {
       // let { data: availabilityData } = await axios.get(
       //   config.staff +
       //     `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${lat}&lng=${lng}&date=${schedule}`
       // );
 
-
-
       const { data } = await axios.get(
         config.staff +
-        `?day=${dayNo}&service=${Service.serviceName}&organization=${Organization._id}&city=${serviceDemander.City}&lat=${serviceDemander.lat}&lng=${serviceDemander.lng}&date=${serviceDemander.Schedule}`
-
+          `?day=${dayNo}&service=${Service.serviceName}&organization=${Organization._id}&city=${serviceDemander.City}&lat=${serviceDemander.lat}&lng=${serviceDemander.lng}&date=${serviceDemander.Schedule}`
       );
       staffGot = data;
-    }
-    else {
+    } else {
       const { data } = await axios.get(
         config.staff +
-        `?day=${dayNo}&service=${Service.serviceName}&organization=${Organization._id}&ignoreCity=true`
+          `?day=${dayNo}&service=${Service.serviceName}&organization=${Organization._id}&ignoreCity=true`
       );
 
       staffGot = data;
@@ -383,10 +383,11 @@ class Leave extends Form {
         const jwt = localStorage.getItem("token");
         const user = jwtDecode(jwt);
 
-
         try {
           serviceDemander.staffMemberID = staffGot[j]._id;
-          serviceDemander.userID = serviceDemander.user && serviceDemander.user._id || serviceDemander.userID;
+          serviceDemander.userID =
+            (serviceDemander.user && serviceDemander.user._id) ||
+            serviceDemander.userID;
           count++;
           await axios.post(
             "http://localhost:3000/api/userRequests?assignDuty=abc",
@@ -424,7 +425,9 @@ class Leave extends Form {
 
       try {
         serviceDemander.staffMemberID = user.staffMember._id;
-        serviceDemander.userID = serviceDemander.user && serviceDemander.user._id || serviceDemander.userID;
+        serviceDemander.userID =
+          (serviceDemander.user && serviceDemander.user._id) ||
+          serviceDemander.userID;
         serviceDemander.canceled = true;
         await axios.post(
           "http://localhost:3000/api/userRequests?assignDuty=abc",
@@ -451,7 +454,12 @@ class Leave extends Form {
   //This function checks if the required staff member
   //who took leave its assigned duties need to rescheduled
   //or not
-  ReScheduleDuty = async (userRequestStaff, leave_from, leave_to, leaveSaved = "") => {
+  ReScheduleDuty = async (
+    userRequestStaff,
+    leave_from,
+    leave_to,
+    leaveSaved = ""
+  ) => {
     let staffLeaveDateFrom = leave_from.split("-");
     let staffLeaveDateTo = leave_to.split("-");
 
@@ -494,7 +502,6 @@ class Leave extends Form {
         markers,
         lat,
         lng,
-
       } = userRequestStaff[i];
       const customer = {
         fullName: fullName,
@@ -510,7 +517,7 @@ class Leave extends Form {
         PhoneNo: PhoneNo,
         markers: markers,
         lat: lat,
-        lng: lng
+        lng: lng,
       };
 
       const compareDate = moment(userRequestDate_, "YYYY/MM/DD");
@@ -539,7 +546,7 @@ class Leave extends Form {
       );
     } else if (!DutyBetweenLeave) toast.success("You've been granted leave");
     else {
-      toast.success("You have been granted leave")
+      toast.success("You have been granted leave");
       // toast.error("Sorry!! You can't take leave");
       // toast.error("No Substitute Staff Member Available to Assign Your Shift");
 
@@ -570,26 +577,26 @@ class Leave extends Form {
     const errors = this.validate();
     this.setState({ errors: errors || {} });
     if (!errors) {
-      console.log(this.state.leaveSlots)
+      console.log(this.state.leaveSlots);
       //Leave on the basis of slots
       if (this.state.leaveSlot) {
-
-
         const leave = {
           leave_from: this.state.doctorForm.leave_from,
           leave_to: this.state.doctorForm.leave_to,
           staffID: this.state.user.staffMember._id,
-          slots: this.state.leaveSlots
+          slots: this.state.leaveSlots,
         };
         try {
-
           const { data: leaveGot } = await await axios.post(
             config.apiEndPoint + "/staffLeave?slotLeave=true",
             leave
           );
           this.setState({ leaveGot });
           //checking slots need to re-assigned on slot leave
-          const { data } = await axios.post(config.apiEndPoint + "/staff?SlotsBooked=true", leave)
+          const { data } = await axios.post(
+            config.apiEndPoint + "/staff?SlotsBooked=true",
+            leave
+          );
 
           let rescheduleCount = 0;
           if (data.length > 0) {
@@ -597,42 +604,32 @@ class Leave extends Form {
               await axios.delete(
                 config.apiEndPoint + "/userRequests/" + userReq._id
               );
-              rescheduleCount = await this.AssignAutomatedStaffDuty(userReq, data.length)
-
+              rescheduleCount = await this.AssignAutomatedStaffDuty(
+                userReq,
+                data.length
+              );
             }
             if (rescheduleCount && rescheduleCount > 0) {
               toast.success("Leave Scheduled!!");
               toast.success(
                 "Check your schedule to know what duties have been substituted"
               );
-            }
-            else {
+            } else {
               toast.error("Sorry!! You can't take leave");
-              toast.error("No Substitute Staff Member Available to Assign Your Shift");
+              toast.error(
+                "No Substitute Staff Member Available to Assign Your Shift"
+              );
               await axios.delete(
                 config.apiEndPoint + "/staffLeave/" + leaveGot._id
               );
             }
-
-          }
-          else toast.success("You've been granted leave");
-
-
-
-
-
-
-
+          } else toast.success("You've been granted leave");
         } catch (ex) {
           toast.error(ex.response.data);
         }
-
       }
       //Leave on the basis of days
       else {
-
-
-
         const leave = {
           leave_from: this.state.doctorForm.leave_from,
           leave_to: this.state.doctorForm.leave_to,
@@ -646,7 +643,11 @@ class Leave extends Form {
 
           // toast.success("Leave Scheduled!");
           this.setState({ leaveGot });
-          await this.AssignSubstituteStaff(leaveGot.leaveFrom, leaveGot.leaveTo, leaveGot);
+          await this.AssignSubstituteStaff(
+            leaveGot.leaveFrom,
+            leaveGot.leaveTo,
+            leaveGot
+          );
         } catch (ex) {
           toast.error(ex.response.data);
         }
@@ -655,22 +656,20 @@ class Leave extends Form {
   };
 
   slotLeaveCheck = (e) => {
-    this.setState({ leaveSlot: e.target.checked })
-  }
+    this.setState({ leaveSlot: e.target.checked });
+  };
   getSlots = () => {
-    let arr = []
+    let arr = [];
     for (let slot of this.state.slots) {
-      arr.push({ value: slot.time, label: slot.time })
+      arr.push({ value: slot.time, label: slot.time });
     }
     return arr;
-  }
+  };
   handleSlots = (e) => {
-
     const leaveSlots = [...this.state.leaveSlots];
     leaveSlots.push(e[0]);
-    this.setState({ leaveSlots: e })
-  }
-
+    this.setState({ leaveSlots: e });
+  };
 
   render() {
     let date = new Date();
@@ -711,41 +710,41 @@ class Leave extends Form {
                 maxDate
               )}
             </article>
+            {/* //leave on slot UI CheckBox */}
 
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                value={this.state.leaveSlot}
+                id="flexCheckDefault"
+                onChange={this.slotLeaveCheck}
+              />
+              <div style={{ marginTop: "0.5rem" }}>
+                <label className="form-check-label" htmlFor="flexCheckDefault">
+                  Leave On Slot?
+                </label>
+              </div>
+            </div>
 
-
-
-
-            {/* 
-           //leave on slot
-          <div className="form-check">
-          <input className="form-check-input" type="checkbox" value={this.state.leaveSlot} id="flexCheckDefault"
-          onChange={this.slotLeaveCheck}
-          />
-          <div  style={{marginTop:"0.5rem"}}>
-          <label className="form-check-label" htmlFor="flexCheckDefault">
-          Leave On Slot?
-          </label>
-          </div>
-          </div>
-          
-
-          //leave on slot
-          */}
-
-            {this.state.leaveSlot && <>
-              <label className="form-check-label mt-2" htmlFor="flexCheckDefault">
-                Select Slots
-              </label>
-              <div style={{ marginTop: "0rem" }}>
-                <Select options={this.getSlots()}
-                  onChange={this.handleSlots}
-                  isMulti
-                />
-
-              </div> </>}
-
-
+            {/* leave on slot  UI CheckBox */}
+            {this.state.leaveSlot && (
+              <>
+                <label
+                  className="form-check-label mt-2"
+                  htmlFor="flexCheckDefault"
+                >
+                  Select Slots
+                </label>
+                <div style={{ marginTop: "0rem" }}>
+                  <Select
+                    options={this.getSlots()}
+                    onChange={this.handleSlots}
+                    isMulti
+                  />
+                </div>{" "}
+              </>
+            )}
 
             <article className="staff-leave-btn">
               {this.renderBtn("Apply For Leave")}

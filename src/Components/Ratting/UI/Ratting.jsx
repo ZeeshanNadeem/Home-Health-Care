@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import config from "../../Api/config.json";
 import axios from "axios";
 import RattingModal from "./RattingModal/RattingModal";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import moment from "moment";
 
 const Ratting = (props) => {
@@ -28,7 +28,7 @@ const Ratting = (props) => {
       const jwt = localStorage.getItem("token");
       user = jwtDecode(jwt);
       setUser(user);
-    } catch (ex) { }
+    } catch (ex) {}
     props.setProgress(10);
     async function fetchData() {
       if (user) {
@@ -37,7 +37,7 @@ const Ratting = (props) => {
           config.apiEndPoint + `/userRequests?userID=${user._id}`
         );
 
-        console.log(userRequest)
+        console.log(userRequest);
         setUserRequests(userRequest);
       }
       props.setProgress(20);
@@ -238,12 +238,15 @@ const Ratting = (props) => {
   };
 
   const rescheduleAppointment = async (appointment) => {
-
-    await axios.patch(config.apiEndPoint + `/userRequests?id=${appointment._id}&rescheduleAppointment=true`, {
-      status: true
-    })
+    await axios.patch(
+      config.apiEndPoint +
+        `/userRequests?id=${appointment._id}&rescheduleAppointment=true`,
+      {
+        status: true,
+      }
+    );
     props.history.push("/user/request", appointment);
-  }
+  };
   return (
     <article>
       <ToastContainer />
@@ -278,9 +281,12 @@ const Ratting = (props) => {
                 <TableCell>{row.Service.servicePrice}</TableCell>
                 <TableCell>{row.ServiceNeededTime}</TableCell>
 
-
                 <TableCell>
-                  {new Date(row.Schedule).getDate() + "-" + parseInt(new Date(row.Schedule).getMonth() + 1) + "-" + new Date(row.Schedule).getFullYear()}
+                  {new Date(row.Schedule).getDate() +
+                    "-" +
+                    parseInt(new Date(row.Schedule).getMonth() + 1) +
+                    "-" +
+                    new Date(row.Schedule).getFullYear()}
                   {/* {row.Schedule[8]}
                   {row.Schedule[9]}
                   {row.Schedule[7]}
@@ -293,50 +299,57 @@ const Ratting = (props) => {
                   {row.Schedule[3]} */}
                 </TableCell>
 
-                {row.canceled && <TableCell align="left"
-                  style={{ textAlign: "center", color: "red" }}
-                >CANCELED</TableCell>}
-                {!row.canceled && <TableCell align="left">{
-                  //request checking status before
+                {row.canceled && (
+                  <TableCell
+                    align="left"
+                    style={{ textAlign: "center", color: "red" }}
+                  >
+                    Canceled By Service Provider
+                  </TableCell>
+                )}
+                {!row.canceled && (
+                  <TableCell align="left">
+                    {
+                      //request checking status before
 
-                  // checkRequest(row)
-                  //now
-                  row.completed ?
-                    <div className="progress">
-                      <div
-                        className="progress-bar progress-bar-striped bg-success"
-                        role="progressbar"
-                        style={{ width: "100%" }}
-                        aria-valuenow="100"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      >
-                        completed
-                      </div>
-                    </div> :
-                    <div className="progress">
-                      <div
-                        className="progress-bar progress-bar-warning progress-bar-striped"
-                        role="progressbar"
-                        aria-valuenow="0"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                        style={{ width: "100%" }}
-                      >
-                        pending
-                      </div>
-                    </div>
-                }</TableCell>}
+                      // checkRequest(row)
+                      //now
+                      row.completed ? (
+                        <div className="progress">
+                          <div
+                            className="progress-bar progress-bar-striped bg-success"
+                            role="progressbar"
+                            style={{ width: "100%" }}
+                            aria-valuenow="100"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                          >
+                            completed
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="progress">
+                          <div
+                            className="progress-bar progress-bar-warning progress-bar-striped"
+                            role="progressbar"
+                            aria-valuenow="0"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style={{ width: "100%" }}
+                          >
+                            pending
+                          </div>
+                        </div>
+                      )
+                    }
+                  </TableCell>
+                )}
 
-                {row.completed && <TableCell>
-
-
-
-
-                  <RattingModal row={row} updateRating={RattingRefactor} />
-
-
-                </TableCell>}
+                {row.completed && (
+                  <TableCell>
+                    <RattingModal row={row} updateRating={RattingRefactor} />
+                  </TableCell>
+                )}
                 {/* ReScheule Appointment Button */}
 
                 {/* { !row.completed &&<TableCell>  <Button variant="contained"

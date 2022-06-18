@@ -12,17 +12,15 @@ import BasicModal from "./Modal/AvailableStaffModal";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationArrow } from "@fortawesome/free-solid-svg-icons";
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button } from "react-bootstrap";
 import { MapPin } from "react-feather";
-import swal from 'sweetalert';
+import swal from "sweetalert";
 import GetCurrentUser from "../CurrentUser/GetCurrentUser";
 import Geocode from "react-geocode";
 
 import MultiSelect from "../ReactMultiSelect/MultiSelect";
 
-
 class UserRequestService extends Form {
-
   state = {
     doctorForm: {
       fullname: "",
@@ -91,18 +89,13 @@ class UserRequestService extends Form {
     reschedule: false,
     patientLat: "",
     patientLng: "",
-    selectedDay: []
+    selectedDay: [],
   };
-
 
   constructor(props) {
     super(props);
-
   }
   async componentDidMount() {
-
-
-
     //current location
     // navigator.geolocation.getCurrentPosition((position) => {
     //   this.setState({ lat: position.coords.latitude });
@@ -112,15 +105,20 @@ class UserRequestService extends Form {
     //Conditionalservices
     //http://localhost:3000/api/services?UniqueService=true
 
-
-    const { data } = await axios.get(config.apiEndPoint + "/services?UniqueService=true");
+    const { data } = await axios.get(
+      config.apiEndPoint + "/services?UniqueService=true"
+    );
     const current_user = GetCurrentUser();
-    const { data: CurrentUser } = await axios.get(config.apiEndPoint + `/user?findUser_=${current_user._id}`)
-    console.log("services!!!:", CurrentUser)
+    const { data: CurrentUser } = await axios.get(
+      config.apiEndPoint + `/user?findUser_=${current_user._id}`
+    );
+    console.log("services!!!:", CurrentUser);
     this.setState({
-      Conditionalservices: data, patientLat: CurrentUser.lat,
-      patientLng: CurrentUser.lng, user: current_user
-    })
+      Conditionalservices: data,
+      patientLat: CurrentUser.lat,
+      patientLng: CurrentUser.lng,
+      user: current_user,
+    });
 
     const { data: meetingDetials } = await axios.get(
       config.apiEndPoint + "/confirmService"
@@ -139,38 +137,41 @@ class UserRequestService extends Form {
 
     const rescheduleData = this.props.location.state;
     if (rescheduleData) {
-      await axios.patch(config.apiEndPoint + `/userRequests?id=${rescheduleData._id}&rescheduleAppointment=true`, {
-        status: true
-      })
+      await axios.patch(
+        config.apiEndPoint +
+          `/userRequests?id=${rescheduleData._id}&rescheduleAppointment=true`,
+        {
+          status: true,
+        }
+      );
       const doctorForm = { ...this.state.doctorForm };
       doctorForm.fullname = rescheduleData.fullName;
       doctorForm.address = rescheduleData.Address;
       doctorForm.phoneno = rescheduleData.PhoneNo;
       doctorForm.city = rescheduleData.City;
       doctorForm.email = rescheduleData.Email;
-      ;
       doctorForm.service = rescheduleData.Service._id;
       doctorForm.ServiceNeededFrom = rescheduleData.ServiceNeededTime;
       doctorForm.schedule = rescheduleData.Schedule;
 
-
-      doctorForm.organization = rescheduleData.Organization._id
-      this.setState({ doctorForm, reschedule: true })
-      localStorage.setItem("lat", rescheduleData.lat)
-      localStorage.setItem("lng", rescheduleData.lng)
-      localStorage.setItem("markers", JSON.stringify(rescheduleData.markers))
+      doctorForm.organization = rescheduleData.Organization._id;
+      this.setState({ doctorForm, reschedule: true });
+      localStorage.setItem("lat", rescheduleData.lat);
+      localStorage.setItem("lng", rescheduleData.lng);
+      localStorage.setItem("markers", JSON.stringify(rescheduleData.markers));
 
       this.populateServices(rescheduleData.Organization._id);
 
-      this.FilterNotAvailableSlots(rescheduleData.Schedule, rescheduleData.Service._id);
+      this.FilterNotAvailableSlots(
+        rescheduleData.Schedule,
+        rescheduleData.Service._id
+      );
       this.filterTime(rescheduleData.Schedule);
-    }
-
-
-    else {
-
+    } else {
       try {
-        const { data } = await axios.get(config.apiEndPoint + `/userRequests?userID=${user._id}`)
+        const { data } = await axios.get(
+          config.apiEndPoint + `/userRequests?userID=${user._id}`
+        );
         if (data[data.length - 1].VaccinationPlan !== true) {
           if (data.length > 0) {
             const doctorForm = { ...this.state.doctorForm };
@@ -179,27 +180,30 @@ class UserRequestService extends Form {
             doctorForm.phoneno = data[data.length - 1].PhoneNo;
             // doctorForm.city=data[data.length-1].City;
             doctorForm.email = data[data.length - 1].Email;
-            ;
             doctorForm.service = data[data.length - 1].Service.serviceName;
-            doctorForm.ServiceNeededFrom = data[data.length - 1].ServiceNeededTime;
+            doctorForm.ServiceNeededFrom =
+              data[data.length - 1].ServiceNeededTime;
             doctorForm.schedule = data[data.length - 1].Schedule;
 
-
-            doctorForm.organization = data[data.length - 1].Organization._id
-            this.setState({ doctorForm })
-            localStorage.setItem("lat", data[data.length - 1].lat)
-            localStorage.setItem("lng", data[data.length - 1].lng)
-            localStorage.setItem("markers", JSON.stringify(data[data.length - 1].markers))
+            doctorForm.organization = data[data.length - 1].Organization._id;
+            this.setState({ doctorForm });
+            localStorage.setItem("lat", data[data.length - 1].lat);
+            localStorage.setItem("lng", data[data.length - 1].lng);
+            localStorage.setItem(
+              "markers",
+              JSON.stringify(data[data.length - 1].markers)
+            );
 
             this.PopulateOrganizations();
 
-            this.FilterNotAvailableSlots(data[data.length - 1].Schedule, data[data.length - 1].Service.serviceName);
+            this.FilterNotAvailableSlots(
+              data[data.length - 1].Schedule,
+              data[data.length - 1].Service.serviceName
+            );
             this.filterTime(data[data.length - 1].Schedule);
-
           }
         }
-      }
-      catch (ex) {
+      } catch (ex) {
         console.log("ex::", ex);
       }
     }
@@ -248,7 +252,7 @@ class UserRequestService extends Form {
       this.setState({ user });
       this.props.setProgress(50);
       this.props.setProgress(100);
-    } catch (ex) { }
+    } catch (ex) {}
   }
 
   schema = {
@@ -299,7 +303,7 @@ class UserRequestService extends Form {
 
     const { data: staff } = await axios.get(
       config.staff +
-      `/?service=${service}&organization=${organization}&findStaffOnOrg=true`
+        `/?service=${service}&organization=${organization}&findStaffOnOrg=true`
     );
     // const { data: staff } = await axios.get(config.staff);
 
@@ -526,10 +530,14 @@ class UserRequestService extends Form {
       if (servicePlan === "Weekly" || servicePlan === "Daily") {
         let userRequest = {};
 
-        const { data: serviceCost } = await axios.get(config.apiEndPoint + `/services?service=${doctorForm.service}&organizationID=${doctorForm.organization}&getServiceCost=true`);
+        const { data: serviceCost } = await axios.get(
+          config.apiEndPoint +
+            `/services?service=${doctorForm.service}&organizationID=${doctorForm.organization}&getServiceCost=true`
+        );
 
-
-        const org = this.state.organization.filter(x => x._id === doctorForm.organization);
+        const org = this.state.organization.filter(
+          (x) => x._id === doctorForm.organization
+        );
 
         userRequest.fullName = doctorForm.fullname;
         userRequest.userID = this.state.user._id;
@@ -547,21 +555,18 @@ class UserRequestService extends Form {
         userRequest.repeatedMeetingsNo = parseInt(doctorForm.noOfMeetings) + 1;
 
         const days = JSON.parse(localStorage.getItem("daysSelectedWeekly"));
-        if (days.length > 0) {
+        if (days && days.length > 0) {
           userRequest.days = days;
         }
         try {
-          this.props.history.push("/Confirm/Meeting", userRequest)
+          this.props.history.push("/Confirm/Meeting", userRequest);
           // await axios.post(
           //   config.apiEndPoint + `/confirmService?repeated=true&servicePlan=${servicePlan}&service=${doctorForm.service}&organization=${doctorForm.organization}`,
           //   userRequest
           // );
-
-
         } catch (ex) {
           toast.error(ex.response.data);
         }
-
       }
     }
     if (tempArray.length > 0) {
@@ -570,8 +575,7 @@ class UserRequestService extends Form {
       global.totalMeetings = parseInt(totalMeetings);
       if (this.state.reschedule)
         this.props.history.push("/Confirm/Meeting", this.props.location.state);
-      else
-        this.props.history.push("/Confirm/Meeting");
+      else this.props.history.push("/Confirm/Meeting");
     }
   };
 
@@ -604,7 +608,8 @@ class UserRequestService extends Form {
   AssignAutomatedStaff = async () => {
     if (
       this.state.doctorForm.noOfMeetings ||
-      this.state.doctorForm.vaccination || this.state.servicePlan === "Weekly"
+      this.state.doctorForm.vaccination ||
+      this.state.servicePlan === "Weekly"
     ) {
       await this.assignDutyOnServicePlan();
 
@@ -631,10 +636,9 @@ class UserRequestService extends Form {
     const { patientLat, patientLng } = this.state;
     const { data: staff } = await axios.get(
       config.staff +
-      `/?day=${dayNo}&service=${service}&organization=${organization}&city=${city}&lat=${patientLat}&lng=${patientLng}`
+        `/?day=${dayNo}&service=${service}&organization=${organization}&city=${city}&lat=${patientLat}&lng=${patientLng}`
     );
-    console.log("all Staff:", staff)
-
+    console.log("all Staff:", staff);
 
     const { staffLeaves } = this.state;
 
@@ -769,18 +773,18 @@ class UserRequestService extends Form {
           userRequest.lat = patientLat;
           userRequest.lng = patientLng;
 
-          console.log("userReq:", userRequest)
+          console.log("userReq:", userRequest);
           try {
             await axios.post(
               config.apiEndPoint + "/confirmService",
               userRequest
             );
-
+            this.props.history.push("/Confirm/Meeting");
             // toast.success("Meeting Scheduled");
           } catch (ex) {
-            toast.error(ex.response.data);
+            console.log("userRequest exception:", ex);
+            // toast.error(ex.response.data);
           }
-          this.props.history.push("/Confirm/Meeting");
 
           return;
         }
@@ -791,9 +795,6 @@ class UserRequestService extends Form {
 
     //Assigning duty on the basis of rating
     if (tempArray.length > 0) {
-
-
-
       tempArray.sort((a, b) => (a.Rating > b.Rating ? -1 : 1));
 
       // if (!maxIndex) maxIndex = 0;
@@ -852,7 +853,6 @@ class UserRequestService extends Form {
         userRequest.vaccination = doctorForm.vaccination;
         userRequest.ServiceID = doctorForm.service;
         userRequest.Schedule = doctorForm.schedule;
-
 
         // userRequest.Recursive = doctorForm.recursive;
         userRequest.Address = doctorForm.address;
@@ -925,18 +925,11 @@ class UserRequestService extends Form {
           toast.error(ex.response.data);
         }
         if (this.props.location.state) {
-
-          userRequest._id = this.props.location.state._id
-          this.props.history.push("/Confirm/Meeting", userRequest
-
-          );
+          userRequest._id = this.props.location.state._id;
+          this.props.history.push("/Confirm/Meeting", userRequest);
+        } else {
+          this.props.history.push("/Confirm/Meeting");
         }
-        else {
-          this.props.history.push("/Confirm/Meeting"
-
-          );
-        }
-
 
         return;
       }
@@ -952,16 +945,10 @@ class UserRequestService extends Form {
     // }
   };
 
-
-
   handleSubmit = async (e) => {
     e.preventDefault();
 
-
     // const radius= localStorage.getItem("radius");
-
-
-
 
     let errors = this.validate();
     if (this.state.servicePlan === "None") {
@@ -975,8 +962,6 @@ class UserRequestService extends Form {
       await this.AssignAutomatedStaff();
   };
 
-
-
   render() {
     const { organization, availabilityData } = this.state;
     const { schedule } = this.state.doctorForm;
@@ -987,26 +972,29 @@ class UserRequestService extends Form {
         <article className="wrapper-user-req user-req-new">
           <div className="card-signup doc-form style-User-Request user-req-card user-req-layout">
             <header>
-              <h1 className="sign-up-header-text doc-header animate__animated animate__zoomIn">
+              <h3
+                className="sign-up-header-text doc-header animate__animated animate__zoomIn"
+                style={{ marginBottom: "6px" }}
+              >
                 Schedule A Service
-              </h1>
+              </h3>
             </header>
             {/* <article>{this.renderLabel("Organization", "serviceFor")}</article>
               <article>
                 {this.renderDropDown("Profession", profession, "serviceFor")}
               </article> */}
             <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
-
-              <div className="mb-2">
+              <div className="mb-0">
                 <Row>
                   {/* <article className="RowSR RowSR-grid"> */}
-
 
                   <Col>
                     <article
                       className={`user-request-input-wrapper ${this.state.errorClass}`}
                     >
-                      <article>{this.renderLabel("Full Name", "fullName")}</article>
+                      <article>
+                        {this.renderLabel("Full Name", "fullName")}
+                      </article>
                       <article>
                         {this.renderInput(
                           "text",
@@ -1023,7 +1011,9 @@ class UserRequestService extends Form {
                     <article
                       className={`user-request-input-wrapper ${this.state.errorClass}`}
                     >
-                      <article>{this.renderLabel("Service", "service")}</article>
+                      <article>
+                        {this.renderLabel("Service", "service")}
+                      </article>
                       <article>
                         {this.renderDropDown(
                           "service",
@@ -1057,15 +1047,12 @@ class UserRequestService extends Form {
                     </article>
                   </Col>
 
-
                   {/* </article> */}
                 </Row>
               </div>
 
-
-              <div className="mb-4 ">
+              <div className="mb-1">
                 <Row>
-
                   {/* Paste Organization here */}
 
                   <Col>
@@ -1089,7 +1076,7 @@ class UserRequestService extends Form {
                   </Col>
 
                   <Col>
-                    <article >
+                    <article>
                       {/* <article>{this.renderLabel("City", "city")}</article>
                   <article className="signup-org-city_">
                     {this.renderDropDown(
@@ -1100,38 +1087,39 @@ class UserRequestService extends Form {
                       "Please Select Your City"
                     )}
                   </article> */}
-                      <article
+                      <article>
+                        {this.renderLabel("Change My Location", "location")}
+                      </article>
 
-                      >{this.renderLabel("Change My Location", "location")}</article>
-
-                      <Link to="/maps"
-                        target="_blank"
-                      >
+                      <Link to="/maps" target="_blank">
                         <div
                           className="style-map-pin"
                           style={{
-                            marginLeft: "auto", marginRight: "auto",
-                            border: "1px solid #0d6efd", padding: "5.9px 0px",
-                            borderRadius: "4px", marginTop: "2px"
-
-
-                          }}>
-
-                          <span
-
-                          >Open Map</span>
-                          <MapPin style={{ marginLeft: "2px", display: "inline-block", height: "17px" }} />
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                            border: "1px solid #0d6efd",
+                            padding: "5.9px 0px",
+                            borderRadius: "4px",
+                            marginTop: "2px",
+                          }}
+                        >
+                          <span>Open Map</span>
+                          <MapPin
+                            style={{
+                              marginLeft: "2px",
+                              display: "inline-block",
+                              height: "17px",
+                            }}
+                          />
                           {/* <FontAwesomeIcon icon={MapPin} */}
-
-
-
                         </div>
                       </Link>
                       {this.state.serviceLocalityError &&
-                        !this.state.errors.city &&
-                        <p className="error">
-                          {this.state.serviceLocalityError}
-                        </p>}
+                        !this.state.errors.city && (
+                          <p className="error">
+                            {this.state.serviceLocalityError}
+                          </p>
+                        )}
                     </article>
                   </Col>
 
@@ -1140,8 +1128,7 @@ class UserRequestService extends Form {
                 </Row>
               </div>
 
-
-              <div className="mb-3">
+              <div className="mb-1">
                 <Row>
                   {/* <article className="RowSR RowSR-grid email-txt"> */}
 
@@ -1156,7 +1143,9 @@ class UserRequestService extends Form {
 
                   <Col>
                     <article>
-                      <article>{this.renderLabel("Phone No", "phoneno")}</article>
+                      <article>
+                        {this.renderLabel("Phone No", "phoneno")}
+                      </article>
                       <article>
                         {this.renderInput(
                           "tel",
@@ -1171,9 +1160,7 @@ class UserRequestService extends Form {
                 </Row>
               </div>
 
-
-
-              <div className="mb-3">
+              <div className="mb-1">
                 <Row>
                   {/* <article className="RowSR RowSR-grid"> */}
                   <Col>
@@ -1191,20 +1178,15 @@ class UserRequestService extends Form {
                             "schedule",
                             "schedule",
                             "Schedule a Meeting",
-                            this.state.minDate,
+                            this.state.minDate
                             // this.state.maxDate
                           )}
                         </article>
-
                       </article>
                       {/* City */}
                     </article>
-
-
-
                   </Col>
                   <Col>
-
                     <article>
                       <article
                         className={`user-request-input-wrapper ${this.state.errorClass}`}
@@ -1235,14 +1217,19 @@ class UserRequestService extends Form {
                 </Row>
               </div>
 
-
               <Row>
                 <Col>
                   {!this.state.vaccinationSelected && (
                     <>
                       <article style={{ display: "flex" }}>
-                        <span style={{ marginLeft: "1rem", marginTop: "0.5rem" }}>
-                          {this.renderRadioBtn1("daily", "servicePlan", "Daily")}
+                        <span
+                          style={{ marginLeft: "1rem", marginTop: "0.5rem" }}
+                        >
+                          {this.renderRadioBtn1(
+                            "daily",
+                            "servicePlan",
+                            "Daily"
+                          )}
                           <span style={{ marginLeft: "0.5rem" }}>
                             {this.renderRadioBtn3(
                               "weekly",
@@ -1271,47 +1258,40 @@ class UserRequestService extends Form {
                           )}
                         </span>
 
-                        {this.state.servicePlan !== "None" &&
-
-                          (
-                            <>
-                              {/* type,
+                        {this.state.servicePlan !== "None" && (
+                          <>
+                            {/* type,
                               id,
                               name,
                               placeholder = "",
                               minDate = "",
                               maxDate = "",
                               readonly = "" */}
-                              <span style={{ marginLeft: "1rem" }}
-                                className="repeated-wrapper"
-                              >
-                                {this.renderInput(
-                                  "number",
-                                  "noOfMeetings",
-                                  "noOfMeetings",
-                                  "Meetings?",
-                                  "1",
-                                  "",
-                                  "",
-                                  "1",
-                                  "no-of-meetings-style"
-                                )}
-                              </span>
-
-                            </>
-                          )}
-                        {this.state.servicePlan === "Weekly" &&
-                          <MultiSelect />
-                        }
+                            <span
+                              style={{ marginLeft: "1rem" }}
+                              className="repeated-wrapper"
+                            >
+                              {this.renderInput(
+                                "number",
+                                "noOfMeetings",
+                                "noOfMeetings",
+                                "Meetings?",
+                                "1",
+                                "",
+                                "",
+                                "1",
+                                "no-of-meetings-style"
+                              )}
+                            </span>
+                          </>
+                        )}
+                        {this.state.servicePlan === "Weekly" && <MultiSelect />}
                       </article>
-
                     </>
                   )}
                 </Col>
                 <Col md={2}>
-                  <article
-                    style={{ display: "flex", justifyContent: "end" }}
-                  >
+                  <article style={{ display: "flex", justifyContent: "end" }}>
                     <BasicModal
                       lat={this.state.patientLat}
                       lng={this.state.patientLng}
@@ -1323,19 +1303,16 @@ class UserRequestService extends Form {
                       }
                       requestTimeLength={
                         this.state.doctorForm.service &&
-                          this.state.doctorForm.organization &&
-                          this.state.doctorForm.schedule
+                        this.state.doctorForm.organization &&
+                        this.state.doctorForm.schedule
                           ? this.state.requestTime.length
                           : 0
                       }
-                      selectedSlot={
-                        this.state.doctorForm.ServiceNeededFrom
-                      }
+                      selectedSlot={this.state.doctorForm.ServiceNeededFrom}
                     />
                   </article>
                 </Col>
               </Row>
-
 
               <article
                 className={`user-request-input-wrapper ${this.state.errorClass} address-grid`}
@@ -1354,6 +1331,7 @@ class UserRequestService extends Form {
               </article>
               <article
                 className={`btn-user-request ${this.state.errorClass} schedule-btn`}
+                style={{ marginBottom: "10px" }}
               >
                 {this.renderBtn("Schedule")}
               </article>
