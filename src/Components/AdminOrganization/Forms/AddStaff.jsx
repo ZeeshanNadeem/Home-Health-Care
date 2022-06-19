@@ -8,7 +8,6 @@ import jwtDecode from "jwt-decode";
 import config from "../../Api/config.json";
 import ServicesMutiple from "../../ReactMultiSelect/MutipleServiceOrg";
 
-
 class NurseForm extends Form {
   state = {
     doctorForm: {
@@ -152,7 +151,7 @@ class NurseForm extends Form {
     ],
     lat: "",
     lng: "",
-    Orgservices: []
+    Orgservices: [],
   };
 
   schema = {
@@ -160,16 +159,16 @@ class NurseForm extends Form {
     // dateOfBirth: Joi.string().required().label("Date of Birth"),
     email: this.state.isEditModel
       ? Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
-        .min(5)
-        .max(255)
-        .required()
+          .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+          .min(5)
+          .max(255)
+          .required()
       : Joi.string()
-        .min(5)
-        .max(255)
-        .required()
-        .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
-        .label("Email"),
+          .min(5)
+          .max(255)
+          .required()
+          .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+          .label("Email"),
     password: this.state.isEditModel
       ? Joi.string()
       : Joi.string().min(5).max(255).required().label("Password"),
@@ -211,7 +210,6 @@ class NurseForm extends Form {
       phone: doctorForm.phone,
     };
 
-
     const updateUser = {
       fullName: doctorForm.fullName,
       staffID: staffMemberData._id,
@@ -224,7 +222,6 @@ class NurseForm extends Form {
       // availabileDayTo: doctorForm.availabileDayTo,
       // phone: doctorForm.phone,
     };
-
 
     try {
       await axios.put(
@@ -269,8 +266,6 @@ class NurseForm extends Form {
       Rating: 0,
       RatingAvgCount: 0,
       locations: user.locations,
-
-
     };
 
     try {
@@ -282,14 +277,10 @@ class NurseForm extends Form {
       userObj.password = addStaffMember.password;
       userObj.locations = CurrentUser.locations;
 
-
-
       const { data: user } = await axios.post(
         config.apiEndPoint + "/user",
         userObj
       );
-
-
 
       const { data: staffAdded } = await axios.post(
         "http://localhost:3000/api/staff?dontCheck=true",
@@ -303,7 +294,6 @@ class NurseForm extends Form {
 
       RefreshStaffMembers();
     } catch (ex) {
-
       const error = { ...this.state.errors };
       error.email = ex.response.data;
       this.setState({ errors: error });
@@ -315,9 +305,10 @@ class NurseForm extends Form {
   handleSubmit = async (e) => {
     e.preventDefault();
     const servicesMulti = JSON.parse(localStorage.getItem("servicesMultiOrg"));
+
     let myServices = [];
     for (let s of this.state.Orgservices) {
-      if (servicesMulti.some(x => x.value === s.serviceName))
+      if (servicesMulti.some((x) => x.value === s.serviceName))
         myServices.push(s);
     }
 
@@ -326,14 +317,17 @@ class NurseForm extends Form {
     errors = this.validate();
     this.setState({ errors: errors || {} });
     // }
-
+    if (servicesMulti.length === 0) {
+      this.setState({ servicesError: true });
+      return;
+    }
     const { staffMemberData } = this.props;
     if (staffMemberData) {
       this.updateStaffMember(myServices);
       return;
     }
 
-    if (!errors) {
+    if (!errors && servicesMulti.length !== 0) {
       this.addAStaffMember(myServices);
       return;
     }
@@ -369,12 +363,12 @@ class NurseForm extends Form {
       `http://localhost:3000/api/services?organization=${user.Organization._id}`
     );
 
-    this.setState({ Orgservices: services.results })
+    this.setState({ Orgservices: services.results });
     let multiple_services = [];
     for (let s of services.results) {
-      multiple_services.push({ label: s.serviceName, value: s.serviceName })
+      multiple_services.push({ label: s.serviceName, value: s.serviceName });
     }
-    this.setState({ MultipleServices: multiple_services })
+    this.setState({ MultipleServices: multiple_services });
     // let { data: services } = await axios.get(
     //   "http://localhost:3000/api/services"
     // );
@@ -488,21 +482,22 @@ class NurseForm extends Form {
             )}
 
             <article className="addStaff-Fields-grouping">
-              <article
-                className="one-group-first-item addStaff-group-alignment"
-              >
+              <article className="one-group-first-item addStaff-group-alignment">
                 <article className="label-addStaff">
                   {this.renderLabel("Speciality", "serviceID")}
                 </article>
-                <article style={{ width: "100%" }} >
+                <article style={{ width: "100%" }}>
                   {this.state.MultipleServices != undefined &&
-                    this.state.MultipleServices.length > 0 &&
-                    <ServicesMutiple
-                      services={this.state.MultipleServices}
-                      PreSelectedService={
-                        this.state.isEditModel ?
-                          this.props.staffMemberData.staffSpeciality : []}
-                    />}
+                    this.state.MultipleServices.length > 0 && (
+                      <ServicesMutiple
+                        services={this.state.MultipleServices}
+                        PreSelectedService={
+                          this.state.isEditModel
+                            ? this.props.staffMemberData.staffSpeciality
+                            : []
+                        }
+                      />
+                    )}
                   {/* <ServicesMutiple
                     services={this.state.multiple_services}
                   /> */}
@@ -514,6 +509,9 @@ class NurseForm extends Form {
                     "Please Select Speciality"
                   )} */}
                 </article>
+                {this.state.servicesError && (
+                  <p className="error services-err">select a service</p>
+                )}
               </article>
               <article className="one-group-second-item addStaff-group-alignment">
                 <article className="label-addStaff">
@@ -538,9 +536,9 @@ class NurseForm extends Form {
                 <article className="time-slots">
                   {this.state.slotTime.map((day) =>
                     day.name === "12 PM to 3 PM" ||
-                      day.name === "3 PM to 6 PM" ||
-                      day.name === "6 PM to 9 PM" ||
-                      day.name === "9 PM to 12 AM" ? (
+                    day.name === "3 PM to 6 PM" ||
+                    day.name === "6 PM to 9 PM" ||
+                    day.name === "9 PM to 12 AM" ? (
                       <article key={day.name}></article>
                     ) : (
                       <article key={day.name}>
@@ -564,9 +562,9 @@ class NurseForm extends Form {
                 <article className="time-slots">
                   {this.state.slotTime.map((day) =>
                     day.name === "12 AM to 3 AM" ||
-                      day.name === "3 AM to 6 AM" ||
-                      day.name === "6 AM to 9 AM" ||
-                      day.name === "9 AM to 12 PM" ? (
+                    day.name === "3 AM to 6 AM" ||
+                    day.name === "6 AM to 9 AM" ||
+                    day.name === "9 AM to 12 PM" ? (
                       <article key={day.name}></article>
                     ) : (
                       <article key={day.name}>

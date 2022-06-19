@@ -110,13 +110,22 @@ class SignUpAsOrganization extends Form {
       },
     ],
     fileUpload: true,
-    city: ["Islamabad", "Rawalpindi", "Karachi", "Lahore", "Multan", "Hyderabad", "Quetta", "Faisalabad",
-      "Sialkot", "Dera Ghazi Khan"
+    city: [
+      "Islamabad",
+      "Rawalpindi",
+      "Karachi",
+      "Lahore",
+      "Multan",
+      "Hyderabad",
+      "Quetta",
+      "Faisalabad",
+      "Sialkot",
+      "Dera Ghazi Khan",
     ],
     lat: "",
     lng: "",
     isIndependentPerson: false,
-    servicesSelected: []
+    servicesSelected: [],
   };
 
   schema = {
@@ -126,8 +135,6 @@ class SignUpAsOrganization extends Form {
     password: Joi.string().min(5).max(255).required(),
     isOrganizationAdmin: Joi.boolean().required(),
     OrganizationID: Joi.string().required(),
-
-
 
     // price: Joi.string().required(),
 
@@ -146,16 +153,14 @@ class SignUpAsOrganization extends Form {
   options = [
     { label: "Grapes 🍇", value: "grapes" },
     { label: "Mango 🥭", value: "mango" },
-    { label: "Strawberry 🍓", value: "strawberry" }
+    { label: "Strawberry 🍓", value: "strawberry" },
   ];
 
   constructor(props) {
     super(props);
     localStorage.removeItem("markers");
-
   }
   async componentDidMount() {
-
     const jwt = localStorage.getItem("token");
     if (jwt) {
       const user = jwtDecode(jwt);
@@ -167,7 +172,7 @@ class SignUpAsOrganization extends Form {
           await axios.delete(config.apiEndPoint + `/user/${user._id}`);
           localStorage.removeItem("token");
           window.location = "/SignUp/Organization";
-        } catch (ex) { }
+        } catch (ex) {}
       }
     }
 
@@ -190,8 +195,7 @@ class SignUpAsOrganization extends Form {
       multiSevices.push({ label: s.serviceName, value: s.serviceName });
     }
 
-    this.setState({ multiSevices })
-
+    this.setState({ multiSevices });
 
     this.setState({
       organizations: data.results,
@@ -199,8 +203,6 @@ class SignUpAsOrganization extends Form {
       IndependentServices: services.results,
     });
   }
-
-
 
   onChange = (e) => {
     // setFile(e.target.files[0]);
@@ -214,38 +216,37 @@ class SignUpAsOrganization extends Form {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-
-    const servicesMulti = JSON.parse(localStorage.getItem("servicesMulti"));
     let myServices = [];
-    for (let s of this.state.IndependentServices) {
-      if (servicesMulti.some(x => x.value === s.serviceName))
-        myServices.push(s);
-    }
+    if (this.state.isIndependentPerson) {
+      const servicesMulti = JSON.parse(localStorage.getItem("servicesMulti"));
 
+      for (let s of this.state.IndependentServices) {
+        if (servicesMulti.some((x) => x.value === s.serviceName))
+          myServices.push(s);
+      }
+    }
 
     const locations = JSON.parse(localStorage.getItem("markers"));
 
-
-
     if (!locations || locations.length === 0)
-      this.setState({ serviceLocalityError: "Please Set Your Service Locality" })
+      this.setState({
+        serviceLocalityError: "Please Set Your Service Locality",
+      });
+    else this.setState({ serviceLocalityError: "" });
 
-    else
-      this.setState({ serviceLocalityError: "" })
+    const isIndependentPerson = this.state.isIndependentPerson ? true : false;
 
-
-
-
-    const isIndependentPerson =
-      this.state.isIndependentPerson ? true : false;
-
-
-    this.setState({ isIndependentPerson })
+    this.setState({ isIndependentPerson });
     global.staffDetails = this.state.doctorForm;
 
     let errors = this.validate();
 
-    if (!isIndependentPerson && errors && errors.qualification && errors.serviceOrg_) {
+    if (
+      !isIndependentPerson &&
+      errors &&
+      errors.qualification &&
+      errors.serviceOrg_
+    ) {
       delete errors["qualification"];
       delete errors["serviceOrg_"];
       if (
@@ -253,7 +254,6 @@ class SignUpAsOrganization extends Form {
         !errors.email &&
         !errors.password &&
         !errors.OrganizationID
-
       ) {
         errors = null;
       }
@@ -266,10 +266,7 @@ class SignUpAsOrganization extends Form {
     //   return;
     // }
 
-
-
     if (locations && locations.length >= 0) {
-
       // if (!errors) {
       try {
         if (isIndependentPerson && this.state.selectedFile) {
@@ -288,27 +285,21 @@ class SignUpAsOrganization extends Form {
             this.state.doctorForm.OrganizationID
           );
 
-
-
-
-
-
           const newLocation = locations.map((marker) => {
-            if (marker.selected === true)
-              delete marker.selected;
-            if (marker.time)
-              delete marker.time
+            if (marker.selected === true) delete marker.selected;
+            if (marker.time) delete marker.time;
 
             return marker;
-          })
-
+          });
 
           // formData.append("city", this.state.doctorForm.city);
           formData.append("locations", JSON.stringify(newLocation));
 
-
           global.selectedFile = this.state.doctorForm.selectedFile;
-          const response = await signingUp(formData, "indepedentServiceProvider");
+          const response = await signingUp(
+            formData,
+            "indepedentServiceProvider"
+          );
           localStorage.setItem("token", response.headers["x-auth-token"]);
           global.userID = response.data._id;
           global.formData = formData;
@@ -316,11 +307,12 @@ class SignUpAsOrganization extends Form {
           global.city = this.state.doctorForm.city;
           global.serviceSelectedID = this.state.doctorForm.serviceOrg_;
 
-
-          const servicesMulti = JSON.parse(localStorage.getItem("servicesMulti"));
+          const servicesMulti = JSON.parse(
+            localStorage.getItem("servicesMulti")
+          );
           let myServices = [];
           for (let s of this.state.IndependentServices) {
-            if (servicesMulti.some(x => x.value === s.serviceName))
+            if (servicesMulti.some((x) => x.value === s.serviceName))
               myServices.push(s);
           }
           const obj = {
@@ -329,31 +321,29 @@ class SignUpAsOrganization extends Form {
             // formData:formData,
             staffDetails: this.state.doctorForm,
             city: this.state.doctorForm.city,
-            serviceSelectedID: this.state.doctorForm.serviceOrg_
-          }
+            serviceSelectedID: this.state.doctorForm.serviceOrg_,
+          };
 
           this.props.history.push("/signUp/details", obj);
-
-
-        }
-        else if (!isIndependentPerson) {
+        } else if (!isIndependentPerson) {
           const locations = JSON.parse(localStorage.getItem("markers"));
 
-
           const newLocation = locations.map((marker) => {
-            if (marker.selected === true)
-              delete marker.selected;
-            if (marker.time)
-              delete marker.time
+            if (marker.selected === true) delete marker.selected;
+            if (marker.time) delete marker.time;
 
             return marker;
-          })
-
-
+          });
 
           // if(lat && lng && radius){
-          const { fullName, email, password, isOrganizationAdmin, OrganizationID, city } =
-            this.state.doctorForm;
+          const {
+            fullName,
+            email,
+            password,
+            isOrganizationAdmin,
+            OrganizationID,
+            // city,
+          } = this.state.doctorForm;
           const obj = {
             fullName: fullName,
             email: email,
@@ -361,9 +351,7 @@ class SignUpAsOrganization extends Form {
             isOrganizationAdmin: isOrganizationAdmin,
             locations: newLocation,
             OrganizationID: OrganizationID,
-            city: "Islamabad",
-
-
+            // city: "Islamabad",
           };
 
           if (errors) return;
@@ -372,8 +360,6 @@ class SignUpAsOrganization extends Form {
             localStorage.setItem("token", response.headers["x-auth-token"]);
 
             window.location = "/Home";
-
-
           } catch (ex) {
             if (ex.response && ex.response.status === 400) {
               const error = { ...this.state.errors };
@@ -383,9 +369,7 @@ class SignUpAsOrganization extends Form {
               this.setState({ errors: error });
             }
           }
-
         }
-
       } catch (ex) {
         if (ex.response && ex.response.status === 400) {
           const error = { ...this.state.errors };
@@ -394,12 +378,11 @@ class SignUpAsOrganization extends Form {
           error.email = ex.response.data;
 
           this.setState({ errors: error });
-
         }
       }
       // }
     }
-  }
+  };
   // };
   render() {
     const year = new Date().getFullYear();
@@ -438,9 +421,7 @@ class SignUpAsOrganization extends Form {
                     {this.renderInput("text", "email", "email")}
                   </article>
                 </article>
-
               </article>
-
 
               <article className="signup-org-group">
                 <article>
@@ -470,20 +451,16 @@ class SignUpAsOrganization extends Form {
 
               {this.state.isIndependentPerson && (
                 <>
-
                   <article
                     style={{ display: "flex" }}
-                  // className="signup-org-group servies-org"
+                    // className="signup-org-group servies-org"
                   >
                     <article>
                       <article style={{ margin: "0" }}>
                         {this.renderLabel("Service", "service")}
                       </article>
                       <article>
-                        <Example
-
-                          services={this.state.multiSevices}
-                        />
+                        <Example services={this.state.multiSevices} />
                         {/* <MultiSelect
                           className="services-multi"
                           options={this.options}
@@ -503,10 +480,7 @@ class SignUpAsOrganization extends Form {
                       </article>
                     </article>
                     <article>
-                      <article
-                        className="second-item"
-
-                      ></article>
+                      <article className="second-item"></article>
                     </article>
                     <article>
                       <article className="signup-label" style={{ margin: "0" }}>
@@ -544,26 +518,17 @@ class SignUpAsOrganization extends Form {
                   {!this.state.fileUpload && (
                     <p className="error">Please Upload Your Resume</p>
                   )}
-
-
                 </article>
               )}
 
-
               <article
-
                 className="signup-org-group"
                 style={{
                   display: "flex",
                   justifyContent: "start",
                 }}
               >
-
-
-
-
                 <article>
-
                   {/* <article className="signup-label" style={{ margin: "0" }}>
                     {this.renderLabel("City", "city")}
                   </article> */}
@@ -580,52 +545,40 @@ class SignUpAsOrganization extends Form {
                       "Select Your City"
                     )}
                   </article> */}
-
-
-
-
                 </article>
 
-                <article className="second-item mt-2 ml-0"
+                <article
+                  className="second-item mt-2 ml-0"
                   style={{ margin: 0 }}
                 >
                   <article className="signup-label" style={{ margin: "0" }}>
-                    {this.renderLabel("Set Your Service Locality", "serviceLocality")}
+                    {this.renderLabel(
+                      "Set Your Service Locality",
+                      "serviceLocality"
+                    )}
                   </article>
 
-                  <div style={{ marginLeft: "auto", marginRight: "auto" }}
+                  <div
+                    style={{ marginLeft: "auto", marginRight: "auto" }}
                     className="open-map"
                   >
-                    <Link to="/maps"
-                      target="_blank"
-
-                    >
+                    <Link to="/maps" target="_blank">
                       Open Map
-                      <FontAwesomeIcon icon={faLocationArrow}
+                      <FontAwesomeIcon
+                        icon={faLocationArrow}
                         style={{ marginLeft: "0.5rem" }}
                       />
                     </Link>
                   </div>
-                  {this.state.serviceLocalityError &&
-
-
-                    <p className="error">{this.state.serviceLocalityError}</p>}
-
-
-
+                  {this.state.serviceLocalityError && (
+                    <p className="error">{this.state.serviceLocalityError}</p>
+                  )}
                 </article>
-
-
-
-
-
-
               </article>
               {/* <MultiServices /> */}
               <article className="btn-orgSignUp org-btn signup-page-btn">
                 {this.renderBtn("Sign Up")}
               </article>
-
             </main>
           </article>
         </form>
@@ -634,9 +587,7 @@ class SignUpAsOrganization extends Form {
   }
 }
 
-
 const mapStateToProps = (state) => {
-
   return {
     Organizationlocation: state.SetLocation,
   };

@@ -915,20 +915,19 @@ class UserRequestService extends Form {
         userRequest.lat = this.state.patientLat;
         userRequest.lng = this.state.patientLng;
 
-        userRequest.markers = JSON.parse(localStorage.getItem("markers"));
+        // userRequest.markers = JSON.parse(localStorage.getItem("markers"));
 
         try {
           await axios.post(config.apiEndPoint + "/confirmService", userRequest);
-
+          if (this.props.location.state) {
+            userRequest._id = this.props.location.state._id;
+            this.props.history.push("/Confirm/Meeting", userRequest);
+          } else {
+            this.props.history.push("/Confirm/Meeting");
+          }
           // toast.success("Meeting Scheduled");
         } catch (ex) {
           toast.error(ex.response.data);
-        }
-        if (this.props.location.state) {
-          userRequest._id = this.props.location.state._id;
-          this.props.history.push("/Confirm/Meeting", userRequest);
-        } else {
-          this.props.history.push("/Confirm/Meeting");
         }
 
         return;

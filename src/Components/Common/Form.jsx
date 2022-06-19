@@ -69,17 +69,15 @@ class Form extends React.Component {
     for (let i = 0; i < staff.length; i++) {
       let staffOnLeave = false;
       for (let j = 0; j < staffLeaves.length; j++) {
-
-        //new line added in staff leaves check 
-        //when staff member has taken leave on slot 
+        //new line added in staff leaves check
+        //when staff member has taken leave on slot
         //dont block the entire day
         if (staffLeaves[j].slotLeave) continue;
-        //new line added in staff leaves check 
-        //when staff member has taken leave on slot 
+        //new line added in staff leaves check
+        //when staff member has taken leave on slot
         //dont block the entire day
 
         if (staff[i]._id === staffLeaves[j].staff._id) {
-
           if (staffLeaves[j].leaveFrom === schedule) {
             staffOnLeave = true;
 
@@ -112,7 +110,7 @@ class Form extends React.Component {
             const compareDate = moment(userSelectedDate_, "YYYY/MM/DD");
             const startDate = moment(staffLeaveDateFrom_, "YYYY/MM/DD");
             const endDate = moment(staffLeaveDateTo_, "YYYY/MM/DD");
-            
+
             const isBetween = compareDate.isBetween(startDate, endDate);
             if (
               isBetween ||
@@ -528,7 +526,6 @@ class Form extends React.Component {
 
       this.setState({ requestTime });
     } else this.setState({ requestTime });
-
   };
 
   //when service,organization,date has been
@@ -619,8 +616,6 @@ class Form extends React.Component {
   //determined.we show only that time slots in time dropdown on
   //which staff is available.Unavailable slot get filtered (booked slots)
   FilterNotAvailableSlots = async (schedule, serviceSelected) => {
-
-
     let track = [];
 
     let slotTime = [
@@ -649,21 +644,18 @@ class Form extends React.Component {
     else if (dayNo === 5) dayNo = "FRI";
     else if (dayNo === 6) dayNo = "SAT";
     const user = GetCurrentUser();
-    const { data } = await axios.get(config.apiEndPoint + `/user?findUser_=${user._id}`)
-
-
-
-
+    const { data } = await axios.get(
+      config.apiEndPoint + `/user?findUser_=${user._id}`
+    );
 
     let { data: availabilityData } = await axios.get(
       config.staff +
-      `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${this.state.patientLat}&lng=${this.state.patientLng}&date=${schedule}`
+        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${this.state.patientLat}&lng=${this.state.patientLng}&date=${schedule}`
     );
-
 
     let { data: allStaff } = await axios.get(
       config.staff +
-      `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&allStaff=true`
+        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&allStaff=true`
     );
     this.setState({ allStaff });
     availabilityData = await this.StaffLeaves(availabilityData);
@@ -825,8 +817,6 @@ class Form extends React.Component {
 
       // this.setState({ requestTime: filterReqTime });
     } else this.setState({ requestTime: availabilityData });
-
-
   };
 
   //Task
@@ -868,7 +858,7 @@ class Form extends React.Component {
     else if (dayNo === 6) dayNo = "SAT";
     let { data: availabilityData } = await axios.get(
       config.staff +
-      `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}`
+        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}`
     );
 
     availabilityData = await this.StaffLeaves(availabilityData);
@@ -1066,12 +1056,12 @@ class Form extends React.Component {
       const { service: serviceGot } = doctorForm;
       const { organization: orgGot } = doctorForm;
       const { city } = doctorForm;
-      const lat = localStorage.getItem("lat")
-      const lng = localStorage.getItem("lng")
+      const lat = localStorage.getItem("lat");
+      const lng = localStorage.getItem("lng");
       if (lat && lng) {
         const { data } = await axios.get(
           config.staff +
-          `?day=${dayNo}&service=${serviceGot}&organization=${orgGot}&city=${city}&lat=${lat}&lng=${lng}`
+            `?day=${dayNo}&service=${serviceGot}&organization=${orgGot}&city=${city}&lat=${lat}&lng=${lng}`
         );
 
         // let filteredStaff_ = [];
@@ -1092,21 +1082,23 @@ class Form extends React.Component {
   //Populating the current organization's services in the next dropdown that
   // is named service
   populateServices = async (inputValue) => {
-
     let { data } = await axios.get(
       `http://localhost:3000/api/services?organization=${inputValue}`
     );
 
-    const { data: indepServices } = await axios.get(config.apiEndPoint + `/independentServices`);
+    const { data: indepServices } = await axios.get(
+      config.apiEndPoint + `/independentServices`
+    );
     //Populating Independent Services
 
     if (indepServices.results[0].serviceOrganization._id === inputValue) {
-      const services = data.results.filter(s => s.IndependentService != undefined)
+      const services = data.results.filter(
+        (s) => s.IndependentService != undefined
+      );
       let tempArr = [];
       //Making a unique arr
       services.map(function (item, pos) {
-
-        let chk = tempArr.some(s => s.serviceName === item.serviceName);
+        let chk = tempArr.some((s) => s.serviceName === item.serviceName);
         console.log(chk);
         if (chk === false)
           tempArr.push({
@@ -1115,7 +1107,7 @@ class Form extends React.Component {
             servicePrice: item.servicePrice,
             serviceOrgranization: item.serviceOrgranization,
           });
-      })
+      });
       this.setState({ Conditionalservices: tempArr });
     }
 
@@ -1146,8 +1138,7 @@ class Form extends React.Component {
     //   }
 
     //   this.setState({ Conditionalservices: temp1 });
-    // } 
-
+    // }
     else this.setState({ Conditionalservices: data.results });
   };
 
@@ -1234,10 +1225,10 @@ class Form extends React.Component {
     } else this.setState({ requestTime });
   };
 
-
   //This function validates pakistani phone no
-  phoneNoValidation = phoneNo => {
-    let phoneNoValidator = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
+  phoneNoValidation = (phoneNo) => {
+    let phoneNoValidator =
+      /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
     const regex = new RegExp(phoneNoValidator);
     return regex.test(phoneNo);
   };
@@ -1246,42 +1237,45 @@ class Form extends React.Component {
   //If Yes,It filters slots according to the location
   //specified by service taker
   myInterval = setInterval(() => {
-
-    if (localStorage.getItem("lat") &&
-      localStorage.getItem("lng") && this.state.serviceLocalityError)
-      this.setState({ serviceLocalityError: "" })
+    if (
+      localStorage.getItem("lat") &&
+      localStorage.getItem("lng") &&
+      this.state.serviceLocalityError
+    )
+      this.setState({ serviceLocalityError: "" });
     const locationChanged = localStorage.getItem("locationChanged");
     if (locationChanged === "true") {
       if (this.state.doctorForm != undefined) {
         const { service, organization, schedule } = this.state.doctorForm;
         if (locationChanged === "true" && service && organization) {
-
           this.setState({
             patientLat: localStorage.getItem("lat"),
-            patientLng: localStorage.getItem("lng")
-          })
+            patientLng: localStorage.getItem("lng"),
+          });
           this.FilterNotAvailableSlots(schedule, service);
           this.filterTime(schedule);
-          localStorage.setItem("locationChanged", "false")
+          localStorage.setItem("locationChanged", "false");
         }
       }
     }
-
   }, 1000);
 
-
-  //This function populates organization in dropdown when 
-  //service is chosen.Only those organizations are shown 
+  //This function populates organization in dropdown when
+  //service is chosen.Only those organizations are shown
   //who lie in radius and provide that service
   PopulateOrganizations = async () => {
     const user = GetCurrentUser();
-    const { data } = await axios.get(config.apiEndPoint + `/user?findUser_=${user._id}`)
+    const { data } = await axios.get(
+      config.apiEndPoint + `/user?findUser_=${user._id}`
+    );
 
-    const { data: organizations } = await axios.get(config.apiEndPoint + `/organizations?service=${this.state.doctorForm.service}&lat=${data.lat}&lng=${data.lng}&getOrganziations=true`)
-    console.log("orgs::", organizations)
-    this.setState({ organization: organizations })
-
-  }
+    const { data: organizations } = await axios.get(
+      config.apiEndPoint +
+        `/organizations?service=${this.state.doctorForm.service}&lat=${data.lat}&lng=${data.lng}&getOrganziations=true`
+    );
+    console.log("orgs::", organizations);
+    this.setState({ organization: organizations });
+  };
 
   handleChange = async ({ currentTarget: input }) => {
     const errorMessage = this.validateProperty(input);
@@ -1332,30 +1326,25 @@ class Form extends React.Component {
 
     //   console.log(service[0].serviceName.trim().toUpperCase())
 
-
-    if (input.value.toUpperCase().includes("BABY")
-
-      && input.value.toUpperCase().includes("VACINATION") ||
+    if (
+      (input.value.toUpperCase().includes("BABY") &&
+        input.value.toUpperCase().includes("VACINATION")) ||
       input.value.toUpperCase().includes("VACCINATION")
     ) {
-
       this.setState({ vaccinationSelected: true });
-
-    }
-    else if (this.state.doctorForm.service &&
-      !this.state.doctorForm.service.toUpperCase("BABY VACINATION"))
-
-
-
+    } else if (
+      this.state.doctorForm.service &&
+      !this.state.doctorForm.service.toUpperCase("BABY VACINATION")
+    )
       this.setState({ vaccinationSelected: false });
 
     //Showing Vaccination Form Need To be Updated
 
     if (input.name === "service") {
-      //This function populates organization in dropdown based when 
-      //service is chosen.Only those organizations are shown 
+      //This function populates organization in dropdown based when
+      //service is chosen.Only those organizations are shown
       //who lie in radius and provide that service
-      this.PopulateOrganizations()
+      this.PopulateOrganizations();
     }
 
     if (input.name === "phoneno" || input.name === "phone") {
@@ -1363,7 +1352,7 @@ class Form extends React.Component {
       // if (phoneNo[0] !== "0" || phoneNo[1] !== "3" || phoneNo.length !== 11) {
       //   errors[input.name] = "Please Enter A Valid Phone No";
       // }
-      const phoneNo = this.phoneNoValidation(input.value)
+      const phoneNo = this.phoneNoValidation(input.value);
       if (!phoneNo) errors[input.name] = "Please Enter A Valid Phone No";
       else delete errors[input.name];
     }
@@ -1372,27 +1361,29 @@ class Form extends React.Component {
     const doctorForm = { ...this.state.doctorForm };
     doctorForm[input.name] = input.value;
     if (input.name === "OrganizationID") {
-      const { data } = await axios.get(config.apiEndPoint + `/independentServices`);
+      const { data } = await axios.get(
+        config.apiEndPoint + `/independentServices`
+      );
       let IndependentPerson = false;
       if (data.results.length > 0) {
-        if (data.results[0].serviceOrganization._id === doctorForm.OrganizationID)
+        if (
+          data.results[0].serviceOrganization._id === doctorForm.OrganizationID
+        )
           IndependentPerson = true;
       }
       if (IndependentPerson)
-        this.setState({ isIndependentPerson: IndependentPerson })
-      else this.setState({ isIndependentPerson: false })
+        this.setState({ isIndependentPerson: IndependentPerson });
+      else this.setState({ isIndependentPerson: false });
     }
 
     this.setState({ doctorForm, errors });
 
     const { service, organization, schedule } = doctorForm;
 
-
     if (
       (input.name === "schedule" && service && organization) ||
       (input.name === "service" && schedule && organization) ||
       (input.name === "organization" && service && schedule)
-
     ) {
       this.FilterNotAvailableSlots(schedule, service);
       this.filterTime(schedule);
@@ -1433,9 +1424,8 @@ class Form extends React.Component {
           id={id}
           onChange={this.handleChange}
           min={minDate}
-          max={maxDate}
+          // max={maxDate}
           readOnly={readonly}
-
         />
         {errors && errors[name] && <p className="error">{errors[name]}</p>}
       </article>
@@ -1485,10 +1475,8 @@ class Form extends React.Component {
   };
 
   handleChangeForRadioBtn3 = (e) => {
-    if (e.target.name === "None")
-      this.setState({ servicePlan: "None" })
-    else
-      this.setState({ servicePlan: "Weekly" });
+    if (e.target.name === "None") this.setState({ servicePlan: "None" });
+    else this.setState({ servicePlan: "Weekly" });
   };
 
   renderRadioBtn3 = (id, name, label, checkedStatus) => {
@@ -1700,7 +1688,14 @@ class Form extends React.Component {
     );
   };
 
-  renderDropDown = (label, optionsArray, id, name, dropDownLabel = "", multi = "") => {
+  renderDropDown = (
+    label,
+    optionsArray,
+    id,
+    name,
+    dropDownLabel = "",
+    multi = ""
+  ) => {
     const { doctorForm, errors } = this.state;
 
     return (
@@ -1714,7 +1709,6 @@ class Form extends React.Component {
             aria-label="Default select example"
             onChange={this.handleChange}
             multiple={multi}
-
           >
             <option value="">{dropDownLabel}</option>
 
@@ -1744,8 +1738,6 @@ class Form extends React.Component {
     );
   };
 
-
-
   renderDropOrg = (label, optionsArray, id, name, dropDownLabel = "") => {
     const { doctorForm, errors } = this.state;
     return (
@@ -1766,8 +1758,8 @@ class Form extends React.Component {
             </option>
           ))}
       </select>
-    )
-  }
+    );
+  };
 
   SmallDropDown = (optionsArray) => {
     return (

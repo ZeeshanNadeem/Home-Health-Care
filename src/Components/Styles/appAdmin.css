@@ -784,14 +784,17 @@ button.btn.btn-outline-primary {
   }
 }
 @media screen and (min-width: 1000px) {
+  .services-err {
+    padding-left: 12px;
+  }
   .style-map-pin {
     padding-left: 7rem !important;
   }
   article.wrapper-user-req.user-req-new {
-    overflow-y: hidden;
+    overflow-y: auto;
   }
   .user-req {
-    overflow-y: hidden;
+    overflow-y: auto;
   }
   .services-multi {
     width: 16.5rem;
@@ -818,4 +821,8 @@ button.btn.btn-outline-primary {
 
 .repeated-wrapper > article > .input {
   border-radius: 3px;
+}
+
+.card-signup.doc-form.add-staff-form {
+  max-height: 38rem;
 }
