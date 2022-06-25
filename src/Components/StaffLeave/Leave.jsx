@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 import moment from "moment";
 import axios from "axios";
+import GetCurrentUser from "../CurrentUser/GetCurrentUser";
 class Leave extends Form {
   state = {
     doctorForm: {
@@ -316,20 +317,25 @@ class Leave extends Form {
             //If time lies between then we check weather
             //its the day in between where user demands service
             //If yes then its slot is booked
+
+            const reqDate = moment(userRequests[i].Schedule, "YYYY-MM-DD");
+            const toScheduleDate = moment(
+              serviceDemander.Schedule,
+              "YYYY-MM-DD"
+            );
+
             if (
               timeFrom_.isSame(beforeTime_) &&
-              timeTo_.isSame(afterTime_)
-
-              // userSelectedTime_ >= bookedServiceFrom_ &&
-              // userSelectedTime_ <= bookedServiceTo_
+              timeTo_.isSame(afterTime_) &&
+              reqDate.isSame(toScheduleDate)
             ) {
-              const staffDutyOnSameDay = this.MatchUserSelected(
-                userRequests[i].Schedule
-              );
-              if (staffDutyOnSameDay) {
-                gotSlotBooked = true;
-                break;
-              }
+              // const staffDutyOnSameDay = this.MatchUserSelected(
+              //   userRequests[i].Schedule
+              // );
+              // if (staffDutyOnSameDay) {
+              gotSlotBooked = true;
+              break;
+              // }
             } else {
               continue;
             }
@@ -710,9 +716,9 @@ class Leave extends Form {
                 maxDate
               )}
             </article>
-            {/* //leave on slot UI CheckBox */}
+            {/* //leave on slot UI  */}
 
-            <div className="form-check">
+            {/* <div className="form-check">
               <input
                 className="form-check-input"
                 type="checkbox"
@@ -725,9 +731,9 @@ class Leave extends Form {
                   Leave On Slot?
                 </label>
               </div>
-            </div>
+            </div> */}
+            {/* //leave on slot UI  */}
 
-            {/* leave on slot  UI CheckBox */}
             {this.state.leaveSlot && (
               <>
                 <label
@@ -745,7 +751,7 @@ class Leave extends Form {
                 </div>{" "}
               </>
             )}
-
+            {/* leave on slot  UI CheckBox */}
             <article className="staff-leave-btn">
               {this.renderBtn("Apply For Leave")}
             </article>

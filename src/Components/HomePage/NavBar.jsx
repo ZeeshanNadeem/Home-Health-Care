@@ -21,7 +21,7 @@ class NavBar extends Component {
 
         this.setState({ user });
       }
-    } catch (ex) { }
+    } catch (ex) {}
   }
 
   handleMenu = () => {
@@ -35,11 +35,7 @@ class NavBar extends Component {
     return (
       <li className="nav-li">
         <span className="current-user">
-          <Avatar
-            alt={user.fullName}
-            src="."
-            className="avatar"
-          />
+          <Avatar alt={user.fullName} src="." className="avatar" />
           {console.log("user....:", user.username)}
           <p className="logged-in-user">{user.fullName}</p>
         </span>
@@ -89,19 +85,17 @@ class NavBar extends Component {
                     <AccountPopOver user={user} />
                   </span>
 
-
                   {/* Notifications */}
 
-                  {!user.isAppAdmin &&
+                  {/* {!user.isAppAdmin &&
                     user.isOrganizationAdmin === "false" &&
                     !user.staffMember && (
                       <span style={{ marginTop: "0.51rem" }}>
                         <Notification />
                       </span>
-                    )}
+                    )} */}
 
                   {/* Notifications */}
-
                 </span>
               </li>
             </React.Fragment>

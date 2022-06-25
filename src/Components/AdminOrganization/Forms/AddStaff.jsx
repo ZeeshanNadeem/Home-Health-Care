@@ -251,6 +251,13 @@ class NurseForm extends Form {
     const jwt = localStorage.getItem("token");
     const user = jwtDecode(jwt);
 
+    if (
+      !this.state.slotTime.some((x) => x.value === true) ||
+      !this.state.daysAvailable.some((x) => x.value === true)
+    ) {
+      this.setState({ availabilityError: true });
+      return;
+    }
     const addStaffMember = {
       fullName: doctorForm.fullName,
       email: doctorForm.email,
@@ -601,7 +608,9 @@ class NurseForm extends Form {
                 </article>
               </article>
             </article>
-
+            {this.state.availabilityError && (
+              <p className="error">Specify Your availability</p>
+            )}
             {/* <article className="addStaff-Fields-grouping">
               <article className="addStaff-input addStaff-group-alignment one-group-first-item">
                 <article className="label-addStaff">

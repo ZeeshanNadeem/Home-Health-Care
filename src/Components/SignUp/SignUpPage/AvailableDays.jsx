@@ -90,12 +90,10 @@ class AvailableDays extends Form {
   };
 
   async componentDidMount() {
-
     // const obj = this.props.location.state;
     // const { data } = await axios.get(
     //   `http://localhost:3000/api/independentServices?serviceID=${obj.serviceSelectedID}`
     // );
-
     // // let doctorForm = { ...this.state.doctorForm };
     // // doctorForm.price = data[0].servicePrice;
     // this.setState({ doctorForm });
@@ -107,19 +105,19 @@ class AvailableDays extends Form {
     let hasSelectedDay = this.state.daysAvailable.some(
       (day) => day.value === true
     );
-    if (!hasSelectedSlot && !hasSelectedDay)
-      this.setState({ hasSelectedSlot: false, hasSelectedDay: false });
+    if (!hasSelectedSlot || !hasSelectedDay) {
+      this.setState({ availabilityError: true });
+      return;
+    }
 
     const errors = this.validate();
     this.setState({ errors: errors || {} });
     if (!errors && hasSelectedSlot && hasSelectedDay) {
       try {
-
         //hea
 
-
         const obj = this.props.location.state;
-  
+
         let serviceOrg = obj.staffDetails.serviceOrg_;
         let OrgID = obj.staffDetails.OrganizationID;
         // let price = this.state.doctorForm.price;
@@ -131,7 +129,7 @@ class AvailableDays extends Form {
           serviceOrgranization: OrgID,
           // servicePrice: price,
           userID: user,
-          services
+          services,
         };
         const { data: service } = await axios.post(
           config.apiEndPoint + "/services",
@@ -139,15 +137,11 @@ class AvailableDays extends Form {
         );
         const locations = JSON.parse(localStorage.getItem("markers"));
         const newLocation = locations.map((marker) => {
-          if (marker.selected === true)
-            delete marker.selected;
-          if (marker.time)
-            delete marker.time
+          if (marker.selected === true) delete marker.selected;
+          if (marker.time) delete marker.time;
 
           return marker;
-        })
-
-
+        });
 
         const addStaffMember = {
           fullName: obj.staffDetails.fullName,
@@ -165,10 +159,8 @@ class AvailableDays extends Form {
           RatingAvgCount: 0,
           locations: newLocation,
           // city: obj.city,
-          locations: newLocation
+          locations: newLocation,
         };
-
-
 
         const { data: staffAdded } = await axios.post(
           `http://localhost:3000/api/staff?dontCheck=true&signUpOrg=true`,
@@ -183,7 +175,6 @@ class AvailableDays extends Form {
 
         localStorage.removeItem("markers");
         window.location = "/Home";
-
       } catch (ex) {
         console.log(ex.response);
         // toast.error(ex.response.data);
@@ -247,9 +238,9 @@ class AvailableDays extends Form {
                   <article className="time-slots">
                     {this.state.slotTime.map((day) =>
                       day.name === "12 PM to 3 PM" ||
-                        day.name === "3 PM to 6 PM" ||
-                        day.name === "6 PM to 9 PM" ||
-                        day.name === "9 PM to 12 AM" ? (
+                      day.name === "3 PM to 6 PM" ||
+                      day.name === "6 PM to 9 PM" ||
+                      day.name === "9 PM to 12 AM" ? (
                         <article key={day.name}></article>
                       ) : (
                         <article key={day.name}>
@@ -272,9 +263,9 @@ class AvailableDays extends Form {
                   <article className="time-slots">
                     {this.state.slotTime.map((day) =>
                       day.name === "12 AM to 3 AM" ||
-                        day.name === "3 AM to 6 AM" ||
-                        day.name === "6 AM to 9 AM" ||
-                        day.name === "9 AM to 12 PM" ? (
+                      day.name === "3 AM to 6 AM" ||
+                      day.name === "6 AM to 9 AM" ||
+                      day.name === "9 AM to 12 PM" ? (
                         <article key={day.name}></article>
                       ) : (
                         <article key={day.name}>
@@ -292,11 +283,11 @@ class AvailableDays extends Form {
                   </article>
                 </article>
               </article>
-              {!hasSelectedSlot && (
+              {/* {!hasSelectedSlot && (
                 <p class="error" style={{ marginLeft: "1.4rem" }}>
                   Please Select Available Slots
                 </p>
-              )}
+              )} */}
               <article className="time-slots">
                 <article className="one-group-first-item addStaff-group-alignment">
                   <article className="label-addStaff">
@@ -316,10 +307,8 @@ class AvailableDays extends Form {
                   </article>
                 </article>
               </article>
-              {!hasSelectedDay && (
-                <p class="error" style={{ marginLeft: "1.4rem" }}>
-                  Please Select Available Days
-                </p>
+              {this.state.availabilityError && (
+                <p class="error">Please Select Availability</p>
               )}
               <article className="btn-orgSignUp org-btn signup-page-btn">
                 {this.renderBtn("OK")}

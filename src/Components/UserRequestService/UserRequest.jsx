@@ -633,6 +633,7 @@ class UserRequestService extends Form {
     else if (dayNo === 6) dayNo = "SAT";
 
     // if(lat && lng){
+      
     const { patientLat, patientLng } = this.state;
     const { data: staff } = await axios.get(
       config.staff +
@@ -983,7 +984,7 @@ class UserRequestService extends Form {
                 {this.renderDropDown("Profession", profession, "serviceFor")}
               </article> */}
             <form onSubmit={this.handleSubmit} className="doc-form-wrapper">
-              <div className="mb-0">
+              <div className="mb-2">
                 <Row>
                   {/* <article className="RowSR RowSR-grid"> */}
 
@@ -1023,15 +1024,17 @@ class UserRequestService extends Form {
                         )}
                       </article>
                       {this.state.vaccinationSelected && <VaccinationPlan />}
-                      <span style={{ marginLeft: "1rem" }}>
-                        {this.state.vaccinationSelected &&
-                          this.renderCheckBox2(
-                            "vaccination,",
-                            "vaccination",
-                            "",
-                            "Avail Plan"
-                          )}
-                      </span>
+                      {this.state.vaccinationSelected && (
+                        <span style={{ marginLeft: "1rem" }}>
+                          {this.state.vaccinationSelected &&
+                            this.renderCheckBox2(
+                              "vaccination,",
+                              "vaccination",
+                              "",
+                              "Avail Plan"
+                            )}
+                        </span>
+                      )}
                       {/* 
                  
                   {this.state.vaccinationSelected && (
@@ -1050,7 +1053,7 @@ class UserRequestService extends Form {
                 </Row>
               </div>
 
-              <div className="mb-1">
+              <div className="mb-2">
                 <Row>
                   {/* Paste Organization here */}
 
@@ -1127,7 +1130,7 @@ class UserRequestService extends Form {
                 </Row>
               </div>
 
-              <div className="mb-1">
+              <div className="mb-2">
                 <Row>
                   {/* <article className="RowSR RowSR-grid email-txt"> */}
 
@@ -1159,7 +1162,7 @@ class UserRequestService extends Form {
                 </Row>
               </div>
 
-              <div className="mb-1">
+              <div className="mb-2">
                 <Row>
                   {/* <article className="RowSR RowSR-grid"> */}
                   <Col>
@@ -1279,7 +1282,8 @@ class UserRequestService extends Form {
                                 "",
                                 "",
                                 "1",
-                                "no-of-meetings-style"
+                                "no-of-meetings-style",
+                                "10"
                               )}
                             </span>
                           </>

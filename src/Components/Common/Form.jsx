@@ -1410,7 +1410,8 @@ class Form extends React.Component {
     maxDate = "",
     readonly = "",
     minVal = "",
-    classForStyle = ""
+    classForStyle = "",
+    maxValue = ""
   ) => {
     const { doctorForm, errors } = this.state;
     return (
@@ -1424,6 +1425,7 @@ class Form extends React.Component {
           id={id}
           onChange={this.handleChange}
           min={minDate}
+          // max={maxValue}
           // max={maxDate}
           readOnly={readonly}
         />
