@@ -42,14 +42,14 @@ import moment from "moment";
 // const addYear=re.add("1","year")
 // console.log("addyear 1:",addYear.format("YYYY/MM/01"))
 
-const todaysDate=moment() // jan=0, dec=11
-const chosenMonth=9;
-const userChosenDate=moment(`2022-${chosenMonth}-1`)
-const diff_=userChosenDate.diff(todaysDate,"months")
-const re=todaysDate.add(diff_,"months")
-console.log("re:",re.format("YYYY/MM/01"))
-const addYear=re.add("1","year")
-console.log("addyear 1:",addYear.format("YYYY/MM/01"))
+//const todaysDate=moment() // jan=0, dec=11
+//const chosenMonth=9;
+//const userChosenDate=moment(`2022-${chosenMonth}-1`)
+//const diff_=userChosenDate.diff(todaysDate,"months")
+//const re=todaysDate.add(diff_,"months")
+// console.log("re:",re.format("YYYY/MM/01"))
+// const addYear=re.add("1","year")
+// console.log("addyear 1:",addYear.format("YYYY/MM/01"))
 
 
 

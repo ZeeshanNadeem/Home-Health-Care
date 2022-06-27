@@ -60,6 +60,7 @@ class ConfirmMeeting extends Form {
   handleSubmit = async (e) => {
     e.preventDefault();
     if (this.props.location.state) {
+      console.log("rep!!!");
       const userRequest_ = { ...this.props.location.state };
       console.log("userRequest:", userRequest_);
       delete userRequest_.cost;
@@ -68,7 +69,7 @@ class ConfirmMeeting extends Form {
       try {
         await axios.post(
           config.apiEndPoint +
-            `/userRequests?repeated=true&servicePlan=${this.props.location.state.servicePlan}&service=${userRequest_.ServiceID}&organization=${userRequest_.OrganizationID}`,
+            `/userRequests?repeated=true&multiple=true&servicePlan=${this.props.location.state.servicePlan}&service=${userRequest_.ServiceID}&organization=${userRequest_.OrganizationID}`,
           userRequest_
         );
         toast.success("Meetings Scheduled");

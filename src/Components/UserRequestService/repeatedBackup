@@ -552,12 +552,10 @@ class UserRequestService extends Form {
         userRequest.servicePlan = this.state.servicePlan;
         userRequest.Address = doctorForm.address;
         userRequest.PhoneNo = doctorForm.phoneno;
-        //userRequest.repeatedMeetingsNo = parseInt(doctorForm.noOfMeetings) + 1;
-        userRequest.repeatedMeetingsNo =
-          parseInt(this.state.repeatedService.length) + 1;
-        this.state.repeatedService.splice(0, 0, { date: doctorForm.schedule });
+        userRequest.repeatedMeetingsNo = parseInt(doctorForm.noOfMeetings) + 1;
         if (this.state.repeatedService.length > 0)
           userRequest.repeatedDates = this.state.repeatedService;
+
         const days = JSON.parse(localStorage.getItem("daysSelectedWeekly"));
         if (days && days.length > 0) {
           userRequest.days = days;
@@ -610,12 +608,10 @@ class UserRequestService extends Form {
   };
 
   AssignAutomatedStaff = async () => {
-    console.log("AssignAutomatedStaff!!");
     if (
       this.state.doctorForm.noOfMeetings ||
       this.state.doctorForm.vaccination ||
-      this.state.servicePlan === "Weekly" ||
-      this.state.servicePlan === "Daily"
+      this.state.servicePlan === "Weekly"
     ) {
       await this.assignDutyOnServicePlan();
 
@@ -959,7 +955,6 @@ class UserRequestService extends Form {
     // const radius= localStorage.getItem("radius");
 
     let errors = this.validate();
-    delete errors["noOfMeetings"];
     if (this.state.servicePlan === "None") {
       delete errors["noOfMeetings"];
       if (!errors || Object.keys(errors).length === 0) errors = {};
@@ -1249,30 +1244,18 @@ class UserRequestService extends Form {
                         >
                           {this.renderRadioBtn1(
                             "daily",
-                            "repeatedNone",
+                            "repeated",
                             "Repeated"
                           )}
 
-                          {this.state.servicePlan === "None" ? (
-                            <span style={{ marginLeft: "1rem" }}>
-                              {this.renderRadioBtn3(
-                                "daily",
-                                "repeatedNone",
-                                "None",
-                                true
-                              )}
-                            </span>
-                          ) : (
-                            <span style={{ marginLeft: "1rem" }}>
-                              {this.renderRadioBtn3(
-                                "daily",
-                                "repeatedNone",
-                                "None",
-                                false
-                              )}
-                            </span>
-                          )}
-
+                          <span style={{ marginLeft: "1rem" }}>
+                            {this.renderRadioBtn3(
+                              "daily",
+                              "repeatedNone",
+                              "None",
+                              true
+                            )}
+                          </span>
                           {/* {this.renderRadioBtn1(
                             "daily",
                             "servicePlan",
@@ -1316,8 +1299,6 @@ class UserRequestService extends Form {
                                 value={this.state.repeatedDates}
                                 onChange={this.repeatedDates}
                                 multiple
-                                minDate={this.state.minDate}
-                           
                               />
                             </span>
                             {/* <span
@@ -1339,7 +1320,7 @@ class UserRequestService extends Form {
                             </span> */}
                           </>
                         )}
-                        {/* {this.state.servicePlan === "Weekly" && <MultiSelect />} */}
+                        {this.state.servicePlan === "Weekly" && <MultiSelect />}
                       </article>
                       {/* Daily,weekly none */}
                     </>

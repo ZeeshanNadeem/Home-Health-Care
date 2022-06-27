@@ -1476,9 +1476,13 @@ class Form extends React.Component {
     );
   };
 
-  handleChangeForRadioBtn3 = (e) => {
-    if (e.target.name === "None") this.setState({ servicePlan: "None" });
-    else this.setState({ servicePlan: "Weekly" });
+  handleChangeForRadioBtn3 = (e, checkedStatus) => {
+    // if (e.target.name === "None") this.setState({ servicePlan: "None" });
+    // else this.setState({ servicePlan: "Weekly" });
+    if (checkedStatus === false) this.setState({ servicePlan: "None" });
+    else {
+      this.setState({ servicePlan: "Weekly" });
+    }
   };
 
   renderRadioBtn3 = (id, name, label, checkedStatus) => {
@@ -1490,7 +1494,7 @@ class Form extends React.Component {
           value={this.state.servicePlan}
           type="radio"
           id={id}
-          onChange={this.handleChangeForRadioBtn3}
+          onChange={(e) => this.handleChangeForRadioBtn3(e, checkedStatus)}
           checked={checkedStatus}
         />
         <label style={{ marginLeft: "0.2rem" }} htmlFor={id}>
