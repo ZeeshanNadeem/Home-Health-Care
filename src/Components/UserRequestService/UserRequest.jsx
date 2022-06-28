@@ -183,7 +183,15 @@ class UserRequestService extends Form {
           doctorForm.service = data[data.length - 1].Service.serviceName;
           doctorForm.ServiceNeededFrom =
             data[data.length - 1].ServiceNeededTime;
-          doctorForm.schedule = data[data.length - 1].Schedule;
+          const date = new Date(data[data.length - 1].Schedule);
+          let month = parseInt(date.getMonth() + 1);
+          let day = date.getDate();
+          console.log("Day:", day);
+          if (day < 10) day = "0" + day;
+          if (month < 10) month = "0" + month;
+          console.log(date.getFullYear() + "-" + month + "-" + day);
+          doctorForm.schedule = date.getFullYear() + "-" + month + "-" + day;
+          //doctorForm.schedule = data[data.length - 1].Schedule;
 
           doctorForm.organization = data[data.length - 1].Organization._id;
           this.setState({ doctorForm });
@@ -1317,7 +1325,6 @@ class UserRequestService extends Form {
                                 onChange={this.repeatedDates}
                                 multiple
                                 minDate={this.state.minDate}
-                           
                               />
                             </span>
                             {/* <span
@@ -1346,7 +1353,7 @@ class UserRequestService extends Form {
                   )}
                 </Col>
                 {/* All Employees show on rating,distance */}
-                {/* <Col md={2}>
+                <Col md={2}>
                   <article style={{ display: "flex", justifyContent: "end" }}>
                     <BasicModal
                       lat={this.state.patientLat}
@@ -1367,7 +1374,7 @@ class UserRequestService extends Form {
                       selectedSlot={this.state.doctorForm.ServiceNeededFrom}
                     />
                   </article>
-                </Col> */}
+                </Col>
                 {/* All Employees show on rating,distance */}
               </Row>
               {/* Daily,weekly none */}

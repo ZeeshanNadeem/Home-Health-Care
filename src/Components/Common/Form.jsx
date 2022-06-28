@@ -650,7 +650,11 @@ class Form extends React.Component {
 
     let { data: availabilityData } = await axios.get(
       config.staff +
-        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${this.state.doctorForm.city}&lat=${this.state.patientLat}&lng=${this.state.patientLng}&date=${schedule}`
+        `/?day=${dayNo}&service=${serviceSelected}&organization=${organization}&city=${
+          this.state.doctorForm.city
+        }&lat=${this.state.patientLat || this.state.user.lat}&lng=${
+          this.state.patientLng || this.state.user.lng
+        }&date=${schedule}`
     );
 
     let { data: allStaff } = await axios.get(
