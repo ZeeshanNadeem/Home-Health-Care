@@ -384,6 +384,30 @@ const Schedule = (props) => {
     return joinArray; // "olleh"
   }
 
+  const serviceStatus = (row) => {
+    if (row.completed) {
+      return (
+        <span className="badge badge-secondary completed-badge-myduties">
+          Completed
+        </span>
+      );
+    } else if (row.canceled) {
+      return <span style={{ color: "red" }}>Canceled</span>;
+    } else {
+      return (
+        <button
+          className="btn btn-primary"
+          type="submit"
+          onClick={() => {
+            serviceCompleted(row._id);
+          }}
+        >
+          COMPLETE
+        </button>
+      );
+    }
+  };
+
   return staffDetails.length > 0 ? (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -463,7 +487,8 @@ const Schedule = (props) => {
                       <TableCell>{row.Service.servicePrice}</TableCell>
                       <TableCell>{row.ServiceNeededTime}</TableCell>
                       <TableCell>
-                        {row.completed ? (
+                        {serviceStatus(row)}
+                        {/* {row.completed ? (
                           <span className="badge badge-secondary completed-badge-myduties">
                             Completed
                           </span>
@@ -477,7 +502,7 @@ const Schedule = (props) => {
                           >
                             COMPLETE
                           </button>
-                        )}
+                        )} */}
                       </TableCell>
                     </TableRow>
                   );

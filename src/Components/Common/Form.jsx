@@ -6,6 +6,7 @@ import config from "../Api/config.json";
 import jwtDecode from "jwt-decode";
 import "../UserRequestService/ModalData/CheckAvailability";
 import GetCurrentUser from "../CurrentUser/GetCurrentUser";
+import Geocode from "react-geocode";
 
 class Form extends React.Component {
   state = {
@@ -1256,6 +1257,21 @@ class Form extends React.Component {
             patientLat: localStorage.getItem("lat"),
             patientLng: localStorage.getItem("lng"),
           });
+          this.PopulateOrganizations(
+            this.state.patientLat,
+            this.state.patientLng
+          );
+          Geocode.setApiKey("AIzaSyDxLxPEKkM9vuuAJpTQuWJBCcfLmZKlDmI");
+          Geocode.fromLatLng(this.state.patientLat, this.state.patientLng).then(
+            (response) => {
+              console.log(response);
+              const address = response.results[0].formatted_address;
+              console.log("address found :", address);
+            },
+            (error) => {
+              console.error(error);
+            }
+          );
           this.FilterNotAvailableSlots(schedule, service);
           this.filterTime(schedule);
           localStorage.setItem("locationChanged", "false");
@@ -1267,7 +1283,7 @@ class Form extends React.Component {
   //This function populates organization in dropdown when
   //service is chosen.Only those organizations are shown
   //who lie in radius and provide that service
-  PopulateOrganizations = async () => {
+  PopulateOrganizations = async (lat = "", lng = "") => {
     const user = GetCurrentUser();
     const { data } = await axios.get(
       config.apiEndPoint + `/user?findUser_=${user._id}`
@@ -1275,7 +1291,9 @@ class Form extends React.Component {
 
     const { data: organizations } = await axios.get(
       config.apiEndPoint +
-        `/organizations?service=${this.state.doctorForm.service}&lat=${data.lat}&lng=${data.lng}&getOrganziations=true`
+        `/organizations?service=${this.state.doctorForm.service}&lat=${
+          lat || data.lat
+        }&lng=${lng || data.lng}&getOrganziations=true`
     );
     console.log("orgs::", organizations);
     this.setState({ organization: organizations });

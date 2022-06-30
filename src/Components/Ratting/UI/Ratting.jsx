@@ -2,6 +2,7 @@ import * as React from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
+
 import TableContainer from "@mui/material/TableContainer";
 import { toast, ToastContainer } from "react-toastify";
 import TableHead from "@mui/material/TableHead";
@@ -13,7 +14,10 @@ import { useEffect } from "react";
 import config from "../../Api/config.json";
 import axios from "axios";
 import RattingModal from "./RattingModal/RattingModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import Button from "@mui/material/Button";
+import swal from "sweetalert";
 import moment from "moment";
 
 const Ratting = (props) => {
@@ -37,7 +41,87 @@ const Ratting = (props) => {
           config.apiEndPoint + `/userRequests?userID=${user._id}`
         );
 
-        console.log(userRequest);
+        // const dates = [
+        //   new Date("July 20, 2021 20:17:40"),
+        //   new Date("August 19, 2021 23:15:30"),
+        //   new Date("March 13, 2021 04:20"),
+        //   new Date("October 2, 2021 11:05"),
+        // ];
+        // console.log("dates before:", dates);
+        // dates.sort((date1, date2) => date1 - date2);
+        // console.log("dates after:", dates);
+        userRequest.sort((req) => req.createdAt - req.createdAt);
+        for (let i = 0; i < userRequest.length - 1; i++) {
+          if (userRequest[i].Schedule === userRequest[i + 1].Schedule) {
+            if (userRequest[i].ServiceNeededTime === "12AM to 3AM") {
+              userRequest[i].timeSort = 1;
+            }
+            if (userRequest[i].ServiceNeededTime === "3AM to 6AM") {
+              userRequest[i].timeSort = 2;
+            }
+            if (userRequest[i].ServiceNeededTime === "6AM to 9AM") {
+              userRequest[i].timeSort = 3;
+            }
+            if (userRequest[i].ServiceNeededTime === "9AM to 12PM") {
+              userRequest[i].timeSort = 4;
+            }
+            if (userRequest[i].ServiceNeededTime === "12PM to 3PM") {
+              userRequest[i].timeSort = 5;
+            }
+            if (userRequest[i].ServiceNeededTime === "12PM to 3PM") {
+              userRequest[i].timeSort = 6;
+            }
+            if (userRequest[i].ServiceNeededTime === "3PM to 6PM") {
+              userRequest[i].timeSort = 7;
+            }
+            if (userRequest[i].ServiceNeededTime === "6PM to 9PM") {
+              userRequest[i].timeSort = 8;
+            }
+            if (userRequest[i].ServiceNeededTime === "9PM to 12AM") {
+              userRequest[i].timeSort = 9;
+            }
+
+            if (userRequest[i + 1].ServiceNeededTime === "12AM to 3AM") {
+              userRequest[i + 1].timeSort = 1;
+            }
+            if (userRequest[i + 1].ServiceNeededTime === "3AM to 6AM") {
+              userRequest[i + 1].timeSort = 2;
+            }
+            if (userRequest[i + 1].ServiceNeededTime === "6AM to 9AM") {
+              userRequest[i + 1].timeSort = 3;
+            }
+            if (userRequest[i + 1].ServiceNeededTime === "9AM to 12PM") {
+              userRequest[i + 1].timeSort = 4;
+            }
+            if (userRequest[i + 1].ServiceNeededTime === "12PM to 3PM") {
+              userRequest[i + 1].timeSort = 5;
+            }
+            if (userRequest[i + 1].ServiceNeededTime === "12PM to 3PM") {
+              userRequest[i + 1].timeSort = 6;
+            }
+            if (userRequest[i + 1].ServiceNeededTime === "3PM to 6PM") {
+              userRequest[i + 1].timeSort = 7;
+            }
+            if (userRequest[i + 1].ServiceNeededTime === "6PM to 9PM") {
+              userRequest[i + 1].timeSort = 8;
+            }
+            if (userRequest[i + 1].ServiceNeededTime === "9PM to 12AM") {
+              userRequest[i + 1].timeSort = 9;
+            }
+          } else {
+            // userRequest[i].timeSort = 0;
+            // userRequest[i + 1].timeSort = 0;
+          }
+        }
+        if (userRequest.length > 0)
+          userRequest.sort((a, b) => {
+            if (a.timeSort && b.timeSort)
+              return a.timeSort > b.timeSort ? 1 : -1;
+
+            return null;
+          });
+        // userRequest.sort((a, b) => (a.Schedule > b.Schedule ? 1 : -1));
+        console.log("reqs:", userRequest);
         setUserRequests(userRequest);
       }
       props.setProgress(20);
@@ -247,6 +331,22 @@ const Ratting = (props) => {
     );
     props.history.push("/user/request", appointment);
   };
+
+  const cancelAppointment = async (id) => {
+    console.log(id);
+    try {
+      const { data } = await axios.patch(
+        config.apiEndPoint +
+          `/userRequests?userRequestID=${id}&cancelService=true`,
+        {
+          status: true,
+        }
+      );
+
+      setUserRequests(data);
+      swal("Service Canceled !", "Your Service Has Been Canceled", "success");
+    } catch (ex) {}
+  };
   return (
     <article>
       <ToastContainer />
@@ -263,6 +363,7 @@ const Ratting = (props) => {
               <TableCell>Slot</TableCell>
 
               <TableCell>Date</TableCell>
+
               <TableCell align="left"></TableCell>
               <TableCell align="left"></TableCell>
               <TableCell align="left"></TableCell>
@@ -304,7 +405,7 @@ const Ratting = (props) => {
                     align="left"
                     style={{ textAlign: "center", color: "red" }}
                   >
-                    Canceled By Service Provider
+                    Canceled
                   </TableCell>
                 )}
                 {!row.canceled && (
@@ -350,6 +451,22 @@ const Ratting = (props) => {
                     <RattingModal row={row} updateRating={RattingRefactor} />
                   </TableCell>
                 )}
+                <TableCell>
+                  {!row.canceled && (
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        cancelAppointment(row._id);
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={faTimes}
+                        style={{ marginRight: "0.6rem" }}
+                      />
+                      Cancel
+                    </Button>
+                  )}
+                </TableCell>
                 {/* ReScheule Appointment Button */}
 
                 {/* { !row.completed &&<TableCell>  <Button variant="contained"

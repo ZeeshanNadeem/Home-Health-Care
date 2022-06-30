@@ -618,7 +618,7 @@ class UserRequestService extends Form {
   };
 
   AssignAutomatedStaff = async () => {
-    console.log("AssignAutomatedStaff!!");
+   
     if (
       this.state.doctorForm.noOfMeetings ||
       this.state.doctorForm.vaccination ||
@@ -1266,7 +1266,7 @@ class UserRequestService extends Form {
                               {this.renderRadioBtn3(
                                 "daily",
                                 "repeatedNone",
-                                "None",
+                                "Only Once",
                                 true
                               )}
                             </span>
@@ -1275,7 +1275,7 @@ class UserRequestService extends Form {
                               {this.renderRadioBtn3(
                                 "daily",
                                 "repeatedNone",
-                                "None",
+                                "Only Once",
                                 false
                               )}
                             </span>
@@ -1325,6 +1325,15 @@ class UserRequestService extends Form {
                                 onChange={this.repeatedDates}
                                 multiple
                                 minDate={this.state.minDate}
+                                weekDays={[
+                                  "MON",
+                                  "TUE",
+                                  "WED",
+                                  "THU",
+                                  "FRI",
+                                  "SAT",
+                                  "SUN",
+                                ]}
                               />
                             </span>
                             {/* <span
